@@ -5,7 +5,7 @@ const products = require('./routes/products.routes.js');
 const cookieParser = require('cookie-parser');
 const allRoutes = require('./routes/all.routes.js')
 const {requireAuth , checkUser} = require('./middleware/authmiddleware.js');
-
+require("dotenv").config();
 //middleware
 app.use(express.json());
 app.use(express.urlencoded({extends:false}))
@@ -17,20 +17,15 @@ app.use(checkUser);
 
 
 
+ // load .env
 
 
 
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("Connected"))
+  .catch(err => console.log(err));
 
-mongoose.connect('mongodb+srv://ghokghoki_db_user:B6beJA95BDiqwHD5@cluster0.l11irmx.mongodb.net/?appName=Cluster0')
-.then(()=>{
-    console.log('connected to the data base');
-    app.listen(3000 , ()=>{
-        console.log('server in running on port 3000');
-    })
-})
-.catch(()=>{
-    console.log('connection failed');
-})
+
 
 
 app.get('/' , (req , res)=> res.render('home'));
