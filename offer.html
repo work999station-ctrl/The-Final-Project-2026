@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Modern Connectivity - Offer Discovery</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#4F46E5",
+                        "secondary": "#0EA5E9",
+                        "background-light": "#F8FAFC",
+                        "background-dark": "#121121",
+                        "surface": "#FFFFFF",
+                        "text-main": "#0F172A",
+                        "muted": "#64748B",
+                        "accent": "#10B981",
+                        "border": "#E2E8F0",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "1rem", "full": "9999px"},
+                    boxShadow: {
+                        "lift": "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                        "soft": "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)",
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: #CBD5E1;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-body text-text-main antialiased min-h-screen flex flex-col">
+<!-- Top Navbar (Adapted from provided component) -->
+<header class="sticky top-0 z-50 bg-[#f9f8fb]/95 backdrop-blur-md border-b border-solid border-b-[#e8e8f3]">
+<div class="px-6 md:px-10 py-3 flex items-center justify-between">
+<div class="flex items-center gap-4 text-[#0f0e1b]">
+<div class="size-8 text-primary">
+<span class="material-symbols-outlined text-[32px]">hub</span>
+</div>
+<h2 class="text-[#0f0e1b] text-lg font-display font-bold leading-tight tracking-[-0.015em] hidden sm:block">Modern Connectivity</h2>
+</div>
+<div class="flex flex-1 justify-end gap-8 items-center">
+<nav class="hidden md:flex items-center gap-9">
+<a class="text-muted hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Student Hub</a>
+<a class="text-primary text-sm font-medium leading-normal" href="#">Offer Discovery</a>
+<a class="text-muted hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Messages</a>
+<a class="text-muted hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Profile</a>
+</nav>
+<div class="flex gap-3">
+<button class="flex items-center justify-center rounded-full size-10 bg-white border border-border text-text-main hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+</button>
+<button class="flex items-center justify-center rounded-full size-10 bg-primary text-white hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-[20px]">person</span>
+</button>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col max-w-[1440px] mx-auto w-full px-4 md:px-8 lg:px-12 py-8 gap-8">
+<!-- Sticky Filter Bar Section -->
+<section class="sticky top-[73px] z-40 -mx-4 md:-mx-8 lg:-mx-12 px-4 md:px-8 lg:px-12 py-4 bg-background-light/95 backdrop-blur-sm transition-all duration-300">
+<div class="max-w-[960px] mx-auto flex flex-col md:flex-row gap-4 items-center">
+<!-- Search Input -->
+<div class="relative w-full md:flex-1 group">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-primary">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="block w-full pl-12 pr-4 py-3.5 bg-white border-0 rounded-full text-text-main placeholder:text-muted focus:ring-2 focus:ring-primary shadow-soft group-hover:shadow-lg transition-all duration-300 text-base font-medium" placeholder="React, Civil Engineering, Marketing..." type="text"/>
+</div>
+<!-- Filters -->
+<div class="flex gap-3 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 no-scrollbar">
+<button class="flex items-center gap-2 px-4 py-2.5 bg-white rounded-full text-sm font-medium text-text-main border border-transparent shadow-sm hover:border-primary/30 hover:shadow-md transition-all whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px] text-muted">location_on</span>
+                        Wilaya
+                        <span class="material-symbols-outlined text-[18px] text-muted">expand_more</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2.5 bg-white rounded-full text-sm font-medium text-text-main border border-transparent shadow-sm hover:border-primary/30 hover:shadow-md transition-all whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px] text-muted">schedule</span>
+                        Duration
+                        <span class="material-symbols-outlined text-[18px] text-muted">expand_more</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2.5 bg-white rounded-full text-sm font-medium text-text-main border border-transparent shadow-sm hover:border-primary/30 hover:shadow-md transition-all whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px] text-muted">laptop_mac</span>
+                        Remote / Onsite
+                        <span class="material-symbols-outlined text-[18px] text-muted">expand_more</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Stats / Subheader -->
+<section class="max-w-[1200px] mx-auto w-full flex justify-between items-end pb-2">
+<div>
+<h1 class="font-display text-3xl font-bold text-text-main mb-1">Recommended for You</h1>
+<p class="text-muted text-sm">Based on your skills: <span class="font-mono text-xs bg-slate-200 px-1.5 py-0.5 rounded text-slate-700">React</span> <span class="font-mono text-xs bg-slate-200 px-1.5 py-0.5 rounded text-slate-700">Node.js</span></p>
+</div>
+<div class="hidden sm:block text-sm font-medium text-muted">
+                Showing <span class="text-text-main font-bold">24</span> opportunities
+            </div>
+</section>
+<!-- Opportunity Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 max-w-[1200px] mx-auto w-full pb-12">
+<!-- Card 1: High Match, Standard State -->
+<article class="group relative bg-white rounded-xl p-6 shadow-sm border border-slate-100 hover:shadow-lift hover:-translate-y-2 transition-all duration-300 flex flex-col h-full">
+<div class="flex justify-between items-start mb-4">
+<div class="flex gap-4">
+<div class="size-12 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0 border border-indigo-100">
+<img alt="TechFlow logo abstract purple gradient" class="w-full h-full object-cover rounded-lg" data-alt="TechFlow logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDT5U-doaxTyx6fFa5pEvXDMSv6uMuVV6odvENd-oLtI0zRuBqzpLvoO9ykCrOXZOwTYUAJp-lzbB8J4mwaHLvTpZQRC_2g360vxX7kRGm8Jc3lhYo8TFbA166HJK-nIkX2f1kjVgAOhnlJV5SnXvxkuAJ164vzm4N9V1Laueva2J5pCQk-GDyOdwUQiN-FCiAgcgCop7atDWKmkHG_5a39zk7Gp5SLoEQJyUbIYZ-laIrcXpmu1OqoGa5oKlCN6M--TwAsJqcmA7g"/>
+</div>
+<div>
+<h3 class="font-display font-bold text-lg text-text-main leading-tight group-hover:text-primary transition-colors">Frontend Developer Intern</h3>
+<p class="text-sm text-muted font-medium mt-0.5">TechFlow • Algiers</p>
+</div>
+</div>
+<!-- Match Gauge -->
+<div class="relative size-12 flex items-center justify-center shrink-0" title="98% Match">
+<svg class="size-full -rotate-90" viewbox="0 0 36 36">
+<path class="text-slate-100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
+<path class="text-emerald-500 drop-shadow-sm" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="98, 100" stroke-width="3"></path>
+</svg>
+<span class="absolute text-[10px] font-bold text-text-main">98%</span>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="px-2.5 py-1 bg-slate-50 text-slate-600 rounded-md text-xs font-mono border border-slate-100">React</span>
+<span class="px-2.5 py-1 bg-slate-50 text-slate-600 rounded-md text-xs font-mono border border-slate-100">TypeScript</span>
+<span class="px-2.5 py-1 bg-slate-50 text-slate-600 rounded-md text-xs font-mono border border-slate-100">Tailwind</span>
+</div>
+<p class="text-sm text-slate-600 mb-6 line-clamp-3 leading-relaxed flex-grow">
+                    Join our core product team to build the next generation of financial tools. You will work directly with senior engineers to ship production code used by thousands of users daily.
+                </p>
+<div class="flex items-center gap-3 mt-auto pt-4 border-t border-slate-50">
+<button class="flex-1 bg-primary hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-full transition-colors shadow-lg shadow-indigo-200">
+                        Apply Now
+                    </button>
+<button class="size-10 flex items-center justify-center rounded-full border border-slate-200 text-slate-400 hover:text-rose-500 hover:border-rose-200 hover:bg-rose-50 transition-all">
+<span class="material-symbols-outlined fill-current">favorite</span>
+</button>
+</div>
+</article>
+<!-- Card 2: Medium Match, Applied State -->
+<article class="group relative bg-white rounded-xl p-6 shadow-sm border border-slate-100 hover:shadow-lift hover:-translate-y-2 transition-all duration-300 flex flex-col h-full">
+<div class="flex justify-between items-start mb-4">
+<div class="flex gap-4">
+<div class="size-12 rounded-lg bg-sky-50 flex items-center justify-center shrink-0 border border-sky-100">
+<img alt="EduCorp logo building block" class="w-full h-full object-cover rounded-lg" data-alt="EduCorp logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhs14YMSOhMEZcCFlJ54LEobExbXSH0qu01XxCH6-lVd6IVbyeGhkGIu5mIwT3-UOMI_zN6lDzbRfJ0yuIQHI71WIDXd3GYibCvpvbnuJRA0Atyk1ISnqdfpeU9sBgUn9-LNr8NtgUaFiUW0T_s9zPW4A1K6CVPosKybOegVif97r42zv60FRvzoXQ38w5BRY_kFJV3Jutlkji-6Xrlvgwl3NmXzMIouvr-V75Uy0XNNHisSzx3aTmgGHNlGSKyfxruHzzYf4meK8"/>
+</div>
+<div>
+<h3 class="font-display font-bold text-lg text-text-main leading-tight group-hover:text-primary transition-colors">UX Research Assistant</h3>
+<p class="text-sm text-muted font-medium mt-0.5">EduCorp • Remote</p>
+</div>
+</div>
+<div class="relative size-12 flex items-center justify-center shrink-0" title="85% Match">
+<svg class="size-full -rotate-90" viewbox="0 0 36 36">
+<path class="text-slate-100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
+<path class="text-primary drop-shadow-sm" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="85, 100" stroke-width="3"></path>
+</svg>
+<span class="absolute text-[10px] font-bold text-text-main">85%</span>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="px-2.5 py-1 bg-slate-50 text-slate-600 rounded-md text-xs font-mono border border-slate-100">Figma</span>
+<span class="px-2.5 py-1 bg-slate-50 text-slate-600 rounded-md text-xs font-mono border border-slate-100">User Testing</span>
+</div>
+<p class="text-sm text-slate-600 mb-6 line-clamp-3 leading-relaxed flex-grow">
+                    Help us understand how students interact with digital learning platforms. You'll conduct interviews, analyze heatmaps, and propose UI improvements based on real data.
+                </p>
+<div class="flex items-center gap-3 mt-auto pt-4 border-t border-slate-50">
+<button class="flex-1 bg-emerald-50 text-emerald-600 font-medium py-2.5 px-4 rounded-full transition-colors flex items-center justify-center gap-2 cursor-default border border-emerald-100" disabled="">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+                        Applied
+                    </button>
+<button class="size-10 flex items-center justify-center rounded-full border border-slate-200 text-slate-400 hover:text-rose-500 hover:border-rose-200 hover:bg-rose-50 transition-all">
+<span class="material-symbols-outlined fill-current">favorite</span>
+</button>
+</div>
+</article>
+<!-- Card 3: High Match -->
+<article class="group relative bg-white rounded-xl p-6 shadow-sm border border-slate-100 hover:shadow-lift hover:-translate-y-2 transition-all duration-300 flex flex-col h-full">
+<div class="flex justify-between items-start mb-4">
+<div class="flex gap-4">
+<div class="size-12 rounded-lg bg-orange-50 flex items-center justify-center shrink-0 border border-orange-100">
+<img alt="Algor logo abstract geometry" class="w-full h-full object-cover rounded-lg" data-alt="Algor logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_7oGWFfNCrkqXS1t7kl6OwF8A5NVF3q1PV1OVmATzs954rue39QCOVlZX4FuNh83qEzLK2D9u1yJP2mraPo637oajKQ5x75iElR8Kv0wv5IRJ8zrnPgpWM6qXGnoAJtJ24Nchl1_83UJ6auijcs-EQf7Y2xEhRd9vfZGBEZ4UrMfH-FUbye5u6MIWXgBQqO7r_STniJj9SzV712FnL16LMdj2htRr7388CKxm7OiVa_t4_yUsySDviYB-EoanJBhfVrCWpJvhJ94"/>
+</div>
+<div>
+<h3 class="font-display font-bold text-lg text-text-main leading-tight group-hover:text-primary transition-colors">Data Science Intern</h3>
+<p class="text-sm text-muted font-medium mt-0.5">Algor • Oran</p>
+</div>
+</div>
+<div class="relative size-12 flex items-center justify-center shrink-0" title="92% Match">
+<svg class="size-full -rotate-90" viewbox="0 0 36 36">
+<path class="text-slate-100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
+<path class="text-emerald-500 drop-shadow-sm" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="92, 100" stroke-width="3"></path>
+</svg>
+<span class="absolute text-[10px] font-bold text-text-main">92%</span>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="px-2.5 py-1 bg-slate-50 text-slate-600 rounded-md text-xs font-mono border border-slate-100">Python</span>
+<span class="px-2.5 py-1 bg-slate-50 text-slate-600 rounded-md text-xs font-mono border border-slate-100">Pandas</span>
+<span class="px-2.5 py-1 bg-slate-50 text-slate-600 rounded-md text-xs font-mono border border-slate-100">SQL</span>
+</div>
+<p class="text-sm text-slate-600 mb-6 line-clamp-3 leading-relaxed flex-grow">
+                    Dive into big data with Algor. You will be cleaning datasets, building predictive models, and visualizing trends for our retail partners.
+                </p>
+<div class="flex items-center gap-3 mt-auto pt-4 border-t border-slate-50">
+<button class="flex-1 bg-primary hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-full transition-colors shadow-lg shadow-indigo-200">
+                        Apply Now
+                    </button>
+<button class="size-10 flex items-center justify-center rounded-full border border-slate-200 text-slate-400 hover:text-rose-500 hover:border-rose-200 hover:bg-rose-50 transition-all">
+<span class="material-symbols-outlined fill-current">favorite</span>
+</button>
+</div>
+</article>
+<!-- Card 4: Lower Match -->
+<article class="group relative bg-white rounded-xl p-6 shadow-sm border border-slate-100 hover:shadow-lift hover:-translate-y-2 transition-all duration-300 flex flex-col h-full">
+<div class="flex justify-between items-start mb-4">
+<div class="flex gap-4">
+<div class="size-12 rounded-lg bg-pink-50 flex items-center justify-center shrink-0 border border-pink-100">
+<img alt="BrandFix logo creative" class="w-full h-full object-cover rounded-lg" data-alt="BrandFix logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAiXFHzTRFyfzx89Ww4VzIzAlsOuu6qKmtjZ-VkMjMxfovKNouqsMvkuInioMcxdU9S3dhFMjq3GKpbKrVPQywT8a6Ix_5rEeSrHt_VlXAzPaK3Gvpc-FVDjHzigwtsBTzgUK22D0i1CmkMTEAYxAbIfj0DQxdH-1tyBH4BkwHZ7753XyXtuatjHRIpSj12pkVMXGq84Xi1qog6AS10KQ8EzdamU704L9dxNjzP-3k8d9wHhLwV3BsoQ-4tea6lFcBIMzxXil2OX0"/>
+</div>
+<div>
+<h3 class="font-display font-bold text-lg text-text-main leading-tight group-hover:text-primary transition-colors">Marketing Trainee</h3>
+<p class="text-sm text-muted font-medium mt-0.5">BrandFix • Constantine</p>
+</div>
+</div>
+<div class="relative size-12 flex items-center justify-center shrink-0" title="70% Match">
+<svg class="size-full -rotate-90" viewbox="0 0 36 36">
+<path class="text-slate-100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
+<path class="text-amber-500 drop-shadow-sm" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="70, 100" stroke-width="3"></path>
+</svg>
+<span class="absolute text-[10px] font-bold text-text-main">70%</span>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="px-2.5 py-1 bg-slate-50 text-slate-600 rounded-md text-xs font-mono border border-slate-100">SEO</span>
+<span class="px-2.5 py-1 bg-slate-50 text-slate-600 rounded-md text-xs font-mono border border-slate-100">Content</span>
+</div>
+<p class="text-sm text-slate-600 mb-6 line-clamp-3 leading-relaxed flex-grow">
+                    Learn the ropes of digital marketing in a fast-paced agency. Responsibilities include social media scheduling, blog writing, and basic analytics reporting.
+                </p>
+<div class="flex items-center gap-3 mt-auto pt-4 border-t border-slate-50">
+<button class="flex-1 bg-white hover:bg-slate-50 text-primary border border-primary/20 font-medium py-2.5 px-4 rounded-full transition-colors">
+                        Save for Later
+                    </button>
+<button class="size-10 flex items-center justify-center rounded-full border border-slate-200 text-slate-400 hover:text-rose-500 hover:border-rose-200 hover:bg-rose-50 transition-all">
+<span class="material-symbols-outlined fill-current">favorite</span>
+</button>
+</div>
+</article>
+<!-- Card 5: New Card for layout -->
+<article class="group relative bg-white rounded-xl p-6 shadow-sm border border-slate-100 hover:shadow-lift hover:-translate-y-2 transition-all duration-300 flex flex-col h-full">
+<div class="flex justify-between items-start mb-4">
+<div class="flex gap-4">
+<div class="size-12 rounded-lg bg-teal-50 flex items-center justify-center shrink-0 border border-teal-100">
+<img alt="GreenEnergy logo leaf" class="w-full h-full object-cover rounded-lg" data-alt="GreenEnergy logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCH5-jV9ghF8I9eDuL1XoQ92H1NxeTldwNq70-eHArG9IDHVJo4d5R8ZuArAyhFjCX82wFfTqxVYeyaW1wFuX3GsROcNo-q04HewYti5QQdo7y2c7mqeuofNar5izIMsPj85XZDdq3gnqy2_10oKjVz9khL1PV5Ux1AdE_4xh_yanpFgtVfTAD7xPpBqHj2xu-tQySh23pwY7XLQQRUjmFGgv3ZQotTY0Z6SYzMdBQmGKB24iILjA3R8q7KziLtCWLJucKG7gMDLds"/>
+</div>
+<div>
+<h3 class="font-display font-bold text-lg text-text-main leading-tight group-hover:text-primary transition-colors">Junior Civil Engineer</h3>
+<p class="text-sm text-muted font-medium mt-0.5">GreenBuild • Setif</p>
+</div>
+</div>
+<div class="relative size-12 flex items-center justify-center shrink-0" title="45% Match">
+<svg class="size-full -rotate-90" viewbox="0 0 36 36">
+<path class="text-slate-100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
+<path class="text-slate-400 drop-shadow-sm" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="45, 100" stroke-width="3"></path>
+</svg>
+<span class="absolute text-[10px] font-bold text-text-main">45%</span>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="px-2.5 py-1 bg-slate-50 text-slate-600 rounded-md text-xs font-mono border border-slate-100">AutoCAD</span>
+<span class="px-2.5 py-1 bg-slate-50 text-slate-600 rounded-md text-xs font-mono border border-slate-100">Planning</span>
+</div>
+<p class="text-sm text-slate-600 mb-6 line-clamp-3 leading-relaxed flex-grow">
+                    Assist in site surveys and drafting architectural plans. This internship requires on-site presence and a strong understanding of structural integrity basics.
+                </p>
+<div class="flex items-center gap-3 mt-auto pt-4 border-t border-slate-50">
+<button class="flex-1 bg-primary hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-full transition-colors shadow-lg shadow-indigo-200">
+                        Apply Now
+                    </button>
+<button class="size-10 flex items-center justify-center rounded-full border border-slate-200 text-slate-400 hover:text-rose-500 hover:border-rose-200 hover:bg-rose-50 transition-all">
+<span class="material-symbols-outlined fill-current">favorite</span>
+</button>
+</div>
+</article>
+<!-- Card 6: New Card for layout -->
+<article class="group relative bg-white rounded-xl p-6 shadow-sm border border-slate-100 hover:shadow-lift hover:-translate-y-2 transition-all duration-300 flex flex-col h-full">
+<div class="flex justify-between items-start mb-4">
+<div class="flex gap-4">
+<div class="size-12 rounded-lg bg-blue-50 flex items-center justify-center shrink-0 border border-blue-100">
+<img alt="CloudSys logo modern" class="w-full h-full object-cover rounded-lg" data-alt="CloudSys logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYExSvhFCE8Ap5MnDwHsnRFCPjc7yM__D4K5RhaFcZr3D4gUXtV5t_vEPdoTihGIPlKeMj2_jlOReTYLxAQuSFwy2FFX3gNuknW4VaeXV0qmXVnoHDY8337Xl3uYQV7vX7XpJ5yD24U3f9J_2-nS2jzTCF-x5AgUAOYZJuvGLVJdr67vg94M8fI1zN3kpUofAwMp1TRiu2kKmUAgNS0qxAmbjH3eHVGuw1IW5AQiWSyS9y7eQAxjUKLN9_-ASEZCcylV-fay_1gG0"/>
+</div>
+<div>
+<h3 class="font-display font-bold text-lg text-text-main leading-tight group-hover:text-primary transition-colors">Backend Developer</h3>
+<p class="text-sm text-muted font-medium mt-0.5">CloudSys • Algiers</p>
+</div>
+</div>
+<div class="relative size-12 flex items-center justify-center shrink-0" title="88% Match">
+<svg class="size-full -rotate-90" viewbox="0 0 36 36">
+<path class="text-slate-100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
+<path class="text-primary drop-shadow-sm" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="88, 100" stroke-width="3"></path>
+</svg>
+<span class="absolute text-[10px] font-bold text-text-main">88%</span>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="px-2.5 py-1 bg-slate-50 text-slate-600 rounded-md text-xs font-mono border border-slate-100">Node.js</span>
+<span class="px-2.5 py-1 bg-slate-50 text-slate-600 rounded-md text-xs font-mono border border-slate-100">PostgreSQL</span>
+<span class="px-2.5 py-1 bg-slate-50 text-slate-600 rounded-md text-xs font-mono border border-slate-100">Docker</span>
+</div>
+<p class="text-sm text-slate-600 mb-6 line-clamp-3 leading-relaxed flex-grow">
+                    We are looking for a backend intern to help scale our APIs. Experience with Docker and microservices is a plus. Great mentorship opportunities available.
+                </p>
+<div class="flex items-center gap-3 mt-auto pt-4 border-t border-slate-50">
+<button class="flex-1 bg-primary hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-full transition-colors shadow-lg shadow-indigo-200">
+                        Apply Now
+                    </button>
+<button class="size-10 flex items-center justify-center rounded-full border border-slate-200 text-slate-400 hover:text-rose-500 hover:border-rose-200 hover:bg-rose-50 transition-all">
+<span class="material-symbols-outlined fill-current">favorite</span>
+</button>
+</div>
+</article>
+</div>
+<!-- Pagination / Load More -->
+<div class="flex justify-center pb-12">
+<button class="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 rounded-full text-sm font-medium text-text-main hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm">
+                Show More Opportunities
+                <span class="material-symbols-outlined text-[18px]">expand_more</span>
+</button>
+</div>
+</main>
+</body></html>

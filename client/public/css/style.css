@@ -1,0 +1,58 @@
+/* Custom scrollbar for webkit */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+.font-feature-settings {
+    font-feature-settings: "cv11", "ss01";
+}
+
+/* Simple Radial Progress CSS component */
+.radial-progress {
+    --thickness: 3px;
+    position: relative;
+    display: inline-flex;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 9999px;
+    place-content: center;
+    place-items: center;
+    background-color: transparent;
+    vertical-align: middle;
+    box-sizing: content-box;
+}
+
+.radial-progress:before,
+.radial-progress:after {
+    position: absolute;
+    border-radius: 9999px;
+    content: "";
+}
+
+.radial-progress:before {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: radial-gradient(farthest-side, currentColor 98%, #0000) top/var(--thickness) var(--thickness) no-repeat, conic-gradient(currentColor calc(var(--value) * 1%), #0000 0);
+    -webkit-mask: radial-gradient(farthest-side, #0000 calc(99% - var(--thickness)), #000 calc(100% - var(--thickness)));
+    mask: radial-gradient(farthest-side, #0000 calc(99% - var(--thickness)), #000 calc(100% - var(--thickness)));
+}
+
+.radial-progress:after {
+    inset: calc(50% - var(--thickness)/2);
+    transform: rotate(calc(var(--value) * 3.6deg - 90deg)) translate(calc(var(--size)/2 - 50%));
+}

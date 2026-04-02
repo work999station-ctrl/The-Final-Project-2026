@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+    .radial-progress {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9999px;
+        width: var(--size);
+        height: var(--size);
+    }
+    .radial-progress::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 9999px;
+        background: conic-gradient(currentColor calc(var(--value) * 1%), transparent 0);
+        mask: radial-gradient(transparent calc(var(--size) / 2 - 4px), #fff 0);
+        -webkit-mask: radial-gradient(transparent calc(var(--size) / 2 - 4px), #fff 0);
+    }
+}

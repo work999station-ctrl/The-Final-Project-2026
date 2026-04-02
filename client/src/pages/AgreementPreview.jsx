@@ -1,0 +1,217 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+
+const AgreementPreview = () => {
+    const { applicationId } = useParams();
+    const navigate = useNavigate();
+    const [application, setApplication] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const agreementRef = useRef(null);
+
+    useEffect(() => {
+        const fetchApplicationInfo = async () => {
+            try {
+                const response = await fetch(`/api/admin/application/${applicationId}`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    setApplication(data.application);
+                } else {
+                    console.error('Failed to load agreement data:', data.error);
+                }
+            } catch (err) {
+                console.error('Failed to fetch application for agreement', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (applicationId) {
+            fetchApplicationInfo();
+        } else {
+            setLoading(false);
+        }
+    }, [applicationId]);
+
+    const handleDownloadPDF = () => {
+        window.print();
+    };
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
+            </div>
+        );
+    }
+
+    // Default Fallback Data if ID not found
+    const data = application || {
+        studentName: "Amine Benali",
+        studentYear: "Master 2 Software Engineering",
+        offerTitle: "Frontend Development",
+        companyName: "TechCorp Solutions Inc.",
+        companyRepresentative: "Sarah Jenkins, Senior Engineering Manager",
+        universityName: "University of Constantine 2",
+        startDate: "October 1st, 2023",
+        endDate: "March 31st, 2024",
+    };
+
+    return (
+        <div className="bg-[#F8FAFC] print:bg-white text-[#0F172A] font-['Inter'] antialiased min-h-screen flex flex-col overflow-hidden print:block print:h-auto">
+            {/* Header / Navigation */}
+            <header className="h-16 border-b border-slate-200 bg-white flex items-center justify-between px-6 z-20 relative print:hidden">
+                <div className="flex items-center gap-3">
+                    <button onClick={() => navigate(-1)} className="p-2 hover:bg-slate-100 rounded-full text-slate-500 transition-colors">
+                        <span className="material-symbols-outlined text-xl">arrow_back</span>
+                    </button>
+                    <div className="h-8 w-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-['Space_Grotesk'] font-bold text-lg">M</div>
+                    <span className="font-['Space_Grotesk'] font-bold text-lg tracking-tight">Modern Connectivity</span>
+                    <span className="mx-2 text-slate-200">/</span>
+                    <span className="text-slate-500 text-sm font-medium">Agreement System</span>
+                </div>
+            </header>
+
+            {/* Main Content Area */}
+            <main className="flex-1 flex items-center justify-center p-4 lg:p-8 bg-slate-50 relative print:p-0 print:bg-white print:block">
+                <div className="absolute inset-0 bg-indigo-600/5 pointer-events-none print:hidden"></div>
+
+                {/* Agreement Preview Modal Container */}
+                <div className="bg-white w-full max-w-5xl h-[85vh] rounded-2xl shadow-xl border border-slate-200 flex flex-col overflow-hidden z-10 print:h-auto print:shadow-none print:border-none print:rounded-none">
+
+                    {/* Modal Header */}
+                    <div className="h-16 px-6 border-b border-slate-200 flex items-center justify-between bg-white shrink-0 print:hidden">
+                        <div className="flex flex-col">
+                            <h1 className="font-['Space_Grotesk'] font-bold text-xl text-slate-900">Agreement Preview</h1>
+                            <p className="text-xs text-slate-500">Review finalized contract terms before signing or exporting.</p>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <span className="px-3 py-1 bg-amber-50 text-amber-700 text-[10px] font-bold tracking-widest rounded-md border border-amber-200 uppercase">Ready For Print</span>
+                            <button
+                                onClick={handleDownloadPDF}
+                                className="ml-2 flex flex-row items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-700 hover:bg-indigo-600 hover:text-white rounded-full text-sm font-bold shadow-sm transition-all"
+                            >
+                                <span className="material-symbols-outlined text-[18px]">download</span> PDF
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Modal Body: Centered Preview */}
+                    <div className="flex flex-1 overflow-hidden bg-slate-100/50 justify-center overflow-y-auto p-4 sm:p-8 print:p-0 print:bg-white print:block print:overflow-visible">
+
+                        {/* Paper Document Container (Target for PDF) */}
+                        <style>{`
+                            @media print {
+                                @page { margin: 0; size: auto; }
+                                body { margin: 1cm; padding: 0 !important; }
+                            }
+                        `}</style>
+                        <div
+                            ref={agreementRef}
+                            className="bg-white w-[816px] min-w-[816px] min-h-[1056px] shrink-0 shadow-sm ring-1 ring-slate-900/5 p-12 sm:p-16 text-sm leading-relaxed text-slate-800 relative mx-auto print:shadow-none print:ring-0 print:min-h-0 print:h-auto print:w-full print:min-w-0 print:p-4 print:m-0"
+                            style={{ backgroundImage: 'radial-gradient(#f1f5f9 0.5px, transparent 0.5px), radial-gradient(#f1f5f9 0.5px, #ffffff 0.5px)', backgroundSize: '20px 20px', backgroundPosition: '0 0, 10px 10px' }}
+                        >
+                            {/* Watermark (PDF visibility issue fixed by opacity) */}
+                            <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] pointer-events-none select-none z-0">
+                                <span className="font-['Space_Grotesk'] font-bold text-[100px] sm:text-[120px] -rotate-45 text-slate-900">FINAL COPY</span>
+                            </div>
+
+                            <div className="relative z-10">
+                                {/* Header of Doc */}
+                                <div className="flex justify-between items-start border-b-2 border-slate-900 pb-6 mb-8">
+                                    <div className="flex items-center gap-3">
+                                        <div className="h-12 w-12 bg-slate-900 text-white flex items-center justify-center font-['Space_Grotesk'] font-bold text-2xl rounded">U</div>
+                                        <div>
+                                            <h2 className="font-['Space_Grotesk'] font-bold text-xl uppercase tracking-tight text-slate-900">{data.universityName}</h2>
+                                            <p className="font-mono text-xs text-slate-500">Department of Computer Science</p>
+                                        </div>
+                                    </div>
+                                    <div className="text-right">
+                                        <h3 className="font-['Space_Grotesk'] font-bold text-slate-900">INTERNSHIP AGREEMENT</h3>
+                                        <p className="font-mono text-xs text-slate-500">Ref: 2026-INT-{Math.floor(Math.random() * 900) + 100}</p>
+                                    </div>
+                                </div>
+
+                                {/* Doc Content */}
+                                <div className="space-y-6 font-serif text-[15px]">
+                                    <p>This Tripartite Internship Agreement ("Agreement") is made and entered into on <strong className="bg-amber-50 px-1">{data.startDate}</strong>, by and between:</p>
+
+                                    <ol className="list-decimal list-inside space-y-4 ml-2">
+                                        <li className="pl-2">
+                                            <strong>The Student:</strong><br />
+                                            <span className="ml-6 block">{data.studentName}, enrolled in {data.studentYear}.</span>
+                                        </li>
+                                        <li className="pl-2">
+                                            <strong>The Host Company:</strong><br />
+                                            <span className="ml-6 block">{data.companyName}, represented by <strong className="bg-amber-50 px-1">{data.companyRepresentative || 'HR Management'}</strong>.</span>
+                                        </li>
+                                        <li className="pl-2">
+                                            <strong>The Educational Institution:</strong><br />
+                                            <span className="ml-6 block">{data.universityName}, represented by the Dean of Engineering.</span>
+                                        </li>
+                                    </ol>
+
+                                    <div className="mt-8">
+                                        <h4 className="font-bold uppercase text-xs tracking-wider border-b border-slate-200 pb-1 mb-3 text-slate-500">Article 1: Purpose & Scope</h4>
+                                        <p>The purpose of this internship is to provide the Student with practical professional experience in the field of <strong>{data.offerTitle}</strong>. The Student will be integrated into the Host Organization's team to acquire critical skills and modern architectures related to the role.</p>
+                                    </div>
+
+                                    <div className="mt-6">
+                                        <h4 className="font-bold uppercase text-xs tracking-wider border-b border-slate-200 pb-1 mb-3 text-slate-500">Article 2: Duration</h4>
+                                        <p>The internship shall commence on <strong className="bg-amber-50 px-1">{data.startDate}</strong> and shall terminate on <strong className="bg-amber-50 px-1">{data.endDate}</strong>. The weekly schedule will be full-time (40 hours/week) unless otherwise agreed upon in standard legal provisions.</p>
+                                    </div>
+
+                                    <div className="mt-6">
+                                        <h4 className="font-bold uppercase text-xs tracking-wider border-b border-slate-200 pb-1 mb-3 text-slate-500">Article 3: Insurance & Liability</h4>
+                                        <p>During the internship, the Student remains affiliated with the University for social security purposes. Civil liability is covered under Policy Number <strong className="bg-amber-50 px-1 font-mono text-xs">UNIV-INS-2026-8892</strong>.</p>
+                                    </div>
+                                </div>
+
+                                {/* Signatures */}
+                                <div className="mt-10 grid grid-cols-3 gap-6 sm:gap-8 pt-6 border-t border-slate-200 print:mt-4 print:pt-4">
+                                    <div>
+                                        <p className="text-[10px] sm:text-xs font-bold uppercase mb-4">The Student</p>
+                                        <div className="h-16 border-b border-dashed border-slate-300 relative flex items-end pb-1">
+                                            <span style={{ fontFamily: '"Dancing Script", cursive' }} className="text-xl sm:text-2xl text-blue-800 opacity-90 select-none">{data.studentName}</span>
+                                        </div>
+                                        <p className="text-[9px] sm:text-[10px] text-slate-400 mt-1 italic">Electronically Signed</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] sm:text-xs font-bold uppercase mb-4">Host Organization</p>
+                                        <div className="h-16 border-b border-dashed border-slate-300 relative flex items-end pb-1">
+                                            <span style={{ fontFamily: '"Dancing Script", cursive' }} className="text-xl sm:text-2xl text-blue-800 opacity-90 select-none">Approved</span>
+                                            {/* Stamp simulation */}
+                                            <div className="absolute -top-6 -right-2 w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-blue-800/20 flex items-center justify-center -rotate-12 opacity-40 pointer-events-none">
+                                                <span className="text-[6px] sm:text-[8px] font-bold text-blue-900 uppercase text-center leading-tight">Corporate<br />Validated<br />HR Dept</span>
+                                            </div>
+                                        </div>
+                                        <p className="text-[9px] sm:text-[10px] text-slate-400 mt-1 italic">Verified Signature</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] sm:text-xs font-bold uppercase mb-4">University Admin</p>
+                                        <div className="h-16 border-b border-dashed border-slate-300 relative flex items-end pb-1">
+                                            <span style={{ fontFamily: '"Dancing Script", cursive' }} className="text-xl sm:text-2xl text-blue-800 opacity-90 select-none">Registrar</span>
+                                            {/* University Stamp simulation */}
+                                            <div className="absolute -top-6 -right-2 w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-blue-800/20 flex items-center justify-center rotate-12 opacity-40 pointer-events-none">
+                                                <span className="text-[6px] sm:text-[8px] font-bold text-blue-900 uppercase text-center leading-tight">UNIVERSITY<br />CERTIFIED</span>
+                                            </div>
+                                        </div>
+                                        <p className="text-[9px] sm:text-[10px] text-slate-400 mt-1 italic">Verified University Admin</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </main>
+        </div>
+    );
+};
+
+export default AgreementPreview;

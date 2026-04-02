@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create New Internship Offer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#4f46e5", // Indigo-600
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#121121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "heading": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .backdrop-blur-custom {
+            backdrop-filter: blur(8px);
+        }
+        /* Custom scrollbar for a cleaner look */
+        .overflow-y-auto::-webkit-scrollbar {
+            width: 6px;
+        }
+        .overflow-y-auto::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .overflow-y-auto::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+        .dark .overflow-y-auto::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+<!-- Background Dashboard (Blurred) -->
+<div class="fixed inset-0 z-0 overflow-hidden filter blur-sm grayscale-[0.2] opacity-50 pointer-events-none">
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between border-b border-primary/10 px-10 py-4 bg-white dark:bg-slate-900">
+<div class="flex items-center gap-4">
+<div class="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">work</span>
+</div>
+<h2 class="text-xl font-bold font-heading">Recruiter Hub</h2>
+</div>
+<div class="flex gap-4">
+<div class="h-10 w-32 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
+<div class="h-10 w-10 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
+</div>
+</header>
+<main class="p-10 grid grid-cols-3 gap-6">
+<div class="col-span-2 space-y-6">
+<div class="h-40 bg-white dark:bg-slate-800 rounded-xl shadow-sm"></div>
+<div class="h-96 bg-white dark:bg-slate-800 rounded-xl shadow-sm"></div>
+</div>
+<div class="space-y-6">
+<div class="h-64 bg-white dark:bg-slate-800 rounded-xl shadow-sm"></div>
+<div class="h-64 bg-white dark:bg-slate-800 rounded-xl shadow-sm"></div>
+</div>
+</main>
+</div>
+</div>
+<!-- Modal Overlay -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-custom">
+<!-- Modal Content -->
+<div class="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[95vh]">
+<!-- Modal Header -->
+<div class="px-8 pt-8 pb-4 flex justify-between items-start">
+<div>
+<h1 class="text-2xl font-heading font-semibold text-slate-900 dark:text-white">Create New Internship Offer</h1>
+<p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Fill in the details to reach out to the best student talent.</p>
+</div>
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+<span class="material-symbols-outlined text-slate-400">close</span>
+</button>
+</div>
+<!-- Modal Body (Scrollable) -->
+<div class="px-8 py-4 overflow-y-auto space-y-6">
+<!-- Internship Title -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-slate-700 dark:text-slate-300">Internship Title</label>
+<input class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-slate-400" placeholder="e.g. Full Stack Developer Intern" type="text"/>
+</div>
+<!-- Hierarchical Skills and Categories Selector -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-slate-700 dark:text-slate-300">Target Categories &amp; Skills</label>
+<div class="relative w-full">
+<!-- Select Trigger (Simulated Search/Selection Bar) -->
+<div class="min-h-[48px] w-full px-4 py-2 flex items-center justify-between rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:border-primary/50 cursor-pointer transition-all">
+<div class="flex flex-wrap gap-2">
+<div class="flex items-center gap-1 px-2.5 py-1 bg-primary text-white text-xs font-semibold rounded-lg shadow-sm">
+                                    Front-end
+                                    <button class="hover:text-white/80"><span class="material-symbols-outlined text-sm leading-none">close</span></button>
+</div>
+<div class="flex items-center gap-1 px-2.5 py-1 bg-primary/10 text-primary border border-primary/20 text-xs font-semibold rounded-lg">
+                                    React
+                                    <button class="hover:text-primary/70"><span class="material-symbols-outlined text-sm leading-none">close</span></button>
+</div>
+<span class="text-sm text-slate-400 self-center ml-2">Search categories and skills...</span>
+</div>
+<span class="material-symbols-outlined text-slate-400">expand_more</span>
+</div>
+<!-- Sophisticated Hierarchical Dropdown Menu (Open State) -->
+<div class="mt-2 w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl overflow-hidden">
+<!-- Dropdown Header -->
+<div class="px-4 py-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/50">
+<span class="text-xs font-bold uppercase tracking-widest text-slate-400">Show Options</span>
+<span class="material-symbols-outlined text-slate-400 text-lg">keyboard_double_arrow_down</span>
+</div>
+<div class="max-h-[320px] overflow-y-auto py-2">
+<!-- Option 1: Front-end (Expanded) -->
+<div class="group/category">
+<div class="flex items-center justify-between px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors">
+<label class="flex items-center gap-3 cursor-pointer flex-1">
+<input checked="" class="w-5 h-5 rounded border-slate-300 dark:border-slate-700 text-primary focus:ring-primary transition-all cursor-pointer" type="checkbox"/>
+<span class="text-sm font-semibold text-slate-800 dark:text-slate-200 uppercase tracking-wide">Front-end</span>
+</label>
+<span class="material-symbols-outlined text-slate-400 text-xl transition-transform group-hover/category:text-primary">expand_more</span>
+</div>
+<!-- Sub Options (Indented) -->
+<div class="ml-10 space-y-1 mb-2">
+<label class="flex items-center gap-3 py-2 px-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors mr-4">
+<input checked="" class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 text-primary focus:ring-primary transition-all cursor-pointer" type="checkbox"/>
+<span class="text-sm text-slate-600 dark:text-slate-400">React</span>
+</label>
+<label class="flex items-center gap-3 py-2 px-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors mr-4">
+<input checked="" class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 text-primary focus:ring-primary transition-all cursor-pointer" type="checkbox"/>
+<span class="text-sm text-slate-600 dark:text-slate-400">Next.js</span>
+</label>
+<label class="flex items-center gap-3 py-2 px-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors mr-4">
+<input class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 text-primary focus:ring-primary transition-all cursor-pointer" type="checkbox"/>
+<span class="text-sm text-slate-600 dark:text-slate-400">Vue.js</span>
+</label>
+<label class="flex items-center gap-3 py-2 px-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors mr-4">
+<input class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 text-primary focus:ring-primary transition-all cursor-pointer" type="checkbox"/>
+<span class="text-sm text-slate-600 dark:text-slate-400">Tailwind CSS</span>
+</label>
+</div>
+</div>
+<!-- Option 2: Back-end -->
+<div class="group/category">
+<div class="flex items-center justify-between px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors">
+<label class="flex items-center gap-3 cursor-pointer flex-1">
+<input class="w-5 h-5 rounded border-slate-300 dark:border-slate-700 text-primary focus:ring-primary transition-all cursor-pointer" type="checkbox"/>
+<span class="text-sm font-semibold text-slate-800 dark:text-slate-200 uppercase tracking-wide">Back-end</span>
+</label>
+<span class="material-symbols-outlined text-slate-400 text-xl transition-transform group-hover/category:text-primary">expand_more</span>
+</div>
+</div>
+<!-- Option 3: Mobile -->
+<div class="group/category">
+<div class="flex items-center justify-between px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors">
+<label class="flex items-center gap-3 cursor-pointer flex-1">
+<input class="w-5 h-5 rounded border-slate-300 dark:border-slate-700 text-primary focus:ring-primary transition-all cursor-pointer" type="checkbox"/>
+<span class="text-sm font-semibold text-slate-800 dark:text-slate-200 uppercase tracking-wide">Mobile</span>
+</label>
+<span class="material-symbols-outlined text-slate-400 text-xl transition-transform group-hover/category:text-primary">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Duration -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-slate-700 dark:text-slate-300">Duration</label>
+<input class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-slate-400" placeholder="e.g. 3 Months" type="text"/>
+</div>
+<!-- Type -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-slate-700 dark:text-slate-300">Work Type</label>
+<div class="relative">
+<select class="w-full appearance-none px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-600 dark:text-slate-300">
+<option>Remote</option>
+<option>Onsite</option>
+<option>Hybrid</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Location -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-slate-700 dark:text-slate-300">Location (Wilaya)</label>
+<div class="relative">
+<input class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-slate-400" placeholder="e.g. Algiers" type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">location_on</span>
+</div>
+</div>
+<!-- Description -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-slate-700 dark:text-slate-300">Description</label>
+<textarea class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-slate-400 resize-none" placeholder="Describe the role, responsibilities, and what the intern will learn..." rows="4"></textarea>
+</div>
+<!-- Required Skills (Manual Entry) -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-slate-700 dark:text-slate-300">Additional Custom Skills</label>
+<div class="flex flex-wrap gap-2 p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
+<input class="flex-1 min-w-[120px] bg-transparent border-none focus:ring-0 p-0 text-sm placeholder:text-slate-400" placeholder="Type and press Enter to add..." type="text"/>
+</div>
+</div>
+</div>
+<!-- Modal Footer -->
+<div class="px-8 py-6 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-4 bg-slate-50/50 dark:bg-slate-800/50">
+<button class="px-6 py-2.5 rounded-full text-sm font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    Cancel
+                </button>
+<button class="flex items-center gap-2 px-8 py-2.5 rounded-full bg-primary text-white text-sm font-semibold hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all active:scale-[0.98]">
+                    Post Offer
+                    <span class="material-symbols-outlined text-lg">send</span>
+</button>
+</div>
+</div>
+</div>
+</body></html>
