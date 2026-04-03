@@ -20,7 +20,7 @@ const StudentSignup = () => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
 
-    const availableSkills = ['JavaScript', 'HTML', 'CSS', 'Docker', 'SQL', 'Git', 'Java', 'C++', 'Next.js', 'PostgreSQL', 'MongoDB', 'Go', 'Rust', 'Python', 'React', 'Node.js', 'TypeScript'];
+    const availableSkills = ['JavaScript', 'Angular', 'CSS', 'Docker', 'SQL', 'Git', 'Java', 'C++', 'Next.js', 'PostgreSQL', 'MongoDB', 'Go', 'Rust', 'Python', 'React', 'Node.js', 'TypeScript'];
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
