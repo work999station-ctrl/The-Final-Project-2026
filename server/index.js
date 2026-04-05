@@ -1,3 +1,4 @@
+
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
@@ -20,6 +21,9 @@ app.use(checkUser);
  // load .env
 
 
+
+// Bypass Windows/ISP DNS issues with MongoDB Atlas SRV/TXT lookups
+require('dns').setServers(['8.8.8.8', '8.8.4.4']);
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("Connected"))

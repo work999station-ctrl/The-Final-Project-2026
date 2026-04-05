@@ -52,7 +52,7 @@ const OfferDetailsSplitView = () => {
     useEffect(() => {
         const fetchApplicants = async () => {
             if (userType !== 'company' || !id) return;
-            
+
             try {
                 setApplicantsLoading(true);
                 const res = await fetch(`/api/company/applications/offer/${id}`);
@@ -92,12 +92,12 @@ const OfferDetailsSplitView = () => {
     };
     const handleCloseOffer = async () => {
         if (!window.confirm("Are you sure you want to close this internship offer? Students will no longer be able to apply.")) return;
-        
+
         try {
             const token = document.cookie.split('jwt=')[1]?.split(';')[0] || localStorage.getItem('token');
             const res = await fetch(`/api/offers/${id}`, {
                 method: 'PUT',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
                     ...(token ? { Authorization: `Bearer ${token}` } : {})
                 },
@@ -118,10 +118,10 @@ const OfferDetailsSplitView = () => {
 
     const handleReopenOffer = async () => {
         if (!window.confirm("Do you want to re-open this internship offer? Students will be able to apply again.")) return;
-        
+
         let newDeadline = offer.endDateOfApplay;
         const deadlineExpired = moment().isAfter(moment(offer.endDateOfApplay).endOf('day'));
-        
+
         // If deadline expired, automatically extend it by 14 days to make it truly 'open' again
         if (deadlineExpired) {
             newDeadline = moment().add(14, 'days').toDate();
@@ -131,9 +131,9 @@ const OfferDetailsSplitView = () => {
             const res = await fetch(`/api/offers/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
+                body: JSON.stringify({
                     status: 'Open',
-                    endDateOfApplay: newDeadline 
+                    endDateOfApplay: newDeadline
                 })
             });
 
@@ -141,8 +141,8 @@ const OfferDetailsSplitView = () => {
                 const data = await res.json();
                 if (data.success) {
                     setOffer(data.offer);
-                    alert(deadlineExpired 
-                        ? `Offer re-opened successfully. Application deadline has been extended to ${moment(newDeadline).format('LL')}.` 
+                    alert(deadlineExpired
+                        ? `Offer re-opened successfully. Application deadline has been extended to ${moment(newDeadline).format('LL')}.`
                         : "Offer re-opened successfully."
                     );
                 }
@@ -182,8 +182,8 @@ const OfferDetailsSplitView = () => {
                 <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
                     <div>
                         <nav className="flex items-center gap-2 text-xs text-slate-500 mb-2">
-                            <Link 
-                                to={userType === 'student' ? "/student-dashboard" : (userType === 'admin' ? "/admin-dashboard" : "/company-dashboard")} 
+                            <Link
+                                to={userType === 'student' ? "/student-dashboard" : (userType === 'admin' ? "/admin-dashboard" : "/company-dashboard")}
                                 className="hover:text-indigo-600 cursor-pointer"
                             >
                                 Dashboard
@@ -198,7 +198,7 @@ const OfferDetailsSplitView = () => {
                     <div className="flex items-center gap-3">
                         {userType === 'company' && (
                             <>
-                                <button 
+                                <button
                                     onClick={() => navigate(`/edit-offer/${id}`)}
                                     className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 transition-all shadow-sm"
                                 >
@@ -206,7 +206,7 @@ const OfferDetailsSplitView = () => {
                                     Edit Offer
                                 </button>
                                 {isClosed ? (
-                                    <button 
+                                    <button
                                         onClick={handleReopenOffer}
                                         className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-semibold hover:bg-emerald-700 transition-all shadow-md active:scale-95"
                                     >
@@ -214,7 +214,7 @@ const OfferDetailsSplitView = () => {
                                         Re-open Offer
                                     </button>
                                 ) : (
-                                    <button 
+                                    <button
                                         onClick={handleCloseOffer}
                                         className="flex items-center gap-2 px-4 py-2 bg-slate-900 dark:bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-all shadow-md active:scale-95"
                                     >
@@ -226,7 +226,7 @@ const OfferDetailsSplitView = () => {
                         )}
                         {userType === 'student' && (
                             <>
-                                <button 
+                                <button
                                     onClick={handleApply}
                                     disabled={isApplying || (offer && offer.isApplied) || isClosed}
                                     className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-bold transition-all shadow-lg ${offer && offer.isApplied ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/50 cursor-default shadow-none' : (isClosed ? 'bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 cursor-not-allowed border border-slate-300 dark:border-slate-700 shadow-none' : (isApplying ? 'bg-indigo-400 text-white cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-200 dark:shadow-indigo-900/40'))}`}>
@@ -236,7 +236,7 @@ const OfferDetailsSplitView = () => {
                                     </span>
                                 </button>
                                 <button
-                                    onClick={() => navigate(`/company-dashboard`)} // Placeholder for student view
+                                    onClick={() => navigate(`/company-dashboard-student-view/${company?._id}`)} // Placeholder for student view
                                     className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 transition-all"
                                 >
                                     View Company
@@ -245,7 +245,7 @@ const OfferDetailsSplitView = () => {
                             </>
                         )}
                         {userType === 'admin' && (
-                            <button 
+                            <button
                                 onClick={() => navigate(`/company-profile-admin/${company?._id}`)}
                                 className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 transition-all shadow-sm"
                             >
@@ -444,10 +444,10 @@ const OfferDetailsSplitView = () => {
                                             applicants.map((app) => (
                                                 <div key={app._id} className="p-4 rounded-xl border border-transparent hover:border-slate-200 dark:hover:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-all group">
                                                     <div className="flex items-center gap-4">
-                                                        <img 
-                                                            alt={app.studentId?.name} 
-                                                            className="h-12 w-12 rounded-full object-cover bg-slate-200 dark:bg-slate-700" 
-                                                            src={app.studentId?.profilePicture || 'https://via.placeholder.com/150'} 
+                                                        <img
+                                                            alt={app.studentId?.name}
+                                                            className="h-12 w-12 rounded-full object-cover bg-slate-200 dark:bg-slate-700"
+                                                            src={app.studentId?.profilePicture || 'https://via.placeholder.com/150'}
                                                         />
                                                         <div className="flex-1 min-w-0">
                                                             <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">{app.studentId?.name || 'Anonymous candidate'}</h4>
@@ -461,7 +461,7 @@ const OfferDetailsSplitView = () => {
                                                     </div>
                                                     <div className="mt-4 flex items-center justify-between">
                                                         <span className="text-[10px] text-slate-400">Applied {moment(app.createdAt).fromNow()}</span>
-                                                        <button 
+                                                        <button
                                                             onClick={() => navigate(`/student-profile-recruiter/${app.studentId._id}`)}
                                                             className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 cursor-pointer"
                                                         >
@@ -480,7 +480,7 @@ const OfferDetailsSplitView = () => {
                                     )}
                                 </div>
                                 <div className="p-4 border-t border-slate-100 dark:border-slate-700">
-                                    <button 
+                                    <button
                                         onClick={() => navigate('/candidate-tracking-statistics')}
                                         className="w-full py-2 bg-slate-100 dark:bg-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
                                     >

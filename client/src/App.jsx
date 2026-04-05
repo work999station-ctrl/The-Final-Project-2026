@@ -26,6 +26,7 @@ import AdminInbox from './pages/AdminInbox';
 import StudentInbox from './pages/StudentInbox';
 import AdminAcceptanceValidation from './pages/AdminAcceptanceValidation';
 import NotificationDetails from './pages/NotificationDetails';
+import CompanyProfileStudentView from './pages/CompanyProfileStudentView';
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
         <Route path="/AdminAcceptanceValidation/:applicationId" element={<AdminAcceptanceValidation />} />
         <Route path="/NotificationDetails/:applicationId" element={<NotificationDetails />} />
         <Route path="/CompanyInbox" element={<CompanyInbox />} />
+        <Route path="/company-dashboard-student-view/:id" element={<CompanyProfileStudentView />} />
 
       </Routes>
     </Router>
