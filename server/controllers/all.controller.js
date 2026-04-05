@@ -937,8 +937,8 @@ const getStudentApplications = async (req, res) => {
 
 const getAdminCompanyProfile = async (req, res) => {
   try {
-    if (req.userType !== 'admin') {
-      return res.status(403).json({ error: 'Only admins can view company profiles' });
+    if (req.userType !== 'admin' && req.userType !== 'student') {
+      return res.status(403).json({ error: 'Only admins and students can view company profiles' });
     }
 
     const { id: companyId } = req.params;
