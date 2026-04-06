@@ -28,6 +28,7 @@ const InternshipOffers = () => {
     const fetchOffers = useCallback(async () => {
         setOffersLoading(true);
         try {
+            
             const params = new URLSearchParams({ limit: 6 });
             if (activeFilters.wilaya) params.append('wilaya', activeFilters.wilaya);
             if (activeFilters.duration) params.append('duration', activeFilters.duration);

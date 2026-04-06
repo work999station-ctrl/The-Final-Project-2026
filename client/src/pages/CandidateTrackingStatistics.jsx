@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import CompanySidebar from '../components/CompanySidebar';
 
 const CandidateTrackingStatistics = () => {
     const navigate = useNavigate();
@@ -159,35 +160,7 @@ const CandidateTrackingStatistics = () => {
             </header>
 
             {/* Sidebar */}
-            <aside className="fixed left-0 top-16 bottom-0 flex flex-col p-4 gap-2 h-screen w-64 border-r border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 hidden md:flex z-40">
-                <div className="flex items-center gap-3 px-2 py-4 mb-2">
-                    {company?.logo ? (
-                        <img alt="Company Logo" className="w-10 h-10 rounded-lg object-cover" src={company.logo} />
-                    ) : (
-                        <div className="w-10 h-10 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold italic">
-                            {company?.name?.substring(0, 2) || 'CP'}
-                        </div>
-                    )}
-                    <div>
-                        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 leading-tight">{company?.name || 'TechCorp Inc.'}</h2>
-                        <p className="text-xs text-slate-500">Recruiter Dashboard</p>
-                    </div>
-                </div>
-                <nav className="flex flex-col gap-1 flex-1">
-                    <a className="flex items-center gap-3 px-4 py-3 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-lg text-sm font-medium" href="#">
-                        <span className="material-symbols-outlined">business</span> Overview
-                    </a>
-                    <a className="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all text-sm font-medium" href="#">
-                        <span className="material-symbols-outlined">groups</span> Candidates
-                    </a>
-                    <a className="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all text-sm font-medium" href="/create-offer">
-                        <span className="material-symbols-outlined">add_box</span> Create Offer
-                    </a>
-                    <a className="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all text-sm font-medium" href="/edit-company-profile">
-                        <span className="material-symbols-outlined">settings_applications</span> Settings
-                    </a>
-                </nav>
-            </aside>
+            <CompanySidebar company={company} activePage="applications" />
 
             {/* Main Content */}
             <main className="md:ml-64 pt-20 p-6 min-h-screen">

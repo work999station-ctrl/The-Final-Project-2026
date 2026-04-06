@@ -9,11 +9,21 @@ const Home = () => {
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                // This calls the backend where your 'checkUser' middleware is running
-                const res = await fetch('/api/student/me');
-                if (res.ok) {
-                    const data = await res.json();
-                    setUser(data.user);
+                const [studentRes, companyRes, adminRes] = await Promise.all([
+                    fetch('/api/student/me').catch(() => ({ ok: false })),
+                    fetch('/api/company/me').catch(() => ({ ok: false })),
+                    fetch('/api/admin/me').catch(() => ({ ok: false }))
+                ]);
+
+                if (studentRes.ok) {
+                    const data = await studentRes.json();
+                    setUser({ ...data.user, role: data.user.role || 'student' });
+                } else if (companyRes.ok) {
+                    const data = await companyRes.json();
+                    setUser({ ...data.user, role: data.user.role || 'company' });
+                } else if (adminRes.ok) {
+                    const data = await adminRes.json();
+                    setUser({ ...data.user, role: data.user.role || 'admin' });
                 }
             } catch (err) {
                 console.error("Auth check failed:", err);
@@ -146,14 +156,16 @@ const Home = () => {
                                 Streamline internship agreements and connect top academic talent with industry leaders
                                 through our high-speed digital bridge.
                             </p>
-                            <div className="flex flex-wrap gap-4">
-                                <button className="bg-primary text-white font-bold py-4 px-8 rounded-full hover:scale-105 transition-transform shadow-xl shadow-primary/25">
-                                    <a href="/student-signup">Join as a Student</a>
-                                </button>
-                                <button className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold py-4 px-8 rounded-full hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
-                                    <a href="/company-Signup">Partner as a Company</a>
-                                </button>
-                            </div>
+                            {!user && (
+                                <div className="flex flex-wrap gap-4">
+                                    <button className="bg-primary text-white font-bold py-4 px-8 rounded-full hover:scale-105 transition-transform shadow-xl shadow-primary/25">
+                                        <a href="/student-signup">Join as a Student</a>
+                                    </button>
+                                    <button className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold py-4 px-8 rounded-full hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                                        <a href="/company-Signup">Partner as a Company</a>
+                                    </button>
+                                </div>
+                            )}
                         </div>
                         <div className="relative">
                             <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-primary/5 rounded-full blur-3xl"></div>
