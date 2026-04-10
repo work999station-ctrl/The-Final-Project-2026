@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import AdminNavbar from '../components/AdminNavbar';
 
 const AdminValidation = () => {
     const navigate = useNavigate();
@@ -7,8 +8,6 @@ const AdminValidation = () => {
     const [generatingDocs, setGeneratingDocs] = useState({});
     const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [adminUser, setAdminUser] = useState(null);
-    const [userType, setUserType] = useState(null);
 
     // Filter & Pagination State
     const [searchQuery, setSearchQuery] = useState('');
@@ -21,27 +20,10 @@ const AdminValidation = () => {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const studentRes = await fetch('/api/student/me');
-                if (studentRes.ok) {
-                    setUserType('student');
-                } else {
-                    const companyRes = await fetch('/api/company/me');
-                    if (companyRes.ok) {
-                        setUserType('company');
-                    } else {
-                        const adminRes = await fetch('/api/admin/me');
-                        if (adminRes.ok) {
-                            const data = await adminRes.json();
-                            setAdminUser(data.user);
-                            setUserType('admin');
-                        }
-                    }
-                }
                 const appRes = await fetch('/api/admin/applications/pending-validation');
                 if (appRes.ok) {
                     const appData = await appRes.json();
                     setApplications(appData.applications || []);
-
                 }
             } catch (error) {
                 console.error("Error fetching admin data:", error);
@@ -166,39 +148,7 @@ const AdminValidation = () => {
                 </div>
             </aside>
 
-            {/* TopAppBar Shell */}
-            <header className="fixed top-0 z-30 flex justify-between items-center px-6 py-3 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl ml-64 w-[calc(100%-16rem)]">
-                <div className="flex items-center gap-4">
-                    <div className="bg-surface-container-low px-4 py-2 rounded-full flex items-center gap-3 w-96 transition-all focus-within:ring-2 focus-within:ring-primary/20">
-                        <span className="material-symbols-outlined text-outline">search</span>
-                        <input className="bg-transparent border-none focus:ring-0 text-sm w-full outline-none" placeholder="Global search..." type="text" />
-                    </div>
-                </div>
-                <div className="flex items-center gap-6">
-                    <div className="flex items-center gap-2">
-                        <button className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors active:scale-95 duration-200">
-                            <span className="material-symbols-outlined">notifications</span>
-                        </button>
-                        <button className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors active:scale-95 duration-200">
-                            <span className="material-symbols-outlined">settings</span>
-                        </button>
-                    </div>
-                    <div className="h-8 w-px bg-slate-200"></div>
-                    <div className="flex items-center gap-3">
-                        <div className="text-right hidden sm:block">
-                            <p className="text-sm font-bold text-on-surface">{adminUser?.fullName || 'Loading...'}</p>
-                            <p className="text-xs text-on-surface-variant">Admin - {adminUser?.universityName || 'University'}</p>
-                        </div>
-                        <div className="w-10 h-10 rounded-full bg-slate-200 border-2 border-primary-container/20 overflow-hidden flex items-center justify-center">
-                            {adminUser?.profilePicture ? (
-                                <img alt="User profile avatar" className="w-full h-full object-cover" src={adminUser.profilePicture} />
-                            ) : (
-                                <span className="text-slate-500 font-bold text-sm tracking-wider">{adminUser?.fullName?.substring(0, 2).toUpperCase() || 'AD'}</span>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </header>
+            <AdminNavbar />
 
             {/* Main Content Canvas */}
             <main className="ml-64 pt-24 p-8 min-h-screen">

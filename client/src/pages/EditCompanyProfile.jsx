@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import CompanyNavbar from '../components/CompanyNavbar';
 
 const EditCompanyProfile = () => {
     const navigate = useNavigate();
@@ -112,34 +113,7 @@ const EditCompanyProfile = () => {
         <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen font-display">
             <div className="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
                 <div className="layout-container flex h-full grow flex-col">
-                    <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 px-6 lg:px-40 py-4 bg-white dark:bg-slate-900 sticky top-0 z-50">
-                        <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/')}>
-                            <div className="flex items-center justify-center size-10 rounded-lg bg-primary text-white">
-                                <span className="material-symbols-outlined">hub</span>
-                            </div>
-                            <h2 className="text-slate-900 dark:text-white text-xl font-bold leading-tight tracking-tight">CampusConnect</h2>
-                        </div>
-                        <div className="flex flex-1 justify-end gap-6 items-center">
-                            <nav className="hidden md:flex items-center gap-8">
-                                <a className="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors border-b-2 border-transparent hover:border-primary pb-1" href="#" onClick={(e) => { e.preventDefault(); navigate('/company-dashboard'); }}>Dashboard</a>
-                                <a className="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Jobs</a>
-                                <a className="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Candidates</a>
-                                <a className="text-primary font-semibold text-sm transition-colors border-b-2 border-primary pb-1" href="#">Settings</a>
-                            </nav>
-                            <div className="flex items-center gap-4 border-l border-slate-200 dark:border-slate-800 pl-6">
-                                <button className="flex items-center justify-center rounded-full size-10 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-primary/10 hover:text-primary transition-all">
-                                    <span className="material-symbols-outlined text-[20px]">notifications</span>
-                                </button>
-                                <div className="bg-center bg-no-repeat aspect-square flex items-center justify-center bg-primary/10 text-primary bg-cover rounded-full size-10 ring-2 ring-primary/20 overflow-hidden cursor-pointer">
-                                    {logoPreview ? (
-                                        <img src={logoPreview} alt="User Profile" className="w-full h-full object-cover" />
-                                    ) : (
-                                        <span className="material-symbols-outlined">person</span>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    </header>
+                    <CompanyNavbar />
 
                     <main className="flex-1 flex flex-col items-center py-10 px-4 md:px-10">
                         <div className="max-w-4xl w-full">
@@ -327,7 +301,7 @@ const EditCompanyProfile = () => {
                     </main>
 
                     <footer className="py-10 text-center text-slate-400 text-sm">
-                        © 2024 CampusConnect Inc. All rights reserved.
+                        © 2024 stage.io Inc. All rights reserved.
                     </footer>
                 </div>
             </div>

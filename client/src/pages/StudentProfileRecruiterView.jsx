@@ -70,7 +70,7 @@ const StudentProfileRecruiterView = () => {
             <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm sticky top-0 z-50">
                 <div className="flex justify-between items-center px-6 h-16 w-full max-w-7xl mx-auto">
                     <div className="flex items-center gap-8">
-                        <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white font-headline">RecruitHub</span>
+                        <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white font-headline">stage.io</span>
                         <nav className="hidden md:flex gap-6 items-center h-full">
                             <button onClick={() => navigate('/company-dashboard')} className="text-slate-600 dark:text-slate-400 pb-4 pt-5 hover:text-blue-500 dark:hover:text-blue-300 transition-colors font-sans text-sm font-medium">Dashboard</button>
                             <button onClick={() => navigate('/candidate-tracking-statistics')} className="text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400 pb-4 pt-5 font-sans text-sm font-medium">Candidates</button>
@@ -204,6 +204,56 @@ const StudentProfileRecruiterView = () => {
                     </div>
                 </div>
 
+
+                {/* Resume Sections */}
+                {(student.experience?.length > 0 || student.academicProjects?.length > 0) && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                        {/* Experience */}
+                        {student.experience && student.experience.length > 0 && (
+                            <div className="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
+                                <h2 className="text-xl font-bold font-headline mb-6 flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-indigo-600">work</span> 
+                                    Experience
+                                </h2>
+                                <div className="space-y-6">
+                                    {student.experience.map((exp, idx) => (
+                                        <div key={idx} className="border-l-2 border-indigo-200 pl-4 py-1">
+                                            <h4 className="font-bold text-slate-900 dark:text-white capitalize">{exp.role}</h4>
+                                            <p className="text-sm font-semibold text-indigo-600 mb-2">{exp.type}</p>
+                                            <p className="text-sm text-slate-600 dark:text-slate-400">{exp.description}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                        {/* Projects */}
+                        {student.academicProjects && student.academicProjects.length > 0 && (
+                            <div className="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
+                                <h2 className="text-xl font-bold font-headline mb-6 flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-indigo-600">terminal</span> 
+                                    Academic Projects
+                                </h2>
+                                <div className="space-y-6">
+                                    {student.academicProjects.map((proj, idx) => (
+                                        <div key={idx} className="border-l-2 border-indigo-200 pl-4 py-1 flex flex-col gap-1.5">
+                                            <h4 className="font-bold text-slate-900 dark:text-white">{proj.title}</h4>
+                                            <p className="text-sm font-medium text-indigo-600 capitalize">Role: {proj.role}</p>
+                                            <p className="text-sm text-slate-600 dark:text-slate-400 italic">Tech: {proj.technologies}</p>
+                                            <p className="text-sm text-slate-600 dark:text-slate-400">{proj.result}</p>
+                                            {proj.link && (
+                                                <a href={proj.link.startsWith('http') ? proj.link : `https://${proj.link}`} target="_blank" rel="noopener noreferrer" className="text-sm text-indigo-600 hover:text-indigo-700 hover:underline flex items-center gap-1 mt-1 font-medium z-10 relative">
+                                                    <span className="material-symbols-outlined text-[16px]">link</span>
+                                                    View Project Site
+                                                </a>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                )}
+
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mt-8">
                     {/* Active Applications with this Company */}
                     <div className="md:col-span-8 bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
@@ -245,9 +295,29 @@ const StudentProfileRecruiterView = () => {
 
                     {/* Quick Stats/Notes */}
                     <div className="md:col-span-4 bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
-                        <h2 className="text-xl font-bold mb-4 font-headline">Internal Notes</h2>
-                        <div className="space-y-4">
-                            <div className="text-sm text-slate-600 dark:text-slate-400 italic">
+                        <h2 className="text-xl font-bold mb-4 font-headline">Additional Details</h2>
+                        <div className="space-y-6">
+                            {student.bio && (
+                                <div className="text-sm text-slate-600 dark:text-slate-400">
+                                    <h3 className="font-bold text-slate-900 dark:text-white mb-2 uppercase text-xs tracking-wide">About Me</h3>
+                                    <p className="whitespace-pre-line leading-relaxed">{student.bio}</p>
+                                </div>
+                            )}
+                            {student.baccalaureate && (
+                                <div className="text-sm text-slate-600 dark:text-slate-400">
+                                    <h3 className="font-bold text-slate-900 dark:text-white mb-2 uppercase text-xs tracking-wide">Baccalaureate Graduation Year</h3>
+                                    <p>{student.baccalaureate}</p>
+                                </div>
+                            )}
+                            {(student.degreeName || student.universityCity || student.expectedGraduationDate) && (
+                                <div className="text-sm text-slate-600 dark:text-slate-400 space-y-1">
+                                    <h3 className="font-bold text-slate-900 dark:text-white mb-2 uppercase text-xs tracking-wide">Higher Education</h3>
+                                    {student.degreeName && <p><span className="font-semibold text-slate-800 dark:text-slate-200">Degree:</span> {student.degreeName}</p>}
+                                    {student.universityCity && <p><span className="font-semibold text-slate-800 dark:text-slate-200">City:</span> {student.universityCity}</p>}
+                                    {student.expectedGraduationDate && <p><span className="font-semibold text-slate-800 dark:text-slate-200">Expected Graduation:</span> {student.expectedGraduationDate}</p>}
+                                </div>
+                            )}
+                            <div className="text-sm text-slate-600 dark:text-slate-400 italic bg-primary/5 p-3 rounded-lg border border-primary/10">
                                 "Quick View: Student is at {student.university} in their {student.currentYear}. Contact them via {student.email}."
                             </div>
                             <div className="pt-4 border-t border-slate-100 dark:border-slate-800">

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import AdminNavbar from '../components/AdminNavbar';
 
 const AdminDashboard = () => {
     const navigate = useNavigate();
@@ -12,7 +13,6 @@ const AdminDashboard = () => {
         phone: ""
     });
     const [applications, setApplications] = useState([]);
-    const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -25,10 +25,9 @@ const AdminDashboard = () => {
     useEffect(() => {
         const fetchDashboardData = async () => {
             try {
-                const [userRes, appsRes, inboxRes] = await Promise.all([
+                const [userRes, appsRes] = await Promise.all([
                     fetch('/api/admin/me'),
                     fetch('/api/admin/applications/pending-validation'),
-                    fetch('/api/inbox/messages')
                 ]);
 
                 if (userRes.ok) {
@@ -48,11 +47,6 @@ const AdminDashboard = () => {
                     const appsData = await appsRes.json();
                     setApplications(appsData.applications || []);
                 }
-
-                if (inboxRes.ok) {
-                    const inboxData = await inboxRes.json();
-                    setMessages(inboxData.messages || []);
-                }
             } catch (err) {
                 console.error("Failed to fetch dashboard data:", err);
             } finally {
@@ -67,38 +61,7 @@ const AdminDashboard = () => {
 
     return (
         <div className="bg-slate-50 text-slate-900 antialiased font-body min-h-screen flex flex-col">
-            {/* TopNavBar (Shared Component) */}
-            <header className="sticky top-0 z-50 flex justify-between items-center w-full px-8 h-16 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800">
-                <div className="flex items-center gap-8">
-                    <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/')}>
-                        <div className="flex items-center justify-center size-8 rounded-lg bg-primary text-white">
-                            <span className="material-symbols-outlined text-xl">hub</span>
-                        </div>
-                        <span className="text-xl font-bold tracking-tight text-primary font-headline">CampusConnect Admin</span>
-                    </div>
-                    <nav className="hidden md:flex items-center gap-6">
-                        <a className="text-primary border-b-2 border-primary pb-4 mt-4 transition-colors font-medium text-sm" href="#">Dashboard</a>
-                        <a className="text-slate-600 dark:text-slate-400 pb-4 mt-4 hover:text-primary transition-colors font-medium text-sm" href="/admin-inbox">Inbox</a>
-                        <a className="text-slate-600 dark:text-slate-400 pb-4 mt-4 hover:text-primary transition-colors font-medium text-sm" href="#">Statistics</a>
-                        <a className="text-slate-600 dark:text-slate-400 pb-4 mt-4 hover:text-primary transition-colors font-medium text-sm" href="#">Settings</a>
-                    </nav>
-                </div>
-                <div className="flex items-center gap-4">
-                    <div className="relative hidden lg:block">
-                        <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
-                        <input className="pl-9 pr-4 py-1.5 bg-slate-100 dark:bg-slate-800 border-none rounded-full text-sm w-64 focus:ring-2 focus:ring-primary outline-none" placeholder="Search records..." type="text" />
-                    </div>
-                    <button className="p-2 text-slate-500 hover:text-primary transition-colors relative" onClick={() => navigate('/admin-inbox')}>
-                        <span className="material-symbols-outlined text-[20px]">notifications</span>
-                        {messages.some(msg => msg.unread) && (
-                            <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-950"></span>
-                        )}
-                    </button>
-                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden ml-2 ring-1 ring-primary/20 text-primary bg-cover bg-center" style={{ backgroundImage: user.profilePicture ? `url('${user.profilePicture}')` : 'none' }}>
-                        {!user.profilePicture && <span className="material-symbols-outlined text-[18px]">person</span>}
-                    </div>
-                </div>
-            </header>
+            <AdminNavbar admin={user} />
 
             <div className="flex flex-1 overflow-hidden">
                 {/* SideNavBar (Shared Component) */}

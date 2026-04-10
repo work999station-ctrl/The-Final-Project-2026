@@ -107,7 +107,7 @@ const Home = () => {
                         <div className="flex items-center justify-center size-10 rounded-lg bg-primary text-white">
                             <span className="material-symbols-outlined">hub</span>
                         </div>
-                        <h2 className="text-slate-900 dark:text-white text-xl font-bold leading-tight tracking-tight">CampusConnect</h2>
+                        <h2 className="text-slate-900 dark:text-white text-xl font-bold leading-tight tracking-tight">stage.io</h2>
                     </div>
                     <nav className="hidden md:flex items-center gap-8">
                         <a className="text-sm font-semibold hover:text-primary transition-colors" href="#students">Students</a>
@@ -369,7 +369,7 @@ const Home = () => {
                                 <div className="flex items-center justify-center size-10 rounded-lg bg-primary text-white">
                                     <span className="material-symbols-outlined">hub</span>
                                 </div>
-                                <h2 className="text-xl font-bold tracking-tight">CampusConnect</h2>
+                                <h2 className="text-xl font-bold tracking-tight">stage.io</h2>
                             </div>
                             <p className="text-sm leading-relaxed mb-6">The premier platform for connecting academic brilliance with industrial innovation.</p>
                             <div className="flex gap-4">
@@ -409,7 +409,7 @@ const Home = () => {
                         </div>
                     </div>
                     <div className="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
-                        <p>© 2024 CampusConnect Inc. All rights reserved.</p>
+                        <p>© 2024 stage.io Inc. All rights reserved.</p>
                         <div className="flex gap-8">
                             <a className="hover:text-white transition-colors" href="#">Facebook</a>
                             <a className="hover:text-white transition-colors" href="#">Twitter</a>

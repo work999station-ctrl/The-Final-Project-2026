@@ -101,7 +101,7 @@ const StudentSignup = () => {
                             <div className="flex items-center justify-center size-10 rounded-lg bg-primary text-white">
                                 <span className="material-symbols-outlined">hub</span>
                             </div>
-                            <h2 className="text-slate-900 dark:text-white text-xl font-bold leading-tight tracking-tight">CampusConnect</h2>
+                            <h2 className="text-slate-900 dark:text-white text-xl font-bold leading-tight tracking-tight">stage.io</h2>
                         </div>
                         <div className="flex items-center gap-4">
                             <span className="hidden md:block text-slate-500 text-sm">Already have an account?</span>
@@ -264,7 +264,7 @@ const StudentSignup = () => {
                     </main>
 
                     <footer className="mt-auto py-8 text-center text-slate-400 text-sm border-t border-slate-200 dark:border-slate-800">
-                        © 2024 CampusConnect Inc. All rights reserved.
+                        © 2024 stage.io Inc. All rights reserved.
                     </footer>
                 </div>
             </div>

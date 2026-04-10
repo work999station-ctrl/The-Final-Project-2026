@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
+import CompanyNavbar from '../components/CompanyNavbar';
 
 const CompanyDashboard = () => {
     const navigate = useNavigate();
@@ -15,7 +16,7 @@ const CompanyDashboard = () => {
         hiredCount: 0,
         pendingReviews: 0
     });
-    const [messages, setMessages] = useState([]);
+
 
     useEffect(() => {
         const fetchCompanyProfile = async () => {
@@ -51,12 +52,7 @@ const CompanyDashboard = () => {
                             setStats(statsData.stats);
                         }
 
-                        // Fetch inbox messages for unread dot
-                        const inboxRes = await fetch('/api/inbox/messages');
-                        if (inboxRes.ok) {
-                            const inboxData = await inboxRes.json();
-                            setMessages(inboxData.messages || []);
-                        }
+
                     } catch (err) {
                         console.error('Error fetching dashboard data:', err);
                     } finally {
@@ -120,45 +116,7 @@ const CompanyDashboard = () => {
 
     return (
         <div className="bg-background-light dark:bg-slate-900 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-display">
-            {/* Top Navigation Bar */}
-            <header className="sticky top-0 z-50 w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 lg:px-12 py-4">
-                <div className="max-w-[1600px] mx-auto flex items-center justify-between">
-                    <div className="flex items-center gap-8">
-                        <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/')}>
-                            <div className="flex items-center justify-center size-10 rounded-lg bg-primary text-white">
-                                <span className="material-symbols-outlined font-bold">hub</span>
-                            </div>
-                            <h2 className="text-xl font-bold font-header tracking-tight text-slate-900 dark:text-white">CampusConnect</h2>
-                        </div>
-                        <nav className="hidden md:flex items-center gap-6">
-                            <a className="text-primary font-semibold text-sm" href="#">Dashboard</a>
-                            <a className="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm font-medium" href="/candidate-tracking-statistics">Postings</a>
-                            <a className="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm font-medium" href="/company-inbox">Inbox</a>
-                            <a className="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm font-medium" href="#">Talent Pool</a>
-                            <a className="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm font-medium" href="#">Analytics</a>
-                        </nav>
-                    </div>
-                    <div className="flex items-center gap-4">
-                        <div className="relative hidden sm:block">
-                            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
-                            <input className="bg-slate-100 dark:bg-slate-800 border-none rounded-full pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/50 w-64 outline-none" placeholder="Search students..." type="text" />
-                        </div>
-                        <button className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors relative" onClick={() => navigate('/company-inbox')}>
-                            <span className="material-symbols-outlined">notifications</span>
-                            {messages.some(msg => msg.unread) && (
-                                <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
-                            )}
-                        </button>
-                        <div className="h-10 w-10 rounded-full bg-primary/10 border-2 border-primary/20 flex items-center justify-center overflow-hidden cursor-pointer">
-                            {company.logo ? (
-                                <img alt="Company Admin" className="w-full h-full object-cover" src={company.logo} />
-                            ) : (
-                                <span className="material-symbols-outlined text-primary">person</span>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </header>
+            <CompanyNavbar company={company} />
 
             <main className="max-w-[1600px] mx-auto w-full p-6 lg:p-12 flex-1">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 relative items-start">

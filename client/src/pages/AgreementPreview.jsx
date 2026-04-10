@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { QRCodeSVG } from 'qrcode.react';
 
 const AgreementPreview = () => {
     const { applicationId } = useParams();
@@ -202,6 +203,34 @@ const AgreementPreview = () => {
                                             </div>
                                         </div>
                                         <p className="text-[9px] sm:text-[10px] text-slate-400 mt-1 italic">Verified University Admin</p>
+                                    </div>
+                                </div>
+
+                                {/* QR Code Section */}
+                                <div className="mt-8 pt-6 border-t border-slate-200 flex items-center justify-between gap-6">
+                                    <div className="flex-1">
+                                        <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Document Authenticity</p>
+                                        <p className="text-xs text-slate-500 leading-relaxed">
+                                            Scan this QR code to verify the authenticity of this internship agreement.
+                                            Each code is uniquely generated for <strong className="text-slate-700">{data.studentName}</strong> and encodes
+                                            all critical agreement identifiers.
+                                        </p>
+                                        <p className="font-mono text-[9px] text-slate-400 mt-2 break-all">
+                                            ID: AGR-{applicationId || 'DEMO'}-{data.studentName?.replace(/\s+/g, '').toUpperCase().slice(0, 6)}
+                                        </p>
+                                    </div>
+                                    <div className="flex flex-col items-center gap-2 shrink-0">
+                                        <div className="p-2 bg-white border border-slate-200 rounded-lg shadow-sm">
+                                            <QRCodeSVG
+                                                value={`INTERNSHIP AGREEMENT\nStudent: ${data.studentName}\nUniversity: ${data.universityName}\nCompany: ${data.companyName}\nRole: ${data.offerTitle}\nPeriod: ${data.startDate} to ${data.endDate}\nRef: AGR-${applicationId || 'DEMO'}-${data.studentName?.replace(/\s+/g, '').toUpperCase().slice(0, 6)}`}
+                                                size={100}
+                                                level="M"
+                                                includeMargin={false}
+                                                fgColor="#0f172a"
+                                                bgColor="#ffffff"
+                                            />
+                                        </div>
+                                        <p className="text-[8px] text-slate-400 uppercase tracking-widest font-medium">Scan to Verify</p>
                                     </div>
                                 </div>
                             </div>

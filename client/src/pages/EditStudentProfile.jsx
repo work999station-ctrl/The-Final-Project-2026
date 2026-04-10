@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import StudentNavbar from '../components/StudentNavbar';
 
 const EditStudentProfile = () => {
     const navigate = useNavigate();
@@ -11,9 +12,22 @@ const EditStudentProfile = () => {
         university: '',
         currentYear: '',
         country: '',
-        githubPortfolio: ''
+        githubPortfolio: '',
+        baccalaureate: '',
+        bio: '',
+        degreeName: '',
+        universityCity: '',
+        expectedGraduationDate: ''
     });
     const [skills, setSkills] = useState([]);
+    const [technicalSkills, setTechnicalSkills] = useState({
+        programmingLanguages: [],
+        frameworksTools: [],
+        design: [],
+        languages: []
+    });
+    const [academicProjects, setAcademicProjects] = useState([]);
+    const [experience, setExperience] = useState([]);
     const [profilePicFile, setProfilePicFile] = useState(null);
     const [profilePicPreview, setProfilePicPreview] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -37,9 +51,17 @@ const EditStudentProfile = () => {
                         university: data.user.university || '',
                         currentYear: data.user.currentYear || '',
                         country: data.user.country || '',
-                        githubPortfolio: data.user.githubPortfolio || ''
+                        githubPortfolio: data.user.githubPortfolio || '',
+                        baccalaureate: data.user.baccalaureate || '',
+                        bio: data.user.bio || '',
+                        degreeName: data.user.degreeName || '',
+                        universityCity: data.user.universityCity || '',
+                        expectedGraduationDate: data.user.expectedGraduationDate || ''
                     });
                     setSkills(data.user.skills || []);
+                    setTechnicalSkills(data.user.technicalSkills || { programmingLanguages: [], frameworksTools: [], design: [], languages: [] });
+                    setAcademicProjects(data.user.academicProjects || []);
+                    setExperience(data.user.experience || []);
                     if (data.user.profilePicture) {
                         setProfilePicPreview(data.user.profilePicture);
                     }
@@ -96,6 +118,12 @@ const EditStudentProfile = () => {
         setIsSaving(true);
         setError('');
 
+        if (formData.githubPortfolio && !/^https?:\/\/(www\.)?github\.com\/[a-zA-Z0-9_-]+/.test(formData.githubPortfolio)) {
+            setError('Please enter a valid GitHub profile link.');
+            setIsSaving(false);
+            return;
+        }
+
         try {
             const submitData = new FormData();
             Object.keys(formData).forEach(key => {
@@ -103,6 +131,9 @@ const EditStudentProfile = () => {
             });
             // Append skills as JSON string
             submitData.append('skills', JSON.stringify(skills));
+            submitData.append('technicalSkills', JSON.stringify(technicalSkills));
+            submitData.append('academicProjects', JSON.stringify(academicProjects));
+            submitData.append('experience', JSON.stringify(experience));
             if (profilePicFile) {
                 submitData.append('profile_picture', profilePicFile);
             }
@@ -139,36 +170,7 @@ const EditStudentProfile = () => {
         <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen font-display">
             <div className="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
                 <div className="layout-container flex h-full grow flex-col">
-                    <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 px-6 lg:px-40 py-4 bg-white dark:bg-slate-900 sticky top-0 z-50">
-                        <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/')}>
-                            <div className="flex items-center justify-center size-10 rounded-lg bg-primary text-white">
-                                <span className="material-symbols-outlined">hub</span>
-                            </div>
-                            <h2 className="text-slate-900 dark:text-white text-xl font-bold leading-tight tracking-tight">CampusConnect</h2>
-                        </div>
-                        <div className="flex flex-1 justify-end gap-6 items-center">
-                            <nav className="hidden md:flex items-center gap-8">
-                                <a className="text-slate-600 dark:text-slate-400 hover:text-primary text-sm font-medium transition-colors border-b-2 border-transparent hover:border-primary pb-1" href="#" onClick={(e) => { e.preventDefault(); navigate('/student-dashboard'); }}>Dashboard</a>
-                                <a className="text-slate-600 dark:text-slate-400 hover:text-primary text-sm font-medium transition-colors" href="#">Offer Discovery</a>
-                                <a className="text-slate-600 dark:text-slate-400 hover:text-primary text-sm font-medium transition-colors" href="#">Messages</a>
-                                <a className="text-primary font-semibold text-sm transition-colors border-b-2 border-primary pb-1" href="#">Profile</a>
-                            </nav>
-                            <div className="flex items-center gap-4 border-l border-slate-200 dark:border-slate-800 pl-6">
-                                <button className="flex items-center justify-center rounded-full size-10 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-primary/10 hover:text-primary transition-all">
-                                    <span className="material-symbols-outlined text-[20px]">notifications</span>
-                                </button>
-                                <div className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 ring-2 ring-primary/20 overflow-hidden cursor-pointer">
-                                    {profilePicPreview ? (
-                                        <img src={profilePicPreview} alt="Profile" className="w-full h-full object-cover" />
-                                    ) : (
-                                        <div className="w-full h-full bg-primary/10 flex items-center justify-center">
-                                            <span className="material-symbols-outlined text-primary">person</span>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    </header>
+                    <StudentNavbar />
 
                     <main className="flex-1 flex flex-col items-center py-10 px-4 md:px-10">
                         <div className="max-w-4xl w-full">
@@ -265,7 +267,53 @@ const EditStudentProfile = () => {
                                         </div>
                                     </div>
 
-                                    {/* Row 2: University and Current Year */}
+                                    {/* Education Row: Degree, University City, Expected Graduation */}
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                        <div className="flex flex-col gap-2">
+                                            <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
+                                                <span className="material-symbols-outlined text-primary text-lg">workspace_premium</span>
+                                                Degree Name
+                                            </label>
+                                            <input
+                                                className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all"
+                                                placeholder="e.g. Bachelor of Science in IT"
+                                                type="text"
+                                                name="degreeName"
+                                                value={formData.degreeName}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                        <div className="flex flex-col gap-2">
+                                            <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
+                                                <span className="material-symbols-outlined text-primary text-lg">school</span>
+                                                University & City
+                                            </label>
+                                            <input
+                                                className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all"
+                                                placeholder="University of Algiers, Algiers"
+                                                type="text"
+                                                name="universityCity"
+                                                value={formData.universityCity}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                        <div className="flex flex-col gap-2">
+                                            <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
+                                                <span className="material-symbols-outlined text-primary text-lg">event</span>
+                                                Expected Graduation Date
+                                            </label>
+                                            <input
+                                                className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all"
+                                                placeholder="e.g. June 2026"
+                                                type="text"
+                                                name="expectedGraduationDate"
+                                                value={formData.expectedGraduationDate}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Legacy University and Current Year */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                         <div className="flex flex-col gap-2">
                                             <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
@@ -329,18 +377,54 @@ const EditStudentProfile = () => {
                                         </div>
                                     </div>
 
-                                    {/* Skills Section */}
-                                    <div className="flex flex-col gap-3">
-                                        <div className="flex items-center justify-between">
+                                    {/* Row 4: Baccalaureate */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                        <div className="flex flex-col gap-2">
                                             <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
-                                                <span className="material-symbols-outlined text-primary text-lg">psychology</span>
-                                                Skills
+                                                <span className="material-symbols-outlined text-primary text-lg">workspace_premium</span>
+                                                Baccalaureate Graduation Year
+                                            </label>
+                                            <select
+                                                className="form-select w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all"
+                                                name="baccalaureate"
+                                                value={formData.baccalaureate}
+                                                onChange={handleChange}
+                                            >
+                                                <option value="">Select Year</option>
+                                                {Array.from({ length: 2026 - 1980 + 1 }, (_, i) => 2026 - i).map(year => (
+                                                    <option key={year} value={year}>{year}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    {/* Row 5: Bio */}
+                                    <div className="flex flex-col gap-2">
+                                        <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
+                                            <span className="material-symbols-outlined text-primary text-lg">article</span>
+                                            Bio / About Me
+                                        </label>
+                                        <textarea
+                                            className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all min-h-[120px] resize-y"
+                                            placeholder="Write a short bio about yourself, your goals, and what makes you unique..."
+                                            name="bio"
+                                            value={formData.bio}
+                                            onChange={handleChange}
+                                        ></textarea>
+                                    </div>
+
+                                    {/* Skills Section */}
+                                    <div className="flex flex-col gap-3 pt-6 border-t border-slate-200 dark:border-slate-800">
+                                        <div className="flex items-center justify-between mt-2">
+                                            <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5 border-none">
+                                                <span className="material-symbols-outlined text-primary text-xl">psychology</span>
+                                                <span className="font-header text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">Skills</span>
                                             </label>
                                             <div className="relative">
                                                 <button
                                                     type="button"
                                                     onClick={() => setShowSkillsDropdown(!showSkillsDropdown)}
-                                                    className="flex items-center gap-1 px-4 h-9 bg-primary/10 text-primary rounded-full text-sm font-semibold hover:bg-primary/20 transition-all"
+                                                    className="flex items-center gap-1 px-4 h-9 bg-primary/10 text-primary rounded-full text-sm font-semibold hover:bg-primary/20 transition-all shrink-0"
                                                 >
                                                     <span className="material-symbols-outlined text-lg">add</span>
                                                     Add Skill
@@ -391,6 +475,116 @@ const EditStudentProfile = () => {
                                             ))}
                                         </div>
                                     </div>
+
+                                    {/* Academic Projects Section */}
+                                    <div className="flex flex-col gap-6 pt-6 border-t border-slate-200 dark:border-slate-800">
+                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                            <div>
+                                                <h3 className="font-header text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                                    <span className="material-symbols-outlined text-primary">terminal</span>
+                                                    Academic Projects
+                                                </h3>
+                                                <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">This is where you prove you can code. Describe 2–3 projects.</p>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => setAcademicProjects([...academicProjects, { title: '', role: '', technologies: '', result: '', link: '' }])}
+                                                className="flex items-center justify-center gap-1 px-4 h-10 bg-primary/10 text-primary rounded-full text-sm font-semibold hover:bg-primary/20 transition-all shrink-0"
+                                            >
+                                                <span className="material-symbols-outlined text-lg">add</span>
+                                                Add Project
+                                            </button>
+                                        </div>
+
+                                        {academicProjects.map((proj, idx) => (
+                                            <div key={idx} className="p-6 bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-700 rounded-xl flex flex-col gap-5 relative">
+                                                <button 
+                                                    type="button" 
+                                                    onClick={() => setAcademicProjects(academicProjects.filter((_, i) => i !== idx))}
+                                                    className="absolute top-4 right-4 text-slate-400 hover:text-red-500 transition-colors"
+                                                >
+                                                    <span className="material-symbols-outlined">delete</span>
+                                                </button>
+                                                
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-2">
+                                                    <div className="flex flex-col gap-2">
+                                                        <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold">Project Title</label>
+                                                        <input type="text" value={proj.title} onChange={(e) => { const newP = [...academicProjects]; newP[idx].title = e.target.value; setAcademicProjects(newP); }} className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-2" placeholder="e.g. E-commerce App using Flutter" />
+                                                    </div>
+                                                    <div className="flex flex-col gap-2">
+                                                        <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold">Your Role</label>
+                                                        <input type="text" value={proj.role} onChange={(e) => { const newP = [...academicProjects]; newP[idx].role = e.target.value; setAcademicProjects(newP); }} className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-2" placeholder="Briefly explain what you built" />
+                                                    </div>
+                                                </div>
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                                    <div className="flex flex-col gap-2">
+                                                        <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold">Technologies Used</label>
+                                                        <input type="text" value={proj.technologies} onChange={(e) => { const newP = [...academicProjects]; newP[idx].technologies = e.target.value; setAcademicProjects(newP); }} className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-2" placeholder="e.g. Used MongoDB for the backend and Flutter for the UI" />
+                                                    </div>
+                                                    <div className="flex flex-col gap-2">
+                                                        <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold">Project Link (Optional)</label>
+                                                        <input type="url" value={proj.link || ''} onChange={(e) => { const newP = [...academicProjects]; newP[idx].link = e.target.value; setAcademicProjects(newP); }} className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-2" placeholder="e.g. https://github.com/my-project" />
+                                                    </div>
+                                                </div>
+                                                <div className="flex flex-col gap-2">
+                                                    <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold">Result</label>
+                                                    <textarea value={proj.result} onChange={(e) => { const newP = [...academicProjects]; newP[idx].result = e.target.value; setAcademicProjects(newP); }} className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-2 min-h-[80px]" placeholder="e.g. Successfully implemented a real-time payment notification system." />
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* Experience Section */}
+                                    <div className="flex flex-col gap-6 pt-6 border-t border-slate-200 dark:border-slate-800">
+                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                            <div>
+                                                <h3 className="font-header text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                                    <span className="material-symbols-outlined text-primary">work</span>
+                                                    Experience (Work or Volunteer)
+                                                </h3>
+                                                <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Include part-time jobs, volunteering, or club involvement.</p>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => setExperience([...experience, { type: 'Part-time jobs', role: '', description: '' }])}
+                                                className="flex items-center gap-1 px-4 h-10 bg-primary/10 text-primary rounded-full text-sm font-semibold hover:bg-primary/20 transition-all shrink-0 justify-center"
+                                            >
+                                                <span className="material-symbols-outlined text-lg">add</span>
+                                                Add Experience
+                                            </button>
+                                        </div>
+
+                                        {experience.map((exp, idx) => (
+                                            <div key={idx} className="p-6 bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-700 rounded-xl flex flex-col gap-5 relative">
+                                                <button 
+                                                    type="button" 
+                                                    onClick={() => setExperience(experience.filter((_, i) => i !== idx))}
+                                                    className="absolute top-4 right-4 text-slate-400 hover:text-red-500 transition-colors"
+                                                >
+                                                    <span className="material-symbols-outlined">delete</span>
+                                                </button>
+                                                
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-2">
+                                                    <div className="flex flex-col gap-2">
+                                                        <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold">Experience Type</label>
+                                                        <select value={exp.type} onChange={(e) => { const newE = [...experience]; newE[idx].type = e.target.value; setExperience(newE); }} className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-2 h-11">
+                                                            <option>Part-time jobs</option>
+                                                            <option>Volunteering</option>
+                                                            <option>Club involvement</option>
+                                                        </select>
+                                                    </div>
+                                                    <div className="flex flex-col gap-2">
+                                                        <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold">Role or Title</label>
+                                                        <input type="text" value={exp.role} onChange={(e) => { const newE = [...experience]; newE[idx].role = e.target.value; setExperience(newE); }} className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-2" placeholder="e.g. Member of Tech Club" />
+                                                    </div>
+                                                </div>
+                                                <div className="flex flex-col gap-2">
+                                                    <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold">Description</label>
+                                                    <textarea value={exp.description} onChange={(e) => { const newE = [...experience]; newE[idx].description = e.target.value; setExperience(newE); }} className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-2 min-h-[80px]" placeholder="Briefly explain what you did and the skills you gained" />
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
 
                                 {/* Footer Actions */}
@@ -431,7 +625,7 @@ const EditStudentProfile = () => {
                     </main>
 
                     <footer className="py-10 text-center text-slate-400 text-sm">
-                        © 2024 CampusConnect Inc. All rights reserved.
+                        © 2024 stage.io Inc. All rights reserved.
                     </footer>
                 </div>
             </div>

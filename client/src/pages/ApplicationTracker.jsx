@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import StudentNavbar from '../components/StudentNavbar';
 
 const ApplicationTracker = () => {
     const navigate = useNavigate();
@@ -65,32 +66,7 @@ const ApplicationTracker = () => {
 
     return (
         <div className="bg-slate-50 text-slate-900 antialiased min-h-screen">
-            {/* Top Navigation Bar */}
-            <header className="bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none sticky top-0 z-50">
-                <div className="flex justify-between items-center h-16 px-6 w-full max-w-full mx-auto font-sans antialiased text-sm font-medium">
-                    <div className="flex items-center gap-8">
-                        <span className="text-2xl font-black tracking-tight text-indigo-700 dark:text-indigo-300 font-headline">InternHub</span>
-                        <nav className="hidden md:flex items-center gap-6">
-                            <a className="text-slate-500 dark:text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors duration-150" href="#">Dashboard</a>
-                            <a className="text-slate-500 dark:text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors duration-150" href="#">Offers</a>
-                            <a className="text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400 pb-1 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors duration-150" href="#">Applications</a>
-                            <a className="text-slate-500 dark:text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors duration-150" href="#">Candidates</a>
-                            <a className="text-slate-500 dark:text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors duration-150" href="#">Analytics</a>
-                        </nav>
-                    </div>
-                    <div className="flex items-center gap-4">
-                        <button className="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors">
-                            <span className="material-symbols-outlined" data-icon="notifications">notifications</span>
-                        </button>
-                        <button className="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors">
-                            <span className="material-symbols-outlined" data-icon="settings">settings</span>
-                        </button>
-                        <div className="h-8 w-8 rounded-full bg-indigo-100 overflow-hidden border border-slate-200">
-                            <img alt="User profile avatar" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9Yb_dyvx3futMXNiynqNBsoUKEyMgo09xtnByE9bBu7UdAfbK2dGglvqI_DFZqsOH79imhFsL4vG8tVWlAXw_ZIJSLklRJRsNcJaQNfB3qy70cVMIjYnF3BCwNrHLAp8TYppMsmGgIxY-ABeYLgDF_CW_WAMKMJaumNKss7pfQurMYAooS0wMlT1dDYqGHFBK8Z6lD9O0Y8ocZSygnHfjMA_weDo75pgh6iO4tSzu60iMbLOgXnAKu7UFSa0QcwDQpKGdKeezwwg" />
-                        </div>
-                    </div>
-                </div>
-            </header>
+            <StudentNavbar />
             <div className="flex min-h-[calc(100vh-64px)]">
                 {/* Sidebar Navigation */}
                 <aside className="hidden lg:flex fixed left-0 top-16 h-[calc(100vh-64px)] w-64 flex-col p-4 bg-slate-50 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 font-sans text-sm font-semibold">

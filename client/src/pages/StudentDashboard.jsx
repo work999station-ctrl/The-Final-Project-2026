@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
+import StudentNavbar from '../components/StudentNavbar';
 
 const StudentDashboard = () => {
     const navigate = useNavigate();
@@ -18,12 +19,10 @@ const StudentDashboard = () => {
     });
 
     const [offers, setOffers] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [offersLoading, setOffersLoading] = useState(false);
     const [page, setPage] = useState(1);
     const [hasMoreOffers, setHasMoreOffers] = useState(true);
     const [applyingTo, setApplyingTo] = useState(null);
-    const [messages, setMessages] = useState([]);
 
     const fetchOffers = async (pageNum) => {
         setOffersLoading(true);
@@ -86,17 +85,8 @@ const StudentDashboard = () => {
                 } else if (res.status === 401) {
                     window.location.href = '/student-signup';
                 }
-
-                // Fetch inbox messages for unread dot
-                const inboxRes = await fetch('/api/inbox/messages');
-                if (inboxRes.ok) {
-                    const inboxData = await inboxRes.json();
-                    setMessages(inboxData.messages || []);
-                }
             } catch (err) {
                 console.error("Failed to fetch dashboard data:", err);
-            } finally {
-                setLoading(false);
             }
         };
         fetchUserData();
@@ -108,43 +98,7 @@ const StudentDashboard = () => {
 
     return (
         <div className="bg-background-light text-text-main font-body min-h-screen flex flex-col antialiased selection:bg-primary/20 selection:text-primary">
-            {/* Top Navigation */}
-            <header className="sticky top-0 z-50 w-full bg-surface-light/80 backdrop-blur-md border-b border-border-color">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center justify-between h-16">
-                        {/* Logo */}
-                        <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
-                            <div className="size-10 bg-primary rounded-lg flex items-center justify-center text-white">
-                                <span className="material-symbols-outlined text-[24px]">hub</span>
-                            </div>
-                            <span className="font-display font-bold text-xl tracking-tight text-text-main">CampusConnect</span>
-                        </div>
-                        {/* Nav Links */}
-                        <nav className="hidden md:flex gap-8">
-                            <a className="text-primary font-medium text-sm border-b-2 border-primary py-5" href="#">Dashboard</a>
-                            <a className="text-text-muted hover:text-primary font-medium text-sm py-5 transition-colors" href="/opportunities">Offer Discovery</a>
-                            <a className="text-text-muted hover:text-primary font-medium text-sm py-5 transition-colors" href="/student-inbox">Messages</a>
-                            <a className="text-text-muted hover:text-primary font-medium text-sm py-5 transition-colors" href="/ApplicationTracker">Applications-Tracker</a>
-                        </nav>
-                        {/* User & Notifications */}
-                        <div className="flex items-center gap-4">
-                            <button className="text-text-muted hover:text-primary transition-colors relative" onClick={() => navigate('/student-inbox')}>
-                                <span className="material-symbols-outlined">notifications</span>
-                                {messages.some(msg => msg.unread) && (
-                                    <span className="absolute top-0 right-0 size-2 bg-red-500 rounded-full border-2 border-surface-light"></span>
-                                )}
-                            </button>
-                            <div
-                                className="size-9 rounded-full bg-gray-200 overflow-hidden border border-border-color bg-center bg-cover cursor-pointer hover:border-primary transition-all shadow-sm"
-                                style={{ backgroundImage: `url('${user.profilePicture}')` }}
-                                onClick={() => navigate('/edit-student-profile')}
-                                title="Edit Profile"
-                            >
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </header>
+            <StudentNavbar student={user} />
 
             {/* Main Content Layout */}
             <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

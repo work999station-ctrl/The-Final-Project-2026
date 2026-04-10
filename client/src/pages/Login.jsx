@@ -70,7 +70,7 @@ const Login = () => {
                             <div className="flex items-center justify-center size-10 rounded-lg bg-primary text-white">
                                 <span className="material-symbols-outlined">hub</span>
                             </div>
-                            <h2 className="text-slate-900 dark:text-white text-xl font-bold leading-tight tracking-tight">CampusConnect</h2>
+                            <h2 className="text-slate-900 dark:text-white text-xl font-bold leading-tight tracking-tight">stage.io</h2>
                         </div>
                         <div className="flex items-center gap-4">
                             <span className="hidden md:block text-slate-500 text-sm">New here?</span>

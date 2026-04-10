@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const SharedInbox = ({ userType, title, backLink, navTitle = "CampusConnect" }) => {
+const SharedInbox = ({ userType, title, backLink, navTitle = "stage.io" }) => {
     const navigate = useNavigate();
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);

@@ -91,7 +91,7 @@ const AdminAcceptanceValidation = () => {
                             <div className="flex items-center justify-center size-10 rounded-lg bg-indigo-700 text-white">
                                 <span className="material-symbols-outlined font-bold">hub</span>
                             </div>
-                            <span className="text-xl font-bold tracking-tight text-indigo-700 dark:text-indigo-300 font-headline uppercase">CampusConnect</span>
+                            <span className="text-xl font-bold tracking-tight text-indigo-700 dark:text-indigo-300 font-headline uppercase">stage.io</span>
                         </div>
                     </div>
                 </div>
