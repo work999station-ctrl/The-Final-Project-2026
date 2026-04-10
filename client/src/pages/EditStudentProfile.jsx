@@ -272,14 +272,20 @@ const EditStudentProfile = () => {
                                                 <span className="material-symbols-outlined text-primary text-lg">school</span>
                                                 University
                                             </label>
-                                            <input
-                                                className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all"
-                                                placeholder="University of Algiers"
-                                                type="text"
-                                                name="university"
-                                                value={formData.university}
-                                                onChange={handleChange}
-                                            />
+                                            <div className="relative">
+                                                <select
+                                                    className="form-select appearance-none w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all"
+                                                    name="university"
+                                                    value={formData.university}
+                                                    onChange={handleChange}
+                                                >
+                                                    <option disabled value="">Select your institution</option>
+                                                    <option value="University of Constantine 1">University of Constantine 1</option>
+                                                    <option value="University of Constantine 2">University of Constantine 2</option>
+                                                    <option value="University of Constantine 3">University of Constantine 3</option>
+                                                </select>
+                                                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
+                                            </div>
                                         </div>
                                         <div className="flex flex-col gap-2">
                                             <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">

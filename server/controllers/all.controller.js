@@ -1089,10 +1089,17 @@ const getInboxMessages = async (req, res) => {
           path: 'offerId',
           populate: { path: 'companyId', select: 'companyName logo' }
         })
-        .populate('studentId', 'name')
+        .populate('studentId', 'name university')
         .lean();
 
-      const validApplications = applications.filter(app => app.offerId);
+      const adminUni = req.user.universityName ? req.user.universityName.trim().toLowerCase() : '';
+
+      const validApplications = applications.filter(app => {
+        if (!app.offerId) return false;
+        if (!app.studentId || !app.studentId.university) return false;
+        const studentUni = app.studentId.university.trim().toLowerCase();
+        return studentUni === adminUni;
+      });
 
       messages = validApplications.map(app => ({
         id: app._id,
@@ -1253,6 +1260,114 @@ const getNotificationDetails = async (req, res) => {
   }
 };
 
+const getUniversityPlacementStats = async (req, res) => {
+  try {
+    if (req.userType !== 'admin') {
+      return res.status(403).json({ error: 'Unauthorized' });
+    }
+
+    const admin = await Admin.findById(req.user._id);
+    if (!admin) {
+      return res.status(404).json({ error: 'Admin not found' });
+    }
+
+    const universityName = admin.universityName;
+
+    const totalStudents = await Student.countDocuments({ university: universityName });
+
+    const students = await Student.find({ university: universityName }, '_id');
+    const studentIds = students.map(s => s._id);
+
+    const validatedApplications = await Application.countDocuments({
+      studentId: { $in: studentIds },
+      status: 'validated'
+    });
+
+    const acceptedApplications = await Application.countDocuments({
+      studentId: { $in: studentIds },
+      status: 'accepted'
+    });
+
+    const placedStudentsList = await Application.distinct('studentId', {
+      studentId: { $in: studentIds },
+      status: 'validated'
+    });
+    
+    const placedStudents = placedStudentsList.length;
+    const unplacedStudents = totalStudents - placedStudents;
+    const placementPercentage = totalStudents > 0 ? Math.round((placedStudents / totalStudents) * 100) : 0;
+
+    // Monthly Trends (Last N months)
+    const trendMonths = parseInt(req.query.months) || 3;
+    const pastDate = new Date();
+    pastDate.setMonth(pastDate.getMonth() - (trendMonths - 1));
+    pastDate.setDate(1);
+    pastDate.setHours(0, 0, 0, 0);
+
+    const trendApps = await Application.find({
+      studentId: { $in: studentIds },
+      status: { $in: ['accepted', 'validated'] },
+      $or: [
+        { statusChangedAt: { $gte: pastDate } },
+        { updatedAt: { $gte: pastDate } }
+      ]
+    });
+
+    const monthlyTrends = [];
+    if (trendMonths === 1) {
+      const bins = [
+        { label: '1st', min: 1, max: 10 },
+        { label: '10th', min: 10, max: 20 },
+        { label: '20th', min: 20, max: 28 },
+        { label: 'End', min: 28, max: 32 }
+      ];
+      const currentMonth = pastDate.getMonth();
+      const currentYear = pastDate.getFullYear();
+
+      for (const bin of bins) {
+        const count = trendApps.filter(app => {
+          const appDate = new Date(app.statusChangedAt || app.updatedAt || app.createdAt);
+          return appDate.getMonth() === currentMonth && 
+                 appDate.getFullYear() === currentYear &&
+                 appDate.getDate() >= bin.min && appDate.getDate() < bin.max;
+        }).length;
+        monthlyTrends.push({ month: bin.label, count });
+      }
+    } else {
+      for (let i = trendMonths - 1; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(1);
+        d.setMonth(d.getMonth() - i);
+        const monthYear = d.toLocaleString('en-US', { month: 'short' });
+        
+        const count = trendApps.filter(app => {
+          const appDate = new Date(app.statusChangedAt || app.updatedAt || app.createdAt);
+          return appDate.getMonth() === d.getMonth() && appDate.getFullYear() === d.getFullYear();
+        }).length;
+
+        monthlyTrends.push({ month: monthYear, count: count });
+      }
+    }
+
+    res.status(200).json({
+      success: true,
+      stats: {
+        totalStudents,
+        validatedApplications,
+        acceptedApplications,
+        placedStudents,
+        unplacedStudents,
+        placementPercentage,
+        monthlyTrends
+      }
+    });
+
+  } catch (err) {
+    console.error("Error fetching university placement stats:", err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 module.exports = {
-  studentSignup_get, studentSignup_post, studentDashboard_get, studentProfile_update, logout_get, login_post, login_get, companySignup_post, companySignup_get, companyProfile_update, adminSignup_post, adminProfile_update, createOffer, getAllOffers, getCompanyOffers, updateOffer, deleteOffer, getOfferById, createApplication, getCompanyApplications, getStudentProfileForRecruiter, getApplicationsByOfferId, updateApplicationStatus, getAdminApplicationsToValidate, getAdminAllApplications, getAdminCompanyProfile, getAdminApplicationById, validateApplicationAdmin, getStudentApplications, deleteApplication, getCompanyDashboardStats, getInboxMessages, markMessageAsRead, getNotificationDetails
+  studentSignup_get, studentSignup_post, studentDashboard_get, studentProfile_update, logout_get, login_post, login_get, companySignup_post, companySignup_get, companyProfile_update, adminSignup_post, adminProfile_update, createOffer, getAllOffers, getCompanyOffers, updateOffer, deleteOffer, getOfferById, createApplication, getCompanyApplications, getStudentProfileForRecruiter, getApplicationsByOfferId, updateApplicationStatus, getAdminApplicationsToValidate, getAdminAllApplications, getAdminCompanyProfile, getAdminApplicationById, validateApplicationAdmin, getStudentApplications, deleteApplication, getCompanyDashboardStats, getInboxMessages, markMessageAsRead, getNotificationDetails, getUniversityPlacementStats
 };

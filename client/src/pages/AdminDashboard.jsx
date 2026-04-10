@@ -77,10 +77,10 @@ const AdminDashboard = () => {
                         <span className="text-xl font-bold tracking-tight text-primary font-headline">CampusConnect Admin</span>
                     </div>
                     <nav className="hidden md:flex items-center gap-6">
-                        <a className="text-primary border-b-2 border-primary pb-4 mt-4 transition-colors font-medium text-sm" href="#">Dashboard</a>
+                        <a className="text-primary border-b-2 border-primary pb-4 mt-4 transition-colors font-medium text-sm" href="/admin-dashboard">Dashboard</a>
                         <a className="text-slate-600 dark:text-slate-400 pb-4 mt-4 hover:text-primary transition-colors font-medium text-sm" href="/admin-inbox">Inbox</a>
-                        <a className="text-slate-600 dark:text-slate-400 pb-4 mt-4 hover:text-primary transition-colors font-medium text-sm" href="#">Statistics</a>
-                        <a className="text-slate-600 dark:text-slate-400 pb-4 mt-4 hover:text-primary transition-colors font-medium text-sm" href="#">Settings</a>
+                        <a className="text-slate-600 dark:text-slate-400 pb-4 mt-4 hover:text-primary transition-colors font-medium text-sm" href="/university-placement-analytics">Statistics</a>
+                        <a className="text-slate-600 dark:text-slate-400 pb-4 mt-4 hover:text-primary transition-colors font-medium text-sm" href="/edit-admin-profile">Settings</a>
                     </nav>
                 </div>
                 <div className="flex items-center gap-4">
@@ -139,28 +139,7 @@ const AdminDashboard = () => {
                             </div>
                         </div>
 
-                        <nav className="space-y-1">
-                            <a className="flex items-center gap-3 bg-primary/10 dark:bg-primary/20 text-primary rounded-lg px-4 py-3 transition-all" href="#">
-                                <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>dashboard</span>
-                                <span className="text-sm font-semibold">Overview</span>
-                            </a>
-                            <a className="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-primary rounded-lg transition-all" href="#">
-                                <span className="material-symbols-outlined">school</span>
-                                <span className="text-sm font-semibold">Student Records</span>
-                            </a>
-                            <a className="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-primary rounded-lg transition-all" href="#">
-                                <span className="material-symbols-outlined">corporate_fare</span>
-                                <span className="text-sm font-semibold">Company Partners</span>
-                            </a>
-                            <a className="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-primary rounded-lg transition-all" href="#">
-                                <span className="material-symbols-outlined">fact_check</span>
-                                <span className="text-sm font-semibold">Validation Queue</span>
-                            </a>
-                            <a className="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-primary rounded-lg transition-all" href="#">
-                                <span className="material-symbols-outlined">analytics</span>
-                                <span className="text-sm font-semibold">Reports</span>
-                            </a>
-                        </nav>
+
                     </div>
 
                     <div className="mt-auto space-y-1 px-2">

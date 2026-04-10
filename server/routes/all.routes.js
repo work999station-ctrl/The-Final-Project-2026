@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 
-const { studentSignup_get, studentSignup_post, studentDashboard_get, studentProfile_update, logout_get, login_post, login_get, companySignup_get, companySignup_post, companyProfile_update, adminSignup_post, adminProfile_update, createOffer, getAllOffers, getCompanyOffers, updateOffer, deleteOffer, getOfferById, createApplication, getCompanyApplications, getStudentProfileForRecruiter, getApplicationsByOfferId, updateApplicationStatus, getAdminApplicationsToValidate, getAdminAllApplications, getAdminCompanyProfile, getAdminApplicationById, validateApplicationAdmin, getStudentApplications, deleteApplication, getCompanyDashboardStats, getInboxMessages, markMessageAsRead, getNotificationDetails } = require('../controllers/all.controller');
+const { studentSignup_get, studentSignup_post, studentDashboard_get, studentProfile_update, logout_get, login_post, login_get, companySignup_get, companySignup_post, companyProfile_update, adminSignup_post, adminProfile_update, createOffer, getAllOffers, getCompanyOffers, updateOffer, deleteOffer, getOfferById, createApplication, getCompanyApplications, getStudentProfileForRecruiter, getApplicationsByOfferId, updateApplicationStatus, getAdminApplicationsToValidate, getAdminAllApplications, getAdminCompanyProfile, getAdminApplicationById, validateApplicationAdmin, getStudentApplications, deleteApplication, getCompanyDashboardStats, getInboxMessages, markMessageAsRead, getNotificationDetails, getUniversityPlacementStats } = require('../controllers/all.controller');
 const { requireAuth, requireAuthAPI } = require('../middleware/authmiddleware');
 
 router.get('/student-Signup', studentSignup_get);
@@ -77,6 +77,7 @@ router.put('/api/admin/applications/:id/validate', requireAuthAPI, validateAppli
 router.get('/api/admin/applications', requireAuthAPI, getAdminAllApplications);
 router.get('/api/admin/company/:id', requireAuthAPI, getAdminCompanyProfile);
 router.get('/api/admin/application/:id', requireAuthAPI, getAdminApplicationById);
+router.get('/api/admin/university-placement-stats', requireAuthAPI, getUniversityPlacementStats);
 
 router.post('/api/logout', (req, res) => {
     res.cookie('jwt', '', { maxAge: 1 });

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import AdminSidebar from '../components/AdminSidebar';
 
 const AdminValidation = () => {
     const navigate = useNavigate();
@@ -127,44 +128,7 @@ const AdminValidation = () => {
     return (
         <div className="bg-background text-on-surface min-h-screen">
             {/* SideNavBar Shell */}
-            <aside className="fixed left-0 top-0 flex flex-col p-4 bg-slate-50 dark:bg-slate-950 h-screen w-64 border-r-0 z-40">
-                <div className="mb-8 px-4">
-                    <h1 className="font-['Space_Grotesk'] font-bold text-indigo-700 dark:text-indigo-400 text-xl tracking-tight">Pulse Portal</h1>
-                    <p className="text-xs text-on-surface-variant font-medium opacity-70">University Admin</p>
-                </div>
-                <nav className="flex-1 space-y-2">
-                    <a className="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-2 hover:bg-indigo-50/50 dark:hover:bg-indigo-900/20 rounded-full transition-all duration-300 ease-in-out" href="#">
-                        <span className="material-symbols-outlined">dashboard</span>
-                        <span className="font-['Inter'] font-medium text-sm">Dashboard</span>
-                    </a>
-                    <a className="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-2 hover:bg-indigo-50/50 dark:hover:bg-indigo-900/20 rounded-full transition-all duration-300 ease-in-out" href="#">
-                        <span className="material-symbols-outlined">description</span>
-                        <span className="font-['Inter'] font-medium text-sm">Applications</span>
-                    </a>
-                    <a className="flex items-center gap-3 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-full px-4 py-2 transition-all duration-300 ease-in-out" href="#">
-                        <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
-                        <span className="font-['Inter'] font-medium text-sm">Validate</span>
-                    </a>
-                    <a className="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-2 hover:bg-indigo-50/50 dark:hover:bg-indigo-900/20 rounded-full transition-all duration-300 ease-in-out" href="#">
-                        <span className="material-symbols-outlined">folder_open</span>
-                        <span className="font-['Inter'] font-medium text-sm">Documents</span>
-                    </a>
-                    <a className="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-2 hover:bg-indigo-50/50 dark:hover:bg-indigo-900/20 rounded-full transition-all duration-300 ease-in-out" href="#">
-                        <span className="material-symbols-outlined">bar_chart</span>
-                        <span className="font-['Inter'] font-medium text-sm">Stats</span>
-                    </a>
-                </nav>
-                <div className="mt-auto space-y-2 border-t border-outline-variant/10 pt-4">
-                    <a className="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-2 hover:bg-indigo-50/50 rounded-full" href="#">
-                        <span className="material-symbols-outlined">help</span>
-                        <span className="font-['Inter'] font-medium text-sm">Help</span>
-                    </a>
-                    <a className="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-2 hover:bg-indigo-50/50 rounded-full" href="#">
-                        <span className="material-symbols-outlined">logout</span>
-                        <span className="font-['Inter'] font-medium text-sm">Logout</span>
-                    </a>
-                </div>
-            </aside>
+            <AdminSidebar activePage="validate" adminUser={adminUser} />
 
             {/* TopAppBar Shell */}
             <header className="fixed top-0 z-30 flex justify-between items-center px-6 py-3 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl ml-64 w-[calc(100%-16rem)]">
