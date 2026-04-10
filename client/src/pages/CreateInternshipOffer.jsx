@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import CompanyNavbar from '../components/CompanyNavbar';
 
 const CreateInternshipOffer = () => {
     const navigate = useNavigate();
@@ -105,7 +106,7 @@ const CreateInternshipOffer = () => {
             // Success, navigate back to dashboard
             navigate('/company-dashboard');
 
-        } catch (err) {
+        } catch { // err swallowed
             setErrors({ general: 'Something went wrong. Please try again.' });
         } finally {
             setIsLoading(false);
@@ -202,6 +203,7 @@ const CreateInternshipOffer = () => {
 
     return (
         <div className="bg-[#f6f6f8] dark:bg-[#121121] font-display text-slate-900 dark:text-slate-100 antialiased min-h-screen">
+            <CompanyNavbar />
             {/* Background Dashboard (Blurred) */}
             <div className="fixed inset-0 z-0 overflow-hidden filter blur-sm grayscale-[0.2] opacity-50 pointer-events-none">
                 <div className="flex h-full grow flex-col">
@@ -418,7 +420,7 @@ const CreateInternshipOffer = () => {
                                     <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">expand_more</span>
                                 </div>
                             </div>
-                            
+
                             {/* Deadline */}
                             <div className="flex flex-col gap-2 col-span-2 md:col-span-4">
                                 <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Application Deadline</label>

@@ -1,35 +1,10 @@
 import React from 'react';
+import CompanyNavbar from '../components/CompanyNavbar';
 
 const CandidateTrackingJobSpecific = () => {
     return (
         <div className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased min-h-screen">
-            {/* TopNavBar */}
-            <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md font-sans antialiased text-sm docked full-width top-0 sticky z-50 border-b border-slate-200 dark:border-slate-800 shadow-sm flex justify-between items-center w-full px-6 py-3">
-                <div className="flex items-center gap-8">
-                    <span className="text-xl font-black tracking-tight text-indigo-700 dark:text-indigo-300">HireFlow</span>
-                    <nav className="hidden md:flex items-center gap-6">
-                        <a className="text-slate-500 dark:text-slate-400 font-medium hover:text-indigo-50 dark:hover:text-indigo-300 transition-colors" href="#">Dashboard</a>
-                        <a className="text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 pb-1 font-semibold" href="#">Postings</a>
-                        <a className="text-slate-500 dark:text-slate-400 font-medium hover:text-indigo-50 dark:hover:text-indigo-300 transition-colors" href="#">Candidates</a>
-                        <a className="text-slate-500 dark:text-slate-400 font-medium hover:text-indigo-50 dark:hover:text-indigo-300 transition-colors" href="#">Reports</a>
-                    </nav>
-                </div>
-                <div className="flex items-center gap-4">
-                    <div className="relative hidden lg:block">
-                        <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
-                        <input className="pl-10 pr-4 py-1.5 bg-slate-100 dark:bg-slate-800 border-none rounded-full text-xs focus:ring-2 focus:ring-indigo-500 w-64" placeholder="Search candidates..." type="text" />
-                    </div>
-                    <button className="text-slate-500 hover:text-indigo-600 transition-colors">
-                        <span className="material-symbols-outlined" data-icon="notifications">notifications</span>
-                    </button>
-                    <button className="text-slate-500 hover:text-indigo-600 transition-colors">
-                        <span className="material-symbols-outlined" data-icon="settings">settings</span>
-                    </button>
-                    <div className="h-8 w-8 rounded-full overflow-hidden border border-slate-200">
-                        <img alt="Recruiter profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEI6n30hUTWq1OKBp61sBEi5MyJK81GUA3SfHDS81_44exdLDLbjyVQ2p7u1LYKxylrYK5ZLWq99576fKo8H1qs_g7PktvwBOFmPCKAxz5kYEOvDs1JGsMo7XlZEhJTRI54EACtWNKttNL0cKLBTB-n_qwifJAyqzZ1ADGWhaMc4e5dndkA124kVfhfLzc7GaEBXYYkeDZq_7r8VxAOc9hrTeOaiqg2fZQkJrLrqwtWxcg9Vv-rz-8TdDJmpifnfHIuveMQ1jqcZo" />
-                    </div>
-                </div>
-            </header>
+            <CompanyNavbar />
 
             <div className="flex">
                 {/* SideNavBar */}

@@ -68,14 +68,20 @@ const studentProfile_update = async (req, res) => {
   try {
     let updateData = { ...req.body };
 
-    // Parse skills if it's a JSON string (from FormData)
-    if (typeof updateData.skills === 'string') {
-      try {
-        updateData.skills = JSON.parse(updateData.skills);
-      } catch (e) {
-        // If it's not valid JSON, keep as-is
-      }
+    if (updateData.githubPortfolio && !/^https?:\/\/(www\.)?github\.com\/[a-zA-Z0-9_-]+/.test(updateData.githubPortfolio)) {
+      return res.status(400).json({ error: 'Please enter a valid GitHub profile link.' });
     }
+
+    // Parse JSON string fields (from FormData)
+    ['skills', 'technicalSkills', 'academicProjects', 'experience'].forEach(field => {
+      if (typeof updateData[field] === 'string') {
+        try {
+          updateData[field] = JSON.parse(updateData[field]);
+        } catch (e) {
+          // Keep as is or ignore invalid JSON
+        }
+      }
+    });
 
     // If a file was uploaded, add its path to updateData
     if (req.file) {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import CompanySidebar from '../components/CompanySidebar';
+import CompanyNavbar from '../components/CompanyNavbar';
 
 const CandidateTrackingStatistics = () => {
     const navigate = useNavigate();
@@ -62,8 +62,8 @@ const CandidateTrackingStatistics = () => {
     const totalApplicants = filteredApplications.length;
     const totalPages = Math.ceil(totalApplicants / PAGE_SIZE);
     const paginatedApplications = filteredApplications.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
-    const showingFrom = totalApplicants === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1;
-    const showingTo = Math.min(currentPage * PAGE_SIZE, totalApplicants);
+    const _showingFrom = totalApplicants === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1;
+    const _showingTo = Math.min(currentPage * PAGE_SIZE, totalApplicants);
     const averageMatch = totalApplicants > 0
         ? Math.round(filteredApplications.reduce((acc, curr) => acc + curr.matchPercentage, 0) / totalApplicants)
         : 0;
@@ -131,36 +131,8 @@ const CandidateTrackingStatistics = () => {
 
     return (
         <div className="bg-slate-50 dark:bg-slate-950 font-body antialiased text-slate-900 dark:text-slate-100 min-h-screen">
-            {/* Header */}
-            <header className="bg-white dark:bg-slate-900 shadow-sm flex justify-between items-center w-full px-6 h-16 fixed top-0 z-50 border-b border-slate-200 dark:border-slate-800">
-                <div className="flex items-center gap-8">
-                    <span className="text-xl font-black tracking-tight text-indigo-700 dark:text-indigo-300">HireFlow</span>
-                    <nav className="hidden md:flex items-center gap-6">
-                        <a className="text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400 pb-1 font-sans antialiased cursor-pointer transition-opacity" href="#">Dashboard</a>
-                        <a className="text-slate-600 dark:text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-300 font-sans antialiased cursor-pointer transition-all" href="#">Candidates</a>
-                        <a className="text-slate-600 dark:text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-300 font-sans antialiased cursor-pointer transition-all" href="#">Jobs</a>
-                        <a className="text-slate-600 dark:text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-300 font-sans antialiased cursor-pointer transition-all" href="#">Analytics</a>
-                    </nav>
-                </div>
-                <div className="flex items-center gap-4">
-                    <button className="text-slate-600 dark:text-slate-400 hover:text-indigo-500 cursor-pointer p-2">
-                        <span className="material-symbols-outlined">notifications</span>
-                    </button>
-                    <button className="text-slate-600 dark:text-slate-400 hover:text-indigo-500 cursor-pointer p-2">
-                        <span className="material-symbols-outlined">settings</span>
-                    </button>
-                    {company?.logo ? (
-                        <img alt="Company Logo" className="w-8 h-8 rounded-full object-cover border border-slate-200" src={company.logo} />
-                    ) : (
-                        <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-xs uppercase">
-                            {company?.name?.substring(0, 2) || 'CP'}
-                        </div>
-                    )}
-                </div>
-            </header>
+            <CompanyNavbar company={company} />
 
-            {/* Sidebar */}
-            <CompanySidebar company={company} activePage="applications" />
 
             {/* Main Content */}
             <main className="md:ml-64 pt-20 p-6 min-h-screen">

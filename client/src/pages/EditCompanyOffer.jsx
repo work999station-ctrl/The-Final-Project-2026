@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import moment from 'moment';
+import CompanyNavbar from '../components/CompanyNavbar';
 
 const EditCompanyOffer = () => {
     const { id } = useParams();
@@ -238,6 +238,7 @@ const EditCompanyOffer = () => {
 
     return (
         <div className="bg-slate-50 dark:bg-slate-900 min-h-screen text-slate-900 dark:text-slate-100 font-sans">
+            <CompanyNavbar />
             <div className="max-w-4xl mx-auto py-12 px-6">
                 {/* Header */}
                 <div className="mb-8">

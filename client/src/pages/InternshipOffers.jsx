@@ -23,13 +23,14 @@ const InternshipOffers = () => {
     }, []);
 
     const [applyingTo, setApplyingTo] = useState(null);
+    const [limit, setLimit] = useState(6);
+    const [hasMore, setHasMore] = useState(false);
 
     // Fetch offers — re-runs whenever activeFilters changes
     const fetchOffers = useCallback(async () => {
         setOffersLoading(true);
         try {
-            
-            const params = new URLSearchParams({ limit: 6 });
+            const params = new URLSearchParams({ limit });
             if (activeFilters.wilaya) params.append('wilaya', activeFilters.wilaya);
             if (activeFilters.duration) params.append('duration', activeFilters.duration);
             if (activeFilters.type) params.append('type', activeFilters.type);
@@ -39,13 +40,14 @@ const InternshipOffers = () => {
             const data = await res.json();
             if (res.ok && data.success) {
                 setOffers(data.offers);
+                setHasMore(data.offers.length >= limit);
             }
         } catch (err) {
             console.error('Failed to fetch offers:', err);
         } finally {
             setOffersLoading(false);
         }
-    }, [activeFilters]);
+    }, [activeFilters, limit]);
 
     const handleApply = async (e, offerId) => {
         e.stopPropagation();
@@ -93,14 +95,21 @@ const InternshipOffers = () => {
     // Apply a filter and close dropdown
     const applyFilter = (key, value) => {
         setActiveFilters(prev => ({ ...prev, [key]: prev[key] === value ? '' : value }));
+        setLimit(6);
         setOpenFilter(null);
     };
 
     // Clear a single filter
-    const clearFilter = (key) => setActiveFilters(prev => ({ ...prev, [key]: '' }));
+    const clearFilter = (key) => {
+        setActiveFilters(prev => ({ ...prev, [key]: '' }));
+        setLimit(6);
+    };
 
     // Clear all filters
-    const clearAllFilters = () => setActiveFilters({ wilaya: '', duration: '', type: '', skill: '' });
+    const clearAllFilters = () => {
+        setActiveFilters({ wilaya: '', duration: '', type: '', skill: '' });
+        setLimit(6);
+    };
 
     const hasActiveFilters = Object.values(activeFilters).some(Boolean);
 
@@ -136,7 +145,7 @@ const InternshipOffers = () => {
                         <div className="size-8 text-[#4F46E5] flex items-center justify-center">
                             <span className="material-symbols-outlined text-[32px]">hub</span>
                         </div>
-                        <h2 className="text-[#0f0e1b] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] hidden sm:block">CampusConnect</h2>
+                        <h2 className="text-[#0f0e1b] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] hidden sm:block">stage.io</h2>
                     </div>
                     <div className="flex flex-1 justify-end gap-8 items-center">
                         <nav className="hidden md:flex items-center gap-9">
@@ -485,12 +494,14 @@ const InternshipOffers = () => {
 
 
                 {/* Pagination / Load More */}
-                <div className="flex justify-center pb-12">
-                    <button className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full text-sm font-medium text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-300 transition-all shadow-sm">
-                        Show More Opportunities
-                        <span className="material-symbols-outlined text-[18px]">expand_more</span>
-                    </button>
-                </div>
+                {hasMore && (
+                    <div className="flex justify-center pb-12">
+                        <button onClick={() => setLimit(prev => prev + 6)} className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full text-sm font-medium text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-300 transition-all shadow-sm">
+                            Show More Opportunities
+                            <span className="material-symbols-outlined text-[18px]">expand_more</span>
+                        </button>
+                    </div>
+                )}
             </main>
         </div>
     );

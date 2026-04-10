@@ -39,10 +39,40 @@ const studentSchema = mongoose.Schema({
         type: String,
         default: '',
     },
+
+    baccalaureate: {
+        type: String,
+        default: ''
+    },
+    bio: {
+        type: String,
+        default: ''
+    },
     skills: {
         type: [String],
         default: []
     },
+    degreeName: { type: String, default: '' },
+    universityCity: { type: String, default: '' },
+    expectedGraduationDate: { type: String, default: '' },
+    technicalSkills: {
+        programmingLanguages: { type: [String], default: [] },
+        frameworksTools: { type: [String], default: [] },
+        design: { type: [String], default: [] },
+        languages: { type: [String], default: [] }
+    },
+    academicProjects: [{
+        title: { type: String, default: '' },
+        role: { type: String, default: '' },
+        technologies: { type: String, default: '' },
+        result: { type: String, default: '' },
+        link: { type: String, default: '' }
+    }],
+    experience: [{
+        type: { type: String, default: '' },
+        role: { type: String, default: '' },
+        description: { type: String, default: '' }
+    }],
     profilePicture: {
         type: String,
         default: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDjBPPlZgqCxXn4rLkoiUfFHy3MP2QaQAbHzCF--6xNTr52Hop8mjrnlAeaIN-fCEshDEM6yUsNXF0GTpdEmLd_HxUV25KKAkcvhbYOTiZ2-t2MXeOexxuRZ3AXjdAYkGHQZkSS_KBwH14mHdxTRwTuzl_hmkabWkPMyWilyA5bApTa4vFXFuW7MjFwQCE6XUlleuLy2M-TUhBAaD_-MM92RVVtnN6fSGGoH-coRgTEIZdsXtrPeNx8JRpzFeGPOkfqcyWdRU8ZdBo'
