@@ -123,10 +123,10 @@ const StudentProfileRecruiterView = () => {
                                     Contact Candidate
                                 </a>
                                 {student.githubPortfolio && (
-                                    <a 
-                                        href={student.githubPortfolio.startsWith('http') ? student.githubPortfolio : `https://${student.githubPortfolio}`} 
-                                        target="_blank" 
-                                        rel="noopener noreferrer" 
+                                    <a
+                                        href={student.githubPortfolio.startsWith('http') ? student.githubPortfolio : `https://${student.githubPortfolio}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                         className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 px-6 py-2.5 rounded-lg font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-2"
                                     >
                                         <span className="material-symbols-outlined text-sm">code</span>
@@ -212,7 +212,7 @@ const StudentProfileRecruiterView = () => {
                         {student.experience && student.experience.length > 0 && (
                             <div className="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
                                 <h2 className="text-xl font-bold font-headline mb-6 flex items-center gap-2">
-                                    <span className="material-symbols-outlined text-indigo-600">work</span> 
+                                    <span className="material-symbols-outlined text-indigo-600">work</span>
                                     Experience
                                 </h2>
                                 <div className="space-y-6">
@@ -230,7 +230,7 @@ const StudentProfileRecruiterView = () => {
                         {student.academicProjects && student.academicProjects.length > 0 && (
                             <div className="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
                                 <h2 className="text-xl font-bold font-headline mb-6 flex items-center gap-2">
-                                    <span className="material-symbols-outlined text-indigo-600">terminal</span> 
+                                    <span className="material-symbols-outlined text-indigo-600">terminal</span>
                                     Academic Projects
                                 </h2>
                                 <div className="space-y-6">
@@ -240,12 +240,6 @@ const StudentProfileRecruiterView = () => {
                                             <p className="text-sm font-medium text-indigo-600 capitalize">Role: {proj.role}</p>
                                             <p className="text-sm text-slate-600 dark:text-slate-400 italic">Tech: {proj.technologies}</p>
                                             <p className="text-sm text-slate-600 dark:text-slate-400">{proj.result}</p>
-                                            {proj.link && (
-                                                <a href={proj.link.startsWith('http') ? proj.link : `https://${proj.link}`} target="_blank" rel="noopener noreferrer" className="text-sm text-indigo-600 hover:text-indigo-700 hover:underline flex items-center gap-1 mt-1 font-medium z-10 relative">
-                                                    <span className="material-symbols-outlined text-[16px]">link</span>
-                                                    View Project Site
-                                                </a>
-                                            )}
                                         </div>
                                     ))}
                                 </div>
@@ -309,14 +303,6 @@ const StudentProfileRecruiterView = () => {
                                     <p>{student.baccalaureate}</p>
                                 </div>
                             )}
-                            {(student.degreeName || student.universityCity || student.expectedGraduationDate) && (
-                                <div className="text-sm text-slate-600 dark:text-slate-400 space-y-1">
-                                    <h3 className="font-bold text-slate-900 dark:text-white mb-2 uppercase text-xs tracking-wide">Higher Education</h3>
-                                    {student.degreeName && <p><span className="font-semibold text-slate-800 dark:text-slate-200">Degree:</span> {student.degreeName}</p>}
-                                    {student.universityCity && <p><span className="font-semibold text-slate-800 dark:text-slate-200">City:</span> {student.universityCity}</p>}
-                                    {student.expectedGraduationDate && <p><span className="font-semibold text-slate-800 dark:text-slate-200">Expected Graduation:</span> {student.expectedGraduationDate}</p>}
-                                </div>
-                            )}
                             <div className="text-sm text-slate-600 dark:text-slate-400 italic bg-primary/5 p-3 rounded-lg border border-primary/10">
                                 "Quick View: Student is at {student.university} in their {student.currentYear}. Contact them via {student.email}."
                             </div>
@@ -326,10 +312,10 @@ const StudentProfileRecruiterView = () => {
                                     <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
                                         <span className="material-symbols-outlined text-lg">link</span>
                                         {student.githubPortfolio ? (
-                                            <a 
-                                                href={student.githubPortfolio.startsWith('http') ? student.githubPortfolio : `https://${student.githubPortfolio}`} 
-                                                target="_blank" 
-                                                rel="noopener noreferrer" 
+                                            <a
+                                                href={student.githubPortfolio.startsWith('http') ? student.githubPortfolio : `https://${student.githubPortfolio}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
                                                 className="truncate hover:text-indigo-600 transition-colors underline decoration-slate-200 hover:decoration-indigo-400 decoration-1 underline-offset-4"
                                             >
                                                 {student.githubPortfolio}

@@ -498,14 +498,14 @@ const EditStudentProfile = () => {
 
                                         {academicProjects.map((proj, idx) => (
                                             <div key={idx} className="p-6 bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-700 rounded-xl flex flex-col gap-5 relative">
-                                                <button 
-                                                    type="button" 
+                                                <button
+                                                    type="button"
                                                     onClick={() => setAcademicProjects(academicProjects.filter((_, i) => i !== idx))}
                                                     className="absolute top-4 right-4 text-slate-400 hover:text-red-500 transition-colors"
                                                 >
                                                     <span className="material-symbols-outlined">delete</span>
                                                 </button>
-                                                
+
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-2">
                                                     <div className="flex flex-col gap-2">
                                                         <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold">Project Title</label>
@@ -556,14 +556,14 @@ const EditStudentProfile = () => {
 
                                         {experience.map((exp, idx) => (
                                             <div key={idx} className="p-6 bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-slate-700 rounded-xl flex flex-col gap-5 relative">
-                                                <button 
-                                                    type="button" 
+                                                <button
+                                                    type="button"
                                                     onClick={() => setExperience(experience.filter((_, i) => i !== idx))}
                                                     className="absolute top-4 right-4 text-slate-400 hover:text-red-500 transition-colors"
                                                 >
                                                     <span className="material-symbols-outlined">delete</span>
                                                 </button>
-                                                
+
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-2">
                                                     <div className="flex flex-col gap-2">
                                                         <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold">Experience Type</label>
