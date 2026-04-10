@@ -420,7 +420,7 @@ const CreateInternshipOffer = () => {
                                     <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">expand_more</span>
                                 </div>
                             </div>
-                            
+
                             {/* Deadline */}
                             <div className="flex flex-col gap-2 col-span-2 md:col-span-4">
                                 <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Application Deadline</label>
