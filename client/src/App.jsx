@@ -28,6 +28,7 @@ import AdminAcceptanceValidation from './pages/AdminAcceptanceValidation';
 import NotificationDetails from './pages/NotificationDetails';
 import CompanyProfileStudentView from './pages/CompanyProfileStudentView';
 import UniversityPlacementAnalytics from './pages/UniversityPlacementAnalytics';
+import ApplicationDetails from './pages/ApplicationDetails';
 
 function App() {
   return (
@@ -63,6 +64,7 @@ function App() {
         <Route path="/CompanyInbox" element={<CompanyInbox />} />
         <Route path="/company-dashboard-student-view/:id" element={<CompanyProfileStudentView />} />
         <Route path="/university-placement-analytics" element={<UniversityPlacementAnalytics />} />
+        <Route path="/application-details/:applicationId" element={<ApplicationDetails />} />
 
       </Routes>
     </Router>
