@@ -28,7 +28,15 @@ const applicationSchema = mongoose.Schema({
     studentRead: {
         type: Boolean,
         default: false
-    }
+    },
+    feedback: [{
+        text: String,
+        authorName: String,
+        createdAt: {
+            type: Date,
+            default: Date.now
+        }
+    }]
 }, {
     timestamps: true
 });

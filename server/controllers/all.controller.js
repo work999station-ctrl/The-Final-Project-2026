@@ -799,6 +799,99 @@ const getApplicationsByOfferId = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+const getCompanyApplicationById = async (req, res) => {
+  try {
+    if (req.userType !== 'company') {
+      return res.status(403).json({ error: 'Only companies can perform this action' });
+    }
+
+    const { id: applicationId } = req.params;
+
+    // 1. Find the application and populate the related offer
+    const application = await Application.findById(applicationId)
+      .populate('studentId')
+      .populate('offerId');
+
+    if (!application) {
+      return res.status(404).json({ error: 'Application not found' });
+    }
+
+    // 2. Verify the associated offer belongs to the requesting company
+    if (application.offerId.companyId.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ error: 'Unauthorized to view this application' });
+    }
+
+    // Reuse the existing matchPercentage logic to provide consistency
+    let matchPercentage = 0;
+    const student = application.studentId;
+    const offer = application.offerId;
+    if (student && student.skills && offer && offer.techStack) {
+      const studentSkills = Array.isArray(student.skills)
+        ? student.skills.filter(s => !!s).map(s => s.toLowerCase())
+        : [];
+      const allOfferTags = Array.isArray(offer.techStack)
+        ? offer.techStack.flatMap(stack => stack.tags || [])
+        : [];
+      const lowerOfferTags = allOfferTags.map(tag => tag.toLowerCase());
+      const totalRequiredSkills = lowerOfferTags.length;
+      const matchingSkillsCount = lowerOfferTags.filter(tag => studentSkills.includes(tag)).length;
+      if (totalRequiredSkills === 0) {
+        matchPercentage = 100;
+      } else {
+        matchPercentage = (matchingSkillsCount / totalRequiredSkills) * 100;
+      }
+    }
+
+    const applicationWithMatch = {
+      ...application.toObject(),
+      matchPercentage: Math.round(matchPercentage)
+    };
+
+    res.status(200).json({ success: true, application: applicationWithMatch });
+  } catch (err) {
+    console.error("Error fetching getCompanyApplicationById:", err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const addApplicationFeedback = async (req, res) => {
+  try {
+    const { id: applicationId } = req.params;
+    const { text } = req.body;
+
+    if (req.userType !== 'company') {
+      return res.status(403).json({ error: 'Only companies can add feedback' });
+    }
+
+    if (!text || text.trim() === '') {
+      return res.status(400).json({ error: 'Feedback text is required' });
+    }
+
+    const application = await Application.findById(applicationId).populate('offerId');
+    if (!application) {
+      return res.status(404).json({ error: 'Application not found' });
+    }
+
+    if (application.offerId.companyId.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ error: 'Unauthorized to add feedback to this application' });
+    }
+
+    // Add new feedback
+    application.feedback.push({
+      text: text.trim(),
+      authorName: req.user.companyName || 'Company Representative',
+      createdAt: new Date()
+    });
+
+    await application.save();
+
+    res.status(200).json({ success: true, application });
+  } catch (err) {
+    console.error("Error adding application feedback:", err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 const updateApplicationStatus = async (req, res) => {
   try {
     const { id: applicationId } = req.params;
@@ -808,8 +901,10 @@ const updateApplicationStatus = async (req, res) => {
       return res.status(403).json({ error: 'Only companies can update application statuses' });
     }
 
-    if (!['accepted', 'rejected'].includes(status)) {
-      return res.status(400).json({ error: 'Invalid status. Must be accepted or rejected' });
+    const normalizedStatus = status.toLowerCase();
+    
+    if (!['accepted', 'rejected', 'refused', 'on hold'].includes(normalizedStatus)) {
+      return res.status(400).json({ error: 'Invalid status. Must be accepted, rejected, refused, or on hold' });
     }
 
     // 1. Find the application and populate the offer to check ownership
@@ -824,7 +919,7 @@ const updateApplicationStatus = async (req, res) => {
     }
 
     // 3. Update the status
-    application.status = status;
+    application.status = normalizedStatus === 'refused' ? 'rejected' : normalizedStatus;
     application.statusChangedAt = new Date();
     await application.save();
 
@@ -1383,5 +1478,5 @@ const getUniversityPlacementStats = async (req, res) => {
 };
 
 module.exports = {
-  studentSignup_get, studentSignup_post, studentDashboard_get, studentProfile_update, logout_get, login_post, login_get, companySignup_post, companySignup_get, companyProfile_update, adminSignup_post, adminProfile_update, createOffer, getAllOffers, getCompanyOffers, updateOffer, deleteOffer, getOfferById, createApplication, getCompanyApplications, getStudentProfileForRecruiter, getApplicationsByOfferId, updateApplicationStatus, getAdminApplicationsToValidate, getAdminAllApplications, getAdminCompanyProfile, getAdminApplicationById, validateApplicationAdmin, getStudentApplications, deleteApplication, getCompanyDashboardStats, getInboxMessages, markMessageAsRead, getNotificationDetails, getUniversityPlacementStats
+  studentSignup_get, studentSignup_post, studentDashboard_get, studentProfile_update, logout_get, login_post, login_get, companySignup_post, companySignup_get, companyProfile_update, adminSignup_post, adminProfile_update, createOffer, getAllOffers, getCompanyOffers, updateOffer, deleteOffer, getOfferById, createApplication, getCompanyApplications, getStudentProfileForRecruiter, getApplicationsByOfferId, updateApplicationStatus, getAdminApplicationsToValidate, getAdminAllApplications, getAdminCompanyProfile, getAdminApplicationById, getCompanyApplicationById, addApplicationFeedback, validateApplicationAdmin, getStudentApplications, deleteApplication, getCompanyDashboardStats, getInboxMessages, markMessageAsRead, getNotificationDetails, getUniversityPlacementStats
 };

@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 
-const { studentSignup_get, studentSignup_post, studentDashboard_get, studentProfile_update, logout_get, login_post, login_get, companySignup_get, companySignup_post, companyProfile_update, adminSignup_post, adminProfile_update, createOffer, getAllOffers, getCompanyOffers, updateOffer, deleteOffer, getOfferById, createApplication, getCompanyApplications, getStudentProfileForRecruiter, getApplicationsByOfferId, updateApplicationStatus, getAdminApplicationsToValidate, getAdminAllApplications, getAdminCompanyProfile, getAdminApplicationById, validateApplicationAdmin, getStudentApplications, deleteApplication, getCompanyDashboardStats, getInboxMessages, markMessageAsRead, getNotificationDetails, getUniversityPlacementStats } = require('../controllers/all.controller');
+const { studentSignup_get, studentSignup_post, studentDashboard_get, studentProfile_update, logout_get, login_post, login_get, companySignup_get, companySignup_post, companyProfile_update, adminSignup_post, adminProfile_update, createOffer, getAllOffers, getCompanyOffers, updateOffer, deleteOffer, getOfferById, createApplication, getCompanyApplications, getCompanyApplicationById, getStudentProfileForRecruiter, getApplicationsByOfferId, updateApplicationStatus, addApplicationFeedback, getAdminApplicationsToValidate, getAdminAllApplications, getAdminCompanyProfile, getAdminApplicationById, validateApplicationAdmin, getStudentApplications, deleteApplication, getCompanyDashboardStats, getInboxMessages, markMessageAsRead, getNotificationDetails, getUniversityPlacementStats } = require('../controllers/all.controller');
 const { requireAuth, requireAuthAPI } = require('../middleware/authmiddleware');
 
 router.get('/student-Signup', studentSignup_get);
@@ -93,6 +93,9 @@ router.get('/api/offers', getAllOffers);
 router.get('/api/offers/:id', requireAuthAPI, getOfferById);
 router.get('/api/company/offers', requireAuthAPI, getCompanyOffers);
 router.get('/api/company/applications', requireAuthAPI, getCompanyApplications);
+router.get('/api/company/applications/:id', requireAuthAPI, getCompanyApplicationById);
+router.put('/api/company/applications/:id/status', requireAuthAPI, updateApplicationStatus);
+router.post('/api/company/applications/:id/feedback', requireAuthAPI, addApplicationFeedback);
 router.get('/api/company/dashboard-stats', requireAuthAPI, getCompanyDashboardStats);
 router.get('/api/company/applications/offer/:id', requireAuthAPI, getApplicationsByOfferId);
 router.put('/api/offers/:id', requireAuthAPI, upload.single('logo'), updateOffer);

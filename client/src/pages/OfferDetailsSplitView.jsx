@@ -469,15 +469,23 @@ const OfferDetailsSplitView = () => {
                                                             </span>
                                                         </div>
                                                     </div>
-                                                    <div className="mt-4 flex items-center justify-between">
+                                                    <div className="mt-4 flex flex-col md:flex-row md:items-center justify-between gap-2">
                                                         <span className="text-[10px] text-slate-400">Applied {moment(app.createdAt).fromNow()}</span>
-                                                        <button
-                                                            onClick={() => navigate(`/student-profile-recruiter/${app.studentId._id}`)}
-                                                            className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 cursor-pointer"
-                                                        >
-                                                            View Profile
-                                                            <span className="material-symbols-outlined text-xs">arrow_forward</span>
-                                                        </button>
+                                                        <div className="flex items-center gap-3">
+                                                            <button
+                                                                onClick={() => navigate(`/student-profile-recruiter/${app.studentId._id}`)}
+                                                                className="text-xs font-bold text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 hover:underline cursor-pointer"
+                                                            >
+                                                                Profile
+                                                            </button>
+                                                            <button
+                                                                onClick={() => navigate(`/application-details/${app._id}`)}
+                                                                className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 cursor-pointer"
+                                                            >
+                                                                View Application
+                                                                <span className="material-symbols-outlined text-xs">arrow_forward</span>
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             ))
