@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CompanyNavbar from '../components/CompanyNavbar';
+import ActionSuccessConfirmation from '../components/ActionSuccessConfirmation';
+import ActionRejectionConfirmation from '../components/ActionRejectionConfirmation';
 
 const CandidateTrackingStatistics = () => {
     const navigate = useNavigate();
@@ -17,6 +19,8 @@ const CandidateTrackingStatistics = () => {
     });
     const [openFilter, setOpenFilter] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
+    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+    const [isRejectionModalOpen, setIsRejectionModalOpen] = useState(false);
     const filterRef = useRef(null);
     const PAGE_SIZE = 4;
 
@@ -111,6 +115,11 @@ const CandidateTrackingStatistics = () => {
                 setApplications(prev => prev.map(app =>
                     app._id === applicationId ? { ...app, status: newStatus, statusChangedAt: data.application.statusChangedAt } : app
                 ));
+                if (newStatus === 'accepted') {
+                    setIsSuccessModalOpen(true);
+                } else if (newStatus === 'rejected') {
+                    setIsRejectionModalOpen(true);
+                }
             } else {
                 alert(data.error || 'Failed to update status');
             }
@@ -555,6 +564,8 @@ const CandidateTrackingStatistics = () => {
 
                 </div>
             </main>
+            <ActionSuccessConfirmation isOpen={isSuccessModalOpen} onClose={() => setIsSuccessModalOpen(false)} />
+            <ActionRejectionConfirmation isOpen={isRejectionModalOpen} onClose={() => setIsRejectionModalOpen(false)} />
         </div>
     );
 };
