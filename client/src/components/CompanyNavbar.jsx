@@ -70,14 +70,14 @@ const CompanyNavbar = ({ company: companyProp }) => {
                             Dashboard
                         </button>
                         <button
-                            onClick={() => navigate('/internship-offers')}
-                            className={`text-sm font-medium transition-colors hover:text-primary ${isActive('/internship-offers', '/create-offer') ? 'text-primary font-semibold' : 'text-slate-500 dark:text-slate-400'}`}
+                            onClick={() => navigate('/opportunities')}
+                            className={`text-sm font-medium transition-colors hover:text-primary ${isActive('/opportunities', '/create-offer') ? 'text-primary font-semibold' : 'text-slate-500 dark:text-slate-400'}`}
                         >
                             My Offers
                         </button>
                         <button
-                            onClick={() => navigate('/candidate-tracking')}
-                            className={`text-sm font-medium transition-colors hover:text-primary ${isActive('/candidate-tracking', '/candidate-tracking-statistics') ? 'text-primary font-semibold' : 'text-slate-500 dark:text-slate-400'}`}
+                            onClick={() => navigate('/candidate-tracking-statistics')}
+                            className={`text-sm font-medium transition-colors hover:text-primary ${isActive('/candidate-tracking-statistics') ? 'text-primary font-semibold' : 'text-slate-500 dark:text-slate-400'}`}
                         >
                             Candidates
                         </button>

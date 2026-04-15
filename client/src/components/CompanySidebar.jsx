@@ -29,7 +29,10 @@ const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
                 <a className={getNavClass('overview')} href="/company-dashboard">
                     <span className="material-symbols-outlined">business</span> Dashboard
                 </a>
-                <a className={getNavClass('applications')} href="#">
+                <a className={getNavClass('offers')} href="/opportunities">
+                    <span className="material-symbols-outlined">work</span> My Offers
+                </a>
+                <a className={getNavClass('applications')} href="/candidate-tracking-statistics">
                     <span className="material-symbols-outlined">groups</span> Applications
                 </a>
                 <a className={getNavClass('create-offer')} href="/create-offer">
