@@ -10,6 +10,7 @@ const EditStudentProfile = () => {
         email: '',
         phoneNumber: '',
         university: '',
+        specialty: '',
         currentYear: '',
         country: '',
         githubPortfolio: '',
@@ -35,7 +36,16 @@ const EditStudentProfile = () => {
     const [error, setError] = useState('');
     const [showSkillsDropdown, setShowSkillsDropdown] = useState(false);
 
-    const availableSkills = ['JavaScript', 'HTML', 'CSS', 'Docker', 'AWS', 'SQL', 'Git', 'Java', 'C++', 'Next.js', 'PostgreSQL', 'MongoDB', 'Go', 'Rust', 'Python', 'React', 'Node.js', 'TypeScript', 'Flutter', 'Express'];
+    const specialtySkills = {
+        'Information Technology (IT)': ['JavaScript', 'HTML', 'CSS', 'Docker', 'AWS', 'SQL', 'Git', 'Java', 'C++', 'Next.js', 'PostgreSQL', 'MongoDB', 'Go', 'Rust', 'Python', 'React', 'Node.js', 'TypeScript', 'Flutter', 'Express'],
+        'E-commerce': ['Shopify', 'WooCommerce', 'PrestaShop', 'Magento', 'Supply Chain', 'Dropshipping', 'Inventory Management', 'Payment Gateways', 'SEO', 'Google Analytics', 'Social Media Management', 'Facebook Ads', 'Google Ads', 'Copywriting', 'Email Marketing', 'Content Strategy', 'Project Management', 'Agile/Scrum', 'Business Analysis', 'CRM (Salesforce, HubSpot)', 'Market Research', 'Data Entry', 'Adobe Photoshop', 'Illustrator', 'Premiere Pro', 'Video Editing', 'Brand Identity', 'Graphic Design', 'Product Photography'],
+        'Psychology': ['Recruitment', 'Talent Acquisition', 'Organizational Behavior', 'Employee Well-being', 'Conflict Resolution', 'Training & Development', 'Psychometric Testing', 'Clinical Assessment', 'Cognitive Behavioral Therapy (CBT)', 'Patient Counseling', 'Child Psychology', 'Neuropsychology', 'Group Therapy', 'Case Management', 'Career Guidance', 'Special Education', 'Developmental Psychology', 'Speech Therapy (Orthophony)', 'Behavioral Intervention', 'Student Counseling'],
+        'Sport': ['Sports Coaching', 'Personal Training', 'Biomechanics', 'Sports Nutrition', 'Athletic Therapy', 'Exercise Physiology', 'Sports Management', 'Event Planning', 'Kinesiology', 'Sports Psychology', 'Fitness Assessment', 'Strength & Conditioning', 'Rehabilitation', 'First Aid', 'CPR']
+    };
+
+    const availableSkills = formData.specialty && specialtySkills[formData.specialty]
+        ? specialtySkills[formData.specialty]
+        : specialtySkills['Information Technology (IT)'];
 
     useEffect(() => {
         const fetchStudentProfile = async () => {
@@ -49,6 +59,7 @@ const EditStudentProfile = () => {
                         email: data.user.email || '',
                         phoneNumber: data.user.phoneNumber || '',
                         university: data.user.university || '',
+                        specialty: data.user.specialty || '',
                         currentYear: data.user.currentYear || '',
                         country: data.user.country || '',
                         githubPortfolio: data.user.githubPortfolio || '',
@@ -285,20 +296,6 @@ const EditStudentProfile = () => {
                                         </div>
                                         <div className="flex flex-col gap-2">
                                             <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
-                                                <span className="material-symbols-outlined text-primary text-lg">school</span>
-                                                University & City
-                                            </label>
-                                            <input
-                                                className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all"
-                                                placeholder="University of Algiers, Algiers"
-                                                type="text"
-                                                name="universityCity"
-                                                value={formData.universityCity}
-                                                onChange={handleChange}
-                                            />
-                                        </div>
-                                        <div className="flex flex-col gap-2">
-                                            <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
                                                 <span className="material-symbols-outlined text-primary text-lg">event</span>
                                                 Expected Graduation Date
                                             </label>
@@ -313,26 +310,36 @@ const EditStudentProfile = () => {
                                         </div>
                                     </div>
 
-                                    {/* Legacy University and Current Year */}
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    {/* Legacy University, Specialty, and Current Year */}
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                                         <div className="flex flex-col gap-2">
                                             <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
                                                 <span className="material-symbols-outlined text-primary text-lg">school</span>
                                                 University
                                             </label>
                                             <div className="relative">
-                                                <select
-                                                    className="form-select appearance-none w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all"
+                                                <input
+                                                    className="form-input appearance-none w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-4 py-3 transition-all opacity-70 cursor-not-allowed"
+                                                    type="text"
                                                     name="university"
-                                                    value={formData.university}
-                                                    onChange={handleChange}
-                                                >
-                                                    <option disabled value="">Select your institution</option>
-                                                    <option value="University of Constantine 1">University of Constantine 1</option>
-                                                    <option value="University of Constantine 2">University of Constantine 2</option>
-                                                    <option value="University of Constantine 3">University of Constantine 3</option>
-                                                </select>
-                                                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
+                                                    value={formData.university || 'Not specified'}
+                                                    disabled
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-col gap-2">
+                                            <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
+                                                <span className="material-symbols-outlined text-primary text-lg">workspace_premium</span>
+                                                Specialty
+                                            </label>
+                                            <div className="relative">
+                                                <input
+                                                    className="form-input appearance-none w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-4 py-3 transition-all opacity-70 cursor-not-allowed"
+                                                    type="text"
+                                                    name="specialty"
+                                                    value={formData.specialty || 'Not specified'}
+                                                    disabled
+                                                />
                                             </div>
                                         </div>
                                         <div className="flex flex-col gap-2">
@@ -340,14 +347,20 @@ const EditStudentProfile = () => {
                                                 <span className="material-symbols-outlined text-primary text-lg">calendar_month</span>
                                                 Current Year
                                             </label>
-                                            <input
-                                                className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all"
-                                                placeholder="e.g. 3rd Year"
-                                                type="text"
-                                                name="currentYear"
-                                                value={formData.currentYear}
-                                                onChange={handleChange}
-                                            />
+                                            <div className="relative">
+                                                <select
+                                                    className="form-select appearance-none w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all"
+                                                    name="currentYear"
+                                                    value={formData.currentYear}
+                                                    onChange={handleChange}
+                                                >
+                                                    <option disabled value="">Select your year</option>
+                                                    <option value="L3">L3</option>
+                                                    <option value="Master 1">Master 1</option>
+                                                    <option value="Master 2">Master 2</option>
+                                                </select>
+                                                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
+                                            </div>
                                         </div>
                                     </div>
 

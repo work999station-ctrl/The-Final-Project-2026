@@ -24,6 +24,11 @@ const OfferSchema = mongoose.Schema({
         required: true, // Crucial for your filter: By Wilaya [cite: 24]
         index: true // Indexed for faster search performance
     },
+    category: {
+        type: String,
+        required: true,
+        index: true
+    },
 
     // Allows selecting multiple categories (Frontend, Backend) and multiple tags
     techStack: [{

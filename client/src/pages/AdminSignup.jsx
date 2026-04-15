@@ -9,7 +9,8 @@ const AdminSignup = () => {
         password: '',
         phone: '',
         universityName: 'University of Constantine 1',
-        role: 'Admin'
+        role: 'Admin',
+        DeptHead: ''
     });
     const [logoPreview, setLogoPreview] = useState(null);
     const [logoFile, setLogoFile] = useState(null);
@@ -201,12 +202,14 @@ const AdminSignup = () => {
                                                 <span className="material-symbols-outlined absolute left-4 text-slate-400 text-[20px] pointer-events-none z-10 hidden sm:block">badge</span>
                                                 <select
                                                     className="form-select w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white focus:border-primary focus:ring-primary h-12 pl-4 sm:pl-12 pr-10 transition-all appearance-none outline-none font-medium cursor-pointer"
-                                                    name="role"
-                                                    value={formData.role}
+                                                    name="DeptHead"
+                                                    value={formData.DeptHead}
                                                     onChange={handleChange}
                                                 >
-                                                    <option value="Internship_Office_Staff">Internship Office Staff</option>
-                                                    <option value="Dept_Head">Department Head</option>
+                                                    <option value="Information Technology (IT)">Information Technology (IT)</option>
+                                                    <option value="E-commerce">E-commerce</option>
+                                                    <option value="Psychology">Psychology</option>
+                                                    <option value="Sport">Sport</option>
                                                 </select>
                                                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-500">
                                                     <span className="material-symbols-outlined text-xl">expand_more</span>
@@ -227,9 +230,7 @@ const AdminSignup = () => {
                                                 onChange={handleChange}
                                                 required
                                             >
-                                                <option value="University of Constantine 1">University of Constantine 1</option>
                                                 <option value="University of Constantine 2">University of Constantine 2</option>
-                                                <option value="University of Constantine 3">University of Constantine 3</option>
                                             </select>
                                             <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-500">
                                                 <span className="material-symbols-outlined text-xl">expand_more</span>

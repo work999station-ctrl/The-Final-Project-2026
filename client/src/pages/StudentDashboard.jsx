@@ -120,7 +120,7 @@ const StudentDashboard = () => {
                                     </div>
                                 </div>
                                 <h2 className="font-display text-xl font-bold text-text-main">{user.name}</h2>
-                                <p className="text-primary font-medium text-sm mt-1">Computer Science Major</p>
+                                <p className="text-primary font-medium text-sm mt-1">{user.specialty}</p>
                                 <p className="text-text-muted text-xs mt-1 mb-4">{user.currentYear} • Ready to work</p>
 
                                 {/* User Details section */}
@@ -399,14 +399,15 @@ const StudentDashboard = () => {
                                 <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-white opacity-10 blur-3xl"></div>
                                 <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
                                     <div>
-                                        <h3 className="font-display text-2xl font-bold mb-2">Complete your profile to get 3x more offers</h3>
+                                        <h3 className="font-display text-2xl font-bold mb-2">
+                                            Enhance your CV to get 3x more offers</h3>
                                         <p className="text-white/80">Recruiters are searching for specific skills. Add your portfolio and certifications.</p>
                                     </div>
                                     <button
                                         onClick={() => navigate('/edit-student-profile')}
                                         className="bg-white text-primary font-bold px-6 py-3 rounded-full hover:bg-gray-50 transition-colors shadow-md whitespace-nowrap"
                                     >
-                                        Update Profile
+                                        Enhance Your CV
                                     </button>
                                 </div>
                             </div>

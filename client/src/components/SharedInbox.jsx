@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const SharedInbox = ({ userType, title, backLink, navTitle = "stage.io" }) => {
+const SharedInbox = ({ userType, title, backLink, navTitle = "stage.io", hideHeader = false }) => {
     const navigate = useNavigate();
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -46,22 +46,24 @@ const SharedInbox = ({ userType, title, backLink, navTitle = "stage.io" }) => {
     return (
         <div className="bg-background-light text-text-main font-body min-h-screen flex flex-col antialiased overflow-hidden">
             {/* Top Navigation Bar */}
-            <header className="sticky top-0 z-50 w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 lg:px-12 py-4 shrink-0">
-                <div className="max-w-[1600px] mx-auto flex items-center justify-between">
-                    <div className="flex items-center gap-8">
-                        <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate(backLink)}>
-                            <div className="flex items-center justify-center size-10 rounded-lg bg-primary text-white">
-                                <span className="material-symbols-outlined font-bold">hub</span>
+            {!hideHeader && (
+                <header className="sticky top-0 z-50 w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 lg:px-12 py-4 shrink-0">
+                    <div className="max-w-[1600px] mx-auto flex items-center justify-between">
+                        <div className="flex items-center gap-8">
+                            <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate(backLink)}>
+                                <div className="flex items-center justify-center size-10 rounded-lg bg-primary text-white">
+                                    <span className="material-symbols-outlined font-bold">hub</span>
+                                </div>
+                                <h2 className="text-xl font-bold font-header tracking-tight text-slate-900 dark:text-white">{navTitle}</h2>
                             </div>
-                            <h2 className="text-xl font-bold font-header tracking-tight text-slate-900 dark:text-white">{navTitle}</h2>
+                            <nav className="hidden md:flex items-center gap-6">
+                                <a className="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm font-medium" onClick={() => navigate(backLink)} href="#">Dashboard</a>
+                                <a className="text-primary font-semibold text-sm border-b-2 border-primary py-2" href="#">{title}</a>
+                            </nav>
                         </div>
-                        <nav className="hidden md:flex items-center gap-6">
-                            <a className="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm font-medium" onClick={() => navigate(backLink)} href="#">Dashboard</a>
-                            <a className="text-primary font-semibold text-sm border-b-2 border-primary py-2" href="#">{title}</a>
-                        </nav>
                     </div>
-                </div>
-            </header>
+                </header>
+            )}
 
             {/* Main Container */}
             <main className="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50 dark:bg-slate-900/50">
