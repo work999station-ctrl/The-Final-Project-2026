@@ -32,6 +32,7 @@ const AdminDashboard = () => {
 
                 if (userRes.ok) {
                     const data = await userRes.json();
+                    console.log(data);
                     if (data && data.user) {
                         setUser(prev => ({
                             ...prev,

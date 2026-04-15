@@ -129,7 +129,7 @@ const AgreementPreview = () => {
                                         <div className="h-12 w-12 bg-slate-900 text-white flex items-center justify-center font-['Space_Grotesk'] font-bold text-2xl rounded">U</div>
                                         <div>
                                             <h2 className="font-['Space_Grotesk'] font-bold text-xl uppercase tracking-tight text-slate-900">{data.universityName}</h2>
-                                            <p className="font-mono text-xs text-slate-500">Department of Computer Science</p>
+                                            <p className="font-mono text-xs text-slate-500">Department of {data.studentDept}</p>
                                         </div>
                                     </div>
                                     <div className="text-right">
@@ -149,11 +149,11 @@ const AgreementPreview = () => {
                                         </li>
                                         <li className="pl-2">
                                             <strong>The Host Company:</strong><br />
-                                            <span className="ml-6 block">{data.companyName}, represented by <strong className="bg-amber-50 px-1">{data.companyRepresentative || 'HR Management'}</strong>.</span>
+                                            <span className="ml-6 block">{data.internshipOffice}, represented by <strong className="bg-amber-50 px-1">{data.companyRepresentative || 'HR Management'}</strong>.</span>
                                         </li>
                                         <li className="pl-2">
                                             <strong>The Educational Institution:</strong><br />
-                                            <span className="ml-6 block">{data.universityName}, represented by the Dean of Engineering.</span>
+                                            <span className="ml-6 block">{data.adminName}, represented by the Dean of {data.adminDeptHead}.</span>
                                         </li>
                                     </ol>
 

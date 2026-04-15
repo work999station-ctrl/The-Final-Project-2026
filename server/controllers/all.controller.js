@@ -172,7 +172,7 @@ const companyProfile_update = async (req, res) => {
     const company = await Company.findById(req.user._id);
 
     // Only allow updates to defined fields
-    const allowedUpdates = ['companyName', 'email', 'phoneNumber', 'address', 'website', 'description'];
+    const allowedUpdates = ['companyName', 'email', 'phoneNumber', 'address', 'website', 'description', 'internshipOffice'];
     allowedUpdates.forEach(field => {
       if (updateData[field] !== undefined) {
         company[field] = updateData[field];
@@ -972,11 +972,14 @@ const getAdminApplicationsToValidate = async (req, res) => {
     // Filter manually to ensure case-insensitive matching in case of data inconsistencies
     const adminUni = req.user.universityName ? req.user.universityName.trim().toLowerCase() : '';
 
+    const adminDeptHead = req.user.DeptHead ? req.user.DeptHead.trim().toLowerCase() : '';
+
+
     applications = applications.filter(app => {
       if (!app.offerId || app.offerId.status !== 'Open') return false;
-      if (!app.studentId || !app.studentId.university) return false;
-      const studentUni = app.studentId.university.trim().toLowerCase();
-      return studentUni === adminUni;
+      if (!app.studentId || !app.studentId.specialty) return false;
+      const studentSpecialty = app.studentId.specialty.trim().toLowerCase();
+      return studentSpecialty === adminDeptHead;
     });
 
     res.status(200).json({ success: true, applications });
@@ -1131,18 +1134,23 @@ const getAdminApplicationById = async (req, res) => {
     const student = application.studentId || {};
     const offer = application.offerId || {};
     const company = offer.companyId || {};
+    const admin = await Admin.findById(req.user._id).select('universityName DeptHead fullName');
 
     const formattedData = {
       studentId: student._id || null,
       studentProfilePicture: student.profilePicture || "",
       studentName: student.name || "Unknown Student",
+      studentDept: student.specialty || "Unknown Specialization",
       studentYear: student.currentYear || "Unknown Year",
       offerId: offer._id || null,
       offerTitle: offer.title || "Unknown Position",
       companyId: company._id || null,
       companyName: company.companyName || "Unknown Company",
+      internshipOffice: company.internshipOffice || "Unknown Office",
       companyRepresentative: "HR Management", // Using a fallback since there's no representative in Company model
-      universityName: student.university || "University of Constantine 2",
+      universityName: admin?.universityName || student.university || "University of Constantine 2",
+      adminDeptHead: admin?.DeptHead || "",
+      adminName: admin?.fullName || "",
       startDate: offer.createdAt ? moment(offer.createdAt).format('MMMM Do, YYYY') : moment().format('MMMM Do, YYYY'),
       endDate: offer.durationMonths ? moment(offer.createdAt).add(offer.durationMonths, 'months').format('MMMM Do, YYYY') : moment().add(6, 'months').format('MMMM Do, YYYY')
     };
@@ -1393,7 +1401,7 @@ const getUniversityPlacementStats = async (req, res) => {
       studentId: { $in: studentIds },
       status: 'validated'
     });
-    
+
     const placedStudents = placedStudentsList.length;
     const unplacedStudents = totalStudents - placedStudents;
     const placementPercentage = totalStudents > 0 ? Math.round((placedStudents / totalStudents) * 100) : 0;
@@ -1428,9 +1436,9 @@ const getUniversityPlacementStats = async (req, res) => {
       for (const bin of bins) {
         const count = trendApps.filter(app => {
           const appDate = new Date(app.statusChangedAt || app.updatedAt || app.createdAt);
-          return appDate.getMonth() === currentMonth && 
-                 appDate.getFullYear() === currentYear &&
-                 appDate.getDate() >= bin.min && appDate.getDate() < bin.max;
+          return appDate.getMonth() === currentMonth &&
+            appDate.getFullYear() === currentYear &&
+            appDate.getDate() >= bin.min && appDate.getDate() < bin.max;
         }).length;
         monthlyTrends.push({ month: bin.label, count });
       }
@@ -1440,7 +1448,7 @@ const getUniversityPlacementStats = async (req, res) => {
         d.setDate(1);
         d.setMonth(d.getMonth() - i);
         const monthYear = d.toLocaleString('en-US', { month: 'short' });
-        
+
         const count = trendApps.filter(app => {
           const appDate = new Date(app.statusChangedAt || app.updatedAt || app.createdAt);
           return appDate.getMonth() === d.getMonth() && appDate.getFullYear() === d.getFullYear();

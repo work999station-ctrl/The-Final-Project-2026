@@ -65,30 +65,30 @@ const AdminValidation = () => {
 
     const handleConfirmValidation = async () => {
         if (!validatingApp) return;
-        
+
         // Optimistically update status
         setApplications(prev => prev.map(a => a._id === validatingApp._id ? { ...a, status: 'validated' } : a));
         setGeneratingDocs(prev => ({ ...prev, [validatingApp._id]: true }));
-        
+
         // Send API request to actually update it
         try {
             const token = document.cookie.split('jwt=')[1]?.split(';')[0] || localStorage.getItem('token');
             await fetch(`/api/admin/applications/${validatingApp._id}/validate`, {
                 method: 'PUT',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
                     ...(token ? { Authorization: `Bearer ${token}` } : {})
                 }
             });
-        } catch(err) {
+        } catch (err) {
             console.error('Failed to validate application', err);
         }
-        
+
         // Fake the document generation delay before showing the View Agreement button
         setTimeout(() => {
             setGeneratingDocs(prev => ({ ...prev, [validatingApp._id]: false }));
         }, 3000);
-        
+
         setValidatingApp(null);
     };
 
@@ -98,16 +98,16 @@ const AdminValidation = () => {
             const companyName = (app.offerId?.companyId?.companyName || '').toLowerCase();
             const offerTitle = (app.offerId?.title || '').toLowerCase();
             const query = searchQuery.toLowerCase();
-            
+
             const matchesSearch = studentName.includes(query) || companyName.includes(query) || offerTitle.includes(query);
             const matchesCompany = !activeFilters.company || app.offerId?.companyId?.companyName === activeFilters.company;
-            
+
             return matchesSearch && matchesCompany;
         })
         .sort((a, b) => {
             // Deadline calculation
             const getDeadline = (app) => new Date((app.statusChangedAt ? new Date(app.statusChangedAt) : new Date(app.createdAt)).getTime() + 10 * 24 * 60 * 60 * 1000);
-            
+
             if (activeFilters.deadline === 'closest') return getDeadline(a) - getDeadline(b);
             if (activeFilters.deadline === 'furthest') return getDeadline(b) - getDeadline(a);
             return new Date(b.createdAt) - new Date(a.createdAt); // Default: newest application first
@@ -161,7 +161,7 @@ const AdminValidation = () => {
                             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 gap-4">
                                 <h3 className="text-xl font-headline font-semibold text-on-surface">Recent Student Acceptances</h3>
                                 <div className="flex flex-wrap items-center gap-3" ref={filterRef}>
-                                    
+
                                     {/* In-Table Search Bar */}
                                     <div className="relative group">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-on-surface-variant group-focus-within:text-primary transition-colors">
@@ -175,7 +175,7 @@ const AdminValidation = () => {
                                             placeholder="Search table..."
                                         />
                                     </div>
-                                    
+
                                     {/* Company Filter Pill */}
                                     <div className="relative">
                                         {activeFilters.company ? (
@@ -257,8 +257,8 @@ const AdminValidation = () => {
                                     </div>
 
                                     {(activeFilters.company || activeFilters.deadline || searchQuery) && (
-                                        <button 
-                                            onClick={() => { setActiveFilters({ deadline: '', company: '' }); setSearchQuery(''); setCurrentPage(1); }} 
+                                        <button
+                                            onClick={() => { setActiveFilters({ deadline: '', company: '' }); setSearchQuery(''); setCurrentPage(1); }}
                                             className="ml-2 text-xs font-bold text-on-surface-variant hover:text-error transition-colors underline decoration-dotted underline-offset-4"
                                         >
                                             Clear Filters
@@ -302,70 +302,70 @@ const AdminValidation = () => {
                                                 const deadline = new Date((app.statusChangedAt ? new Date(app.statusChangedAt) : new Date(app.createdAt)).getTime() + 10 * 24 * 60 * 60 * 1000);
                                                 const isOverdue = new Date() > deadline;
                                                 return (
-                                                <tr key={app._id} className="group hover:bg-surface-container-low/50 transition-colors">
-                                                    <td className="py-5 px-4">
-                                                        <div
-                                                            className="flex items-center gap-3 cursor-pointer w-max group"
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                if (app.studentId?._id) navigate(`/student-profile-recruiter/${app.studentId._id}`);
-                                                            }}
-                                                        >
-                                                            <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold overflow-hidden shadow-sm border-2 border-slate-200">
-                                                                {app.studentId?.profilePicture ? (
-                                                                    <img src={app.studentId.profilePicture} alt={app.studentId.name} className="w-full h-full object-cover" />
-                                                                ) : (
-                                                                    app.studentId?.name?.substring(0, 2).toUpperCase() || 'ST'
-                                                                )}
+                                                    <tr key={app._id} className="group hover:bg-surface-container-low/50 transition-colors">
+                                                        <td className="py-5 px-4">
+                                                            <div
+                                                                className="flex items-center gap-3 cursor-pointer w-max group"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    if (app.studentId?._id) navigate(`/student-profile-recruiter/${app.studentId._id}`);
+                                                                }}
+                                                            >
+                                                                <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold overflow-hidden shadow-sm border-2 border-slate-200">
+                                                                    {app.studentId?.profilePicture ? (
+                                                                        <img src={app.studentId.profilePicture} alt={app.studentId.name} className="w-full h-full object-cover" />
+                                                                    ) : (
+                                                                        app.studentId?.name?.substring(0, 2).toUpperCase() || 'ST'
+                                                                    )}
+                                                                </div>
+                                                                <div>
+                                                                    <p className="font-bold text-on-surface hover:text-indigo-600 transition-colors font-['Inter']">{app.studentId?.name || 'Unknown Student'}</p>
+                                                                    <p className="text-xs text-on-surface-variant">{app.studentId?.fieldOfStudy || 'Student'}, {app.studentId?.currentYear || 'Year'}</p>
+                                                                </div>
                                                             </div>
-                                                            <div>
-                                                                <p className="font-bold text-on-surface transition-colors font-['Inter']">{app.studentId?.name || 'Unknown Student'}</p>
-                                                                <p className="text-xs text-on-surface-variant">{app.studentId?.fieldOfStudy || 'Student'}, {app.studentId?.currentYear || 'Year'}</p>
+                                                        </td>
+                                                        <td className="py-5 px-4">
+                                                            <div
+                                                                className="flex items-center gap-2 cursor-pointer w-max group"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    if (app.offerId?.companyId?._id) navigate(`/company-profile-admin/${app.offerId.companyId._id}`);
+                                                                }}
+                                                            >
+                                                                <div className="w-6 h-6 rounded bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-200 shadow-sm">
+                                                                    {app.offerId?.companyId?.logo ? (
+                                                                        <img src={app.offerId.companyId.logo} alt={app.offerId.companyId.name} className="w-full h-full object-cover" />
+                                                                    ) : (
+                                                                        <span className="text-[10px] text-slate-500 font-black">{app.offerId?.companyId?.name?.substring(0, 1) || 'C'}</span>
+                                                                    )}
+                                                                </div>
+                                                                <span className="text-on-surface font-medium hover:text-indigo-600 transition-colors">{app.offerId?.companyId?.companyName || 'Company'}</span>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                    <td className="py-5 px-4">
-                                                        <div
-                                                            className="flex items-center gap-2 cursor-pointer w-max group"
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                if (app.offerId?.companyId?._id) navigate(`/company-profile-admin/${app.offerId.companyId._id}`);
-                                                            }}
-                                                        >
-                                                            <div className="w-6 h-6 rounded bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-200 shadow-sm">
-                                                                {app.offerId?.companyId?.logo ? (
-                                                                    <img src={app.offerId.companyId.logo} alt={app.offerId.companyId.name} className="w-full h-full object-cover" />
-                                                                ) : (
-                                                                    <span className="text-[10px] text-slate-500 font-black">{app.offerId?.companyId?.name?.substring(0, 1) || 'C'}</span>
-                                                                )}
-                                                            </div>
-                                                            <span className="text-on-surface font-medium transition-colors">{app.offerId?.companyId?.companyName || 'Company'}</span>
-                                                        </div>
-                                                    </td>
-                                                    <td className="py-5 px-4">
-                                                        <span
-                                                            onClick={() => app.offerId?._id && navigate(`/offer-details/${app.offerId._id}`)}
-                                                            className="text-on-surface-variant font-medium text-sm line-clamp-1 cursor-pointer hover:text-indigo-600 transition-colors"
-                                                        >
-                                                            {app.offerId?.title || 'Internship Title'}
-                                                        </span>
-                                                    </td>
-                                                    <td className="py-5 px-4">
-                                                        <span className="text-xs font-medium text-slate-600 bg-slate-100 border border-slate-200 px-2 py-1 rounded shadow-sm">
-                                                            {app.offerId?.durationMonths + ' months' || 'Duration'}
-                                                        </span>
-                                                    </td>
-                                                    <td className="py-5 px-4">
-                                                        <span className="text-xs font-medium text-slate-600 bg-slate-100 border border-slate-200 px-2 py-1 rounded shadow-sm">
-                                                            {new Date(app.statusChangedAt || app.createdAt).toLocaleDateString()}
-                                                        </span>
-                                                    </td>
-                                                    <td className="py-5 px-4">
-                                                        <span className="text-xs font-medium text-amber-700 bg-amber-50 border border-amber-200 px-2 py-1 rounded shadow-sm">
-                                                            {new Date((app.statusChangedAt ? new Date(app.statusChangedAt) : new Date(app.createdAt)).getTime() + 10 * 24 * 60 * 60 * 1000).toLocaleDateString()}
-                                                        </span>
-                                                    </td>
-                                                    <td className="py-5 px-4 text-right">
+                                                        </td>
+                                                        <td className="py-5 px-4">
+                                                            <span
+                                                                onClick={() => app.offerId?._id && navigate(`/offer-details/${app.offerId._id}`)}
+                                                                className="text-on-surface-variant font-medium text-sm line-clamp-1 cursor-pointer hover:text-indigo-600 transition-colors"
+                                                            >
+                                                                {app.offerId?.title || 'Internship Title'}
+                                                            </span>
+                                                        </td>
+                                                        <td className="py-5 px-4">
+                                                            <span className="text-xs font-medium text-slate-600 bg-slate-100 border border-slate-200 px-2 py-1 rounded shadow-sm">
+                                                                {app.offerId?.durationMonths + ' months' || 'Duration'}
+                                                            </span>
+                                                        </td>
+                                                        <td className="py-5 px-4">
+                                                            <span className="text-xs font-medium text-slate-600 bg-slate-100 border border-slate-200 px-2 py-1 rounded shadow-sm">
+                                                                {new Date(app.statusChangedAt || app.createdAt).toLocaleDateString()}
+                                                            </span>
+                                                        </td>
+                                                        <td className="py-5 px-4">
+                                                            <span className="text-xs font-medium text-amber-700 bg-amber-50 border border-amber-200 px-2 py-1 rounded shadow-sm">
+                                                                {new Date((app.statusChangedAt ? new Date(app.statusChangedAt) : new Date(app.createdAt)).getTime() + 10 * 24 * 60 * 60 * 1000).toLocaleDateString()}
+                                                            </span>
+                                                        </td>
+                                                        <td className="py-5 px-4 text-right">
                                                             <div className="flex justify-end items-center gap-3">
                                                                 {app.status !== 'validated' && !isOverdue && (
                                                                     <button
@@ -382,35 +382,35 @@ const AdminValidation = () => {
                                                                     </span>
                                                                 )}
 
-                                                            {generatingDocs[app._id] && (
-                                                                <span className="text-xs font-bold text-indigo-600 flex items-center gap-0.5 bg-indigo-50 px-3 py-1.5 rounded-full">
-                                                                    Generating document
-                                                                    <span className="flex">
-                                                                        <span className="animate-bounce inline-block" style={{ animationDelay: '0s' }}>.</span>
-                                                                        <span className="animate-bounce inline-block" style={{ animationDelay: '0.2s' }}>.</span>
-                                                                        <span className="animate-bounce inline-block" style={{ animationDelay: '0.4s' }}>.</span>
+                                                                {generatingDocs[app._id] && (
+                                                                    <span className="text-xs font-bold text-indigo-600 flex items-center gap-0.5 bg-indigo-50 px-3 py-1.5 rounded-full">
+                                                                        Generating document
+                                                                        <span className="flex">
+                                                                            <span className="animate-bounce inline-block" style={{ animationDelay: '0s' }}>.</span>
+                                                                            <span className="animate-bounce inline-block" style={{ animationDelay: '0.2s' }}>.</span>
+                                                                            <span className="animate-bounce inline-block" style={{ animationDelay: '0.4s' }}>.</span>
+                                                                        </span>
                                                                     </span>
-                                                                </span>
-                                                            )}
+                                                                )}
 
-                                                            {app.status === 'validated' && !generatingDocs[app._id] && (
-                                                                <>
-                                                                    <span className="text-xs font-bold text-green-700 bg-green-50 px-3 py-1.5 rounded-full border border-green-200 flex items-center gap-1 shadow-sm">
-                                                                        <span className="material-symbols-outlined text-[14px]">check_circle</span>
-                                                                        Validated
-                                                                    </span>
-                                                                    <button
-                                                                        className="p-2 flex items-center justify-center text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-full transition-colors active:scale-95 shadow-sm border border-indigo-200"
-                                                                        title="View Agreement"
-                                                                        onClick={() => navigate(`/agreement/${app._id}`)}
-                                                                    >
-                                                                        <span className="material-symbols-outlined text-[16px]">description</span>
-                                                                    </button>
-                                                                </>
-                                                            )}
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                                {app.status === 'validated' && !generatingDocs[app._id] && (
+                                                                    <>
+                                                                        <span className="text-xs font-bold text-green-700 bg-green-50 px-3 py-1.5 rounded-full border border-green-200 flex items-center gap-1 shadow-sm">
+                                                                            <span className="material-symbols-outlined text-[14px]">check_circle</span>
+                                                                            Validated
+                                                                        </span>
+                                                                        <button
+                                                                            className="p-2 flex items-center justify-center text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-full transition-colors active:scale-95 shadow-sm border border-indigo-200"
+                                                                            title="View Agreement"
+                                                                            onClick={() => navigate(`/agreement/${app._id}`)}
+                                                                        >
+                                                                            <span className="material-symbols-outlined text-[16px]">description</span>
+                                                                        </button>
+                                                                    </>
+                                                                )}
+                                                            </div>
+                                                        </td>
+                                                    </tr>
                                                 );
                                             })
                                         )}
@@ -423,16 +423,16 @@ const AdminValidation = () => {
                                 <div className="mt-8 flex justify-between items-center text-sm text-on-surface-variant border-t border-slate-100 pt-6">
                                     <p>Showing <span className="font-bold text-on-surface">{(currentPage - 1) * PAGE_SIZE + 1}</span> to <span className="font-bold text-on-surface">{Math.min(currentPage * PAGE_SIZE, totalApplicants)}</span> of <span className="font-bold text-on-surface">{totalApplicants}</span> tracking results</p>
                                     <div className="flex gap-2">
-                                        <button 
+                                        <button
                                             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                                             disabled={currentPage === 1}
                                             className={`w-8 h-8 flex items-center justify-center rounded-full transition-colors ${currentPage === 1 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-slate-100 text-on-surface'}`}
                                         >
                                             <span className="material-symbols-outlined text-base">chevron_left</span>
                                         </button>
-                                        
+
                                         {Array.from({ length: totalPages }).map((_, i) => (
-                                            <button 
+                                            <button
                                                 key={i}
                                                 onClick={() => setCurrentPage(i + 1)}
                                                 className={`w-8 h-8 flex items-center justify-center rounded-full transition-colors ${currentPage === i + 1 ? 'bg-primary text-white font-bold' : 'hover:bg-slate-100 text-on-surface font-medium'}`}
@@ -441,7 +441,7 @@ const AdminValidation = () => {
                                             </button>
                                         ))}
 
-                                        <button 
+                                        <button
                                             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                                             disabled={currentPage === totalPages}
                                             className={`w-8 h-8 flex items-center justify-center rounded-full transition-colors ${currentPage === totalPages ? 'opacity-30 cursor-not-allowed' : 'hover:bg-slate-100 text-on-surface'}`}

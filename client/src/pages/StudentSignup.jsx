@@ -6,24 +6,43 @@ import { submitStudentSignup } from '../services/api';
 const StudentSignup = () => {
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
-    const [skills, setSkills] = useState(['React', 'UI Design', 'Python']);
+    const [skills, setSkills] = useState([]);
     const [showSkillDropdown, setShowSkillDropdown] = useState(false);
 
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         password: '',
-        university: ''
+        university: '',
+        specialty: ''
     });
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
 
-    const availableSkills = ['JavaScript', 'Angular', 'CSS', 'Docker', 'SQL', 'Git', 'Java', 'C++', 'Next.js', 'PostgreSQL', 'MongoDB', 'Go', 'Rust', 'Python', 'React', 'Node.js', 'TypeScript'];
+    const specialtySkills = {
+        'Information Technology (IT)': ['JavaScript', 'Angular', 'CSS', 'Docker', 'SQL', 'Git', 'Java', 'C++', 'Next.js', 'PostgreSQL', 'MongoDB', 'Go', 'Rust', 'Python', 'React', 'Node.js', 'TypeScript'],
+        'E-commerce': ['Shopify', 'WooCommerce', 'PrestaShop', 'Magento', 'Supply Chain', 'Dropshipping', 'Inventory Management', 'Payment Gateways', 'SEO', 'Google Analytics', 'Social Media Management', 'Facebook Ads', 'Google Ads', 'Copywriting', 'Email Marketing', 'Content Strategy', 'Project Management', 'Agile/Scrum', 'Business Analysis', 'CRM (Salesforce, HubSpot)', 'Market Research', 'Data Entry', 'Adobe Photoshop', 'Illustrator', 'Premiere Pro', 'Video Editing', 'Brand Identity', 'Graphic Design', 'Product Photography'],
+        'Psychology': ['Recruitment', 'Talent Acquisition', 'Organizational Behavior', 'Employee Well-being', 'Conflict Resolution', 'Training & Development', 'Psychometric Testing', 'Clinical Assessment', 'Cognitive Behavioral Therapy (CBT)', 'Patient Counseling', 'Child Psychology', 'Neuropsychology', 'Group Therapy', 'Case Management', 'Career Guidance', 'Special Education', 'Developmental Psychology', 'Speech Therapy (Orthophony)', 'Behavioral Intervention', 'Student Counseling'],
+        'Sport': ['Sports Coaching', 'Personal Training', 'Biomechanics', 'Sports Nutrition', 'Athletic Therapy', 'Exercise Physiology', 'Sports Management', 'Event Planning', 'Kinesiology', 'Sports Psychology', 'Fitness Assessment', 'Strength & Conditioning', 'Rehabilitation', 'First Aid', 'CPR']
+    };
+
+    const availableSkills = formData.specialty && specialtySkills[formData.specialty]
+        ? specialtySkills[formData.specialty]
+        : specialtySkills['Information Technology (IT)'];
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+
+        if (name === 'specialty') {
+            if (value && specialtySkills[value]) {
+                setSkills(specialtySkills[value].slice(0, 3));
+            } else {
+                setSkills([]);
+            }
+        }
     };
 
     const removeSkill = (indexToRemove) => {
@@ -172,6 +191,23 @@ const StudentSignup = () => {
                                                 <option value="University of Constantine 2">University of Constantine 2</option>
                                                 <option value="University of Constantine 3">University of Constantine 3</option>
 
+                                            </select>
+                                            <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
+                                        </div>
+                                    </label>
+
+                                    <label className="flex flex-col gap-2">
+                                        <span className="text-slate-700 dark:text-slate-300 text-sm font-semibold">Specialty</span>
+                                        <div className="relative">
+                                            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg">school</span>
+                                            <select name="specialty" required
+                                                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 focus:border-primary focus:ring-primary pl-12 h-14 appearance-none"
+                                                value={formData.specialty} onChange={handleChange}>
+                                                <option disabled value="">Select your specialty</option>
+                                                <option value="Information Technology (IT)">Information Technology (IT)</option>
+                                                <option value="E-commerce">E-commerce</option>
+                                                <option value="Psychology">Psychology</option>
+                                                <option value="Sport">Sport</option>
                                             </select>
                                             <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
                                         </div>

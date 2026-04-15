@@ -4,14 +4,15 @@ import CompanyNavbar from '../components/CompanyNavbar';
 
 const EditCompanyProfile = () => {
     const navigate = useNavigate();
-    
+
     const [formData, setFormData] = useState({
         companyName: '',
         email: '',
         phoneNumber: '',
         address: '',
         website: '',
-        description: ''
+        description: '',
+        internshipOffice: ''
     });
     const [logoFile, setLogoFile] = useState(null);
     const [logoPreview, setLogoPreview] = useState(null);
@@ -24,7 +25,7 @@ const EditCompanyProfile = () => {
             try {
                 const res = await fetch('/api/company/me');
                 const data = await res.json();
-                
+
                 if (res.ok && data.user) {
                     setFormData({
                         companyName: data.user.companyName || '',
@@ -32,7 +33,8 @@ const EditCompanyProfile = () => {
                         phoneNumber: data.user.phoneNumber || '',
                         address: data.user.address || '',
                         website: data.user.website || '',
-                        description: data.user.description || ''
+                        description: data.user.description || '',
+                        internshipOffice: data.user.internshipOffice || '',
                     });
                     if (data.user.logo) {
                         setLogoPreview(data.user.logo);
@@ -71,7 +73,7 @@ const EditCompanyProfile = () => {
     const handleSave = async () => {
         setIsSaving(true);
         setError('');
-        
+
         try {
             const submitData = new FormData();
             Object.keys(formData).forEach(key => {
@@ -171,12 +173,26 @@ const EditCompanyProfile = () => {
                                                 <span className="material-symbols-outlined text-primary text-lg">business</span>
                                                 Company Name
                                             </label>
-                                            <input 
-                                                className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all" 
-                                                placeholder="e.g. Acme Corp" 
-                                                type="text" 
+                                            <input
+                                                className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all"
+                                                placeholder="e.g. Acme Corp"
+                                                type="text"
                                                 name="companyName"
                                                 value={formData.companyName}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                        <div className="flex flex-col gap-2">
+                                            <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
+                                                <span className="material-symbols-outlined text-primary text-lg">business</span>
+                                                Internship Office
+                                            </label>
+                                            <input
+                                                className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all"
+                                                placeholder="e.g. Acme Corp"
+                                                type="text"
+                                                name="internshipOffice"
+                                                value={formData.internshipOffice}
                                                 onChange={handleChange}
                                             />
                                         </div>
@@ -185,10 +201,10 @@ const EditCompanyProfile = () => {
                                                 <span className="material-symbols-outlined text-primary text-lg">mail</span>
                                                 Business Email
                                             </label>
-                                            <input 
-                                                className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all" 
-                                                placeholder="contact@company.com" 
-                                                type="email" 
+                                            <input
+                                                className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all"
+                                                placeholder="contact@company.com"
+                                                type="email"
                                                 name="email"
                                                 value={formData.email}
                                                 onChange={handleChange}
@@ -199,10 +215,10 @@ const EditCompanyProfile = () => {
                                                 <span className="material-symbols-outlined text-primary text-lg">call</span>
                                                 Phone Number
                                             </label>
-                                            <input 
-                                                className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all" 
-                                                placeholder="+1 (555) 000-0000" 
-                                                type="tel" 
+                                            <input
+                                                className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all"
+                                                placeholder="+1 (555) 000-0000"
+                                                type="tel"
                                                 name="phoneNumber"
                                                 value={formData.phoneNumber}
                                                 onChange={handleChange}
@@ -217,10 +233,10 @@ const EditCompanyProfile = () => {
                                                 <span className="material-symbols-outlined text-primary text-lg">language</span>
                                                 Website URL
                                             </label>
-                                            <input 
-                                                className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all" 
-                                                placeholder="https://www.example.com" 
-                                                type="url" 
+                                            <input
+                                                className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all"
+                                                placeholder="https://www.example.com"
+                                                type="url"
                                                 name="website"
                                                 value={formData.website}
                                                 onChange={handleChange}
@@ -231,10 +247,10 @@ const EditCompanyProfile = () => {
                                                 <span className="material-symbols-outlined text-primary text-lg">location_on</span>
                                                 Address
                                             </label>
-                                            <input 
-                                                className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all" 
-                                                placeholder="Main St, City Country" 
-                                                type="text" 
+                                            <input
+                                                className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all"
+                                                placeholder="Main St, City Country"
+                                                type="text"
                                                 name="address"
                                                 value={formData.address}
                                                 onChange={handleChange}
@@ -248,9 +264,9 @@ const EditCompanyProfile = () => {
                                             <span className="material-symbols-outlined text-primary text-lg">description</span>
                                             Company Description
                                         </label>
-                                        <textarea 
-                                            className="form-textarea w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all resize-none" 
-                                            placeholder="Tell candidates what makes your company special..." 
+                                        <textarea
+                                            className="form-textarea w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all resize-none"
+                                            placeholder="Tell candidates what makes your company special..."
                                             rows="6"
                                             name="description"
                                             value={formData.description}
@@ -264,14 +280,14 @@ const EditCompanyProfile = () => {
 
                                 {/* Footer Actions */}
                                 <div className="p-8 bg-slate-50 dark:bg-slate-800/30 border-t border-slate-200 dark:border-slate-800 flex flex-col-reverse justify-end gap-4 md:flex-row">
-                                    <button 
+                                    <button
                                         onClick={() => navigate('/company-dashboard')}
                                         className="px-8 h-12 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-full font-semibold hover:bg-slate-100 dark:hover:bg-slate-700 transition-all text-sm"
                                         disabled={isSaving}
                                     >
                                         Cancel
                                     </button>
-                                    <button 
+                                    <button
                                         onClick={handleSave}
                                         className="px-10 h-12 bg-primary text-white rounded-full font-semibold hover:bg-primary/90 transition-all shadow-lg shadow-primary/25 text-sm flex items-center justify-center gap-2"
                                         disabled={isSaving}
