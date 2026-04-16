@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import logoImage from '../assets/logo.png';
 
 const Navbar = ({ userProfile }) => {
     const navigate = useNavigate();
@@ -57,11 +58,8 @@ const Navbar = ({ userProfile }) => {
             <div className="flex items-center justify-between px-6 lg:px-10 py-3 mx-auto w-full">
 
                 {/* Logo */}
-                <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/')}>
-                    <div className="flex items-center justify-center size-9 rounded-lg bg-[#4F46E5] text-white">
-                        <span className="material-symbols-outlined text-[20px]">hub</span>
-                    </div>
-                    <h2 className="text-slate-900 dark:text-white text-xl font-bold leading-tight tracking-tight hidden sm:block">stage.io</h2>
+                <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
+                    <img src={logoImage} alt="stage.io logo" className="h-12 w-auto object-contain" />
                 </div>
 
                 {/* Right side */}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import logoImage from '../assets/logo.png';
 
 const AdminAcceptanceValidation = () => {
     const { applicationId } = useParams();
@@ -87,11 +88,8 @@ const AdminAcceptanceValidation = () => {
             <header className="bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none sticky top-0 z-50">
                 <div className="flex justify-between items-center h-16 px-6 w-full max-w-full mx-auto font-sans antialiased text-sm font-medium">
                     <div className="flex items-center gap-8">
-                        <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/admin-dashboard')}>
-                            <div className="flex items-center justify-center size-10 rounded-lg bg-indigo-700 text-white">
-                                <span className="material-symbols-outlined font-bold">hub</span>
-                            </div>
-                            <span className="text-xl font-bold tracking-tight text-indigo-700 dark:text-indigo-300 font-headline uppercase">stage.io</span>
+                        <div className="flex items-center cursor-pointer" onClick={() => navigate('/admin-dashboard')}>
+                            <img src={logoImage} alt="stage.io logo" className="h-12 w-auto object-contain" />
                         </div>
                     </div>
                 </div>

@@ -216,9 +216,9 @@ const CompanyDashboard = () => {
                                 <h1 className="text-3xl font-bold font-header tracking-tight">Employer Portal</h1>
                                 <p className="text-slate-500 dark:text-slate-400 mt-1">Welcome back. Here's what's happening with your internship programs.</p>
                             </div>
-                            <button className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-full font-semibold shadow-lg shadow-primary/20 transition-all active:scale-95">
+                            <button onClick={() => navigate('/create-offer')} className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-full font-semibold shadow-lg shadow-primary/20 transition-all active:scale-95">
                                 <span className="material-symbols-outlined">add</span>
-                                <span><a href="/create-offer">Create New Offer</a></span>
+                                <span>Create New Offer</span>
                             </button>
                         </div>
 
@@ -370,15 +370,7 @@ const CompanyDashboard = () => {
                                         <h2 className="text-lg font-bold font-header">Quick Actions</h2>
                                     </div>
                                     <div className="p-4 grid grid-cols-2 gap-3">
-                                        <button className="flex flex-col items-center justify-center p-4 rounded-xl border border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all gap-2 group">
-                                            <span className="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">assignment_turned_in</span>
-                                            <span className="text-xs font-semibold text-center">Review Agreements</span>
-                                        </button>
-                                        <button className="flex flex-col items-center justify-center p-4 rounded-xl border border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all gap-2 group">
-                                            <span className="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">person_search</span>
-                                            <span className="text-xs font-semibold text-center">Search Students</span>
-                                        </button>
-                                        <button className="flex flex-col items-center justify-center p-4 rounded-xl border border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all gap-2 group">
+                                        <button onClick={() => navigate('/company-inbox')} className="flex flex-col items-center justify-center p-4 rounded-xl border border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all gap-2 group">
                                             <span className="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">mail</span>
                                             <span className="text-xs font-semibold text-center">Message All</span>
                                         </button>

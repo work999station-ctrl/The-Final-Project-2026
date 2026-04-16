@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import logoImage from '../assets/logo.png';
 import { submitStudentSignup } from '../services/api';
-
 
 const StudentSignup = () => {
     const navigate = useNavigate();
@@ -116,11 +116,8 @@ const StudentSignup = () => {
             <div className="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
                 <div className="flex h-full grow flex-col">
                     <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 px-6 lg:px-40 py-4 bg-white dark:bg-slate-900">
-                        <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/')}>
-                            <div className="flex items-center justify-center size-10 rounded-lg bg-primary text-white">
-                                <span className="material-symbols-outlined">hub</span>
-                            </div>
-                            <h2 className="text-slate-900 dark:text-white text-xl font-bold leading-tight tracking-tight">stage.io</h2>
+                        <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
+                            <img src={logoImage} alt="stage.io logo" className="h-12 w-auto object-contain" />
                         </div>
                         <div className="flex items-center gap-4">
                             <span className="hidden md:block text-slate-500 text-sm">Already have an account?</span>

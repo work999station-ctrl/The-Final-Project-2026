@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import logoImage from '../assets/logo.png';
 
 const Home = () => {
     const navigate = useNavigate();
@@ -103,11 +104,8 @@ const Home = () => {
             {/* Navigation */}
             <header className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
                 <div className="container mx-auto flex items-center justify-between px-6 py-4">
-                    <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/')}>
-                        <div className="flex items-center justify-center size-10 rounded-lg bg-primary text-white">
-                            <span className="material-symbols-outlined">hub</span>
-                        </div>
-                        <h2 className="text-slate-900 dark:text-white text-xl font-bold leading-tight tracking-tight">stage.io</h2>
+                    <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
+                        <img src={logoImage} alt="stage.io logo" className="h-12 w-auto object-contain" />
                     </div>
                     <nav className="hidden md:flex items-center gap-8">
                         <a className="text-sm font-semibold hover:text-primary transition-colors" href="#students">Students</a>
@@ -365,11 +363,8 @@ const Home = () => {
                 <div className="container mx-auto px-6">
                     <div className="grid md:grid-cols-4 gap-12 mb-16">
                         <div className="col-span-1 md:col-span-1">
-                            <div className="flex items-center gap-3 text-white mb-6">
-                                <div className="flex items-center justify-center size-10 rounded-lg bg-primary text-white">
-                                    <span className="material-symbols-outlined">hub</span>
-                                </div>
-                                <h2 className="text-xl font-bold tracking-tight">stage.io</h2>
+                            <div className="flex items-center text-white mb-6">
+                                <img src={logoImage} alt="stage.io logo" className="h-12 w-auto object-contain brightness-0 invert" />
                             </div>
                             <p className="text-sm leading-relaxed mb-6">The premier platform for connecting academic brilliance with industrial innovation.</p>
                             <div className="flex gap-4">
