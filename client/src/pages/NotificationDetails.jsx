@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import moment from 'moment';
+import StudentNavbar from '../components/StudentNavbar';
+import CompanyNavbar from '../components/CompanyNavbar';
 
 const NotificationDetails = () => {
     const { applicationId } = useParams();
@@ -9,6 +11,7 @@ const NotificationDetails = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [userType, setUserType] = useState('');
+    const [showArchiveModal, setShowArchiveModal] = useState(false);
 
     useEffect(() => {
         const fetchNotificationDetails = async () => {
@@ -71,23 +74,7 @@ const NotificationDetails = () => {
     return (
         <div className="bg-slate-50 text-slate-900 antialiased min-h-screen font-body pb-20">
             {/* Top Navigation Bar */}
-            <header className="bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none sticky top-0 z-50">
-                <div className="flex justify-between items-center h-16 px-6 w-full max-w-full mx-auto font-sans antialiased text-sm font-medium">
-                    <div className="flex items-center gap-8">
-                        <span className="text-2xl font-black tracking-tight text-indigo-700 dark:text-indigo-300 font-headline uppercase cursor-pointer" onClick={() => navigate(isStudent ? '/studentDashboard' : '/opportunities')}>InternHub</span>
-                        <nav className="hidden md:flex items-center gap-6 text-slate-500 font-semibold">
-                            <a className="hover:text-indigo-600 transition-colors" href={isStudent ? "/studentDashboard" : "/opportunities"}>Dashboard</a>
-                            <a className="hover:text-indigo-600 transition-colors" href="/opportunities">Offers</a>
-                            <a className="text-indigo-600 border-b-2 border-indigo-600 pb-1" href={isStudent ? "/student-inbox" : "/company-inbox"}>Inbox</a>
-                        </nav>
-                    </div>
-                    <div className="flex items-center gap-4">
-                        <div className="h-8 w-8 rounded-full bg-slate-200 overflow-hidden border border-slate-300 cursor-pointer text-indigo-600 flex items-center justify-center font-black">
-                            {isStudent ? notification.studentName.charAt(0) : notification.companyName.charAt(0)}
-                        </div>
-                    </div>
-                </div>
-            </header>
+            {isStudent ? <StudentNavbar /> : <CompanyNavbar />}
 
             <div className="max-w-4xl mx-auto px-6 py-10">
                 {/* Navigation Context */}
@@ -214,6 +201,7 @@ const NotificationDetails = () => {
                                 View Original Offer
                             </button>
                             <button
+                                onClick={() => setShowArchiveModal(true)}
                                 className="px-10 py-3 rounded-xl bg-slate-900 text-white font-black text-sm hover:bg-indigo-600 transition-all shadow-lg tracking-wide uppercase"
                             >
                                 Archive Notification
@@ -222,6 +210,36 @@ const NotificationDetails = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Archive Confirmation Modal */}
+            {showArchiveModal && (
+                <div className="fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-100">
+                        <div className="w-16 h-16 bg-slate-50 border border-slate-100 rounded-full flex items-center justify-center text-slate-800 mx-auto mb-6">
+                            <span className="material-symbols-outlined text-3xl">inventory_2</span>
+                        </div>
+                        <h3 className="text-2xl font-black text-slate-900 font-headline tracking-tight mb-2">Archive Notice?</h3>
+                        <p className="text-slate-500 text-sm mb-8 font-medium leading-relaxed">This notification will be securely moved to your archive. You can still access its details later if necessary.</p>
+                        <div className="flex gap-4">
+                            <button 
+                                onClick={() => setShowArchiveModal(false)} 
+                                className="flex-1 py-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-sm uppercase tracking-wider rounded-xl transition-all"
+                            >
+                                Cancel
+                            </button>
+                            <button 
+                                onClick={() => {
+                                    setShowArchiveModal(false);
+                                    navigate(isStudent ? '/student-inbox' : '/company-inbox');
+                                }} 
+                                className="flex-1 py-3 bg-slate-900 hover:bg-indigo-600 text-white font-bold text-sm uppercase tracking-wider rounded-xl transition-all shadow-xl shadow-slate-900/20"
+                            >
+                                Confirm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
