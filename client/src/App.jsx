@@ -11,6 +11,8 @@ import AdminDashboard from './pages/AdminDashboard';
 import AdminSignup from './pages/AdminSignup';
 import EditAdminProfile from './pages/EditAdminProfile';
 import InternshipOffers from './pages/InternshipOffers';
+import CompanyOffers from './pages/CompanyOffers';
+import CompanyStatistics from './pages/CompanyStatistics';
 import CreateInternshipOffer from './pages/CreateInternshipOffer';
 import OfferDetailsSplitView from './pages/OfferDetailsSplitView';
 import EditCompanyOffer from './pages/EditCompanyOffer';
@@ -46,10 +48,12 @@ function App() {
         <Route path="/admin-signup" element={<AdminSignup />} />
         <Route path="/edit-admin-profile" element={<EditAdminProfile />} />
         <Route path="/opportunities" element={<InternshipOffers />} />
+        <Route path="/company-offers" element={<CompanyOffers />} />
         <Route path="/create-offer" element={<CreateInternshipOffer />} />
         <Route path="/offer-details/:id" element={<OfferDetailsSplitView />} />
         <Route path="/edit-offer/:id" element={<EditCompanyOffer />} />
         <Route path="/candidate-tracking-statistics" element={<CandidateTrackingStatistics />} />
+        <Route path="/company-statistics" element={<CompanyStatistics />} />
         <Route path="/candidate-tracking-job-specific/:id" element={<CandidateTrackingJobSpecific />} />
         <Route path="/student-profile-recruiter/:id" element={<StudentProfileRecruiter />} />
         <Route path="/candidate-tracking-admin" element={<CandidateTrackingAdmin />} />

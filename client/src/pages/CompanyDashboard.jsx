@@ -10,6 +10,7 @@ const CompanyDashboard = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [offers, setOffers] = useState([]);
     const [isLoadingOffers, setIsLoadingOffers] = useState(true);
+    const [offerToDelete, setOfferToDelete] = useState(null);
     const [stats, setStats] = useState({
         activeOffers: 0,
         newApplicants: 0,
@@ -72,17 +73,20 @@ const CompanyDashboard = () => {
         fetchCompanyProfile();
     }, [navigate]);
 
-    const handleDeleteOffer = async (id) => {
-        if (!window.confirm("Are you sure you want to delete this offer?")) return;
+    const confirmDeleteOffer = async () => {
+        if (!offerToDelete) return;
         try {
-            const res = await fetch(`/api/offers/${id}`, { method: 'DELETE' });
+            const res = await fetch(`/api/offers/${offerToDelete}`, { method: 'DELETE' });
             if (res.ok) {
-                setOffers(offers.filter(offer => offer._id !== id));
+                setOffers(offers.filter(offer => offer._id !== offerToDelete));
+                setOfferToDelete(null);
             } else {
                 alert("Failed to delete offer");
+                setOfferToDelete(null);
             }
         } catch (err) {
             console.error(err);
+            setOfferToDelete(null);
         }
     };
 
@@ -282,7 +286,7 @@ const CompanyDashboard = () => {
                                                 <p className="text-sm text-slate-500">You haven't posted any internship offers yet.</p>
                                             </div>
                                         ) : (
-                                            offers.map((offer) => (
+                                            offers.slice(0, 5).map((offer) => (
                                                 <div key={offer._id} onClick={() => navigate(`/offer-details/${offer._id}`)} className="p-8 relative hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-6 group cursor-pointer">
                                                     {/* Top-right Time */}
                                                     <div className="absolute top-6 right-8 text-slate-400 text-xs font-semibold tracking-wide">
@@ -344,7 +348,7 @@ const CompanyDashboard = () => {
                                                             <button
                                                                 className="p-2.5 hover:bg-red-100 dark:hover:bg-red-900/20 rounded-full transition-colors flex-shrink-0 text-slate-400 hover:text-red-500"
                                                                 title="Delete Offer"
-                                                                onClick={(e) => { e.stopPropagation(); handleDeleteOffer(offer._id); }}
+                                                                onClick={(e) => { e.stopPropagation(); setOfferToDelete(offer._id); }}
                                                             >
                                                                 <span className="material-symbols-outlined text-base">delete</span>
                                                             </button>
@@ -378,47 +382,12 @@ const CompanyDashboard = () => {
                                             <span className="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">mail</span>
                                             <span className="text-xs font-semibold text-center">Message All</span>
                                         </button>
-                                        <button className="flex flex-col items-center justify-center p-4 rounded-xl border border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all gap-2 group">
+                                        <button onClick={() => navigate('/company-statistics')} className="flex flex-col items-center justify-center p-4 rounded-xl border border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all gap-2 group">
                                             <span className="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">bar_chart</span>
                                             <span className="text-xs font-semibold text-center">Export Reports</span>
                                         </button>
                                     </div>
                                 </div>
-
-                                {/* Recent Activity */}
-                                <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-                                    <div className="p-6 border-b border-slate-100 dark:border-slate-800">
-                                        <h2 className="text-lg font-bold font-header">Recent Activity</h2>
-                                    </div>
-                                    <div className="p-6 space-y-6">
-                                        <div className="flex gap-4">
-                                            <div className="h-8 w-8 rounded-full bg-slate-100 dark:bg-slate-800 flex-shrink-0 flex items-center justify-center">
-                                                <span className="material-symbols-outlined text-[18px] text-primary">person</span>
-                                            </div>
-                                            <div className="space-y-1">
-                                                <p className="text-sm leading-relaxed">
-                                                    <span className="font-bold text-slate-900 dark:text-white">Amine B.</span> applied to <span className="font-medium text-primary cursor-pointer hover:underline">React Intern</span>
-                                                </p>
-                                                <p className="text-xs text-slate-400">14 minutes ago</p>
-                                            </div>
-                                        </div>
-                                        <div className="flex gap-4">
-                                            <div className="h-8 w-8 rounded-full bg-slate-100 dark:bg-slate-800 flex-shrink-0 flex items-center justify-center">
-                                                <span className="material-symbols-outlined text-[18px] text-emerald-500">check_circle</span>
-                                            </div>
-                                            <div className="space-y-1">
-                                                <p className="text-sm leading-relaxed">
-                                                    <span className="font-bold text-slate-900 dark:text-white">Sarah M.</span> accepted the offer for <span className="font-medium text-primary cursor-pointer hover:underline">Design Lead</span>
-                                                </p>
-                                                <p className="text-xs text-slate-400">2 hours ago</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="p-4 bg-slate-50 dark:bg-slate-800/50 text-center border-t border-slate-100 dark:border-slate-800">
-                                        <button className="text-sm font-semibold text-primary hover:underline">View All Activity</button>
-                                    </div>
-                                </div>
-
                             </div>
                         </div>
                     </div>
@@ -436,6 +405,33 @@ const CompanyDashboard = () => {
                     </div>
                 </div>
             </footer>
+
+            {/* Delete Offer Confirmation Modal */}
+            {offerToDelete && (
+                <div className="fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-100 dark:border-slate-800">
+                        <div className="w-16 h-16 bg-rose-50 dark:bg-rose-900/20 border border-rose-100 dark:border-rose-800/30 rounded-full flex items-center justify-center text-rose-600 mx-auto mb-6">
+                            <span className="material-symbols-outlined text-3xl">warning</span>
+                        </div>
+                        <h3 className="text-2xl font-black text-slate-900 dark:text-white font-headline tracking-tight mb-2">Delete Offer?</h3>
+                        <p className="text-slate-500 dark:text-slate-400 text-sm mb-8 font-medium leading-relaxed">Are you absolutely sure you want to delete this internship offer? This action cannot be undone.</p>
+                        <div className="flex gap-4">
+                            <button 
+                                onClick={() => setOfferToDelete(null)} 
+                                className="flex-1 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-sm uppercase tracking-wider rounded-xl transition-all"
+                            >
+                                Cancel
+                            </button>
+                            <button 
+                                onClick={() => confirmDeleteOffer()} 
+                                className="flex-1 py-3 bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm uppercase tracking-wider rounded-xl transition-all shadow-xl shadow-rose-600/20"
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
