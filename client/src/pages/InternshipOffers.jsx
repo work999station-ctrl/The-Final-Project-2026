@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
+import StudentNavbar from '../components/StudentNavbar';
 
 const InternshipOffers = () => {
     const navigate = useNavigate();
@@ -139,40 +140,7 @@ const InternshipOffers = () => {
     return (
         <div className="bg-[#F8FAFC] dark:bg-[#121121] font-body text-slate-900 dark:text-white antialiased min-h-screen flex flex-col">
             {/* Top Navbar */}
-            <header className="sticky top-0 z-50 bg-[#f9f8fb]/95 dark:bg-[#121121]/95 backdrop-blur-md border-b border-solid border-b-[#e8e8f3] dark:border-b-slate-800">
-                <div className="px-6 md:px-10 py-3 flex items-center justify-between">
-                    <div className="flex items-center gap-4 cursor-pointer" onClick={() => navigate('/')}>
-                        <div className="size-8 text-[#4F46E5] flex items-center justify-center">
-                            <span className="material-symbols-outlined text-[32px]">hub</span>
-                        </div>
-                        <h2 className="text-[#0f0e1b] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] hidden sm:block">stage.io</h2>
-                    </div>
-                    <div className="flex flex-1 justify-end gap-8 items-center">
-                        <nav className="hidden md:flex items-center gap-9">
-                            <a className="text-slate-500 dark:text-slate-400 hover:text-[#4F46E5] transition-colors text-sm font-medium leading-normal" href="/student-dashboard">Dashboard</a>
-                            <a className="text-[#4F46E5] text-sm font-medium leading-normal" href="#">Offer Discovery</a>
-                            <a className="text-slate-500 dark:text-slate-400 hover:text-[#4F46E5] transition-colors text-sm font-medium leading-normal" href="#">Messages</a>
-                            <a className="text-slate-500 dark:text-slate-400 hover:text-[#4F46E5] transition-colors text-sm font-medium leading-normal" href="#">Profile</a>
-                        </nav>
-                        <div className="flex gap-3">
-                            <button className="flex items-center justify-center rounded-full size-10 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
-                                <span className="material-symbols-outlined text-[20px]">notifications</span>
-                            </button>
-                            <button
-                                onClick={() => navigate('/student-dashboard')}
-                                className="flex items-center justify-center rounded-full size-10 bg-[#4F46E5] text-white hover:bg-[#4F46E5]/90 transition-colors shadow-lg shadow-[#4F46E5]/20 overflow-hidden"
-                                title="Edit Profile"
-                            >
-                                {student?.profilePicture ? (
-                                    <img src={student.profilePicture} alt="Profile" className="w-full h-full object-cover" />
-                                ) : (
-                                    <span className="material-symbols-outlined text-[20px]">person</span>
-                                )}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </header>
+            <StudentNavbar />
 
             {/* Main Content Area */}
             <main className="flex-1 flex flex-col max-w-[1440px] mx-auto w-full px-4 md:px-8 lg:px-12 py-8 gap-8">

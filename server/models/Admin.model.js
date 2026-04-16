@@ -33,16 +33,12 @@ const adminSchema = new mongoose.Schema({
     // Role & Permissions
     role: {
         type: String,
-
         default: 'admin'
     },
-
-    // Relations
-    // This array tracks which internship validations this admin has handled
-    //   managedPlacements: [{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Placement' // Reference to the matching/internship record
-    //   }],
+    DeptHead: {
+        type: String,
+        default: ''
+    },
 
     profilePicture: {
         type: String,

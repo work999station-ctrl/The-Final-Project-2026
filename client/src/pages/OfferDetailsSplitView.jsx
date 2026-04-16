@@ -322,7 +322,17 @@ const OfferDetailsSplitView = () => {
                                             {offer.techStack && offer.techStack.length > 0 ? (
                                                 offer.techStack.map((stack, index) => (
                                                     <div key={index}>
-                                                        {stack.category && <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">{stack.category}</h4>}
+                                                        {stack.category && (
+                                                            <div className="flex items-center gap-3 mb-3 mt-1">
+                                                                <span className="flex-shrink-0 flex items-center justify-center w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-md shadow-indigo-500/20">
+                                                                    <span className="material-symbols-outlined text-[16px]">category</span>
+                                                                </span>
+                                                                <h4 className="text-xs font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-800 to-slate-500 dark:from-white dark:to-slate-400 uppercase tracking-widest">
+                                                                    {stack.category}
+                                                                </h4>
+                                                                <div className="flex-1 min-w-[20px] h-px bg-gradient-to-r from-slate-200 dark:from-slate-700 to-transparent"></div>
+                                                            </div>
+                                                        )}
                                                         <div className="flex flex-wrap gap-2">
                                                             {stack.tags && stack.tags.map((tag, tagIndex) => (
                                                                 <span key={tagIndex} className="px-3 py-1.5 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-lg text-xs font-semibold border border-indigo-100 dark:border-indigo-800">

@@ -304,7 +304,7 @@ const StudentProfileRecruiterView = () => {
                                 </div>
                             )}
                             <div className="text-sm text-slate-600 dark:text-slate-400 italic bg-primary/5 p-3 rounded-lg border border-primary/10">
-                                "Quick View: Student is at {student.university} in their {student.currentYear}. Contact them via {student.email}."
+                                "Quick View: Student is at {student.university} in their {student.currentYear} specialty of {student.specialty}. Contact them via {student.email}."
                             </div>
                             <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
                                 <p className="text-xs font-bold uppercase text-slate-400 mb-2">Social Profiles</p>

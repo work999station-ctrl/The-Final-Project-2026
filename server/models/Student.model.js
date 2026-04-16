@@ -19,6 +19,10 @@ const studentSchema = mongoose.Schema({
         require: [true, 'Please enter an password'],
         minlength: [6, 'Minimum password length is 6 characters']
     },
+    specialty: {
+        type: String,
+        default: ''
+    },
     university: {
         type: String,
         default: ''
@@ -53,7 +57,7 @@ const studentSchema = mongoose.Schema({
         default: []
     },
     degreeName: { type: String, default: '' },
-    universityCity: { type: String, default: '' },
+
     expectedGraduationDate: { type: String, default: '' },
     technicalSkills: {
         programmingLanguages: { type: [String], default: [] },
@@ -66,7 +70,7 @@ const studentSchema = mongoose.Schema({
         role: { type: String, default: '' },
         technologies: { type: String, default: '' },
         result: { type: String, default: '' },
-        link: { type: String, default: '' }
+        link: { type: String, required: true, default: '' }
     }],
     experience: [{
         type: { type: String, default: '' },
