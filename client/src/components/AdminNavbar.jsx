@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import logoImage from '../assets/logo.png';
 
 const AdminNavbar = ({ admin: adminProp }) => {
     const navigate = useNavigate();
@@ -45,13 +46,8 @@ const AdminNavbar = ({ admin: adminProp }) => {
                 {/* Left: Logo + Nav */}
                 <div className="flex items-center gap-8">
                     {/* Logo */}
-                    <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/')}>
-                        <div className="flex items-center justify-center size-10 rounded-lg bg-primary text-white">
-                            <span className="material-symbols-outlined font-bold">hub</span>
-                        </div>
-                        <h2 className="text-xl font-bold font-header tracking-tight text-slate-900 dark:text-white hidden sm:block">
-                            stage.io <span className="text-primary text-sm font-semibold">Admin</span>
-                        </h2>
+                    <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
+                        <img src={logoImage} alt="stage.io logo" className="h-12 w-auto object-contain" />
                     </div>
 
                     {/* Nav Links */}
