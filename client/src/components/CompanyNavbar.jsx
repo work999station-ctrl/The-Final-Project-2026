@@ -69,7 +69,7 @@ const CompanyNavbar = ({ company: companyProp }) => {
                 <div className="flex items-center gap-8">
                     {/* Logo */}
                     <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-                        <img src={logoImage} alt="stage.io logo" className="h-12 w-auto object-contain" />
+                        <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain" />
                     </div>
 
                     {/* Nav Links */}

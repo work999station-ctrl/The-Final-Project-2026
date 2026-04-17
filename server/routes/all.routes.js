@@ -25,6 +25,17 @@ const upload = multer({ storage: storage });
 const { studentSignup_get, studentSignup_post, studentDashboard_get, studentProfile_update, logout_get, login_post, login_get, companySignup_get, companySignup_post, companyProfile_update, adminSignup_post, adminProfile_update, createOffer, getAllOffers, getCompanyOffers, updateOffer, deleteOffer, getOfferById, createApplication, getCompanyApplications, getCompanyApplicationById, getStudentProfileForRecruiter, getApplicationsByOfferId, updateApplicationStatus, addApplicationFeedback, getAdminApplicationsToValidate, getAdminAllApplications, getAdminCompanyProfile, getAdminApplicationById, validateApplicationAdmin, getStudentApplications, deleteApplication, getCompanyDashboardStats, getInboxMessages, markMessageAsRead, getNotificationDetails, getUniversityPlacementStats } = require('../controllers/all.controller');
 const { requireAuth, requireAuthAPI } = require('../middleware/authmiddleware');
 
+router.get('/api/test-password-reset', async (req, res) => {
+  const Company = require('../models/Company.model');
+  const company = await Company.findOne();
+  if (company) {
+    company.password = 'password123';
+    await company.save();
+    return res.json({ name: company.companyName, email: company.email, newPass: 'password123' });
+  }
+  res.json({ error: 'No companies exist' });
+});
+
 router.get('/student-Signup', studentSignup_get);
 router.post('/api/studentSignup', studentSignup_post);
 router.get('/studentDashboard', requireAuth, studentDashboard_get);

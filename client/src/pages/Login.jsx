@@ -68,7 +68,7 @@ const Login = () => {
                     {/* Header */}
                     <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 px-6 lg:px-40 py-4 bg-white dark:bg-slate-900 sticky top-0 z-50">
                         <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-                            <img src={logoImage} alt="stage.io logo" className="h-12 w-auto object-contain" />
+                            <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain" />
                         </div>
                         <div className="flex items-center gap-4">
                             <span className="hidden md:block text-slate-500 text-sm">New here?</span>

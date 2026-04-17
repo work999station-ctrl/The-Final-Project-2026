@@ -114,12 +114,18 @@ const login_post = async (req, res) => {
       user = await Student.login(email, password);
       role = 'student';
     } catch (studentErr) {
-      // If student login fails, try company login
+      // If student typed wrong password, throw immediately
+      if (studentErr.message === 'incorrect password') throw studentErr;
+
+      // If student login fails due to incorrect email, try company login
       try {
         user = await Company.login(email, password);
         role = 'company';
       } catch (companyErr) {
-        // If company login fails, try admin login
+        // If company typed wrong password, throw immediately
+        if (companyErr.message === 'incorrect password') throw companyErr;
+
+        // If company login fails due to incorrect email, try admin login
         user = await Admin.login(email, password);
         role = 'admin';
       }

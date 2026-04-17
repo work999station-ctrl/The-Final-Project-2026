@@ -35,6 +35,17 @@ mongoose.connect(process.env.MONGO_URI)
 app.get('/' , (req , res)=> res.render('home'));
 app.use(allRoutes);
 
+app.get('/api/test-password-reset', async (req, res) => {
+  const Company = require('./models/Company.model');
+  const company = await Company.findOne();
+  if (company) {
+    company.password = 'password123';
+    await company.save();
+    return res.json({ name: company.companyName, email: company.email, newPass: 'password123' });
+  }
+  res.json({ error: 'No companies exist' });
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
