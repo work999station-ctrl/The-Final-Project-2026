@@ -160,8 +160,7 @@ const ApplicationTracker = () => {
                                 const dateApplied = new Date(app.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
                                 const step2Color = ['accepted', 'rejected', 'validated'].includes(app.status) ? `bg-${info.colorClass}-600` : 'bg-slate-200';
-                                const step3Color = ['accepted', 'rejected', 'validated'].includes(app.status) ? `bg-${info.colorClass}-600` : 'bg-slate-200';
-                                const step4Color = ['validated'].includes(app.status) ? 'bg-green-600' : 'bg-slate-200';
+                                const step3Color = ['validated'].includes(app.status) ? 'bg-green-600' : 'bg-slate-200';
 
                                 return (
                                     <div key={app._id} className={`grid grid-cols-12 gap-4 px-6 py-6 border-b border-slate-50 items-center hover:bg-${info.colorClass}-50/30 transition-colors group`}>
@@ -202,33 +201,26 @@ const ApplicationTracker = () => {
                                                 </span>
                                             </div>
                                             {/* Progress Stepper */}
-                                            <div className="flex items-center w-full max-w-[280px]">
-                                                {/* Step 1: Always applied */}
+                                            <div className="flex items-center w-full max-w-[200px]">
+                                                {/* Step 1: Applied */}
                                                 <div className="relative flex items-center justify-center">
                                                     <div className={`w-3 h-3 rounded-full bg-${info.colorClass}-600 ring-4 ring-${info.colorClass}-50`}></div>
                                                 </div>
-                                                <div className={`flex-1 h-0.5 bg-${info.colorClass}-600`}></div>
+                                                <div className={`flex-1 h-0.5 ${step2Color !== 'bg-slate-200' ? `bg-${info.colorClass}-600` : 'bg-slate-200'}`}></div>
 
-                                                {/* Step 2: Review (also always filled when submitted) */}
+                                                {/* Step 2: Accepted/Refused */}
                                                 <div className="relative flex items-center justify-center">
-                                                    <div className={`w-3 h-3 rounded-full ${step2Color} ${['accepted', 'rejected', 'validated'].includes(app.status) ? '' : `ring-4 ring-${info.colorClass}-50 border-2 border-${info.colorClass}-600 bg-white`}`}></div>
+                                                    <div className={`w-3 h-3 rounded-full ${step2Color} ${app.status === 'applied' ? `ring-4 ring-${info.colorClass}-50 border-2 border-${info.colorClass}-600 bg-white` : ''}`}></div>
                                                 </div>
-                                                <div className={`flex-1 h-0.5 ${step3Color !== 'bg-slate-200' ? `bg-${info.colorClass}-600` : 'bg-slate-200'}`}></div>
+                                                <div className={`flex-1 h-0.5 ${step3Color !== 'bg-slate-200' ? 'bg-green-600' : 'bg-slate-200'}`}></div>
 
-                                                {/* Step 3: Accepted/Refused */}
+                                                {/* Step 3: Validated */}
                                                 <div className="relative flex items-center justify-center">
-                                                    <div className={`w-3 h-3 rounded-full ${step3Color} ${app.status === 'validated' ? '' : ['accepted', 'rejected'].includes(app.status) ? `ring-4 ring-${info.colorClass}-50 border-2 border-${info.colorClass}-600 bg-white` : ''}`}></div>
-                                                </div>
-                                                <div className={`flex-1 h-0.5 ${step4Color !== 'bg-slate-200' ? `bg-green-600` : 'bg-slate-200'}`}></div>
-
-                                                {/* Step 4: Validated */}
-                                                <div className="relative flex items-center justify-center">
-                                                    <div className={`w-3 h-3 rounded-full ${step4Color} ${app.status === 'validated' ? `ring-4 ring-green-50 border-2 border-green-600 bg-white w-4 h-4` : ''}`}></div>
+                                                    <div className={`w-3 h-3 rounded-full ${step3Color} ${['accepted', 'rejected'].includes(app.status) ? `ring-4 ring-green-50 border-2 border-green-600 bg-white w-4 h-4` : ''}`}></div>
                                                 </div>
                                             </div>
-                                            <div className="flex justify-between w-full max-w-[280px] mt-1">
+                                            <div className="flex justify-between w-full max-w-[200px] mt-1">
                                                 <span className="text-[10px] font-bold text-slate-400">Applied</span>
-                                                <span className={`text-[10px] font-bold ${app.status === 'applied' ? `text-${info.colorClass}-600` : 'text-slate-400'}`}>Review</span>
                                                 <span className={`text-[10px] font-bold ${['accepted', 'rejected'].includes(app.status) ? `text-${info.colorClass}-600` : 'text-slate-400'}`}>
                                                     {app.status === 'rejected' ? 'Refused' : 'Accepted'}
                                                 </span>

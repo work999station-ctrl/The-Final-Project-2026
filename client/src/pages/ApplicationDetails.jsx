@@ -391,32 +391,44 @@ const ApplicationDetails = () => {
                                 {/* Candidate Actions */}
                                 <section className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-lg">
                                     <h3 className="font-display text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">Candidate Actions</h3>
-                                    <div className="flex flex-col gap-3">
-                                        <button
-                                            disabled={actionLoading}
-                                            onClick={() => setConfirmationModal({ isOpen: true, status: 'Accepted' })}
-                                            className="w-full bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95 shadow-md shadow-green-100 dark:shadow-none"
-                                        >
-                                            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
-                                            Accept
-                                        </button>
-                                        <button
-                                            disabled={actionLoading}
-                                            onClick={() => setConfirmationModal({ isOpen: true, status: 'Refused' })}
-                                            className="w-full bg-red-50 hover:bg-red-100 disabled:opacity-50 text-red-600 dark:bg-red-900/20 dark:hover:bg-red-900/40 dark:text-red-400 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95 border border-red-100 dark:border-red-900/50"
-                                        >
-                                            <span className="material-symbols-outlined">cancel</span>
-                                            Refuse
-                                        </button>
-                                        <button
-                                            disabled={actionLoading}
-                                            onClick={() => setConfirmationModal({ isOpen: true, status: 'On Hold' })}
-                                            className="w-full bg-slate-50 hover:bg-slate-100 disabled:opacity-50 text-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95 border border-slate-200 dark:border-slate-700"
-                                        >
-                                            <span className="material-symbols-outlined">schedule</span>
-                                            Put on Hold
-                                        </button>
-                                    </div>
+                                    {appData.status === 'accepted' ? (
+                                        <div className="flex flex-col items-center gap-3 py-4 px-2 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-xl text-center">
+                                            <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center">
+                                                <span className="material-symbols-outlined text-amber-600 dark:text-amber-400 text-2xl">hourglass_top</span>
+                                            </div>
+                                            <div>
+                                                <p className="font-bold text-amber-800 dark:text-amber-300 text-sm">Waiting for Admin Validation</p>
+                                                <p className="text-xs text-amber-600 dark:text-amber-500 mt-1 leading-relaxed">This application has been accepted. The university admin must now validate it before proceeding.</p>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="flex flex-col gap-3">
+                                            <button
+                                                disabled={actionLoading}
+                                                onClick={() => setConfirmationModal({ isOpen: true, status: 'Accepted' })}
+                                                className="w-full bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95 shadow-md shadow-green-100 dark:shadow-none"
+                                            >
+                                                <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                                                Accept
+                                            </button>
+                                            <button
+                                                disabled={actionLoading}
+                                                onClick={() => setConfirmationModal({ isOpen: true, status: 'Refused' })}
+                                                className="w-full bg-red-50 hover:bg-red-100 disabled:opacity-50 text-red-600 dark:bg-red-900/20 dark:hover:bg-red-900/40 dark:text-red-400 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95 border border-red-100 dark:border-red-900/50"
+                                            >
+                                                <span className="material-symbols-outlined">cancel</span>
+                                                Refuse
+                                            </button>
+                                            <button
+                                                disabled={actionLoading}
+                                                onClick={() => setConfirmationModal({ isOpen: true, status: 'On Hold' })}
+                                                className="w-full bg-slate-50 hover:bg-slate-100 disabled:opacity-50 text-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95 border border-slate-200 dark:border-slate-700"
+                                            >
+                                                <span className="material-symbols-outlined">schedule</span>
+                                                Put on Hold
+                                            </button>
+                                        </div>
+                                    )}
                                 </section>
 
                                 {/* Quick Info */}
@@ -472,8 +484,8 @@ const ApplicationDetails = () => {
                     <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 md:p-8 max-w-md w-full shadow-2xl border border-slate-200 dark:border-slate-800 animate-in zoom-in-95 duration-300">
                         <div className="flex items-start gap-4 mb-4">
                             <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 mt-1 ${confirmationModal.status === 'Accepted' ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' :
-                                    confirmationModal.status === 'Refused' ? 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400' :
-                                        'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'
+                                confirmationModal.status === 'Refused' ? 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400' :
+                                    'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'
                                 }`}>
                                 <span className="material-symbols-outlined text-2xl font-bold" style={{ fontVariationSettings: "'FILL' 1" }}>
                                     {confirmationModal.status === 'Accepted' ? 'check_circle' :
@@ -502,8 +514,8 @@ const ApplicationDetails = () => {
                                 onClick={handleAction}
                                 disabled={actionLoading}
                                 className={`px-5 py-2.5 rounded-xl font-bold text-sm text-white flex items-center justify-center min-w-[140px] gap-2 transition-all active:scale-95 disabled:opacity-75 ${confirmationModal.status === 'Accepted' ? 'bg-green-600 hover:bg-green-700 shadow-md shadow-green-100 dark:shadow-none' :
-                                        confirmationModal.status === 'Refused' ? 'bg-red-600 hover:bg-red-700 shadow-md shadow-red-100 dark:shadow-none' :
-                                            'bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 shadow-md shadow-slate-200 dark:shadow-none'
+                                    confirmationModal.status === 'Refused' ? 'bg-red-600 hover:bg-red-700 shadow-md shadow-red-100 dark:shadow-none' :
+                                        'bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 shadow-md shadow-slate-200 dark:shadow-none'
                                     }`}
                             >
                                 {actionLoading ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> : 'Confirm Update'}
