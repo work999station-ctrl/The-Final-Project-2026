@@ -89,7 +89,7 @@ const AdminAcceptanceValidation = () => {
                 <div className="flex justify-between items-center h-16 px-6 w-full max-w-full mx-auto font-sans antialiased text-sm font-medium">
                     <div className="flex items-center gap-8">
                         <div className="flex items-center cursor-pointer" onClick={() => navigate('/admin-dashboard')}>
-                            <img src={logoImage} alt="stage.io logo" className="h-12 w-auto object-contain" />
+                            <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain" />
                         </div>
                     </div>
                 </div>

@@ -105,7 +105,7 @@ const Home = () => {
             <header className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
                 <div className="container mx-auto flex items-center justify-between px-6 py-4">
                     <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-                        <img src={logoImage} alt="stage.io logo" className="h-12 w-auto object-contain" />
+                        <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain" />
                     </div>
                     <nav className="hidden md:flex items-center gap-8">
                         <a className="text-sm font-semibold hover:text-primary transition-colors" href="#students">Students</a>
@@ -364,7 +364,7 @@ const Home = () => {
                     <div className="grid md:grid-cols-4 gap-12 mb-16">
                         <div className="col-span-1 md:col-span-1">
                             <div className="flex items-center text-white mb-6">
-                                <img src={logoImage} alt="stage.io logo" className="h-12 w-auto object-contain brightness-0 invert" />
+                                <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain brightness-0 invert" />
                             </div>
                             <p className="text-sm leading-relaxed mb-6">The premier platform for connecting academic brilliance with industrial innovation.</p>
                             <div className="flex gap-4">
