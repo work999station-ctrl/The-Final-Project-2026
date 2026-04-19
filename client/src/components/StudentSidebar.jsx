@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
+const StudentSidebar = ({ student, activePage, topOffset = "top-16" }) => {
     const navigate = useNavigate();
     const [isCollapsed, setIsCollapsed] = useState(() => {
-        return localStorage.getItem('companySidebarCollapsed') === 'true';
+        return localStorage.getItem('studentSidebarCollapsed') === 'true';
     });
 
     const sidebarWidth = isCollapsed ? '4.5rem' : '16rem';
 
     useEffect(() => {
-        localStorage.setItem('companySidebarCollapsed', isCollapsed);
+        localStorage.setItem('studentSidebarCollapsed', isCollapsed);
         window.dispatchEvent(new CustomEvent('sidebar-toggle', { detail: { isCollapsed } }));
     }, [isCollapsed]);
 
@@ -23,12 +23,11 @@ const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
     };
 
     const navItems = [
-        { page: 'overview', icon: 'business', label: 'Dashboard', href: '/company-dashboard' },
-        { page: 'offers', icon: 'work', label: 'My Offers', href: '/candidate-tracking-statistics' },
-        { page: 'applications', icon: 'groups', label: 'Applications', href: '/candidate-tracking-statistics' },
-        { page: 'create-offer', icon: 'add_box', label: 'Create Offer', href: '/create-offer' },
-        { page: 'inbox', icon: 'inbox', label: 'Inbox', href: '/company-inbox' },
-        { page: 'settings', icon: 'settings_applications', label: 'Settings', href: '/edit-company-profile' },
+        { page: 'dashboard', icon: 'dashboard', label: 'Dashboard', href: '/student-dashboard' },
+        { page: 'internships', icon: 'work', label: 'Internships', href: '/opportunities' },
+        { page: 'applications', icon: 'description', label: 'Applications', href: '/ApplicationTracker' },
+        { page: 'inbox', icon: 'mail', label: 'Messages', href: '/student-inbox' },
+        { page: 'settings', icon: 'settings', label: 'Settings', href: '/edit-student-profile' },
     ];
 
     return (
@@ -38,23 +37,23 @@ const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
                 className={`fixed left-0 ${topOffset} bottom-0 flex flex-col p-3 gap-2 border-r border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 hidden md:flex z-40 transition-all duration-300 ease-in-out overflow-hidden`}
                 style={{ width: sidebarWidth, height: 'auto' }}
             >
-                {/* Company Header */}
+                {/* Student Header */}
                 <div
-                    onClick={() => navigate('/edit-company-profile')}
+                    onClick={() => navigate('/edit-student-profile')}
                     className="flex items-center gap-3 px-2 py-3 mb-2 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-900 rounded-xl transition-colors"
                 >
                     <div className="shrink-0">
-                        {company?.logo ? (
-                            <img alt="Company Logo" className="w-10 h-10 rounded-lg object-cover" src={company.logo} />
+                        {student?.profilePicture ? (
+                            <img alt="Student Profile" className="w-10 h-10 rounded-lg object-cover" src={student.profilePicture} />
                         ) : (
                             <div className="w-10 h-10 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold italic">
-                                {company?.name?.substring(0, 2) || 'CP'}
+                                {student?.name?.substring(0, 2) || 'ST'}
                             </div>
                         )}
                     </div>
                     <div className={`overflow-hidden whitespace-nowrap transition-all duration-300 ${isCollapsed ? 'w-0 opacity-0' : 'opacity-100'}`}>
-                        <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100 leading-tight truncate">{company?.name || 'TechCorp Inc.'}</h2>
-                        <p className="text-xs text-slate-500 truncate">Recruiter Dashboard</p>
+                        <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100 leading-tight truncate">{student?.name || 'Student Name'}</h2>
+                        <p className="text-xs text-slate-500 truncate">University Portal</p>
                     </div>
                 </div>
 
@@ -73,7 +72,7 @@ const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
                 {/* Bottom Buttons */}
                 <div className="flex flex-col gap-3 mt-auto pb-4">
                     <button
-                        onClick={() => navigate('/edit-company-profile')}
+                        onClick={() => navigate('/edit-student-profile')}
                         title={isCollapsed ? "Edit Profile" : undefined}
                         className="py-3 px-3 rounded-xl border border-primary/20 text-indigo-600 dark:text-indigo-400 font-semibold text-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors flex items-center justify-center gap-2 w-full"
                     >
@@ -116,4 +115,4 @@ const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
     );
 };
 
-export default CompanySidebar;
+export default StudentSidebar;

@@ -1,32 +1,51 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import StudentNavbar from '../components/StudentNavbar';
+import StudentSidebar from '../components/StudentSidebar';
 
 const ApplicationTracker = () => {
     const navigate = useNavigate();
     const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [student, setStudent] = useState(null);
 
     useEffect(() => {
-        const fetchApps = async () => {
+        const fetchAppsAndStudent = async () => {
             try {
                 const token = document.cookie.split('jwt=')[1]?.split(';')[0] || localStorage.getItem('token');
-                const res = await fetch('/api/student/applications', {
+                
+                // Fetch Applications
+                const resApps = fetch('/api/student/applications', {
                     headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) }
                 });
-                if (res.ok) {
-                    const data = await res.json();
+                
+                // Fetch Student Data
+                const resStudent = fetch('/api/student/me', {
+                    headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) }
+                });
+
+                const [appResponse, studentResponse] = await Promise.all([resApps, resStudent]);
+
+                if (appResponse.ok) {
+                    const data = await appResponse.json();
                     if (data.success) {
                         setApplications(data.applications);
                     }
                 }
+
+                if (studentResponse.ok) {
+                    const stuData = await studentResponse.json();
+                    if (stuData.user) {
+                        setStudent(stuData.user);
+                    }
+                }
             } catch (err) {
-                console.error("Failed to fetch applications:", err);
+                console.error("Failed to fetch data:", err);
             } finally {
                 setLoading(false);
             }
         };
-        fetchApps();
+        fetchAppsAndStudent();
     }, []);
 
     const getStatusInfo = (status) => {
@@ -66,65 +85,17 @@ const ApplicationTracker = () => {
 
     return (
         <div className="bg-slate-50 text-slate-900 antialiased min-h-screen">
-            <StudentNavbar />
+            <StudentNavbar student={student} />
+            <StudentSidebar student={student} activePage="applications" />
+            
             <div className="flex min-h-[calc(100vh-64px)]">
-                {/* Sidebar Navigation */}
-                <aside className="hidden lg:flex fixed left-0 top-16 h-[calc(100vh-64px)] w-64 flex-col p-4 bg-slate-50 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 font-sans text-sm font-semibold">
-                    <div className="mb-8 px-4 py-2">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-200">
-                                <span className="material-symbols-outlined" data-icon="school">school</span>
-                            </div>
-                            <div>
-                                <p className="text-slate-900 dark:text-white font-bold">Admin Portal</p>
-                                <p className="text-slate-500 dark:text-slate-400 text-xs font-normal">University Management</p>
-                            </div>
-                        </div>
-                    </div>
-                    <nav className="flex-1 space-y-1">
-                        <a className="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-2.5 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all scale-95 duration-200 ease-in-out" href="#">
-                            <span className="material-symbols-outlined" data-icon="dashboard">dashboard</span>
-                            Dashboard
-                        </a>
-                        <a className="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-2.5 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all scale-95 duration-200 ease-in-out" href="#">
-                            <span className="material-symbols-outlined" data-icon="work">work</span>
-                            Internships
-                        </a>
-                        <a className="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-2.5 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all scale-95 duration-200 ease-in-out" href="#">
-                            <span className="material-symbols-outlined" data-icon="mail">mail</span>
-                            Messages
-                        </a>
-                        <a className="flex items-center gap-3 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-lg px-4 py-2.5 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all scale-95 duration-200 ease-in-out" href="#">
-                            <span className="material-symbols-outlined" data-icon="description">description</span>
-                            Applications
-                        </a>
-                        <a className="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-2.5 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all scale-95 duration-200 ease-in-out" href="#">
-                            <span className="material-symbols-outlined" data-icon="settings">settings</span>
-                            Settings
-                        </a>
-                    </nav>
-                    <div className="mt-auto pt-6 border-t border-slate-200 dark:border-slate-800 space-y-1">
-                        <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg mb-4 font-bold transition-all shadow-md shadow-indigo-100">
-                            Post New Offer
-                        </button>
-                        <a className="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-2.5 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all" href="#">
-                            <span className="material-symbols-outlined" data-icon="help">help</span>
-                            Help Center
-                        </a>
-                        <a className="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-2.5 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all" href="#">
-                            <span className="material-symbols-outlined" data-icon="logout">logout</span>
-                            Logout
-                        </a>
-                    </div>
-                </aside>
-
                 {/* Main Content Canvas */}
-                <main className="flex-1 lg:ml-64 p-8">
+                <main className="flex-1 md:ml-64 p-8 pt-20">
                     <div className="max-w-7xl mx-auto">
                         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
                             <div>
                                 <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-2 font-headline">My Applications</h1>
-                                <p className="text-slate-500 font-medium">Tracking {applications.length} active internship opportunities for the 2024 Fall term.</p>
+                                <p className="text-slate-500 font-medium">Tracking {applications.length} active internship opportunities for the 2026 Fall term.</p>
                             </div>
                             <div className="flex items-center gap-3">
                                 <div className="relative">
@@ -240,9 +211,12 @@ const ApplicationTracker = () => {
                                                     </span>
                                                 )}
                                                 {app.offerId && (
-                                                    <button 
-                                                        className={`p-2 hover:text-${info.colorClass}-600 hover:bg-${info.colorClass}-50 rounded-lg transition-all border border-transparent hover:border-${info.colorClass}-100 shadow-sm ${app.status === 'validated' ? 'text-green-600 bg-green-50 border-green-200' : 'text-slate-400'}`} 
-                                                        onClick={() => { if (app.status === 'validated') navigate(`/agreement/${app._id}`); }}
+                                                    <button
+                                                        className={`p-2 hover:text-${info.colorClass}-600 hover:bg-${info.colorClass}-50 rounded-lg transition-all border border-transparent hover:border-${info.colorClass}-100 shadow-sm ${app.status === 'validated' ? 'text-green-600 bg-green-50 border-green-200' : 'text-slate-400'}`}
+                                                        onClick={() => {
+                                                            if (app.status === 'validated') navigate(`/agreement/${app._id}`);
+                                                            else navigate(`/offer-details/${app.offerId?._id}`);
+                                                        }}
                                                         title={app.status === 'validated' ? 'Download Agreement' : 'View Details'}
                                                     >
                                                         <span className="material-symbols-outlined text-[20px]" data-icon={app.status === 'validated' ? 'description' : 'visibility'}>
@@ -251,8 +225,8 @@ const ApplicationTracker = () => {
                                                     </button>
                                                 )}
                                                 {app.status !== 'validated' && (
-                                                    <button 
-                                                        className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all border border-transparent hover:border-red-100 shadow-sm" 
+                                                    <button
+                                                        className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all border border-transparent hover:border-red-100 shadow-sm"
                                                         title="Delete Application"
                                                         onClick={() => handleDelete(app._id)}
                                                     >
@@ -302,7 +276,7 @@ const ApplicationTracker = () => {
                                                 {a.offerId?.companyId?.logo ? (
                                                     <img src={`http://localhost:3000${a.offerId.companyId.logo}`} className="w-full h-full object-cover" alt="Company" />
                                                 ) : (
-                                                    <div className="w-full h-full flex items-center justify-center text-[10px] bg-indigo-100 text-indigo-600 font-bold">{i+1}</div>
+                                                    <div className="w-full h-full flex items-center justify-center text-[10px] bg-indigo-100 text-indigo-600 font-bold">{i + 1}</div>
                                                 )}
                                             </div>
                                         ))}
@@ -323,7 +297,7 @@ const ApplicationTracker = () => {
                                 <h4 className="text-4xl font-extrabold mt-1 text-green-600 font-headline">
                                     {applications.filter(a => a.status === 'validated').length}
                                 </h4>
-                                <button 
+                                <button
                                     className="mt-4 text-indigo-600 text-sm font-bold flex items-center gap-1 hover:gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                                     disabled={applications.filter(a => a.status === 'validated').length === 0}
                                 >

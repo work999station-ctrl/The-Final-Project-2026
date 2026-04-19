@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import StudentNavbar from '../components/StudentNavbar';
+import StudentSidebar from '../components/StudentSidebar';
 
 const EditStudentProfile = () => {
     const navigate = useNavigate();
@@ -35,6 +36,7 @@ const EditStudentProfile = () => {
     const [isSaving, setIsSaving] = useState(false);
     const [error, setError] = useState('');
     const [showSkillsDropdown, setShowSkillsDropdown] = useState(false);
+    const [student, setStudent] = useState(null);
 
     const specialtySkills = {
         'Information Technology (IT)': ['JavaScript', 'HTML', 'CSS', 'Docker', 'AWS', 'SQL', 'Git', 'Java', 'C++', 'Next.js', 'PostgreSQL', 'MongoDB', 'Go', 'Rust', 'Python', 'React', 'Node.js', 'TypeScript', 'Flutter', 'Express'],
@@ -76,6 +78,7 @@ const EditStudentProfile = () => {
                     if (data.user.profilePicture) {
                         setProfilePicPreview(data.user.profilePicture);
                     }
+                    setStudent(data.user);
                 } else {
                     setError('Failed to load profile data.');
                 }
@@ -181,14 +184,15 @@ const EditStudentProfile = () => {
         <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen font-display">
             <div className="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
                 <div className="layout-container flex h-full grow flex-col">
-                    <StudentNavbar />
+                    <StudentNavbar student={student} />
+                    <StudentSidebar student={student} activePage="settings" />
 
-                    <main className="flex-1 flex flex-col items-center py-10 px-4 md:px-10">
+                    <main className="flex-1 flex flex-col items-center py-10 px-4 md:px-10 md:ml-64 transition-all duration-300">
                         <div className="max-w-4xl w-full">
                             {/* Page Header */}
                             <div className="mb-8">
                                 <h1 className="font-header text-3xl font-bold text-slate-900 dark:text-white mb-2">Edit Student Profile</h1>
-                                <p className="text-slate-500 dark:text-slate-400">Update your profile to get better internship matches and stand out to recruiters.</p>
+                                <p className="text-slate-500 dark:text-slate-400">Update your CV to get better internship matches and stand out to recruiters.</p>
                             </div>
 
                             {/* Main Form Card */}

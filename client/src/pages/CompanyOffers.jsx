@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import CompanyNavbar from '../components/CompanyNavbar';
+import CompanySidebar from '../components/CompanySidebar';
 
 const CompanyOffers = () => {
     const navigate = useNavigate();
@@ -55,17 +56,18 @@ const CompanyOffers = () => {
     return (
         <div className="bg-[#f8fafc] dark:bg-[#0f172a] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-body">
             <CompanyNavbar company={company} />
+            <CompanySidebar company={company} activePage="offers" />
+            {/* <main className="max-w-6xl mx-auto w-full p-6 lg:p-12 flex-1 flex flex-col"></main> */}
+            <main className="md:ml-64 max-w-full p-6 lg:p-12 flex-1 flex flex-col">
 
-            <main className="max-w-6xl mx-auto w-full p-6 lg:p-12 flex-1 flex flex-col">
-                
                 {/* Header Section */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
                     <div>
                         <h1 className="text-3xl font-black font-header tracking-tight text-slate-900 dark:text-white">My Internship Offers</h1>
                         <p className="text-slate-500 font-medium text-sm mt-1">Manage and edit all your posted internship opportunities in one place.</p>
                     </div>
-                    <button 
-                        onClick={() => navigate('/create-offer')} 
+                    <button
+                        onClick={() => navigate('/create-offer')}
                         className="flex items-center gap-2 bg-[#4F46E5] hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-bold shadow-xl shadow-indigo-600/20 transition-all active:scale-[0.98] w-full sm:w-auto justify-center"
                     >
                         <span className="material-symbols-outlined text-[20px]">add</span>
@@ -75,7 +77,7 @@ const CompanyOffers = () => {
 
                 {/* Main List Container */}
                 <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex-1 flex flex-col overflow-hidden mb-12">
-                    
+
                     <div className="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex justify-between items-center">
                         <h2 className="text-sm font-bold uppercase tracking-widest text-slate-400">All Offers</h2>
                         <span className="bg-[#4F46E5]/10 text-[#4F46E5] px-3 py-1 rounded-full text-xs font-bold">{offers.length} Total</span>
@@ -94,12 +96,12 @@ const CompanyOffers = () => {
                             </div>
                         ) : (
                             offers.map((offer) => (
-                                <div 
-                                    key={offer._id} 
-                                    onClick={() => navigate(`/offer-details/${offer._id}`)} 
+                                <div
+                                    key={offer._id}
+                                    onClick={() => navigate(`/offer-details/${offer._id}`)}
                                     className="p-6 md:p-8 relative hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors flex flex-col lg:flex-row lg:items-center justify-between gap-6 group cursor-pointer"
                                 >
-                                    
+
                                     {/* Top-right Time for Mobile View, embedded cleanly for Desktop */}
                                     <div className="absolute top-6 right-6 lg:static lg:right-auto lg:top-auto text-slate-400 text-xs font-semibold tracking-wide order-3 lg:order-none hidden sm:block">
                                         Posted {moment(offer.createdAt).startOf('day').fromNow()}
@@ -116,7 +118,7 @@ const CompanyOffers = () => {
                                         </div>
                                         <div className="flex flex-col justify-center py-1 min-w-0">
                                             <h4 className="font-black text-lg md:text-xl text-slate-900 dark:text-white mb-1 truncate group-hover:text-[#4F46E5] transition-colors">{offer.title}</h4>
-                                            
+
                                             <div className="flex items-center flex-wrap gap-x-4 gap-y-2 text-sm text-slate-500 font-medium">
                                                 <span className="flex items-center gap-1.5 flex-shrink-0">
                                                     <span className="material-symbols-outlined text-[16px]">location_on</span>
@@ -149,10 +151,10 @@ const CompanyOffers = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     {/* Action Buttons */}
                                     <div className="flex items-center justify-between lg:justify-end gap-6 w-full lg:w-auto pl-22 lg:pl-0 mt-4 lg:mt-0 border-t lg:border-t-0 border-slate-100 dark:border-slate-800 pt-4 lg:pt-0">
-                                        
+
                                         {/* Status Tag */}
                                         {(() => {
                                             const isClosed = offer.status === 'Closed' || (offer.endDateOfApplay && moment().isAfter(moment(offer.endDateOfApplay).endOf('day')));
@@ -167,14 +169,14 @@ const CompanyOffers = () => {
                                         })()}
 
                                         <div className="flex items-center gap-1.5 relative z-10">
-                                            <button 
+                                            <button
                                                 className="h-10 w-10 flex items-center justify-center bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl transition-all shadow-sm text-slate-500 hover:text-[#4F46E5]"
                                                 title="Edit Offer"
                                                 onClick={(e) => { e.stopPropagation(); navigate(`/edit-offer/${offer._id}`); }}
                                             >
                                                 <span className="material-symbols-outlined text-[20px]">edit</span>
                                             </button>
-                                            <button 
+                                            <button
                                                 className="h-10 w-10 flex items-center justify-center bg-white dark:bg-slate-800 hover:bg-rose-50 dark:hover:bg-rose-900/20 border border-slate-200 dark:border-slate-700 hover:border-rose-200 dark:hover:border-rose-800 rounded-xl transition-all shadow-sm text-slate-500 hover:text-rose-500"
                                                 title="Delete Offer"
                                                 onClick={(e) => { e.stopPropagation(); setOfferToDelete(offer._id); }}
@@ -202,14 +204,14 @@ const CompanyOffers = () => {
                         <h3 className="text-2xl font-black text-slate-900 dark:text-white font-headline tracking-tight mb-2">Delete Offer?</h3>
                         <p className="text-slate-500 dark:text-slate-400 text-sm mb-8 font-medium leading-relaxed">Are you absolutely sure you want to delete this internship offer? This action cannot be undone.</p>
                         <div className="flex gap-4">
-                            <button 
-                                onClick={() => setOfferToDelete(null)} 
+                            <button
+                                onClick={() => setOfferToDelete(null)}
                                 className="flex-1 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-sm uppercase tracking-wider rounded-xl transition-all"
                             >
                                 Cancel
                             </button>
-                            <button 
-                                onClick={() => confirmDeleteOffer()} 
+                            <button
+                                onClick={() => confirmDeleteOffer()}
                                 className="flex-1 py-3 bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm uppercase tracking-wider rounded-xl transition-all shadow-xl shadow-rose-600/20"
                             >
                                 Delete

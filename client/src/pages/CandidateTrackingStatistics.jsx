@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CompanyNavbar from '../components/CompanyNavbar';
+import CompanySidebar from '../components/CompanySidebar';
 import ActionSuccessConfirmation from '../components/ActionSuccessConfirmation';
 import ActionRejectionConfirmation from '../components/ActionRejectionConfirmation';
 
@@ -141,7 +142,7 @@ const CandidateTrackingStatistics = () => {
     return (
         <div className="bg-slate-50 dark:bg-slate-950 font-body antialiased text-slate-900 dark:text-slate-100 min-h-screen">
             <CompanyNavbar company={company} />
-
+            <CompanySidebar company={company} activePage="applications" />
 
             {/* Main Content */}
             <main className="md:ml-64 pt-20 p-6 min-h-screen">

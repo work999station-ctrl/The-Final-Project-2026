@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import StudentNavbar from '../components/StudentNavbar';
 
+
 const StudentDashboard = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState({
@@ -23,6 +24,17 @@ const StudentDashboard = () => {
     const [page, setPage] = useState(1);
     const [hasMoreOffers, setHasMoreOffers] = useState(true);
     const [applyingTo, setApplyingTo] = useState(null);
+    const [applications, setApplications] = useState([]);
+
+    const getStatusInfo = (status) => {
+        switch (status) {
+            case 'applied': return { text: 'In Review', colorClass: 'slate' };
+            case 'accepted': return { text: 'Accepted', colorClass: 'indigo' };
+            case 'rejected': return { text: 'Refused', colorClass: 'red' };
+            case 'validated': return { text: 'Validated', colorClass: 'green' };
+            default: return { text: 'Unknown', colorClass: 'slate' };
+        }
+    };
 
     const fetchOffers = async (pageNum) => {
         setOffersLoading(true);
@@ -95,6 +107,21 @@ const StudentDashboard = () => {
     useEffect(() => {
         fetchOffers(page);
     }, [page]);
+
+    useEffect(() => {
+        const fetchApplications = async () => {
+            try {
+                const res = await fetch('/api/student/applications');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.success) setApplications(data.applications);
+                }
+            } catch (err) {
+                console.error('Failed to fetch applications:', err);
+            }
+        };
+        fetchApplications();
+    }, []);
 
     return (
         <div className="bg-background-light text-text-main font-body min-h-screen flex flex-col antialiased selection:bg-primary/20 selection:text-primary">
@@ -217,80 +244,110 @@ const StudentDashboard = () => {
                         <section>
                             <div className="flex items-center justify-between mb-4">
                                 <h2 className="font-display text-xl font-bold text-text-main">Active Applications</h2>
-                                <a className="text-sm font-medium text-primary hover:underline" href="#">View all (3)</a>
+                                <button onClick={() => navigate('/ApplicationTracker')} className="text-sm font-medium text-primary hover:underline">View all ({applications.length})</button>
                             </div>
 
-                            <div className="bg-surface-light rounded-xl shadow-lift p-6 border border-border-color">
-                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
-                                    <div className="flex items-center gap-4">
-                                        <div className="size-12 rounded-lg bg-white border border-gray-100 flex items-center justify-center p-1">
-                                            <img alt="Company Logo" className="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8gZEinn3XeuSI5CP2ChLCiWwBFu64Zv3By9fqavPaJEn4TZPf_G58_SV574sxig2TgNPwWRa-b4UPLUdo4JcQMApZrc0F46PRu9FIZpi9yvL9HSLKPfs-uT21MQwRZ2Mfn6schMcetKVlKkPyeTA6osOEND3gUNmJ9zeoHCiGVfAD4CdNZSNi5R9yueakW4Qes8gpd8vJM30oGYJC5MetH-lVeWfLt5PNfuNZp2B4HM7xQ9EzkfPv_b-W5_kgdSwnlp96zZRRvUQ" />
+                            {applications.length === 0 ? (
+                                <div className="bg-surface-light rounded-xl shadow-lift p-8 border border-border-color flex flex-col items-center text-center gap-3">
+                                    <span className="material-symbols-outlined text-4xl text-slate-300">description</span>
+                                    <p className="text-text-muted font-medium">No applications yet. Start applying!</p>
+                                </div>
+                            ) : (() => {
+                                // Show the most recent application
+                                const app = [...applications].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
+                                const info = getStatusInfo(app.status);
+                                const step2Color = ['accepted', 'rejected', 'validated'].includes(app.status) ? `bg-${info.colorClass}-600` : 'bg-slate-200';
+                                const step3Color = app.status === 'validated' ? 'bg-green-600' : 'bg-slate-200';
+                                const dateApplied = new Date(app.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+                                return (
+                                    <div className="bg-surface-light rounded-xl shadow-lift p-6 border border-border-color">
+                                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+                                            <div className="flex items-center gap-4">
+                                                <div className="size-12 rounded-lg bg-white border border-gray-100 flex items-center justify-center p-1 overflow-hidden">
+                                                    {app.offerId?.companyId?.logo ? (
+                                                        <img alt="Company Logo" className="w-full h-full object-contain" src={`http://localhost:3000${app.offerId.companyId.logo}`} />
+                                                    ) : (
+                                                        <span className="material-symbols-outlined text-gray-400">business</span>
+                                                    )}
+                                                </div>
+                                                <div>
+                                                    <h3 className="font-bold text-lg text-text-main">{app.offerId?.title || 'Position'}</h3>
+                                                    <p className="text-sm text-text-muted">{app.offerId?.companyId?.companyName || 'Company'} • Applied {dateApplied}</p>
+                                                </div>
+                                            </div>
+                                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-${info.colorClass}-100 text-${info.colorClass}-700 border border-${info.colorClass}-200`}>
+                                                {info.text}
+                                            </span>
                                         </div>
-                                        <div>
-                                            <h3 className="font-bold text-lg text-text-main">Frontend Intern</h3>
-                                            <p className="text-sm text-text-muted">Linear • Applied 2 days ago</p>
+
+                                        {/* Dynamic Progress Stepper */}
+                                        <div className="py-4">
+                                            <div className="flex items-center w-full">
+                                                {/* Step 1: Applied */}
+                                                <div className="flex flex-col items-center gap-1">
+                                                    <div className={`w-10 h-10 rounded-full bg-${info.colorClass}-600 ring-4 ring-${info.colorClass}-100 flex items-center justify-center shadow-md`}>
+                                                        <span className="material-symbols-outlined text-white text-base" style={{ fontVariationSettings: "'FILL' 1" }}>send</span>
+                                                    </div>
+                                                </div>
+                                                <div className={`flex-1 h-1 rounded-full mx-1 ${step2Color !== 'bg-slate-200' ? `bg-${info.colorClass}-500` : 'bg-slate-200'}`}></div>
+
+                                                {/* Step 2: Accepted / Refused */}
+                                                <div className="flex flex-col items-center gap-1">
+                                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center shadow-md ring-4 ${app.status === 'applied'
+                                                        ? `bg-white ring-${info.colorClass}-100 border-2 border-${info.colorClass}-400`
+                                                        : app.status === 'rejected'
+                                                            ? 'bg-red-600 ring-red-100'
+                                                            : ['accepted', 'validated'].includes(app.status)
+                                                                ? 'bg-indigo-600 ring-indigo-100'
+                                                                : 'bg-slate-200 ring-slate-100'
+                                                        }`}>
+                                                        <span className={`material-symbols-outlined text-base ${app.status === 'applied' ? `text-${info.colorClass}-400` :
+                                                            app.status === 'rejected' ? 'text-white' : 'text-white'
+                                                            }`} style={{ fontVariationSettings: "'FILL' 1" }}>
+                                                            {app.status === 'rejected' ? 'cancel' : 'check_circle'}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div className={`flex-1 h-1 rounded-full mx-1 ${step3Color !== 'bg-slate-200' ? 'bg-green-500' : 'bg-slate-200'}`}></div>
+
+                                                {/* Step 3: Validated */}
+                                                <div className="flex flex-col items-center gap-1">
+                                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center shadow-md ring-4 ${app.status === 'validated'
+                                                        ? 'bg-green-600 ring-green-100'
+                                                        : ['accepted', 'rejected'].includes(app.status)
+                                                            ? 'bg-white border-2 border-green-400 ring-green-100'
+                                                            : 'bg-slate-200 ring-slate-100'
+                                                        }`}>
+                                                        <span className={`material-symbols-outlined text-base ${app.status === 'validated' ? 'text-white' :
+                                                            ['accepted', 'rejected'].includes(app.status) ? 'text-green-400' : 'text-slate-400'
+                                                            }`} style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Labels */}
+                                            <div className="flex justify-between w-full mt-3">
+                                                <span className={`text-xs font-bold text-${info.colorClass}-600 text-center w-10`}>Applied</span>
+                                                <span className={`text-xs font-bold text-center flex-1 ${['accepted', 'rejected'].includes(app.status) ? `text-${info.colorClass}-600` : 'text-slate-400'}`}>
+                                                    {app.status === 'rejected' ? 'Refused' : 'Accepted'}
+                                                </span>
+                                                <span className={`text-xs font-bold text-center w-10 ${app.status === 'validated' ? 'text-green-600' : 'text-slate-400'}`}>Valid.</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="pt-4 border-t border-gray-100 flex justify-end">
+                                            <button
+                                                onClick={() => navigate('/ApplicationTracker')}
+                                                className="text-sm font-medium text-text-main hover:text-primary flex items-center gap-1 transition-colors"
+                                            >
+                                                View All Applications
+                                                <span className="material-symbols-outlined text-base">arrow_forward</span>
+                                            </button>
                                         </div>
                                     </div>
-                                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20">
-                                        <span className="relative flex h-2 w-2">
-                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                                            <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-                                        </span>
-                                        Interview Stage
-                                    </span>
-                                </div>
-
-                                {/* Stepper */}
-                                <div className="relative w-full px-2">
-                                    <div className="absolute top-1/2 left-0 w-full h-0.5 bg-gray-100 -translate-y-1/2 rounded-full z-0"></div>
-                                    <div className="absolute top-1/2 left-0 w-[50%] h-0.5 bg-primary -translate-y-1/2 rounded-full z-0"></div>
-
-                                    <div className="relative z-10 flex justify-between w-full">
-                                        {/* Step 1: Applied */}
-                                        <div className="flex flex-col items-center gap-2 group cursor-default">
-                                            <div className="size-8 rounded-full bg-primary flex items-center justify-center text-white shadow-sm ring-4 ring-white">
-                                                <span className="material-symbols-outlined text-sm font-bold">check</span>
-                                            </div>
-                                            <span className="text-xs font-medium text-primary absolute -bottom-6 w-20 text-center">Applied</span>
-                                        </div>
-                                        {/* Step 2: Review */}
-                                        <div className="flex flex-col items-center gap-2 group cursor-default">
-                                            <div className="size-8 rounded-full bg-primary flex items-center justify-center text-white shadow-sm ring-4 ring-white">
-                                                <span className="material-symbols-outlined text-sm font-bold">check</span>
-                                            </div>
-                                            <span className="text-xs font-medium text-primary absolute -bottom-6 w-20 text-center">Review</span>
-                                        </div>
-                                        {/* Step 3: Interview */}
-                                        <div className="flex flex-col items-center gap-2 group cursor-default">
-                                            <div className="size-8 rounded-full bg-white border-2 border-primary flex items-center justify-center text-primary shadow-sm ring-4 ring-white">
-                                                <span className="material-symbols-outlined text-sm font-bold animate-pulse">videocam</span>
-                                            </div>
-                                            <span className="text-xs font-bold text-primary absolute -bottom-6 w-20 text-center">Interview</span>
-                                        </div>
-                                        {/* Step 4: Offer */}
-                                        <div className="flex flex-col items-center gap-2 group cursor-default">
-                                            <div className="size-8 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400 ring-4 ring-white">
-                                                <span className="material-symbols-outlined text-sm">mail</span>
-                                            </div>
-                                            <span className="text-xs font-medium text-text-muted absolute -bottom-6 w-20 text-center">Offer</span>
-                                        </div>
-                                        {/* Step 5: Signed */}
-                                        <div className="flex flex-col items-center gap-2 group cursor-default">
-                                            <div className="size-8 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400 ring-4 ring-white">
-                                                <span className="material-symbols-outlined text-sm">edit_document</span>
-                                            </div>
-                                            <span className="text-xs font-medium text-text-muted absolute -bottom-6 w-20 text-center">Signed</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="mt-10 pt-4 border-t border-gray-100 flex justify-end">
-                                    <button className="text-sm font-medium text-text-main hover:text-primary flex items-center gap-1 transition-colors">
-                                        View Application Details
-                                        <span className="material-symbols-outlined text-base">arrow_forward</span>
-                                    </button>
-                                </div>
-                            </div>
+                                );
+                            })()}
                         </section>
 
                         {/* Suggested Matches */}
