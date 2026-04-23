@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import CompanyNavbar from '../components/CompanyNavbar';
+import StudentNavbar from '../components/StudentNavbar';
 import moment from 'moment';
 
 const ApplicationDetails = () => {
     const navigate = useNavigate();
     const { applicationId } = useParams();
     const [company, setCompany] = useState(null);
+    const [student, setStudent] = useState(null);
     const [fetchedApp, setFetchedApp] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState(false);
@@ -18,11 +20,23 @@ const ApplicationDetails = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Fetch company
+                // Fetch user
+                let isCompany = false;
                 const resCompany = await fetch('/api/company/me');
                 if (resCompany.ok) {
                     const dataCompany = await resCompany.json();
-                    if (dataCompany.user) setCompany(dataCompany.user);
+                    if (dataCompany.user) {
+                        setCompany(dataCompany.user);
+                        isCompany = true;
+                    }
+                }
+                
+                if (!isCompany) {
+                    const resStudent = await fetch('/api/student/me');
+                    if (resStudent.ok) {
+                        const dataStudent = await resStudent.json();
+                        if (dataStudent.user) setStudent(dataStudent.user);
+                    }
                 }
 
                 // Try to fetch application if endpoint exists
@@ -126,14 +140,14 @@ const ApplicationDetails = () => {
         { id: 'Overview', icon: 'person' },
         { id: 'Timeline', icon: 'history' },
         { id: 'Documents', icon: 'description' },
-        { id: 'Interviews', icon: 'video_chat' },
         { id: 'Feedback', icon: 'rate_review' },
     ];
 
     return (
         <div className="bg-slate-50 dark:bg-slate-900 dark:bg-slate-950 text-slate-900 dark:text-white dark:text-slate-100 min-h-screen flex flex-col font-body">
             {company && <CompanyNavbar company={company} />}
-            {!company && (
+            {student && <StudentNavbar student={student} />}
+            {!company && !student && (
                 <header className="flex justify-between items-center px-6 h-16 w-full sticky top-0 z-50 bg-white dark:bg-slate-800 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 dark:border-slate-800 shadow-sm dark:shadow-none">
                     <span className="text-xl font-bold font-display text-primary">stage.io</span>
                 </header>
@@ -170,7 +184,7 @@ const ApplicationDetails = () => {
                         {/* Breadcrumbs & Header */}
                         <div className="mb-8">
                             <nav className="flex text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 mb-2 gap-2">
-                                <span className="hover:text-primary cursor-pointer" onClick={() => navigate('/company-dashboard')}>Dashboard</span>
+                                <span className="hover:text-primary cursor-pointer" onClick={() => navigate(company ? '/company-dashboard' : '/application-tracker')}>Dashboard</span>
                                 <span>›</span>
                                 <span className="hover:text-primary cursor-pointer">Applications</span>
                                 <span>›</span>
@@ -330,26 +344,18 @@ const ApplicationDetails = () => {
                                     </section>
                                 )}
 
-                                {activeTab === 'Interviews' && (
-                                    <section className="bg-white dark:bg-slate-800 dark:bg-slate-900 p-6 md:p-8 rounded-xl border border-slate-200 dark:border-slate-700 dark:border-slate-800 shadow-sm transition-all flex flex-col items-center justify-center text-center h-full min-h-[300px]">
-                                        <span className="material-symbols-outlined text-5xl text-slate-300 mb-4">video_camera_front</span>
-                                        <h3 className="font-display text-lg font-bold mb-2">No Interviews Scheduled</h3>
-                                        <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 text-sm max-w-sm">When you configure the interview backend integration, upcoming and past video sessions will map here.</p>
-                                    </section>
-                                )}
-
                                 {activeTab === 'Feedback' && (
                                     <section className="bg-white dark:bg-slate-800 dark:bg-slate-900 p-6 md:p-8 rounded-xl border border-slate-200 dark:border-slate-700 dark:border-slate-800 shadow-sm transition-all h-full min-h-[300px]">
                                         <h3 className="font-display text-lg font-bold mb-2 flex items-center gap-2">
                                             <span className="material-symbols-outlined text-slate-400 dark:text-slate-500">rate_review</span>
-                                            Internal Feedback
+                                            {company ? 'Internal Feedback / Messaging' : 'Message Company'}
                                         </h3>
-                                        <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 text-sm mb-6">Collaborate with your team to review this candidate.</p>
+                                        <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 text-sm mb-6">{company ? 'Collaborate with your team or message the candidate.' : 'Communicate directly with the company.'}</p>
                                         <div className="flex flex-col h-full min-h-[400px]">
                                             <div className="flex-1 bg-slate-50 dark:bg-slate-900 dark:bg-slate-800/50 rounded-lg p-4 mb-4 border border-slate-100 dark:border-slate-800 overflow-y-auto max-h-[400px] flex flex-col gap-3">
                                                 {feedbackList.length === 0 ? (
                                                     <div className="h-full flex items-center justify-center">
-                                                        <p className="text-slate-400 dark:text-slate-500 text-sm italic">No feedback comments yet.</p>
+                                                        <p className="text-slate-400 dark:text-slate-500 text-sm italic">No messages yet.</p>
                                                     </div>
                                                 ) : (
                                                     feedbackList.map((fb, idx) => (
@@ -368,13 +374,14 @@ const ApplicationDetails = () => {
                                                     value={feedbackText}
                                                     onChange={e => setFeedbackText(e.target.value)}
                                                     onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleAddFeedback(); } }}
-                                                    className="w-full rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary placeholder-slate-400 resize-none"
-                                                    placeholder="Leave a note for your team..."
+                                                    className="w-full rounded-lg border-slate-300 dark:border-slate-700 dark:bg-slate-800 text-sm focus:ring-primary focus:border-primary placeholder-slate-400 resize-none disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    placeholder={!company && feedbackList.length === 0 ? "Wait for the company to message you first..." : "Write a message..."}
                                                     rows="2"
+                                                    disabled={isSubmittingFeedback || (!company && feedbackList.length === 0)}
                                                 ></textarea>
                                                 <button
                                                     onClick={handleAddFeedback}
-                                                    disabled={isSubmittingFeedback || !feedbackText.trim()}
+                                                    disabled={isSubmittingFeedback || !feedbackText.trim() || (!company && feedbackList.length === 0)}
                                                     className="bg-primary hover:bg-primary/90 disabled:opacity-50 text-white px-4 rounded-lg transition-colors flex items-center justify-center min-w-[50px]"
                                                 >
                                                     {isSubmittingFeedback ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> : <span className="material-symbols-outlined">send</span>}
@@ -389,6 +396,7 @@ const ApplicationDetails = () => {
                             {/* Right Column (1/3) */}
                             <div className="space-y-6">
                                 {/* Candidate Actions */}
+                                {company && (
                                 <section className="bg-white dark:bg-slate-800 dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-700 dark:border-slate-800 shadow-lg">
                                     <h3 className="font-display text-sm font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-4">Candidate Actions</h3>
                                     {appData.status === 'accepted' ? (
@@ -430,6 +438,7 @@ const ApplicationDetails = () => {
                                         </div>
                                     )}
                                 </section>
+                                )}
 
                                 {/* Quick Info */}
                                 <section className="bg-white dark:bg-slate-800 dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-700 dark:border-slate-800 shadow-sm">

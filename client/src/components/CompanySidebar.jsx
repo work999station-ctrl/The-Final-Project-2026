@@ -24,11 +24,10 @@ const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
 
     const navItems = [
         { page: 'overview', icon: 'business', label: 'Dashboard', href: '/company-dashboard' },
-        { page: 'offers', icon: 'work', label: 'My Offers', href: '/candidate-tracking-statistics' },
+        { page: 'offers', icon: 'work', label: 'My Offers', href: '/company-offers' },
         { page: 'applications', icon: 'groups', label: 'Applications', href: '/candidate-tracking-statistics' },
         { page: 'create-offer', icon: 'add_box', label: 'Create Offer', href: '/create-offer' },
         { page: 'inbox', icon: 'inbox', label: 'Inbox', href: '/company-inbox' },
-        { page: 'settings', icon: 'settings_applications', label: 'Settings', href: '/edit-company-profile' },
     ];
 
     return (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import CompanyNavbar from '../components/CompanyNavbar';
 import CompanySidebar from '../components/CompanySidebar';
 import ActionSuccessConfirmation from '../components/ActionSuccessConfirmation';
@@ -7,10 +7,21 @@ import ActionRejectionConfirmation from '../components/ActionRejectionConfirmati
 
 const CandidateTrackingStatistics = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const initialSearch = searchParams.get('search') || '';
     const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(true);
     const [company, setCompany] = useState(null);
-    const [searchQuery, setSearchQuery] = useState('');
+    const [searchQuery, setSearchQuery] = useState(initialSearch);
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const search = params.get('search');
+        if (search !== null) {
+            setSearchQuery(search);
+        }
+    }, [location.search]);
     const [activeFilters, setActiveFilters] = useState({
         location: '',
         type: '',
