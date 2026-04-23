@@ -494,6 +494,13 @@ const CandidateTrackingStatistics = () => {
                                                                 </button>
                                                             </div>
                                                         )}
+                                                        <button
+                                                            className="p-2 flex items-center justify-center text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-full transition-colors active:scale-95 shadow-sm border border-blue-200"
+                                                            title="Message Candidate"
+                                                            onClick={(e) => { e.stopPropagation(); navigate(`/application-details/${app._id}`); }}
+                                                        >
+                                                            <span className="material-symbols-outlined text-[16px]">chat</span>
+                                                        </button>
                                                     </div>
                                                 </td>
                                             </tr>

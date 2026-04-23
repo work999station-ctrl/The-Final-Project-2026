@@ -118,10 +118,20 @@ const StudentProfileRecruiterView = () => {
                                 </div>
                             </div>
                             <div className="flex flex-wrap justify-center gap-3 mt-8">
-                                <a href={`mailto:${student.email}`} className="bg-indigo-600 text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-indigo-700 transition-colors flex items-center gap-2">
-                                    <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>mail</span>
-                                    Contact Candidate
-                                </a>
+                                {applications.length > 0 ? (
+                                    <button 
+                                        onClick={() => navigate(`/application-details/${applications[0]._id}`)} 
+                                        className="bg-indigo-600 text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-indigo-700 transition-colors flex items-center gap-2"
+                                    >
+                                        <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>chat</span>
+                                        Message Candidate
+                                    </button>
+                                ) : (
+                                    <a href={`mailto:${student.email}`} className="bg-indigo-600 text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-indigo-700 transition-colors flex items-center gap-2">
+                                        <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>mail</span>
+                                        Contact Candidate
+                                    </a>
+                                )}
                                 {student.githubPortfolio && (
                                     <a
                                         href={student.githubPortfolio.startsWith('http') ? student.githubPortfolio : `https://${student.githubPortfolio}`}
