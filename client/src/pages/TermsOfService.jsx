@@ -1,0 +1,188 @@
+import React, { useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import logoImage from '../assets/logo.png';
+
+const TermsOfService = () => {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
+    return (
+        <div className="bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-body min-h-screen antialiased flex flex-col">
+            {/* Top Navigation */}
+            <header className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
+                <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+                    <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
+                        <img src={logoImage} alt="stage.io logo" className="h-12 w-auto object-contain dark:invert dark:hue-rotate-180 mix-blend-multiply dark:mix-blend-screen" />
+                    </div>
+                    <nav className="hidden md:flex items-center space-x-8 font-display text-sm font-medium tracking-tight">
+                        <Link to="/" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 transition-all duration-200">Platform</Link>
+                        <Link to="/students" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 transition-all duration-200">Students</Link>
+                        <Link to="/companies" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 transition-all duration-200">Companies</Link>
+                        <Link to="/universities" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 transition-all duration-200">Universities</Link>
+                        <Link to="/about-us" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 transition-all duration-200">Culture</Link>
+                        <Link to="/pricing" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 transition-all duration-200">Pricing</Link>
+                        <Link to="/careers" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 transition-all duration-200">Team</Link>
+                    </nav>
+                    <div className="hidden md:flex items-center space-x-4">
+                        <Link to="/login" className="font-display text-sm font-medium tracking-tight text-slate-600 dark:text-slate-400 hover:text-indigo-600 transition-all duration-200">Sign In</Link>
+                        <Link to="/student-signup" className="bg-indigo-600 text-white font-display text-sm font-medium tracking-tight px-4 py-2 rounded-full hover:opacity-90 transition-all duration-200 shadow-sm hover:shadow-md">Apply Now</Link>
+                    </div>
+                </div>
+            </header>
+
+            {/* Main Content */}
+            <main className="flex-grow w-full max-w-5xl mx-auto px-6 py-12 md:py-16">
+                {/* Header Section */}
+                <header className="mb-12 pt-8">
+                    <h1 className="font-display text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4 tracking-tight">
+                        Terms of Service
+                    </h1>
+                    <p className="font-body text-lg text-slate-500 dark:text-slate-400 max-w-2xl">
+                        Please read these terms carefully before using the stag.io platform. These Terms constitute a legally binding agreement between you and stag.io.
+                    </p>
+                    <div className="mt-4 text-xs font-mono text-slate-400 uppercase tracking-widest">
+                        Last Updated: April 22, 2026
+                    </div>
+                </header>
+
+                {/* Policy Content Layout */}
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
+                    {/* Sidebar Navigation */}
+                    <div className="md:col-span-3 hidden md:block">
+                        <nav className="sticky top-24 bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+                            <ul className="space-y-4">
+                                <li><a className="font-body text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 transition-colors" href="#introduction">1. Introduction</a></li>
+                                <li><a className="font-body text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 transition-colors" href="#user-accounts">2. User Accounts</a></li>
+                                <li><a className="font-body text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 transition-colors" href="#platform-usage">3. Platform Usage</a></li>
+                                <li><a className="font-body text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 transition-colors" href="#intellectual-property">4. Intellectual Property</a></li>
+                                <li><a className="font-body text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 transition-colors" href="#privacy">5. Privacy</a></li>
+                                <li><a className="font-body text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 transition-colors" href="#termination">6. Termination</a></li>
+                                <li><a className="font-body text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 transition-colors" href="#limitation-liability">7. Limitation of Liability</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+
+                    {/* Main Text Content */}
+                    <div className="md:col-span-9 space-y-12">
+                        <section className="bg-white dark:bg-slate-800 rounded-xl p-8 shadow-sm border border-slate-200 dark:border-slate-700" id="introduction">
+                            <h2 className="font-display text-2xl font-bold text-slate-900 dark:text-white mb-4">1. Introduction</h2>
+                            <div className="space-y-4 text-slate-600 dark:text-slate-300">
+                                <p>
+                                    Welcome to stag.io. These Terms of Service ("Terms") constitute a legally binding agreement between you and stag.io ("Company," "we," "us," or "our") governing your access to and use of the stag.io website, mobile applications, and associated services (collectively, the "Platform").
+                                </p>
+                                <p>
+                                    By accessing or using the Platform, you acknowledge that you have read, understood, and agree to be bound by these Terms. If you do not agree to these Terms, you must not access or use the Platform.
+                                </p>
+                            </div>
+                        </section>
+
+                        <section className="bg-white dark:bg-slate-800 rounded-xl p-8 shadow-sm border border-slate-200 dark:border-slate-700" id="user-accounts">
+                            <h2 className="font-display text-2xl font-bold text-slate-900 dark:text-white mb-4">2. User Accounts</h2>
+                            <div className="space-y-4 text-slate-600 dark:text-slate-300">
+                                <p>
+                                    To access certain features of the Platform, you must register for an account. You agree to provide accurate, current, and complete information during the registration process and to update such information to keep it accurate, current, and complete.
+                                </p>
+                                <ul className="list-disc pl-5 space-y-2">
+                                    <li><strong>Account Security:</strong> You are responsible for safeguarding your password and for all activities that occur under your account.</li>
+                                    <li><strong>Eligibility:</strong> You must be at least 18 years old or the age of majority in your jurisdiction to create an account as an Employer or University representative. Students must be at least 16 years old.</li>
+                                    <li><strong>Identity Verification:</strong> We reserve the right to verify your identity and employment or academic status.</li>
+                                </ul>
+                            </div>
+                        </section>
+
+                        <section className="bg-white dark:bg-slate-800 rounded-xl p-8 shadow-sm border border-slate-200 dark:border-slate-700" id="platform-usage">
+                            <h2 className="font-display text-2xl font-bold text-slate-900 dark:text-white mb-4">3. Platform Usage & Conduct</h2>
+                            <div className="space-y-4 text-slate-600 dark:text-slate-300">
+                                <p>
+                                    The Platform serves as a modern connectivity tool facilitating connections between students, universities, and employers. You agree to use the Platform only for lawful purposes and in accordance with these Terms.
+                                </p>
+                                <div className="bg-amber-50 dark:bg-slate-700 border-l-4 border-amber-400 p-4 rounded-r-lg">
+                                    <h4 className="font-display font-bold text-amber-800 dark:text-amber-300 mb-2 flex items-center gap-2">
+                                        <span className="material-symbols-outlined text-sm">warning</span>
+                                        Prohibited Activities
+                                    </h4>
+                                    <ul className="list-disc pl-5 space-y-1 text-sm text-amber-700 dark:text-amber-200">
+                                        <li>Scraping, mining, or extracting data from the Platform using automated tools.</li>
+                                        <li>Submitting false, inaccurate, or misleading profile information or job listings.</li>
+                                        <li>Attempting to bypass or circumvent any security or authentication measures.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section className="bg-white dark:bg-slate-800 rounded-xl p-8 shadow-sm border border-slate-200 dark:border-slate-700" id="intellectual-property">
+                            <h2 className="font-display text-2xl font-bold text-slate-900 dark:text-white mb-4">4. Intellectual Property</h2>
+                            <div className="space-y-4 text-slate-600 dark:text-slate-300">
+                                <p>
+                                    The Platform and its entire contents, features, and functionality are owned by stag.io, its licensors, or other providers and are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws.
+                                </p>
+                                <p>
+                                    <strong>User Content:</strong> By posting, uploading, or submitting content to the Platform, you grant us a non-exclusive, worldwide, royalty-free license to use, display, reproduce, and distribute your content in connection with operating and providing the Platform.
+                                </p>
+                            </div>
+                        </section>
+
+                        <section className="bg-white dark:bg-slate-800 rounded-xl p-8 shadow-sm border border-slate-200 dark:border-slate-700" id="privacy">
+                            <h2 className="font-display text-2xl font-bold text-slate-900 dark:text-white mb-4">5. Privacy</h2>
+                            <p className="text-slate-600 dark:text-slate-300">
+                                Your privacy is critically important to us. Our data collection and use practices are described in our <Link to="/privacy-policy" className="text-indigo-600 hover:underline">Privacy Policy</Link>. By using the Platform, you agree to the terms outlined in the Privacy Policy.
+                            </p>
+                        </section>
+
+                        <section className="bg-white dark:bg-slate-800 rounded-xl p-8 shadow-sm border border-slate-200 dark:border-slate-700" id="termination">
+                            <h2 className="font-display text-2xl font-bold text-slate-900 dark:text-white mb-4">6. Termination</h2>
+                            <p className="text-slate-600 dark:text-slate-300">
+                                We may terminate or suspend your account and bar access to the Platform immediately, without prior notice or liability, under our sole discretion, for any reason whatsoever, including breach of the Terms. Upon termination, your right to use the Platform will immediately cease.
+                            </p>
+                        </section>
+
+                        <section className="bg-white dark:bg-slate-800 rounded-xl p-8 shadow-sm border border-slate-200 dark:border-slate-700" id="limitation-liability">
+                            <h2 className="font-display text-2xl font-bold text-slate-900 dark:text-white mb-4">7. Limitation of Liability</h2>
+                            <p className="text-slate-600 dark:text-slate-300 uppercase text-xs leading-relaxed italic">
+                                IN NO EVENT SHALL STAG.IO, ITS DIRECTORS, EMPLOYEES, PARTNERS, AGENTS, SUPPLIERS, OR AFFILIATES, BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL OR PUNITIVE DAMAGES, INCLUDING WITHOUT LIMITATION, LOSS OF PROFITS, DATA, USE, GOODWILL, OR OTHER INTANGIBLE LOSSES, RESULTING FROM (I) YOUR ACCESS TO OR USE OF OR INABILITY TO ACCESS OR USE THE PLATFORM; (II) ANY CONDUCT OR CONTENT OF ANY THIRD PARTY ON THE PLATFORM.
+                            </p>
+                        </section>
+                        
+                        <div className="flex justify-center pt-8">
+                            <button className="flex items-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-display font-bold px-8 py-3 rounded-full shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200">
+                                <span className="material-symbols-outlined">download</span>
+                                Download PDF Version
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            {/* Footer */}
+            <footer className="w-full border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 mt-auto">
+                <div className="max-w-7xl mx-auto py-12 px-6 flex flex-col md:flex-row justify-between items-center gap-8">
+                    <div className="flex items-center">
+                         <img src={logoImage} alt="stage.io logo" className="h-10 w-auto object-contain dark:invert dark:hue-rotate-180 mix-blend-multiply dark:mix-blend-screen" />
+                    </div>
+                    <div className="flex flex-wrap justify-center gap-6 font-display text-sm text-slate-500 dark:text-slate-400">
+                        <Link to="/about-us" className="hover:text-indigo-600 transition-colors duration-200">About Us</Link>
+                        <Link to="/" className="hover:text-indigo-600 transition-colors duration-200">Platform</Link>
+                        <Link to="/careers" className="hover:text-indigo-600 transition-colors duration-200">Careers</Link>
+                        <Link to="/blog" className="hover:text-indigo-600 transition-colors duration-200">Blog</Link>
+                        <Link to="/contact-us" className="hover:text-indigo-600 transition-colors duration-200">Contact Us</Link>
+                        <Link to="/students" className="hover:text-indigo-600 transition-colors duration-200">Students</Link>
+                        <Link to="/companies" className="hover:text-indigo-600 transition-colors duration-200">Companies</Link>
+                        <Link to="/universities" className="hover:text-indigo-600 transition-colors duration-200">Universities</Link>
+                        <Link to="/pricing" className="hover:text-indigo-600 transition-colors duration-200">Pricing</Link>
+                        <Link to="/privacy-policy" className="hover:text-indigo-600 transition-colors duration-200">Privacy Policy</Link>
+                        <Link to="/cookie-policy" className="hover:text-indigo-600 transition-colors duration-200">Cookie Policy</Link>
+                        <Link to="/terms-of-service" className="text-indigo-600 font-semibold transition-colors duration-200">Terms of Service</Link>
+                    </div>
+                    <div className="font-display text-sm text-slate-500 dark:text-slate-400 text-center md:text-right">
+                        © {new Date().getFullYear()} stage.io Inc. Bridging the gap between potential and opportunity.
+                    </div>
+                </div>
+            </footer>
+        </div>
+    );
+};
+
+export default TermsOfService;

@@ -61,14 +61,14 @@ const AdminDashboard = () => {
     const recentPlacements = applications.filter(app => ['accepted', 'validated'].includes(app.status));
 
     return (
-        <div className="bg-slate-50 text-slate-900 antialiased font-body min-h-screen flex flex-col">
+        <div className="bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white antialiased font-body min-h-screen flex flex-col">
             <AdminNavbar admin={user} />
 
             <div className="flex flex-1 overflow-hidden">
                 {/* SideNavBar (Shared Component) */}
-                <aside className="fixed left-0 top-16 bottom-0 w-80 bg-slate-50 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col p-4 z-40 overflow-y-auto hidden md:flex">
+                <aside className="fixed left-0 top-16 bottom-0 w-80 bg-slate-50 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-700 dark:border-slate-800 flex flex-col p-4 z-40 overflow-y-auto hidden md:flex">
                     <div className="mb-8 px-2">
-                        <div className="flex flex-col items-center text-center py-10 px-6 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 mb-8">
+                        <div className="flex flex-col items-center text-center py-10 px-6 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 dark:border-slate-700 mb-8">
                             <div className="w-24 h-24 rounded-full mb-5 ring-4 ring-primary/10 bg-primary/20 flex items-center justify-center text-primary bg-cover bg-center shadow-lg" style={{ backgroundImage: user.profilePicture ? `url('${user.profilePicture}')` : 'none' }}>
                                 {!user.profilePicture && <span className="material-symbols-outlined text-4xl">school</span>}
                             </div>
@@ -77,26 +77,26 @@ const AdminDashboard = () => {
 
                             <button
                                 onClick={() => navigate('/edit-admin-profile')}
-                                className="flex items-center justify-center gap-1.5 px-4 py-1.5 mb-6 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-full text-[11px] font-bold hover:bg-primary/10 hover:text-primary transition-all group"
+                                className="flex items-center justify-center gap-1.5 px-4 py-1.5 mb-6 bg-slate-100 dark:bg-slate-800 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-full text-[11px] font-bold hover:bg-primary/10 hover:text-primary transition-all group"
                             >
                                 <span className="material-symbols-outlined text-[16px] transition-transform group-hover:rotate-12">edit</span>
                                 Edit Profile
                             </button>
 
                             <div className="flex items-center justify-center gap-2 mb-6 w-full px-4">
-                                <span className="material-symbols-outlined text-slate-400 text-sm">school</span>
-                                <span className="text-[11px] uppercase tracking-wider font-bold text-slate-500 truncate" title={user.universityName}>{user.universityName}</span>
+                                <span className="material-symbols-outlined text-slate-400 dark:text-slate-500 text-sm">school</span>
+                                <span className="text-[11px] uppercase tracking-wider font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 truncate" title={user.universityName}>{user.universityName}</span>
                             </div>
                             <div className="w-full pt-6 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-3 text-left">
-                                <div className="flex items-center gap-3 text-[12px] text-slate-600 dark:text-slate-400 hover:text-primary transition-colors cursor-default">
+                                <div className="flex items-center gap-3 text-[12px] text-slate-600 dark:text-slate-300 dark:text-slate-400 dark:text-slate-500 hover:text-primary transition-colors cursor-default">
                                     <span className="material-symbols-outlined text-[18px]">person</span>
                                     <span className="truncate font-medium" title={user.fullName}>{user.fullName}</span>
                                 </div>
-                                <div className="flex items-center gap-3 text-[12px] text-slate-600 dark:text-slate-400 hover:text-primary transition-colors cursor-default">
+                                <div className="flex items-center gap-3 text-[12px] text-slate-600 dark:text-slate-300 dark:text-slate-400 dark:text-slate-500 hover:text-primary transition-colors cursor-default">
                                     <span className="material-symbols-outlined text-[18px]">mail</span>
                                     <span className="truncate font-medium" title={user.email}>{user.email}</span>
                                 </div>
-                                <div className="flex items-center gap-3 text-[12px] text-slate-600 dark:text-slate-400 hover:text-primary transition-colors cursor-default">
+                                <div className="flex items-center gap-3 text-[12px] text-slate-600 dark:text-slate-300 dark:text-slate-400 dark:text-slate-500 hover:text-primary transition-colors cursor-default">
                                     <span className="material-symbols-outlined text-[18px]">call</span>
                                     <span className="truncate font-medium" title={user.phone}>{user.phone || 'No phone provided'}</span>
                                 </div>
@@ -110,7 +110,7 @@ const AdminDashboard = () => {
                         <a onClick={async () => {
                             await fetch('/api/logout', { method: 'POST' });
                             navigate('/login');
-                        }} className="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-4 py-3 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 rounded-lg transition-all cursor-pointer">
+                        }} className="flex items-center gap-3 text-slate-600 dark:text-slate-300 dark:text-slate-400 dark:text-slate-500 px-4 py-3 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 rounded-lg transition-all cursor-pointer">
                             <span className="material-symbols-outlined">logout</span>
                             <span className="text-sm font-semibold">Logout</span>
                         </a>
@@ -123,13 +123,13 @@ const AdminDashboard = () => {
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
                         <div>
                             <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white mb-2 font-headline">Admin Control Center</h1>
-                            <p className="text-slate-500 dark:text-slate-400 flex items-center gap-2 text-sm font-medium">
+                            <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500 flex items-center gap-2 text-sm font-medium">
                                 <span className="material-symbols-outlined text-[16px]">calendar_today</span>
                                 <span>{currentTime.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })} • {currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}</span>
                             </p>
                         </div>
                         <div className="flex gap-3">
-                            <button className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 px-4 py-2.5 rounded-lg flex items-center gap-2 font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-sm">
+                            <button className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 dark:text-slate-300 px-4 py-2.5 rounded-lg flex items-center gap-2 font-semibold text-sm hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-700 transition-all shadow-sm">
                                 <span className="material-symbols-outlined text-[18px]">sync</span>
                                 Refresh
                             </button>
@@ -163,15 +163,15 @@ const AdminDashboard = () => {
                         {/* Unplaced Students KPI */}
                         <div className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex items-center justify-between relative overflow-hidden">
                             <div>
-                                <p className="text-slate-500 dark:text-slate-400 text-sm font-semibold mb-2 uppercase tracking-wider">Unplaced Students</p>
+                                <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500 text-sm font-semibold mb-2 uppercase tracking-wider">Unplaced Students</p>
                                 <h4 className="text-5xl font-black text-slate-900 dark:text-white mb-3 font-headline">784</h4>
-                                <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
+                                <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500">
                                     <span className="material-symbols-outlined text-[16px]">person_search</span>
                                     <span className="text-xs font-semibold">32% currently seeking validation</span>
                                 </div>
                             </div>
-                            <div className="p-6 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-800">
-                                <span className="material-symbols-outlined text-slate-400 text-5xl">person_search</span>
+                            <div className="p-6 bg-slate-50 dark:bg-slate-900 dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-800 dark:border-slate-800">
+                                <span className="material-symbols-outlined text-slate-400 dark:text-slate-500 text-5xl">person_search</span>
                             </div>
                         </div>
                     </div>
@@ -190,7 +190,7 @@ const AdminDashboard = () => {
 
                                 <div className="space-y-4">
                                     {pendingValidations.length === 0 ? (
-                                        <div className="text-center py-8 text-slate-500">
+                                        <div className="text-center py-8 text-slate-500 dark:text-slate-400 dark:text-slate-500">
                                             No applications pending validation.
                                         </div>
                                     ) : (
@@ -202,10 +202,10 @@ const AdminDashboard = () => {
                                                         <h4 className="font-bold text-slate-900 dark:text-white text-lg font-headline">{app.studentId?.name || 'Unknown'}</h4>
                                                         <p className="text-sm text-primary font-medium">{app.studentId?.fieldOfStudy || 'Student'}</p>
                                                     </div>
-                                                    <button className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"><span className="material-symbols-outlined text-[20px]">more_vert</span></button>
+                                                    <button className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:text-slate-300 dark:hover:text-slate-300 transition-colors"><span className="material-symbols-outlined text-[20px]">more_vert</span></button>
                                                 </div>
-                                                <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 mb-4 flex items-center gap-3 border border-slate-100 dark:border-slate-800">
-                                                    <div className="w-10 h-10 rounded-lg bg-white dark:bg-slate-800 shadow-sm overflow-hidden flex items-center justify-center text-slate-500 border border-slate-200 dark:border-slate-700">
+                                                <div className="bg-slate-50 dark:bg-slate-900 dark:bg-slate-900/50 rounded-xl p-4 mb-4 flex items-center gap-3 border border-slate-100 dark:border-slate-800 dark:border-slate-800">
+                                                    <div className="w-10 h-10 rounded-lg bg-white dark:bg-slate-800 shadow-sm overflow-hidden flex items-center justify-center text-slate-500 dark:text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-700 dark:border-slate-700">
                                                         {app.offerId?.companyId?.logo ? (
                                                             <img src={app.offerId.companyId.logo} alt={app.offerId.companyId.name} className="w-full h-full object-cover" />
                                                         ) : (
@@ -213,13 +213,13 @@ const AdminDashboard = () => {
                                                         )}
                                                     </div>
                                                     <div>
-                                                        <p className="text-[11px] text-slate-500 font-medium mb-0.5 uppercase tracking-wider">Accepted at</p>
+                                                        <p className="text-[11px] text-slate-500 dark:text-slate-400 dark:text-slate-500 font-medium mb-0.5 uppercase tracking-wider">Accepted at</p>
                                                         <p className="text-sm font-bold text-slate-900 dark:text-white truncate max-w-[140px]">{app.offerId?.companyId?.name || 'Company'}</p>
                                                     </div>
                                                 </div>
                                                 <button
                                                     onClick={() => navigate('/candidate-tracking-admin')}
-                                                    className="w-full py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-700 dark:text-slate-300 text-sm font-bold flex items-center justify-center gap-2 hover:bg-primary hover:text-white hover:border-primary transition-colors group-hover:border-primary/30"
+                                                    className="w-full py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-700 dark:text-slate-200 dark:text-slate-300 text-sm font-bold flex items-center justify-center gap-2 hover:bg-primary hover:text-white hover:border-primary transition-colors group-hover:border-primary/30"
                                                 >
                                                     Review & Validate <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
                                                 </button>
@@ -230,7 +230,7 @@ const AdminDashboard = () => {
                                     {pendingValidations.length > 0 && (
                                         <button
                                             onClick={() => navigate('/candidate-tracking-admin')}
-                                            className="w-full py-3.5 text-slate-500 hover:text-primary hover:border-primary hover:bg-primary/5 transition-all text-xs font-bold uppercase tracking-widest border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-2xl flex items-center justify-center gap-2"
+                                            className="w-full py-3.5 text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:text-primary hover:border-primary hover:bg-primary/5 transition-all text-xs font-bold uppercase tracking-widest border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-2xl flex items-center justify-center gap-2"
                                         >
                                             VIEW ALL ({pendingValidations.length} PENDING)
                                         </button>
@@ -242,18 +242,18 @@ const AdminDashboard = () => {
                         {/* Detailed Records Table */}
                         <div className="lg:col-span-2">
                             <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
-                                <div className="p-6 border-b border-slate-100 dark:border-slate-700 flex flex-wrap gap-4 justify-between items-center">
+                                <div className="p-6 border-b border-slate-100 dark:border-slate-800 dark:border-slate-700 flex flex-wrap gap-4 justify-between items-center">
                                     <h2 className="text-xl font-bold text-slate-900 dark:text-white font-headline">Recent Placements</h2>
                                     <div className="flex gap-2">
                                         <div className="relative">
-                                            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">filter_alt</span>
+                                            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 text-sm">filter_alt</span>
                                             <select className="pl-9 pr-8 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-semibold focus:ring-primary focus:border-primary text-slate-600 dark:text-slate-300 appearance-none outline-none">
                                                 <option>All Statuses</option>
                                                 <option>Agreement Generated</option>
                                                 <option>Pending</option>
                                             </select>
                                         </div>
-                                        <button className="px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-bold hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                        <button className="px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 dark:text-slate-300 rounded-lg text-xs font-bold hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-800 transition-colors">
                                             Sort: Latest
                                         </button>
                                     </div>
@@ -261,27 +261,27 @@ const AdminDashboard = () => {
 
                                 <div className="overflow-x-auto">
                                     <table className="w-full text-left whitespace-nowrap">
-                                        <thead className="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-700">
+                                        <thead className="bg-slate-50 dark:bg-slate-900 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800 dark:border-slate-700">
                                             <tr>
-                                                <th className="px-6 py-4 text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Student Details</th>
-                                                <th className="px-6 py-4 text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Company</th>
-                                                <th className="px-6 py-4 text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Dept</th>
-                                                <th className="px-6 py-4 text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Document Status</th>
-                                                <th className="px-6 py-4 text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest text-right">Actions</th>
+                                                <th className="px-6 py-4 text-[11px] font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-widest">Student Details</th>
+                                                <th className="px-6 py-4 text-[11px] font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-widest">Company</th>
+                                                <th className="px-6 py-4 text-[11px] font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-widest">Dept</th>
+                                                <th className="px-6 py-4 text-[11px] font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-widest">Document Status</th>
+                                                <th className="px-6 py-4 text-[11px] font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-widest text-right">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-slate-100 dark:divide-slate-800/50">
                                             {loading ? (
                                                 <tr>
-                                                    <td colSpan="5" className="px-6 py-8 text-center text-slate-500">Loading data...</td>
+                                                    <td colSpan="5" className="px-6 py-8 text-center text-slate-500 dark:text-slate-400 dark:text-slate-500">Loading data...</td>
                                                 </tr>
                                             ) : recentPlacements.length === 0 ? (
                                                 <tr>
-                                                    <td colSpan="5" className="px-6 py-8 text-center text-slate-500">No recent placements found.</td>
+                                                    <td colSpan="5" className="px-6 py-8 text-center text-slate-500 dark:text-slate-400 dark:text-slate-500">No recent placements found.</td>
                                                 </tr>
                                             ) : (
                                                 recentPlacements.map((app) => (
-                                                    <tr key={app._id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors group">
+                                                    <tr key={app._id} className="hover:bg-slate-50 dark:bg-slate-900/50 dark:hover:bg-slate-800/50 transition-colors group">
                                                         <td className="px-6 py-4">
                                                             <div className="flex items-center gap-3">
                                                                 <div className="w-9 h-9 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-black ring-2 ring-white dark:ring-slate-800 overflow-hidden">
@@ -292,16 +292,16 @@ const AdminDashboard = () => {
                                                                     )}
                                                                 </div>
                                                                 <div>
-                                                                    <p className="text-sm font-bold text-slate-900 dark:text-white">{app.studentId?.name || 'Unknown'}</p>
-                                                                    <p className="text-[10px] text-slate-500 font-medium">{app.studentId?.fieldOfStudy || 'Student'}</p>
+                                                                    <p className="text-sm font-bold text-slate-900 dark:text-white dark:text-white">{app.studentId?.name || 'Unknown'}</p>
+                                                                    <p className="text-[10px] text-slate-500 dark:text-slate-400 dark:text-slate-500 font-medium">{app.studentId?.fieldOfStudy || 'Student'}</p>
                                                                 </div>
                                                             </div>
                                                         </td>
                                                         <td className="px-6 py-4">
-                                                            <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">{app.offerId?.companyId?.name || 'Company'}</span>
+                                                            <span className="text-sm font-semibold text-slate-700 dark:text-slate-200 dark:text-slate-300">{app.offerId?.companyId?.name || 'Company'}</span>
                                                         </td>
                                                         <td className="px-6 py-4">
-                                                            <span className="text-[10px] font-bold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-2.5 py-1 rounded uppercase tracking-wider line-clamp-1 max-w-[120px]" title={app.offerId?.title}>
+                                                            <span className="text-[10px] font-bold bg-slate-100 dark:bg-slate-800 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-2.5 py-1 rounded uppercase tracking-wider line-clamp-1 max-w-[120px]" title={app.offerId?.title}>
                                                                 {app.offerId?.title || 'Role'}
                                                             </span>
                                                         </td>
@@ -321,7 +321,7 @@ const AdminDashboard = () => {
                                                         <td className="px-6 py-4 text-right">
                                                             <button
                                                                 onClick={() => navigate('/candidate-tracking-admin')}
-                                                                className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-primary transition-all ml-auto opacity-0 group-hover:opacity-100"
+                                                                className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 hover:text-primary transition-all ml-auto opacity-0 group-hover:opacity-100"
                                                             >
                                                                 <span className="material-symbols-outlined text-[18px]">visibility</span>
                                                             </button>
@@ -332,7 +332,7 @@ const AdminDashboard = () => {
                                         </tbody>
                                     </table>
                                 </div>
-                                <div className="p-4 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-800 flex justify-center">
+                                <div className="p-4 bg-slate-50 dark:bg-slate-900 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-800 flex justify-center">
                                     <button className="text-[11px] font-bold text-primary hover:text-primary/80 tracking-widest uppercase flex items-center gap-2 transition-colors">
                                         <span className="material-symbols-outlined text-[16px]">database</span>
                                         Access Full Academic Database

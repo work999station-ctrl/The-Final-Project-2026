@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Careers | stag.io</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#ffdad6",
+                        "background": "#fcf8ff",
+                        "on-secondary-container": "#004666",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "inverse-primary": "#c3c0ff",
+                        "outline": "#777587",
+                        "on-error-container": "#93000a",
+                        "text-muted": "#64748B",
+                        "tertiary-container": "#a44100",
+                        "on-surface-variant": "#464555",
+                        "secondary": "#006591",
+                        "on-secondary-fixed-variant": "#004c6e",
+                        "outline-variant": "#c7c4d8",
+                        "surface-variant": "#e4e1ee",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "border-subtle": "#E2E8F0",
+                        "success-accent": "#10B981",
+                        "primary-fixed": "#e2dfff",
+                        "tertiary-fixed": "#ffdbcc",
+                        "secondary-fixed": "#c9e6ff",
+                        "status-warning": "#F59E0B",
+                        "surface-dim": "#dcd8e5",
+                        "inverse-on-surface": "#f3effc",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "text-heading": "#0F172A",
+                        "on-primary-container": "#dad7ff",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed": "#0f0069",
+                        "secondary-fixed-dim": "#89ceff",
+                        "on-surface": "#1b1b24",
+                        "primary-container": "#4f46e5",
+                        "on-background": "#1b1b24",
+                        "surface-tint": "#4d44e3",
+                        "surface-container-high": "#eae6f4",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#39b8fd",
+                        "on-tertiary-fixed": "#351000",
+                        "on-secondary-fixed": "#001e2f",
+                        "surface-container": "#f0ecf9",
+                        "inverse-surface": "#302f39",
+                        "on-tertiary-container": "#ffd2be",
+                        "on-primary": "#ffffff",
+                        "surface": "#FFFFFF",
+                        "on-tertiary": "#ffffff",
+                        "bg-global": "#F8FAFC",
+                        "surface-container-highest": "#e4e1ee",
+                        "primary": "#3525cd",
+                        "surface-container-low": "#f5f2ff",
+                        "tertiary": "#7e3000",
+                        "surface-bright": "#fcf8ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "stack-md": "16px",
+                        "stack-lg": "24px",
+                        "margin-base": "32px",
+                        "stack-sm": "8px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "h3": ["Inter"],
+                        "h2": ["Space Grotesk"],
+                        "skill-tag": ["JetBrains Mono"],
+                        "display": ["Space Grotesk"],
+                        "body": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "h3": ["18px", { "lineHeight": "1.4", "fontWeight": "600" }],
+                        "h2": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "skill-tag": ["13px", { "lineHeight": "1", "fontWeight": "400" }],
+                        "display": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body": ["15px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-bg-global text-on-surface antialiased min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-slate-50/90 dark:bg-slate-950/90 backdrop-blur-md fixed top-0 w-full z-50 border-b border-slate-200/60 dark:border-slate-800/60 shadow-sm font-['Space_Grotesk'] font-medium antialiased">
+<div class="max-w-[1280px] mx-auto flex justify-between items-center px-6 py-4">
+<div class="text-2xl font-black tracking-tighter text-indigo-600 dark:text-indigo-400 cursor-pointer">stag.io</div>
+<nav class="hidden md:flex gap-8 items-center">
+<a class="text-slate-600 dark:text-slate-400 hover:text-indigo-500 hover:bg-slate-100 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 px-3 py-2 active:scale-95 duration-150 ease-in-out" href="#">Opportunities</a>
+<a class="text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 pb-1 hover:bg-slate-100 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 px-3 py-2 active:scale-95 duration-150 ease-in-out" href="#">Culture</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-indigo-500 hover:bg-slate-100 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 px-3 py-2 active:scale-95 duration-150 ease-in-out" href="#">Mission</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-indigo-500 hover:bg-slate-100 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 px-3 py-2 active:scale-95 duration-150 ease-in-out" href="#">Team</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="hidden md:block text-slate-600 dark:text-slate-400 hover:text-indigo-500 hover:bg-slate-100 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-200 px-4 py-2 active:scale-95 duration-150 ease-in-out font-['Space_Grotesk']">Sign In</button>
+<button class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-full px-6 py-2 transition-all duration-200 shadow-md hover:shadow-lg active:scale-95 ease-in-out font-['Space_Grotesk'] font-medium">Apply Now</button>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow pt-24 pb-20">
+<!-- Hero Section -->
+<section class="max-w-[1280px] mx-auto px-6 pt-16 pb-24 text-center">
+<h1 class="font-display text-display md:text-[56px] text-text-heading mb-6 tracking-tight leading-[1.1]">Build the Future of Connectivity</h1>
+<p class="font-body text-body text-text-muted max-w-2xl mx-auto mb-10 text-lg">We are on a mission to eliminate friction in the talent ecosystem. Join us in building a high-energy, modern platform that connects ambition with opportunity.</p>
+<div class="flex justify-center gap-4">
+<a class="bg-indigo-600 hover:bg-indigo-700 text-white font-body font-medium rounded-full px-8 py-3 transition-all shadow-[0_4px_14px_0_rgba(79,70,229,0.39)] hover:shadow-[0_6px_20px_rgba(79,70,229,0.23)] hover:-translate-y-0.5 inline-flex items-center gap-2" href="#openings">
+                    View Openings
+                    <span class="material-symbols-outlined text-[20px]" data-icon="arrow_downward">arrow_downward</span>
+</a>
+</div>
+</section>
+<!-- Image Banner -->
+<section class="max-w-[1280px] mx-auto px-6 mb-32">
+<div class="w-full h-[400px] rounded-2xl overflow-hidden shadow-sm border border-slate-200 relative group">
+<img alt="Team working together" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="diverse team of young professionals collaborating around a large modern wooden table in a bright airy tech startup office with large windows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADFssn0t0QQKFV0Zp2iQm7o2sRBR6Qd5sSCkEwO6dK7GLA0w0oUPPfIDz4tqP47LxSWW3rOnZsmmnSU658RHYYsEkNZDXZiIx7DXYwSirq8aFIVIk4e5g7ecKxC7RNkjc-_NA-kblt5DpUFm-NRZdmM3cgKRtefmT-8LM5HgUuwGzxnOHN1WlAIXe5n1lGlKpfzYwTBZBS6k_a4Ym7-xcjWhBoMp5n_l_CFqSdtGUf3uZhcHgyNOLZMYIRZWaeTG7jgxhe1A-TFPI"/>
+<div class="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent"></div>
+</div>
+</section>
+<!-- Culture / Benefits -->
+<section class="max-w-[1280px] mx-auto px-6 mb-32">
+<div class="text-center mb-16">
+<span class="font-label-caps text-label-caps text-indigo-600 mb-4 block">WHY JOIN US</span>
+<h2 class="font-h2 text-h2 text-text-heading">Designed for Impact</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Benefit Card 1 -->
+<div class="bg-surface rounded-xl p-8 border border-slate-100 shadow-sm hover:shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1)] transition-all duration-300 hover:-translate-y-1">
+<div class="w-12 h-12 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600 mb-6">
+<span class="material-symbols-outlined text-[28px]" data-icon="public">public</span>
+</div>
+<h3 class="font-h3 text-h3 text-text-heading mb-3">Remote First</h3>
+<p class="font-body text-body text-text-muted">Work from anywhere. We believe in outcomes over hours, giving you the flexibility to manage your own environment.</p>
+</div>
+<!-- Benefit Card 2 -->
+<div class="bg-surface rounded-xl p-8 border border-slate-100 shadow-sm hover:shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1)] transition-all duration-300 hover:-translate-y-1">
+<div class="w-12 h-12 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600 mb-6">
+<span class="material-symbols-outlined text-[28px]" data-icon="rocket_launch">rocket_launch</span>
+</div>
+<h3 class="font-h3 text-h3 text-text-heading mb-3">Skill Development</h3>
+<p class="font-body text-body text-text-muted">Continuous learning is baked into our DNA. Access dedicated budgets for courses, conferences, and certifications.</p>
+</div>
+<!-- Benefit Card 3 -->
+<div class="bg-surface rounded-xl p-8 border border-slate-100 shadow-sm hover:shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1)] transition-all duration-300 hover:-translate-y-1">
+<div class="w-12 h-12 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600 mb-6">
+<span class="material-symbols-outlined text-[28px]" data-icon="lightbulb">lightbulb</span>
+</div>
+<h3 class="font-h3 text-h3 text-text-heading mb-3">Impactful Work</h3>
+<p class="font-body text-body text-text-muted">No cogs in a machine here. Your code, designs, and strategies directly shape the product and user experience.</p>
+</div>
+</div>
+</section>
+<!-- Social Proof / Testimonial -->
+<section class="max-w-[1280px] mx-auto px-6 mb-32">
+<div class="bg-indigo-600 rounded-2xl overflow-hidden relative shadow-xl">
+<div class="absolute top-0 right-0 p-12 opacity-10 pointer-events-none">
+<span class="material-symbols-outlined text-[180px] text-white" data-icon="format_quote">format_quote</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2">
+<div class="p-12 md:p-16 flex flex-col justify-center text-white relative z-10">
+<p class="font-display text-[24px] md:text-[32px] font-medium leading-tight mb-8">
+                            "Joining stag.io means working alongside incredibly sharp minds who actually care about the problem we're solving. The autonomy here is unmatched."
+                        </p>
+<div class="flex items-center gap-4">
+<img alt="Sarah Jenkins" class="w-12 h-12 rounded-full border-2 border-indigo-400" data-alt="professional headshot of a young woman with curly hair smiling warmly against a neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdHLk2876Gcok0a19mKt5ceYOMjdzSQkKE9KyaoHAOTZcKa157jtne7R9M6qcSKHNmU9djSjA8Z8GigrY6THAB0BWFzxDK3D6Abvw5bPkFYFGarxptP-qvPvgybZiFOafaWyhzfE4z0F4arSg1mvX_u6Ol6hJiZP5lt1yw6kVPDL5RZZnHAsPW_X36hjH47g_QGVUZzvzeUewksqZh9H5C_NJjyeK0FemwFWrvbEzaH9rBK72KJlxPVtpCzptn_gr6ZRTJqWqlZyI"/>
+<div>
+<h4 class="font-h3 text-h3 text-white m-0">Sarah Jenkins</h4>
+<span class="font-body text-body text-indigo-200">Lead Product Designer</span>
+</div>
+</div>
+</div>
+<div class="hidden md:block bg-indigo-700 relative">
+<img alt="Working together" class="w-full h-full object-cover mix-blend-overlay opacity-50" data-alt="candid shot of a female tech professional smiling while looking at a laptop screen in a modern office with indoor plants" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYwFf0PLMqcoocra5U7fblf2XeJ3wTcRsCMymNKHulzP1lpFtntP2BSWVDbdjWP0ny3n0bGKuSSrUd4jhCVpT-G5BGM9Rel1ujPsbzuU47zX6f73W6GYY0Iupt5OUN2qjoWby-oNp--KAcRjtKM6TjaLZ3wsXjIDv87-l21ag8hke-KS30S-Y1BDXTwVTBPma_ebCnovsAPCND5v5R9LRW4zZhUSpn36cxJSGLKd-I0UvU3ws31kuq12RDnLD06RU17pPAa1iVqmA"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Open Positions -->
+<section class="max-w-[1280px] mx-auto px-6" id="openings">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-6">
+<div>
+<span class="font-label-caps text-label-caps text-indigo-600 mb-2 block">WE ARE HIRING</span>
+<h2 class="font-h2 text-h2 text-text-heading">Open Positions</h2>
+</div>
+<div class="w-full md:w-auto relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" data-icon="search">search</span>
+<input class="w-full md:w-[320px] h-12 pl-12 pr-4 bg-surface border-slate-200 rounded-full text-body font-body shadow-sm focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 transition-colors" placeholder="Search roles..." type="text"/>
+</div>
+</div>
+<div class="grid gap-4">
+<!-- Job Card 1 -->
+<div class="bg-surface rounded-xl p-6 border border-slate-200 shadow-sm hover:shadow-[0_10px_20px_-5px_rgba(0,0,0,0.08)] transition-all duration-200 hover:-translate-y-1 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 group cursor-pointer">
+<div class="flex items-center gap-6">
+<div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 flex-shrink-0">
+<span class="material-symbols-outlined" data-icon="code">code</span>
+</div>
+<div>
+<h3 class="font-h3 text-h3 text-text-heading mb-1 group-hover:text-indigo-600 transition-colors">Senior Full Stack Developer</h3>
+<div class="flex flex-wrap gap-3 items-center mt-2">
+<span class="font-skill-tag text-skill-tag bg-slate-100 text-slate-600 px-3 py-1 rounded-md">Engineering</span>
+<div class="flex items-center gap-1 text-slate-500 font-body text-[14px]">
+<span class="material-symbols-outlined text-[16px]" data-icon="location_on">location_on</span> Remote
+                                </div>
+<div class="flex items-center gap-1 text-slate-500 font-body text-[14px]">
+<span class="material-symbols-outlined text-[16px]" data-icon="schedule">schedule</span> Full-time
+                                </div>
+</div>
+</div>
+</div>
+<div class="w-full md:w-auto flex justify-end">
+<button class="font-body font-medium text-indigo-600 border border-slate-200 hover:border-indigo-600 hover:bg-indigo-50 px-6 py-2 rounded-full transition-all w-full md:w-auto">View Details</button>
+</div>
+</div>
+<!-- Job Card 2 -->
+<div class="bg-surface rounded-xl p-6 border border-slate-200 shadow-sm hover:shadow-[0_10px_20px_-5px_rgba(0,0,0,0.08)] transition-all duration-200 hover:-translate-y-1 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 group cursor-pointer">
+<div class="flex items-center gap-6">
+<div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 flex-shrink-0">
+<span class="material-symbols-outlined" data-icon="brush">brush</span>
+</div>
+<div>
+<h3 class="font-h3 text-h3 text-text-heading mb-1 group-hover:text-indigo-600 transition-colors">UI/UX Designer</h3>
+<div class="flex flex-wrap gap-3 items-center mt-2">
+<span class="font-skill-tag text-skill-tag bg-slate-100 text-slate-600 px-3 py-1 rounded-md">Design</span>
+<div class="flex items-center gap-1 text-slate-500 font-body text-[14px]">
+<span class="material-symbols-outlined text-[16px]" data-icon="location_on">location_on</span> Hybrid (Algiers)
+                                </div>
+<div class="flex items-center gap-1 text-slate-500 font-body text-[14px]">
+<span class="material-symbols-outlined text-[16px]" data-icon="schedule">schedule</span> Full-time
+                                </div>
+</div>
+</div>
+</div>
+<div class="w-full md:w-auto flex justify-end">
+<button class="font-body font-medium text-indigo-600 border border-slate-200 hover:border-indigo-600 hover:bg-indigo-50 px-6 py-2 rounded-full transition-all w-full md:w-auto">View Details</button>
+</div>
+</div>
+<!-- Job Card 3 -->
+<div class="bg-surface rounded-xl p-6 border border-slate-200 shadow-sm hover:shadow-[0_10px_20px_-5px_rgba(0,0,0,0.08)] transition-all duration-200 hover:-translate-y-1 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 group cursor-pointer">
+<div class="flex items-center gap-6">
+<div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 flex-shrink-0">
+<span class="material-symbols-outlined" data-icon="campaign">campaign</span>
+</div>
+<div>
+<h3 class="font-h3 text-h3 text-text-heading mb-1 group-hover:text-indigo-600 transition-colors">Marketing Lead</h3>
+<div class="flex flex-wrap gap-3 items-center mt-2">
+<span class="font-skill-tag text-skill-tag bg-slate-100 text-slate-600 px-3 py-1 rounded-md">Marketing</span>
+<div class="flex items-center gap-1 text-slate-500 font-body text-[14px]">
+<span class="material-symbols-outlined text-[16px]" data-icon="location_on">location_on</span> Remote
+                                </div>
+<div class="flex items-center gap-1 text-slate-500 font-body text-[14px]">
+<span class="material-symbols-outlined text-[16px]" data-icon="schedule">schedule</span> Full-time
+                                </div>
+</div>
+</div>
+</div>
+<div class="w-full md:w-auto flex justify-end">
+<button class="font-body font-medium text-indigo-600 border border-slate-200 hover:border-indigo-600 hover:bg-indigo-50 px-6 py-2 rounded-full transition-all w-full md:w-auto">View Details</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-white dark:bg-slate-900 w-full border-t mt-20 border-slate-200 dark:border-slate-800">
+<div class="max-w-[1280px] mx-auto py-12 px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex flex-col items-center md:items-start gap-2">
+<span class="text-xl font-bold text-slate-900 dark:text-slate-50 font-['Space_Grotesk']">stag.io</span>
+<p class="font-['Space_Grotesk'] text-sm text-slate-500 dark:text-slate-400">© 2024 stag.io. Empowering the next generation of talent.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-6 font-['Space_Grotesk'] text-sm">
+<a class="text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:underline underline-offset-4 transition-all cursor-pointer" href="#">Privacy</a>
+<a class="text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:underline underline-offset-4 transition-all cursor-pointer" href="#">Terms</a>
+<a class="text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:underline underline-offset-4 transition-all cursor-pointer" href="#">Support</a>
+<a class="text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:underline underline-offset-4 transition-all cursor-pointer" href="#">LinkedIn</a>
+<a class="text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:underline underline-offset-4 transition-all cursor-pointer" href="#">Twitter</a>
+</div>
+</div>
+</footer>
+</body></html>
