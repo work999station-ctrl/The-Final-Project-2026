@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import moment from 'moment';
 import CompanyNavbar from '../components/CompanyNavbar';
 
@@ -274,7 +274,7 @@ const CompanyDashboard = () => {
                                 <div className="bg-white dark:bg-slate-800 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col h-full">
                                     <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
                                         <h2 className="text-xl font-bold font-header">Active Internship Offers</h2>
-                                        <button className="text-primary text-sm font-semibold hover:underline">View All</button>
+                                        <button onClick={() => navigate('/company-offers')} className="text-primary text-sm font-semibold hover:underline">View All</button>
                                     </div>
                                     <div className="divide-y divide-slate-100 dark:divide-slate-800 flex-1">
                                         {isLoadingOffers ? (
@@ -391,9 +391,9 @@ const CompanyDashboard = () => {
                 <div className="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-slate-500 dark:text-slate-400 dark:text-slate-500 text-sm">
                     <p>© 2024 Modern Connectivity. All rights reserved.</p>
                     <div className="flex gap-6">
-                        <a className="hover:text-primary transition-colors" href="#">Privacy Policy</a>
-                        <a className="hover:text-primary transition-colors" href="#">Terms of Service</a>
-                        <a className="hover:text-primary transition-colors" href="#">Help Center</a>
+                        <Link to="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</Link>
+                        <Link to="/terms-of-service" className="hover:text-primary transition-colors">Terms of Service</Link>
+                        <Link to="/contact-us" className="hover:text-primary transition-colors">Help Center</Link>
                     </div>
                 </div>
             </footer>

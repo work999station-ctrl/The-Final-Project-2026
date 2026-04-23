@@ -231,9 +231,9 @@ const ApplicationTracker = () => {
                                                         className={`p-2 hover:text-${info.colorClass}-600 hover:bg-${info.colorClass}-50 rounded-lg transition-all border border-transparent hover:border-${info.colorClass}-100 shadow-sm ${app.status === 'validated' ? 'text-green-600 bg-green-50 border-green-200' : 'text-slate-400 dark:text-slate-500'}`}
                                                         onClick={() => {
                                                             if (app.status === 'validated') navigate(`/agreement/${app._id}`);
-                                                            else navigate(`/offer-details/${app.offerId?._id}`);
+                                                            else navigate(`/application-details/${app._id}`);
                                                         }}
-                                                        title={app.status === 'validated' ? 'Download Agreement' : 'View Details'}
+                                                        title={app.status === 'validated' ? 'Download Agreement' : 'View Tracking & Messages'}
                                                     >
                                                         <span className="material-symbols-outlined text-[20px]" data-icon={app.status === 'validated' ? 'description' : 'visibility'}>
                                                             {app.status === 'validated' ? 'description' : 'visibility'}

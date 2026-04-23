@@ -13,6 +13,7 @@ const OfferDetailsSplitView = () => {
     const [userType, setUserType] = useState(null); // 'student' or 'company'
     const [applicants, setApplicants] = useState([]);
     const [applicantsLoading, setApplicantsLoading] = useState(false);
+    const [actionModal, setActionModal] = useState(null);
 
     useEffect(() => {
         const fetchOfferDetails = async () => {
@@ -91,8 +92,6 @@ const OfferDetailsSplitView = () => {
         }
     };
     const handleCloseOffer = async () => {
-        if (!window.confirm("Are you sure you want to close this internship offer? Students will no longer be able to apply.")) return;
-
         try {
             const token = document.cookie.split('jwt=')[1]?.split(';')[0] || localStorage.getItem('token');
             const res = await fetch(`/api/offers/${id}`, {
@@ -106,19 +105,20 @@ const OfferDetailsSplitView = () => {
 
             if (res.ok) {
                 setOffer(prev => ({ ...prev, status: 'Closed' }));
+                setActionModal(null);
             } else {
                 const data = await res.json();
                 alert(data.error || "Failed to close offer");
+                setActionModal(null);
             }
         } catch (err) {
             console.error("Error closing offer:", err);
             alert("Connection error. Please try again.");
+            setActionModal(null);
         }
     };
 
     const handleReopenOffer = async () => {
-        if (!window.confirm("Do you want to re-open this internship offer? Students will be able to apply again.")) return;
-
         let newDeadline = offer.endDateOfApplay;
         const deadlineExpired = moment().isAfter(moment(offer.endDateOfApplay).endOf('day'));
 
@@ -141,6 +141,7 @@ const OfferDetailsSplitView = () => {
                 const data = await res.json();
                 if (data.success) {
                     setOffer(data.offer);
+                    setActionModal(null);
                     alert(deadlineExpired
                         ? `Offer re-opened successfully. Application deadline has been extended to ${moment(newDeadline).format('LL')}.`
                         : "Offer re-opened successfully."
@@ -149,10 +150,12 @@ const OfferDetailsSplitView = () => {
             } else {
                 const errorData = await res.json();
                 alert(errorData.error || "Failed to re-open offer");
+                setActionModal(null);
             }
         } catch (err) {
             console.error("Error re-opening offer:", err);
             alert("An error occurred while re-opening the offer.");
+            setActionModal(null);
         }
     };
 
@@ -207,7 +210,7 @@ const OfferDetailsSplitView = () => {
                                 </button>
                                 {isClosed ? (
                                     <button
-                                        onClick={handleReopenOffer}
+                                        onClick={() => setActionModal({ type: 'reopen' })}
                                         className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-semibold hover:bg-emerald-700 transition-all shadow-md active:scale-95"
                                     >
                                         <span className="material-symbols-outlined text-lg">check_circle</span>
@@ -215,7 +218,7 @@ const OfferDetailsSplitView = () => {
                                     </button>
                                 ) : (
                                     <button
-                                        onClick={handleCloseOffer}
+                                        onClick={() => setActionModal({ type: 'close' })}
                                         className="flex items-center gap-2 px-4 py-2 bg-slate-900 dark:bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-all shadow-md active:scale-95"
                                     >
                                         <span className="material-symbols-outlined text-lg">block</span>
@@ -510,6 +513,37 @@ const OfferDetailsSplitView = () => {
                     )}
                 </div>
             </main>
+
+            {/* Floating Confirmation Modal */}
+            {actionModal && (
+                <div className="fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-100 dark:border-slate-800">
+                        <div className={`w-16 h-16 ${actionModal.type === 'close' ? 'bg-amber-50 dark:bg-amber-900/20 border-amber-100 dark:border-amber-800/30 text-amber-600' : 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-100 dark:border-emerald-800/30 text-emerald-600'} border rounded-full flex items-center justify-center mx-auto mb-6`}>
+                            <span className="material-symbols-outlined text-3xl">{actionModal.type === 'close' ? 'lock' : 'lock_open'}</span>
+                        </div>
+                        <h3 className="text-2xl font-black text-slate-900 dark:text-white font-headline tracking-tight mb-2">{actionModal.type === 'close' ? 'Close Offer?' : 'Reopen Offer?'}</h3>
+                        <p className="text-slate-500 dark:text-slate-400 text-sm mb-8 font-medium leading-relaxed">
+                            {actionModal.type === 'close' 
+                                ? 'Are you sure you want to close this internship offer? Candidates will no longer be able to apply.' 
+                                : 'Are you sure you want to reopen this internship offer? Candidates will be able to apply again.'}
+                        </p>
+                        <div className="flex gap-4">
+                            <button
+                                onClick={() => setActionModal(null)}
+                                className="flex-1 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-sm uppercase tracking-wider rounded-xl transition-all"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={actionModal.type === 'close' ? handleCloseOffer : handleReopenOffer}
+                                className={`flex-1 py-3 ${actionModal.type === 'close' ? 'bg-amber-600 hover:bg-amber-700 shadow-amber-600/20' : 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/20'} text-white font-bold text-sm uppercase tracking-wider rounded-xl transition-all shadow-xl`}
+                            >
+                                {actionModal.type === 'close' ? 'Close Offer' : 'Reopen Offer'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
