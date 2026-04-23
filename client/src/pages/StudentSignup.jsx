@@ -117,7 +117,7 @@ const StudentSignup = () => {
                 <div className="flex h-full grow flex-col">
                     <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 px-6 lg:px-40 py-4 bg-white dark:bg-slate-900">
                         <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-                            <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain" />
+                            <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain dark:invert dark:hue-rotate-180 mix-blend-multiply dark:mix-blend-screen" />
                         </div>
                         <div className="flex items-center gap-4">
                             <span className="hidden md:block text-slate-500 text-sm">Already have an account?</span>
@@ -268,7 +268,7 @@ const StudentSignup = () => {
                                         )}
                                     </button>
                                     <p className="text-center mt-6 text-xs text-slate-400 dark:text-slate-500 leading-relaxed px-4">
-                                        By signing up, you agree to our Terms of Service and Privacy Policy. We'll send you occasional campus updates.
+                                        By signing up, you agree to our <Link to="/terms-of-service" className="text-slate-500 hover:text-primary underline transition-colors">Terms of Service</Link> and <Link to="/privacy-policy" className="text-slate-500 hover:text-primary underline transition-colors">Privacy Policy</Link>. We'll send you occasional campus updates.
                                     </p>
                                     <p className="mt-6 text-sm text-center text-slate-500 font-semibold">
                                         Already have an account? <Link to="/login" className="text-primary hover:underline font-black">Log In</Link>

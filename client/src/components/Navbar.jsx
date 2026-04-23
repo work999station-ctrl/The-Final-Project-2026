@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import logoImage from '../assets/logo.png';
+import ThemeToggle from './ThemeToggle';
 
 const Navbar = ({ userProfile }) => {
     const navigate = useNavigate();
@@ -59,7 +60,7 @@ const Navbar = ({ userProfile }) => {
 
                 {/* Logo */}
                 <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-                    <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain" />
+                    <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain dark:invert dark:hue-rotate-180 mix-blend-multiply dark:mix-blend-screen" />
                 </div>
 
                 {/* Right side */}
@@ -124,9 +125,9 @@ const Navbar = ({ userProfile }) => {
                         ) : (
                             /* ── Logged-out ── */
                             <>
-                                <a className="text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-[#4F46E5] transition-colors" href="/#students">Students</a>
-                                <a className="text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-[#4F46E5] transition-colors" href="/#companies">Companies</a>
-                                <a className="text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-[#4F46E5] transition-colors" href="/#universities">Universities</a>
+                                <Link className="text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-[#4F46E5] transition-colors" to="/students">Students</Link>
+                                <Link className="text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-[#4F46E5] transition-colors" to="/companies">Companies</Link>
+                                <Link className="text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-[#4F46E5] transition-colors" to="/universities">Universities</Link>
                             </>
                         )}
                     </nav>
@@ -136,6 +137,9 @@ const Navbar = ({ userProfile }) => {
                         {!loading && (
                             user ? (
                                 <>
+                                    {/* Theme Toggle */}
+                                    <ThemeToggle />
+
                                     {/* Notification bell */}
                                     <button className="flex items-center justify-center rounded-full size-9 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-[#4F46E5]/10 hover:text-[#4F46E5] transition-all relative">
                                         <span className="material-symbols-outlined text-[20px]">notifications</span>
@@ -160,6 +164,9 @@ const Navbar = ({ userProfile }) => {
                                 </>
                             ) : (
                                 <>
+                                    {/* Theme Toggle */}
+                                    <ThemeToggle />
+
                                     <button
                                         className="hidden sm:block text-sm font-bold px-4 py-2 text-slate-600 dark:text-slate-300 hover:text-[#4F46E5] transition-colors"
                                         onClick={() => navigate('/login')}

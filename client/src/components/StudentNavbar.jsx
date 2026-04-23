@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import logoImage from '../assets/logo.png';
+import ThemeToggle from './ThemeToggle';
 
 const StudentNavbar = ({ student: studentProp }) => {
     const navigate = useNavigate();
@@ -47,7 +48,7 @@ const StudentNavbar = ({ student: studentProp }) => {
                 <div className="flex items-center gap-8">
                     {/* Logo */}
                     <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-                        <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain" />
+                        <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain dark:invert dark:hue-rotate-180 mix-blend-multiply dark:mix-blend-screen" />
                     </div>
 
                     {/* Nav Links */}
@@ -91,6 +92,8 @@ const StudentNavbar = ({ student: studentProp }) => {
                             type="text"
                         />
                     </div>
+
+                    <ThemeToggle />
 
                     {/* Notification bell */}
                     <button

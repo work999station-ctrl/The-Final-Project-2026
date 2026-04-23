@@ -194,7 +194,7 @@ const CompanyStatistics = () => {
 
                             {/* Data Compliance & Footer Note */}
                             <div className="text-[10px] text-slate-400 font-mono leading-relaxed mt-auto text-justify">
-                                * CONFIDENTIALITY NOTICE: These statistical readings are derived from real-time database inputs from Stag.io's tracking infrastructure. Application velocity is approximated on a trailing 30-day interval. Conversion analytics exclude incomplete or withdrawn applications by default.
+                                * CONFIDENTIALITY NOTICE: These statistical readings are derived from real-time database inputs from stage.io's tracking infrastructure. Application velocity is approximated on a trailing 30-day interval. Conversion analytics exclude incomplete or withdrawn applications by default.
                             </div>
 
                         </div>

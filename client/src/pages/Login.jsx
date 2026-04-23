@@ -68,7 +68,7 @@ const Login = () => {
                     {/* Header */}
                     <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 px-6 lg:px-40 py-4 bg-white dark:bg-slate-900 sticky top-0 z-50">
                         <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-                            <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain" />
+                            <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain dark:invert dark:hue-rotate-180 mix-blend-multiply dark:mix-blend-screen" />
                         </div>
                         <div className="flex items-center gap-4">
                             <span className="hidden md:block text-slate-500 text-sm">New here?</span>
@@ -173,7 +173,7 @@ const Login = () => {
 
                             <div className="mt-10 text-center">
                                 <p className="text-slate-500 dark:text-slate-400 text-sm">
-                                    By logging in, you agree to our <a className="text-slate-900 dark:text-white font-semibold hover:underline" href="#">Terms of Service</a> and <a className="text-slate-900 dark:text-white font-semibold hover:underline" href="#">Privacy Policy</a>.
+                                    By logging in, you agree to our <Link className="text-slate-900 dark:text-white font-semibold hover:underline" to="/terms-of-service">Terms of Service</Link> and <Link className="text-slate-900 dark:text-white font-semibold hover:underline" to="/privacy-policy">Privacy Policy</Link>.
                                 </p>
                             </div>
                         </div>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Contact Us - stag.io</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=JetBrains+Mono:wght@400&amp;family=Space+Grotesk:wght@600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                            "error": "#ba1a1a",
+                            "outline": "#777587",
+                            "tertiary": "#7e3000",
+                            "tertiary-fixed-dim": "#ffb695",
+                            "on-secondary-fixed-variant": "#004c6e",
+                            "border-subtle": "#E2E8F0",
+                            "on-surface-variant": "#464555",
+                            "on-tertiary-fixed-variant": "#7b2f00",
+                            "secondary-fixed-dim": "#89ceff",
+                            "on-primary-fixed": "#0f0069",
+                            "secondary": "#006591",
+                            "primary": "#3525cd",
+                            "primary-container": "#4f46e5",
+                            "surface-dim": "#dcd8e5",
+                            "surface-container-low": "#f5f2ff",
+                            "surface-container-lowest": "#ffffff",
+                            "primary-fixed": "#e2dfff",
+                            "secondary-container": "#39b8fd",
+                            "inverse-on-surface": "#f3effc",
+                            "on-surface": "#1b1b24",
+                            "inverse-primary": "#c3c0ff",
+                            "surface-variant": "#e4e1ee",
+                            "surface-container-high": "#eae6f4",
+                            "text-heading": "#0F172A",
+                            "on-secondary": "#ffffff",
+                            "success-accent": "#10B981",
+                            "surface-tint": "#4d44e3",
+                            "on-tertiary-container": "#ffd2be",
+                            "error-container": "#ffdad6",
+                            "on-tertiary": "#ffffff",
+                            "on-secondary-fixed": "#001e2f",
+                            "tertiary-container": "#a44100",
+                            "surface-container": "#f0ecf9",
+                            "primary-fixed-dim": "#c3c0ff",
+                            "surface-bright": "#fcf8ff",
+                            "on-error-container": "#93000a",
+                            "on-primary-container": "#dad7ff",
+                            "tertiary-fixed": "#ffdbcc",
+                            "on-background": "#1b1b24",
+                            "text-muted": "#64748B",
+                            "on-primary-fixed-variant": "#3323cc",
+                            "background": "#fcf8ff",
+                            "bg-global": "#F8FAFC",
+                            "surface": "#FFFFFF",
+                            "inverse-surface": "#302f39",
+                            "outline-variant": "#c7c4d8",
+                            "on-error": "#ffffff",
+                            "status-warning": "#F59E0B",
+                            "on-primary": "#ffffff",
+                            "secondary-fixed": "#c9e6ff",
+                            "on-secondary-container": "#004666",
+                            "surface-container-highest": "#e4e1ee",
+                            "on-tertiary-fixed": "#351000"
+                    },
+                    "borderRadius": {
+                            "DEFAULT": "0.25rem",
+                            "lg": "0.5rem",
+                            "xl": "0.75rem",
+                            "full": "9999px"
+                    },
+                    "spacing": {
+                            "stack-lg": "24px",
+                            "gutter": "24px",
+                            "container-max": "1280px",
+                            "stack-sm": "8px",
+                            "stack-md": "16px",
+                            "margin-base": "32px"
+                    },
+                    "fontFamily": {
+                            "label-caps": ["Inter"],
+                            "h3": ["Inter"],
+                            "h2": ["Space Grotesk"],
+                            "display": ["Space Grotesk"],
+                            "skill-tag": ["JetBrains Mono"],
+                            "body": ["Inter"]
+                    },
+                    "fontSize": {
+                            "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                            "h3": ["18px", { "lineHeight": "1.4", "fontWeight": "600" }],
+                            "h2": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                            "display": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                            "skill-tag": ["13px", { "lineHeight": "1", "fontWeight": "400" }],
+                            "body": ["15px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .deep-shadow:hover {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transform: translateY(-8px);
+        }
+    </style>
+</head>
+<body class="bg-bg-global text-on-surface font-body text-body antialiased min-h-screen flex flex-col pt-16">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/50 dark:border-slate-800/50 shadow-sm font-space-grotesk font-medium">
+<div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+<div class="flex items-center gap-8">
+<a class="text-2xl font-black tracking-tighter text-indigo-600 dark:text-white" href="#">stag.io</a>
+<div class="hidden md:flex items-center gap-6">
+<a class="text-slate-600 dark:text-slate-400 hover:text-indigo-500 transition-colors duration-200" href="#">Opportunities</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-indigo-500 transition-colors duration-200" href="#">Talent</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-indigo-500 transition-colors duration-200" href="#">Pipeline</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-indigo-500 transition-colors duration-200" href="#">Insights</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container rounded-full border-none shadow-sm focus:ring-2 focus:ring-primary focus:outline-none w-48 text-sm" placeholder="Search..." type="text"/>
+</div>
+<button class="text-slate-600 dark:text-slate-400 hover:text-indigo-500 transition-colors duration-200 p-2 rounded-full hover:bg-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-slate-600 dark:text-slate-400 hover:text-indigo-500 transition-colors duration-200 p-2 rounded-full hover:bg-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<a class="text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 pb-1 ml-2 font-semibold" href="#">Contact Us</a>
+<img alt="User profile" class="w-8 h-8 rounded-full border border-border-subtle cursor-pointer hover:ring-2 ring-primary-container transition-all ml-2" data-alt="Close-up portrait of a smiling professional man with short dark hair, wearing a dark shirt against a blurred outdoor background, well-lit" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvesD74kqEeKburSfZV8jA-BcO4UY9bFx1100oNWaRzs_49b0QIr6iTugZdglTHGwIyKHbcbWWiE6BUb6pX-b4OptLI0begX8SI0KaTxnIYouH61qwCrbDNCaBCV8n5whtszLHBSxXutdbVK-l-H4X7g5okksLMasG3mgN0sPzABssAchuQbUbhFlziFOZ-WftEbI2VSNE99EcNrdopYkfWdOriM_Wc6gYTAUqBzzbYzz7IV198Onaqu7csiQGGrwwoeLR-WkdKL4"/>
+</div>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="flex-grow w-full max-w-container-max mx-auto px-6 py-margin-base md:py-16">
+<div class="text-center mb-16">
+<h1 class="font-display text-display text-text-heading mb-4">Let's Connect</h1>
+<p class="text-text-muted max-w-2xl mx-auto">Have questions about modern connectivity? Our team is ready to help you eliminate friction and accelerate your pipeline.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
+<!-- Left Column: Contact Form -->
+<div class="bg-surface rounded-xl p-8 border border-border-subtle shadow-sm transition-all duration-300 deep-shadow">
+<h2 class="font-h2 text-h2 text-text-heading mb-6">Send a Message</h2>
+<form action="#" class="space-y-stack-md" method="POST">
+<div>
+<label class="block font-label-caps text-label-caps text-text-muted mb-2" for="name">FULL NAME</label>
+<input class="w-full bg-surface-bright border border-border-subtle rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-colors outline-none text-on-surface" id="name" name="name" placeholder="Jane Doe" type="text"/>
+</div>
+<div>
+<label class="block font-label-caps text-label-caps text-text-muted mb-2" for="email">EMAIL ADDRESS</label>
+<input class="w-full bg-surface-bright border border-border-subtle rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-colors outline-none text-on-surface" id="email" name="email" placeholder="jane@company.com" type="email"/>
+</div>
+<div>
+<label class="block font-label-caps text-label-caps text-text-muted mb-2" for="subject">SUBJECT</label>
+<input class="w-full bg-surface-bright border border-border-subtle rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-colors outline-none text-on-surface" id="subject" name="subject" placeholder="How can we help?" type="text"/>
+</div>
+<div>
+<label class="block font-label-caps text-label-caps text-text-muted mb-2" for="message">MESSAGE</label>
+<textarea class="w-full bg-surface-bright border border-border-subtle rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary transition-colors outline-none text-on-surface resize-none" id="message" name="message" placeholder="Your message here..." rows="5"></textarea>
+</div>
+<button class="w-full bg-primary-container text-white font-h3 text-h3 py-3 px-6 rounded-full hover:bg-primary transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2" type="submit">
+                        Send Message
+                        <span class="material-symbols-outlined text-sm" data-icon="send">send</span>
+</button>
+</form>
+</div>
+<!-- Right Column: Contact Details -->
+<div class="flex flex-col gap-stack-lg">
+<!-- Contact Info Card -->
+<div class="bg-surface rounded-xl p-8 border border-border-subtle shadow-sm flex-grow">
+<h2 class="font-h2 text-h2 text-text-heading mb-8">Contact Information</h2>
+<div class="space-y-6">
+<div class="flex items-start gap-4">
+<div class="bg-surface-container-low p-3 rounded-full text-primary flex-shrink-0">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+</div>
+<div>
+<h3 class="font-h3 text-h3 text-text-heading">Email</h3>
+<p class="text-text-muted mt-1">Support: <a class="text-primary hover:underline" href="mailto:support@stag.io">support@stag.io</a></p>
+<p class="text-text-muted">Sales: <a class="text-primary hover:underline" href="mailto:sales@stag.io">sales@stag.io</a></p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="bg-surface-container-low p-3 rounded-full text-primary flex-shrink-0">
+<span class="material-symbols-outlined" data-icon="call">call</span>
+</div>
+<div>
+<h3 class="font-h3 text-h3 text-text-heading">Phone</h3>
+<p class="text-text-muted mt-1">+1 (555) 123-4567</p>
+<p class="text-text-muted text-sm mt-1">Mon-Fri from 8am to 6pm PST</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="bg-surface-container-low p-3 rounded-full text-primary flex-shrink-0">
+<span class="material-symbols-outlined" data-icon="location_on">location_on</span>
+</div>
+<div>
+<h3 class="font-h3 text-h3 text-text-heading">Office</h3>
+<p class="text-text-muted mt-1">100 Innovation Drive<br/>Suite 400<br/>San Francisco, CA 94105</p>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-8 border-t border-border-subtle">
+<h3 class="font-label-caps text-label-caps text-text-muted mb-4">CONNECT WITH US</h3>
+<div class="flex gap-4">
+<a class="p-2 bg-surface-variant text-on-surface-variant rounded-full hover:bg-primary-container hover:text-white transition-colors" href="#">
+<svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24">
+<path clip-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" fill-rule="evenodd"></path>
+</svg>
+</a>
+<a class="p-2 bg-surface-variant text-on-surface-variant rounded-full hover:bg-primary-container hover:text-white transition-colors" href="#">
+<svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24">
+<path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"></path>
+</svg>
+</a>
+</div>
+</div>
+</div>
+<!-- Decorative Element / Map Placeholder -->
+<div class="h-48 rounded-xl overflow-hidden shadow-sm relative group cursor-pointer border border-border-subtle bg-slate-100">
+<img alt="Map" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300" data-alt="Abstract minimalist map graphic focusing on San Francisco with subtle indigo highlights and soft grey roads, modern digital style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8I2S4_ZJE_0TH4Le8QOsKKyoThO3Tr6bgA-imFdvEFLNFH4FeGb5D_EdxBWOEacgxZl61IOuvClTGZtbh6UnE9fJFe3-4t4pHC3XYDbA89r6EadLSGbUTNpAFTbTt5J1oelMSQJCdZDW_hS3MCeGuW8F6gWAEj9C-FH86e6KMts_ASzlr8RV_IQrh7TlH8H4Rri8gi25XYiT7rF5lp_UF9cgVmM6PQ7J6WM_njtaa4DAHhvJT_7VeOttcvZQY_pAbn8WS_BbOwDs"/>
+<div class="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent flex items-end p-4">
+<span class="text-white font-label-caps text-label-caps flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="explore">explore</span>
+                            VIEW ON MAP
+                        </span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-50 dark:bg-slate-950 w-full py-12 border-t border-slate-200 dark:border-slate-800 font-space-grotesk text-sm mt-auto">
+<div class="max-w-7xl mx-auto px-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+<div>
+<span class="text-lg font-bold text-slate-900 dark:text-white block mb-2 opacity-80 hover:opacity-100 transition-opacity">stag.io</span>
+<p class="text-slate-500 dark:text-slate-500 opacity-80 hover:opacity-100 transition-opacity">© 2024 stag.io. Engineering Modern Connectivity.</p>
+</div>
+<div class="flex flex-wrap gap-4 md:justify-end">
+<a class="text-slate-500 dark:text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 opacity-80 hover:opacity-100 transition-opacity" href="#">Privacy Policy</a>
+<a class="text-slate-500 dark:text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 opacity-80 hover:opacity-100 transition-opacity" href="#">Terms of Service</a>
+<a class="text-slate-500 dark:text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 opacity-80 hover:opacity-100 transition-opacity" href="#">Cookie Settings</a>
+<a class="text-indigo-600 font-semibold hover:text-indigo-600 dark:hover:text-indigo-400 opacity-80 hover:opacity-100 transition-opacity" href="#">Support</a>
+</div>
+</div>
+</footer>
+</body></html>
