@@ -457,7 +457,7 @@ const AdminValidation = () => {
                         <div className="col-span-12 md:col-span-4 bg-primary text-white rounded-xl p-8 relative overflow-hidden h-64">
                             <div className="relative z-10">
                                 <h4 className="font-headline text-2xl font-bold mb-2">Policy Reminder</h4>
-                                <p className="text-on-primary-container text-sm leading-relaxed mb-6">Validation must be completed within 72 hours of company acceptance to ensure legal compliance for student visas.</p>
+                                <p className="text-on-primary-container text-sm leading-relaxed mb-6">Validation must be completed within 10 days after the date of company acceptance to ensure legal compliance for internships.</p>
                                 <a className="text-white font-bold flex items-center gap-2 group" href="#">
                                     Read Policy Handbook
                                     <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>

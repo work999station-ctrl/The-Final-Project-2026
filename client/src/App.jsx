@@ -31,6 +31,9 @@ import NotificationDetails from './pages/NotificationDetails';
 import CompanyProfileStudentView from './pages/CompanyProfileStudentView';
 import UniversityPlacementAnalytics from './pages/UniversityPlacementAnalytics';
 import ApplicationDetails from './pages/ApplicationDetails';
+import AgreementVerificationSuccess from './pages/AgreementVerificationSuccess';
+import AgreementVerificationInvalid from './pages/AgreementVerificationInvalid';
+import VerifyQR from './pages/VerifyQR';
 
 function App() {
   return (
@@ -69,7 +72,9 @@ function App() {
         <Route path="/company-dashboard-student-view/:id" element={<CompanyProfileStudentView />} />
         <Route path="/university-placement-analytics" element={<UniversityPlacementAnalytics />} />
         <Route path="/application-details/:applicationId" element={<ApplicationDetails />} />
-
+        <Route path="/verification-success/:id" element={<AgreementVerificationSuccess />} />
+        <Route path="/verification-invalid" element={<AgreementVerificationInvalid />} />
+        <Route path="/verify-qr/:id" element={<VerifyQR />} />
       </Routes>
     </Router>
   );

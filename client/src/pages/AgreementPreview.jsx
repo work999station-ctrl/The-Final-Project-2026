@@ -222,7 +222,7 @@ const AgreementPreview = () => {
                                     <div className="flex flex-col items-center gap-2 shrink-0">
                                         <div className="p-2 bg-white border border-slate-200 rounded-lg shadow-sm">
                                             <QRCodeSVG
-                                                value={`INTERNSHIP AGREEMENT\nStudent: ${data.studentName}\nUniversity: ${data.universityName}\nCompany: ${data.companyName}\nRole: ${data.offerTitle}\nPeriod: ${data.startDate} to ${data.endDate}\nRef: AGR-${applicationId || 'DEMO'}-${data.studentName?.replace(/\s+/g, '').toUpperCase().slice(0, 6)}`}
+                                                value={`${window.location.origin}/verify-qr/${applicationId || 'DEMO'}`}
                                                 size={100}
                                                 level="M"
                                                 includeMargin={false}
