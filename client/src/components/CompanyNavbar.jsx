@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import logoImage from '../assets/logo.png';
+import ThemeToggle from './ThemeToggle';
 
 const CompanyNavbar = ({ company: companyProp }) => {
     const navigate = useNavigate();
@@ -69,7 +70,7 @@ const CompanyNavbar = ({ company: companyProp }) => {
                 <div className="flex items-center gap-8">
                     {/* Logo */}
                     <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-                        <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain" />
+                        <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain dark:invert dark:hue-rotate-180 mix-blend-multiply dark:mix-blend-screen" />
                     </div>
 
                     {/* Nav Links */}
@@ -111,8 +112,16 @@ const CompanyNavbar = ({ company: companyProp }) => {
                             className="bg-slate-100 dark:bg-slate-800 border-none rounded-full pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/50 w-56 outline-none text-slate-700 dark:text-slate-200"
                             placeholder="Search students..."
                             type="text"
+                            defaultValue={new URLSearchParams(location.search).get('search') || ''}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    navigate(`/candidate-tracking-statistics?search=${encodeURIComponent(e.target.value)}`);
+                                }
+                            }}
                         />
                     </div>
+
+                    <ThemeToggle />
 
                     {/* Notification bell */}
                     <div className="relative" ref={notificationRef}>

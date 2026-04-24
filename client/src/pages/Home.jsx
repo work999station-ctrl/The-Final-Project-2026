@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import logoImage from '../assets/logo.png';
+import ThemeToggle from '../components/ThemeToggle';
 
 const Home = () => {
     const navigate = useNavigate();
@@ -105,18 +106,19 @@ const Home = () => {
             <header className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
                 <div className="container mx-auto flex items-center justify-between px-6 py-4">
                     <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-                        <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain" />
+                        <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain dark:invert dark:hue-rotate-180 mix-blend-multiply dark:mix-blend-screen" />
                     </div>
                     <nav className="hidden md:flex items-center gap-8">
-                        <a className="text-sm font-semibold hover:text-primary transition-colors" href="#students">Students</a>
-                        <a className="text-sm font-semibold hover:text-primary transition-colors" href="#companies">Companies</a>
-                        <a className="text-sm font-semibold hover:text-primary transition-colors" href="#universities">Universities</a>
-                        <a className="text-sm font-semibold hover:text-primary transition-colors" href="#features">Features</a>
+                        <Link className="text-sm font-semibold hover:text-primary transition-colors" to="/students">Students</Link>
+                        <Link className="text-sm font-semibold hover:text-primary transition-colors" to="/companies">Companies</Link>
+                        <Link className="text-sm font-semibold hover:text-primary transition-colors" to="/universities">Universities</Link>
+                        <Link className="text-sm font-semibold hover:text-primary transition-colors" to="/pricing">Pricing</Link>
                     </nav>
                     <div className="flex items-center gap-4">
                         {!loading && (
                             user ? (
                                 <div className="flex items-center gap-4">
+                                    <ThemeToggle />
                                     <button onClick={handleDashboardClick} className="text-sm font-bold text-primary hover:underline">Dashboard</button>
                                     <div
                                         className="size-10 rounded-full border-2 border-primary bg-cover bg-center cursor-pointer shadow-sm"
@@ -127,6 +129,7 @@ const Home = () => {
                                 </div>
                             ) : (
                                 <>
+                                    <ThemeToggle />
                                     <button className="hidden sm:block text-sm font-bold px-4 py-2 hover:text-primary" onClick={() => navigate('/login')}>Log In</button>
                                     <button className="bg-primary text-white text-sm font-bold py-2.5 px-6 rounded-full hover:opacity-90 transition-all shadow-lg shadow-primary/20" onClick={() => navigate('/student-signup')}>
                                         Get Started
@@ -364,7 +367,7 @@ const Home = () => {
                     <div className="grid md:grid-cols-4 gap-12 mb-16">
                         <div className="col-span-1 md:col-span-1">
                             <div className="flex items-center text-white mb-6">
-                                <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain brightness-0 invert" />
+                                <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain brightness-0 invert mix-blend-screen" />
                             </div>
                             <p className="text-sm leading-relaxed mb-6">The premier platform for connecting academic brilliance with industrial innovation.</p>
                             <div className="flex gap-4">
@@ -379,27 +382,27 @@ const Home = () => {
                         <div>
                             <h6 className="text-white font-bold mb-6">Platform</h6>
                             <ul className="space-y-4 text-sm">
-                                <li><a className="hover:text-white transition-colors" href="#">Students</a></li>
-                                <li><a className="hover:text-white transition-colors" href="#">Companies</a></li>
-                                <li><a className="hover:text-white transition-colors" href="#">Universities</a></li>
-                                <li><a className="hover:text-white transition-colors" href="#">Pricing</a></li>
+                                <li><Link className="hover:text-white transition-colors" to="/students">Students</Link></li>
+                                <li><Link className="hover:text-white transition-colors" to="/companies">Companies</Link></li>
+                                <li><Link className="hover:text-white transition-colors" to="/universities">Universities</Link></li>
+                                <li><Link className="hover:text-white transition-colors" to="/pricing">Pricing</Link></li>
                             </ul>
                         </div>
                         <div>
                             <h6 className="text-white font-bold mb-6">Company</h6>
                             <ul className="space-y-4 text-sm">
-                                <li><a className="hover:text-white transition-colors" href="#">About Us</a></li>
-                                <li><a className="hover:text-white transition-colors" href="#">Careers</a></li>
-                                <li><a className="hover:text-white transition-colors" href="#">Blog</a></li>
-                                <li><a className="hover:text-white transition-colors" href="#">Contact</a></li>
+                                <li><Link className="hover:text-white transition-colors" to="/about-us">About Us</Link></li>
+                                <li><Link className="hover:text-white transition-colors" to="/careers">Careers</Link></li>
+                                <li><Link className="hover:text-white transition-colors" to="/blog">Blog</Link></li>
+                                <li><Link className="hover:text-white transition-colors" to="/contact-us">Contact</Link></li>
                             </ul>
                         </div>
                         <div>
                             <h6 className="text-white font-bold mb-6">Legal</h6>
                             <ul className="space-y-4 text-sm">
-                                <li><a className="hover:text-white transition-colors" href="#">Privacy Policy</a></li>
-                                <li><a className="hover:text-white transition-colors" href="#">Terms of Service</a></li>
-                                <li><a className="hover:text-white transition-colors" href="#">Cookie Policy</a></li>
+                                <li><Link className="hover:text-white transition-colors" to="/privacy-policy">Privacy Policy</Link></li>
+                                <li><Link className="hover:text-white transition-colors" to="/terms-of-service">Terms of Service</Link></li>
+                                <li><Link className="hover:text-white transition-colors" to="/cookie-policy">Cookie Policy</Link></li>
                             </ul>
                         </div>
                     </div>

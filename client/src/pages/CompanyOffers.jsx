@@ -10,6 +10,7 @@ const CompanyOffers = () => {
     const [offers, setOffers] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [offerToDelete, setOfferToDelete] = useState(null);
+    const [offerToToggle, setOfferToToggle] = useState(null);
 
     useEffect(() => {
         const fetchCompanyAndOffers = async () => {
@@ -35,6 +36,29 @@ const CompanyOffers = () => {
         };
         fetchCompanyAndOffers();
     }, []);
+
+    const confirmToggleStatus = async () => {
+        if (!offerToToggle) return;
+        try {
+            const formData = new FormData();
+            formData.append('status', offerToToggle.newStatus);
+            const res = await fetch(`/api/offers/${offerToToggle._id}`, {
+                method: 'PUT',
+                body: formData
+            });
+            if (res.ok) {
+                const updated = await res.json();
+                setOffers(offers.map(o => o._id === offerToToggle._id ? updated.offer : o));
+                setOfferToToggle(null);
+            } else {
+                alert(`Failed to ${offerToToggle.newStatus === 'Closed' ? 'close' : 'reopen'} offer`);
+                setOfferToToggle(null);
+            }
+        } catch (err) {
+            console.error(err);
+            setOfferToToggle(null);
+        }
+    };
 
     const confirmDeleteOffer = async () => {
         if (!offerToDelete) return;
@@ -169,6 +193,18 @@ const CompanyOffers = () => {
                                         })()}
 
                                         <div className="flex items-center gap-1.5 relative z-10">
+                                            {(() => {
+                                                const isClosed = offer.status === 'Closed' || (offer.endDateOfApplay && moment().isAfter(moment(offer.endDateOfApplay).endOf('day')));
+                                                return (
+                                                    <button
+                                                        className={`h-10 w-10 flex items-center justify-center bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl transition-all shadow-sm ${isClosed ? 'text-emerald-500 hover:text-emerald-600 hover:border-emerald-200 dark:hover:border-emerald-800' : 'text-slate-500 hover:text-amber-500 hover:border-amber-200 dark:hover:border-amber-800'}`}
+                                                        title={isClosed ? "Reopen Offer" : "Close Offer"}
+                                                        onClick={(e) => { e.stopPropagation(); setOfferToToggle({ _id: offer._id, newStatus: isClosed ? 'Validation' : 'Closed' }); }}
+                                                    >
+                                                        <span className="material-symbols-outlined text-[20px]">{isClosed ? 'lock_open' : 'lock'}</span>
+                                                    </button>
+                                                );
+                                            })()}
                                             <button
                                                 className="h-10 w-10 flex items-center justify-center bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl transition-all shadow-sm text-slate-500 hover:text-[#4F46E5]"
                                                 title="Edit Offer"
@@ -193,6 +229,37 @@ const CompanyOffers = () => {
                 </div>
 
             </main>
+
+            {/* Toggle Status Confirmation Modal */}
+            {offerToToggle && (
+                <div className="fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-100 dark:border-slate-800">
+                        <div className={`w-16 h-16 ${offerToToggle.newStatus === 'Closed' ? 'bg-amber-50 dark:bg-amber-900/20 border-amber-100 dark:border-amber-800/30 text-amber-600' : 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-100 dark:border-emerald-800/30 text-emerald-600'} border rounded-full flex items-center justify-center mx-auto mb-6`}>
+                            <span className="material-symbols-outlined text-3xl">{offerToToggle.newStatus === 'Closed' ? 'lock' : 'lock_open'}</span>
+                        </div>
+                        <h3 className="text-2xl font-black text-slate-900 dark:text-white font-headline tracking-tight mb-2">{offerToToggle.newStatus === 'Closed' ? 'Close Offer?' : 'Reopen Offer?'}</h3>
+                        <p className="text-slate-500 dark:text-slate-400 text-sm mb-8 font-medium leading-relaxed">
+                            {offerToToggle.newStatus === 'Closed' 
+                                ? 'Are you sure you want to close this internship offer? Candidates will no longer be able to apply.' 
+                                : 'Are you sure you want to reopen this internship offer? Candidates will be able to apply again.'}
+                        </p>
+                        <div className="flex gap-4">
+                            <button
+                                onClick={() => setOfferToToggle(null)}
+                                className="flex-1 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-sm uppercase tracking-wider rounded-xl transition-all"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={() => confirmToggleStatus()}
+                                className={`flex-1 py-3 ${offerToToggle.newStatus === 'Closed' ? 'bg-amber-600 hover:bg-amber-700 shadow-amber-600/20' : 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/20'} text-white font-bold text-sm uppercase tracking-wider rounded-xl transition-all shadow-xl`}
+                            >
+                                {offerToToggle.newStatus === 'Closed' ? 'Close Offer' : 'Reopen Offer'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Delete Offer Confirmation Modal */}
             {offerToDelete && (

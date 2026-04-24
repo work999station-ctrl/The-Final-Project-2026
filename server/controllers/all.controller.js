@@ -807,8 +807,8 @@ const getApplicationsByOfferId = async (req, res) => {
 };
 const getCompanyApplicationById = async (req, res) => {
   try {
-    if (req.userType !== 'company') {
-      return res.status(403).json({ error: 'Only companies can perform this action' });
+    if (req.userType !== 'company' && req.userType !== 'student') {
+      return res.status(403).json({ error: 'Only companies and students can perform this action' });
     }
 
     const { id: applicationId } = req.params;
@@ -822,9 +822,15 @@ const getCompanyApplicationById = async (req, res) => {
       return res.status(404).json({ error: 'Application not found' });
     }
 
-    // 2. Verify the associated offer belongs to the requesting company
-    if (application.offerId.companyId.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ error: 'Unauthorized to view this application' });
+    // 2. Verify authorization
+    if (req.userType === 'company') {
+      if (application.offerId.companyId.toString() !== req.user._id.toString()) {
+        return res.status(403).json({ error: 'Unauthorized to view this application' });
+      }
+    } else { // student
+      if (application.studentId._id.toString() !== req.user._id.toString()) {
+        return res.status(403).json({ error: 'Unauthorized to view this application' });
+      }
     }
 
     // Reuse the existing matchPercentage logic to provide consistency
@@ -865,8 +871,8 @@ const addApplicationFeedback = async (req, res) => {
     const { id: applicationId } = req.params;
     const { text } = req.body;
 
-    if (req.userType !== 'company') {
-      return res.status(403).json({ error: 'Only companies can add feedback' });
+    if (req.userType !== 'company' && req.userType !== 'student') {
+      return res.status(403).json({ error: 'Only companies and students can add feedback' });
     }
 
     if (!text || text.trim() === '') {
@@ -878,14 +884,23 @@ const addApplicationFeedback = async (req, res) => {
       return res.status(404).json({ error: 'Application not found' });
     }
 
-    if (application.offerId.companyId.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ error: 'Unauthorized to add feedback to this application' });
+    if (req.userType === 'company') {
+      if (application.offerId.companyId.toString() !== req.user._id.toString()) {
+        return res.status(403).json({ error: 'Unauthorized to add feedback to this application' });
+      }
+    } else if (req.userType === 'student') {
+      if (application.studentId.toString() !== req.user._id.toString()) {
+        return res.status(403).json({ error: 'Unauthorized to add feedback to this application' });
+      }
+      if (application.feedback.length === 0) {
+        return res.status(403).json({ error: 'Wait for the company to message you first.' });
+      }
     }
 
     // Add new feedback
     application.feedback.push({
       text: text.trim(),
-      authorName: req.user.companyName || 'Company Representative',
+      authorName: req.userType === 'company' ? (req.user.companyName || 'Company Representative') : (req.user.name || 'Candidate'),
       createdAt: new Date()
     });
 
