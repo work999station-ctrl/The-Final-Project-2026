@@ -304,7 +304,7 @@ const AdminSignup = () => {
 
                     {/* Footer */}
                     <footer className="py-8 text-center text-slate-400 text-sm font-medium border-t border-slate-100 dark:border-slate-800/50 mt-auto">
-                        © 2024 stage.io Inc. All rights reserved.
+                        © 2026 stage.io Inc. All rights reserved.
                     </footer>
                 </div>
             </div>
