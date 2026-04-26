@@ -42,13 +42,13 @@ const AdminNavbar = ({ admin: adminProp }) => {
 
     return (
         <header className="sticky top-0 z-50 w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
-            <div className="max-w-[1600px] mx-auto flex items-center justify-between px-6 lg:px-12 py-4">
+            <div className="max-w-[1600px] mx-auto flex items-center justify-between px-6 lg:px-12 h-16">
 
                 {/* Left: Logo + Nav */}
                 <div className="flex items-center gap-8">
                     {/* Logo */}
                     <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-                        <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain dark:invert dark:hue-rotate-180 mix-blend-multiply dark:mix-blend-screen" />
+                        <img src={logoImage} alt="stage.io logo" className="h-8 w-auto object-contain dark:invert dark:hue-rotate-180 mix-blend-multiply dark:mix-blend-screen" />
                     </div>
 
                     {/* Nav Links */}

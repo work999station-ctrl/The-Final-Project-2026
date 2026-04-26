@@ -425,10 +425,7 @@ const StudentDashboard = () => {
                                             <p className="text-sm text-text-muted dark:text-gray-400 line-clamp-2 mb-4 flex-grow">
                                                 {offer.description || 'No description provided.'}
                                             </p>
-                                            <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-slate-700 mt-auto">
-                                                <button onClick={(e) => { e.stopPropagation(); }} className="text-text-muted dark:text-gray-400 hover:text-primary transition-colors">
-                                                    <span className="material-symbols-outlined">bookmark</span>
-                                                </button>
+                                            <div className="flex items-center justify-end pt-4 border-t border-gray-100 dark:border-slate-700 mt-auto">
                                                 {(() => {
                                                     const isClosed = offer.status === 'Closed' || (offer.endDateOfApplay && moment().isAfter(moment(offer.endDateOfApplay).endOf('day')));
                                                     return (

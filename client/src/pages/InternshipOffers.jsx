@@ -1,15 +1,23 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import moment from 'moment';
 import StudentNavbar from '../components/StudentNavbar';
 
 const InternshipOffers = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const [openFilter, setOpenFilter] = useState(null);
     const filterRef = useRef(null);
     const [offers, setOffers] = useState([]);
     const [offersLoading, setOffersLoading] = useState(true);
     const [activeFilters, setActiveFilters] = useState({ wilaya: '', duration: '', type: '', skill: '' });
+    const [searchQuery, setSearchQuery] = useState(() => new URLSearchParams(location.search).get('search') || '');
+
+    // Sync search query whenever the URL ?search= param changes (e.g. navbar search)
+    useEffect(() => {
+        const urlSearch = new URLSearchParams(location.search).get('search') || '';
+        setSearchQuery(urlSearch);
+    }, [location.search]);
     const [student, setStudent] = useState(null);
 
     // Close dropdown when clicking outside
@@ -112,7 +120,20 @@ const InternshipOffers = () => {
         setLimit(6);
     };
 
-    const hasActiveFilters = Object.values(activeFilters).some(Boolean);
+    const hasActiveFilters = Object.values(activeFilters).some(Boolean) || !!searchQuery;
+
+    // Client-side filter by search query (title, company name, tags)
+    const filteredOffers = searchQuery.trim()
+        ? offers.filter(o => {
+            const q = searchQuery.toLowerCase();
+            const allTags = o.techStack ? o.techStack.flatMap(s => s.tags || []) : [];
+            return (
+                (o.title || '').toLowerCase().includes(q) ||
+                (o.company?.companyName || o.company?.name || '').toLowerCase().includes(q) ||
+                allTags.some(t => t.toLowerCase().includes(q))
+            );
+          })
+        : offers;
 
     const wilayas = [
         '01 - Adrar', '02 - Chlef', '03 - Laghouat', '04 - Oum El Bouaghi', '05 - Batna',
@@ -152,7 +173,22 @@ const InternshipOffers = () => {
                             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#4F46E5]">
                                 <span className="material-symbols-outlined">search</span>
                             </div>
-                            <input className="block w-full pl-12 pr-4 py-3.5 bg-white dark:bg-slate-800 dark:text-white border-0 rounded-full text-slate-900 placeholder:text-slate-500 focus:ring-2 focus:ring-[#4F46E5] shadow-sm group-hover:shadow-lg transition-all duration-300 text-base font-medium outline-none" placeholder="React, Civil Engineering, Marketing..." type="text" />
+                            <input
+                                className="block w-full pl-12 pr-10 py-3.5 bg-white dark:bg-slate-800 dark:text-white border-0 rounded-full text-slate-900 placeholder:text-slate-500 focus:ring-2 focus:ring-[#4F46E5] shadow-sm group-hover:shadow-lg transition-all duration-300 text-base font-medium outline-none"
+                                placeholder="React, Civil Engineering, Marketing..."
+                                type="text"
+                                value={searchQuery}
+                                onChange={e => setSearchQuery(e.target.value)}
+                            />
+                            {searchQuery && (
+                                <button
+                                    className="absolute inset-y-0 right-4 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                                    onClick={() => setSearchQuery('')}
+                                    type="button"
+                                >
+                                    <span className="material-symbols-outlined text-lg">close</span>
+                                </button>
+                            )}
                         </div>
                         {/* Filters */}
                         <div className="flex gap-3 overflow-x-auto md:overflow-visible w-full md:w-auto pb-2 md:pb-0 scrollbar-hide" ref={filterRef}>
@@ -329,14 +365,14 @@ const InternshipOffers = () => {
                 <section className="max-w-[1200px] mx-auto w-full flex justify-between items-end pb-2">
                     <div>
                         <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-1">
-                            {hasActiveFilters ? 'Filtered Results' : 'Recommended for You'}
+                            {searchQuery ? `Results for "${searchQuery}"` : hasActiveFilters ? 'Filtered Results' : 'Recommended for You'}
                         </h1>
                         <p className="text-slate-500 text-sm">
                             {hasActiveFilters ? 'Showing offers matching your selected filters.' : 'Browse the latest opportunities available on the platform.'}
                         </p>
                     </div>
                     <div className="hidden sm:block text-sm font-medium text-slate-500">
-                        Showing <span className="text-slate-900 dark:text-white font-bold">{offers.length}</span> opportunities
+                        Showing <span className="text-slate-900 dark:text-white font-bold">{filteredOffers.length}</span> opportunities
                     </div>
                 </section>
 
@@ -346,13 +382,18 @@ const InternshipOffers = () => {
                         Array.from({ length: 6 }).map((_, i) => (
                             <div key={i} className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 animate-pulse h-72"></div>
                         ))
-                    ) : offers.length === 0 ? (
+                    ) : filteredOffers.length === 0 ? (
                         <div className="col-span-3 text-center py-20 text-slate-400">
-                            <span className="material-symbols-outlined text-5xl mb-4 block">inbox</span>
-                            <p className="text-lg font-semibold">No offers available yet.</p>
+                            <span className="material-symbols-outlined text-5xl mb-4 block">{searchQuery ? 'search_off' : 'inbox'}</span>
+                            <p className="text-lg font-semibold">
+                                {searchQuery ? `Offer not found for "${searchQuery}"` : 'No offers available yet.'}
+                            </p>
+                            {searchQuery && (
+                                <button onClick={() => setSearchQuery('')} className="mt-4 text-sm text-[#4F46E5] hover:underline font-medium">Clear search</button>
+                            )}
                         </div>
                     ) : (
-                        offers.map((offer) => {
+                        filteredOffers.map((offer) => {
                             // Flatten all tags from all techStack categories
                             const allTags = offer.techStack
                                 ? offer.techStack.flatMap(stack => stack.tags || [])
@@ -447,12 +488,6 @@ const InternshipOffers = () => {
                                                 </button>
                                             );
                                         })()}
-                                        <button
-                                            onClick={(e) => { e.stopPropagation(); /* handle favorite logic */ }}
-                                            className="w-10 h-10 flex items-center justify-center rounded-full border border-slate-200 dark:border-slate-600 text-slate-400 hover:text-rose-500 hover:border-rose-200 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all"
-                                        >
-                                            <span className="material-symbols-outlined fill-current">favorite</span>
-                                        </button>
                                     </div>
                                 </article>
                             );
