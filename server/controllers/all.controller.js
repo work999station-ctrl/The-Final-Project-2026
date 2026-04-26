@@ -12,6 +12,11 @@ const handelErrors = (err) => {
   console.log(err, err.code);
   let errors = { name: '', email: '', password: '' };
 
+  if (err.name === 'MongooseError' || (err.message && (err.message.includes('buffering timed out') || err.message.includes('ETIMEOUT')))) {
+    errors.email = 'Database connection error. Please try again later or check MongoDB status.';
+    return errors;
+  }
+
   // incorrect email
   if (err.message === 'incorrect email') {
     errors.email = 'That email is not registered';

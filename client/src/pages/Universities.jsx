@@ -278,7 +278,7 @@ const Universities = () => {
                         </div>
                     </div>
                     <div className="pt-8 border-t border-slate-200 dark:border-slate-900 flex flex-col md:flex-row justify-between items-center gap-6">
-                        <p className="text-sm text-slate-500 dark:text-slate-400">© 2024 stag.io Inc. All rights reserved.</p>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">© 2026 stag.io Inc. All rights reserved.</p>
                         <div className="flex items-center gap-6">
                             <a href="#" className="text-slate-400 hover:text-indigo-600 transition-colors"><span className="material-symbols-outlined">school</span></a>
                             <a href="#" className="text-slate-400 hover:text-indigo-600 transition-colors"><span className="material-symbols-outlined">hub</span></a>

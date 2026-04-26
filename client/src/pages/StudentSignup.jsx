@@ -297,7 +297,7 @@ const StudentSignup = () => {
                     </main>
 
                     <footer className="mt-auto py-8 text-center text-slate-400 text-sm border-t border-slate-200 dark:border-slate-800">
-                        © 2024 stage.io Inc. All rights reserved.
+                        © 2026 stage.io Inc. All rights reserved.
                     </footer>
                 </div>
             </div>

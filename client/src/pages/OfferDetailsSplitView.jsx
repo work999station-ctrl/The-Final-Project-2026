@@ -14,6 +14,7 @@ const OfferDetailsSplitView = () => {
     const [applicants, setApplicants] = useState([]);
     const [applicantsLoading, setApplicantsLoading] = useState(false);
     const [actionModal, setActionModal] = useState(null);
+    const [toastMessage, setToastMessage] = useState(null);
 
     useEffect(() => {
         const fetchOfferDetails = async () => {
@@ -106,6 +107,8 @@ const OfferDetailsSplitView = () => {
             if (res.ok) {
                 setOffer(prev => ({ ...prev, status: 'Closed' }));
                 setActionModal(null);
+                setToastMessage("Offer closed successfully.");
+                setTimeout(() => setToastMessage(null), 4000);
             } else {
                 const data = await res.json();
                 alert(data.error || "Failed to close offer");
@@ -142,10 +145,11 @@ const OfferDetailsSplitView = () => {
                 if (data.success) {
                     setOffer(data.offer);
                     setActionModal(null);
-                    alert(deadlineExpired
+                    setToastMessage(deadlineExpired
                         ? `Offer re-opened successfully. Application deadline has been extended to ${moment(newDeadline).format('LL')}.`
                         : "Offer re-opened successfully."
                     );
+                    setTimeout(() => setToastMessage(null), 4000);
                 }
             } else {
                 const errorData = await res.json();
@@ -541,6 +545,24 @@ const OfferDetailsSplitView = () => {
                                 {actionModal.type === 'close' ? 'Close Offer' : 'Reopen Offer'}
                             </button>
                         </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Toast Notification */}
+            {toastMessage && (
+                <div className="fixed bottom-6 right-6 z-[200] animate-fade-in-up">
+                    <div className="bg-emerald-600 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-4 max-w-sm">
+                        <div className="bg-white/20 p-2 rounded-full flex-shrink-0">
+                            <span className="material-symbols-outlined text-white text-xl">check_circle</span>
+                        </div>
+                        <p className="text-sm font-semibold">{toastMessage}</p>
+                        <button 
+                            onClick={() => setToastMessage(null)}
+                            className="ml-auto text-white/80 hover:text-white transition-colors"
+                        >
+                            <span className="material-symbols-outlined text-xl">close</span>
+                        </button>
                     </div>
                 </div>
             )}

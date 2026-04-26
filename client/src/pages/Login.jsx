@@ -180,7 +180,7 @@ const Login = () => {
                     </main>
 
                     <footer className="p-8 text-center text-slate-400 text-xs font-medium tracking-tight mt-auto border-t border-slate-200 dark:border-slate-800">
-                        © 2024 Modern Connectivity Platform. All rights reserved.
+                        © 2026 Modern Connectivity Platform. All rights reserved.
                     </footer>
                 </div>
             </div>

@@ -407,7 +407,7 @@ const Home = () => {
                         </div>
                     </div>
                     <div className="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
-                        <p>© 2024 stage.io Inc. All rights reserved.</p>
+                        <p>© 2026 stage.io Inc. All rights reserved.</p>
                         <div className="flex gap-8">
                             <a className="hover:text-white transition-colors" href="#">Facebook</a>
                             <a className="hover:text-white transition-colors" href="#">Twitter</a>

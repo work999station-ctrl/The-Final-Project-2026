@@ -389,7 +389,7 @@ const CompanyDashboard = () => {
             {/* Footer */}
             <footer className="mt-auto py-8 px-6 border-t border-slate-200 dark:border-slate-700 dark:border-slate-800 bg-white dark:bg-slate-800 dark:bg-slate-900">
                 <div className="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-slate-500 dark:text-slate-400 dark:text-slate-500 text-sm">
-                    <p>© 2024 Modern Connectivity. All rights reserved.</p>
+                    <p>© 2026 Modern Connectivity. All rights reserved.</p>
                     <div className="flex gap-6">
                         <Link to="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</Link>
                         <Link to="/terms-of-service" className="hover:text-primary transition-colors">Terms of Service</Link>
