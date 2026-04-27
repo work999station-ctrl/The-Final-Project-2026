@@ -14,6 +14,7 @@ const OfferDetailsSplitView = () => {
     const [applicants, setApplicants] = useState([]);
     const [applicantsLoading, setApplicantsLoading] = useState(false);
     const [actionModal, setActionModal] = useState(null);
+    const [applyModal, setApplyModal] = useState(false);
     const [toastMessage, setToastMessage] = useState(null);
 
     useEffect(() => {
@@ -73,6 +74,7 @@ const OfferDetailsSplitView = () => {
     }, [id, userType]);
 
     const handleApply = async () => {
+        setApplyModal(false);
         setIsApplying(true);
         try {
             const res = await fetch('/api/applications', {
@@ -82,14 +84,19 @@ const OfferDetailsSplitView = () => {
             });
             const data = await res.json();
             if (res.ok && data.success) {
-                alert('Success! Your application has been submitted.');
+                setToastMessage('Your application has been submitted successfully!');
+                setTimeout(() => setToastMessage(null), 4000);
                 setOffer(prev => ({ ...prev, isApplied: true }));
             } else {
-                alert(data.message || 'Failed to apply.');
+                setToastMessage(data.message || 'Failed to apply.');
+                setTimeout(() => setToastMessage(null), 4000);
             }
         } catch (err) {
             console.error('Error applying:', err);
-            alert('An error occurred. Please try again later.');
+            setToastMessage('An error occurred. Please try again later.');
+            setTimeout(() => setToastMessage(null), 4000);
+        } finally {
+            setIsApplying(false);
         }
     };
     const handleCloseOffer = async () => {
@@ -234,7 +241,7 @@ const OfferDetailsSplitView = () => {
                         {userType === 'student' && (
                             <>
                                 <button
-                                    onClick={handleApply}
+                                    onClick={() => setApplyModal(true)}
                                     disabled={isApplying || (offer && offer.isApplied) || isClosed}
                                     className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-bold transition-all shadow-lg ${offer && offer.isApplied ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/50 cursor-default shadow-none' : (isClosed ? 'bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 cursor-not-allowed border border-slate-300 dark:border-slate-700 shadow-none' : (isApplying ? 'bg-indigo-400 text-white cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-200 dark:shadow-indigo-900/40'))}`}>
                                     {offer && offer.isApplied ? 'Applied' : (isClosed ? 'Offer Closed' : (isApplying ? 'Applying...' : 'Apply now'))}
@@ -517,6 +524,35 @@ const OfferDetailsSplitView = () => {
                     )}
                 </div>
             </main>
+
+            {/* Floating Apply Confirmation Modal */}
+            {applyModal && (
+                <div className="fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setApplyModal(false)}>
+                    <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-100 dark:border-slate-800" onClick={(e) => e.stopPropagation()}>
+                        <div className="w-16 h-16 bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800/30 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <span className="material-symbols-outlined text-3xl">send</span>
+                        </div>
+                        <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Apply to this offer?</h3>
+                        <p className="text-slate-500 dark:text-slate-400 text-sm mb-2 font-semibold">{offer?.title}</p>
+                        <p className="text-slate-400 dark:text-slate-500 text-xs mb-8">at {company?.companyName || 'Company'}</p>
+                        <div className="flex gap-4">
+                            <button
+                                onClick={() => setApplyModal(false)}
+                                className="flex-1 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-sm uppercase tracking-wider rounded-xl transition-all"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleApply}
+                                className="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm uppercase tracking-wider rounded-xl transition-all shadow-xl shadow-indigo-600/20 flex items-center justify-center gap-2"
+                            >
+                                <span className="material-symbols-outlined text-lg">send</span>
+                                Apply Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Floating Confirmation Modal */}
             {actionModal && (

@@ -32,6 +32,8 @@ const InternshipOffers = () => {
     }, []);
 
     const [applyingTo, setApplyingTo] = useState(null);
+    const [applyModal, setApplyModal] = useState(null); // { offerId, title, company }
+    const [toastMessage, setToastMessage] = useState(null); // { type: 'success'|'error', text }
     const [limit, setLimit] = useState(6);
     const [hasMore, setHasMore] = useState(false);
 
@@ -58,9 +60,16 @@ const InternshipOffers = () => {
         }
     }, [activeFilters, limit]);
 
-    const handleApply = async (e, offerId) => {
+    const openApplyModal = (e, offer) => {
         e.stopPropagation();
+        setApplyModal({ offerId: offer._id, title: offer.title, company: offer.company?.name || 'Company' });
+    };
+
+    const handleApply = async () => {
+        if (!applyModal) return;
+        const offerId = applyModal.offerId;
         setApplyingTo(offerId);
+        setApplyModal(null);
         try {
             const res = await fetch('/api/applications', {
                 method: 'POST',
@@ -69,15 +78,18 @@ const InternshipOffers = () => {
             });
             const data = await res.json();
             if (res.ok && data.success) {
-                alert('Success! Your application has been submitted.');
+                setToastMessage({ type: 'success', text: 'Your application has been submitted successfully!' });
+                setTimeout(() => setToastMessage(null), 4000);
                 // Local update to set isApplied to true
                 setOffers(prev => prev.map(o => o._id === offerId ? { ...o, isApplied: true } : o));
             } else {
-                alert(data.message || 'Failed to apply.');
+                setToastMessage({ type: 'error', text: data.message || 'Failed to apply.' });
+                setTimeout(() => setToastMessage(null), 4000);
             }
         } catch (err) {
             console.error('Error applying:', err);
-            alert('An error occurred. Please try again later.');
+            setToastMessage({ type: 'error', text: 'An error occurred. Please try again later.' });
+            setTimeout(() => setToastMessage(null), 4000);
         } finally {
             setApplyingTo(null);
         }
@@ -477,7 +489,7 @@ const InternshipOffers = () => {
                                             const isClosed = offer.status === 'Closed' || (offer.endDateOfApplay && moment().isAfter(moment(offer.endDateOfApplay).endOf('day')));
                                             return (
                                                 <button
-                                                    onClick={(e) => handleApply(e, offer._id)}
+                                                    onClick={(e) => openApplyModal(e, offer)}
                                                     disabled={applyingTo === offer._id || offer.isApplied || isClosed}
                                                     className={`flex-1 font-semibold py-2.5 px-4 rounded-full transition-all flex items-center justify-center gap-2 ${offer.isApplied ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/50 cursor-default' : (isClosed ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed border border-slate-200 dark:border-slate-700' : (applyingTo === offer._id ? 'bg-indigo-400 text-white cursor-not-allowed' : 'bg-[#4F46E5] hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 dark:shadow-none'))}`}
                                                 >
@@ -506,7 +518,54 @@ const InternshipOffers = () => {
                     </div>
                 )}
             </main>
-        </div>
+
+            {/* Floating Apply Confirmation Modal */}
+            {applyModal && (
+                <div className="fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setApplyModal(null)}>
+                    <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-100 dark:border-slate-800 animate-in fade-in zoom-in-95" onClick={(e) => e.stopPropagation()}>
+                        <div className="w-16 h-16 bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800/30 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <span className="material-symbols-outlined text-3xl">send</span>
+                        </div>
+                        <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Apply to this offer?</h3>
+                        <p className="text-slate-500 dark:text-slate-400 text-sm mb-2 font-semibold">{applyModal.title}</p>
+                        <p className="text-slate-400 dark:text-slate-500 text-xs mb-8">at {applyModal.company}</p>
+                        <div className="flex gap-4">
+                            <button
+                                onClick={() => setApplyModal(null)}
+                                className="flex-1 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-sm uppercase tracking-wider rounded-xl transition-all"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleApply}
+                                className="flex-1 py-3 bg-[#4F46E5] hover:bg-indigo-700 text-white font-bold text-sm uppercase tracking-wider rounded-xl transition-all shadow-xl shadow-indigo-600/20 flex items-center justify-center gap-2"
+                            >
+                                <span className="material-symbols-outlined text-lg">send</span>
+                                Apply Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Toast Notification */}
+            {toastMessage && (
+                <div className="fixed bottom-6 right-6 z-[200] animate-fade-in-up">
+                    <div className={`${toastMessage.type === 'success' ? 'bg-emerald-600' : 'bg-red-600'} text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-4 max-w-sm`}>
+                        <div className="bg-white/20 p-2 rounded-full flex-shrink-0">
+                            <span className="material-symbols-outlined text-white text-xl">{toastMessage.type === 'success' ? 'check_circle' : 'error'}</span>
+                        </div>
+                        <p className="text-sm font-semibold">{toastMessage.text}</p>
+                        <button
+                            onClick={() => setToastMessage(null)}
+                            className="ml-auto text-white/80 hover:text-white transition-colors"
+                        >
+                            <span className="material-symbols-outlined text-xl">close</span>
+                        </button>
+                    </div>
+                </div>
+            )}
+    </div>
     );
 };
 
