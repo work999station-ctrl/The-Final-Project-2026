@@ -41,7 +41,6 @@ import Blog from './pages/Blog';
 import CookiePolicy from './pages/CookiePolicy';
 import TermsOfService from './pages/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy';
-import Pricing from './pages/Pricing';
 import Students from './pages/Students';
 import Companies from './pages/Companies';
 import Universities from './pages/Universities';
@@ -93,7 +92,6 @@ function App() {
         <Route path="/cookie-policy" element={<CookiePolicy />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="/pricing" element={<Pricing />} />
         <Route path="/students" element={<Students />} />
         <Route path="/companies" element={<Companies />} />
         <Route path="/universities" element={<Universities />} />

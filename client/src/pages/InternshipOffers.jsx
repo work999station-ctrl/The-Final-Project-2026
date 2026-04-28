@@ -131,10 +131,15 @@ const InternshipOffers = () => {
 
     const skillCategories = [
         { name: 'Front-end', skills: ['React', 'Next.js', 'Vue.js', 'Tailwind CSS', 'Angular', 'HTML/CSS'] },
-        { name: 'Back-end', skills: ['Node.js', 'Express', 'Python', 'Django', 'Go', 'PHP'] },
+        { name: 'Back-end', skills: ['Node.js', 'Express', 'Python', 'Django', 'Go', 'PHP', 'Java', 'C++', 'Rust'] },
         { name: 'Mobile', skills: ['React Native', 'Flutter', 'Swift', 'Kotlin'] },
-        { name: 'Database', skills: ['PostgreSQL', 'MongoDB', 'Redis', 'MySQL', 'Firebase'] },
-        { name: 'DevOps', skills: ['Docker', 'AWS', 'CI/CD', 'Linux'] }
+        { name: 'Database', skills: ['PostgreSQL', 'MongoDB', 'Redis', 'MySQL', 'Firebase', 'SQL'] },
+        { name: 'DevOps', skills: ['Docker', 'AWS', 'CI/CD', 'Linux', 'Git'] },
+        { name: 'E-commerce & Marketing', skills: ['Shopify', 'WooCommerce', 'SEO', 'Google Analytics', 'Social Media Management', 'Email Marketing', 'Copywriting'] },
+        { name: 'Design & Media', skills: ['Adobe Photoshop', 'Illustrator', 'Premiere Pro', 'UI/UX Design', 'Graphic Design'] },
+        { name: 'Business & Management', skills: ['Project Management', 'Agile/Scrum', 'Business Analysis', 'CRM'] },
+        { name: 'Psychology & HR', skills: ['Recruitment', 'Talent Acquisition', 'Training & Development', 'Conflict Resolution'] },
+        { name: 'Sport & Health', skills: ['Sports Coaching', 'Personal Training', 'Sports Nutrition', 'First Aid'] }
     ];
 
     return (

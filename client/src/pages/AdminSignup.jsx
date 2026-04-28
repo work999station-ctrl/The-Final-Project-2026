@@ -9,9 +9,9 @@ const AdminSignup = () => {
         email: '',
         password: '',
         phone: '',
-        universityName: 'University of Constantine 1',
+        universityName: 'University of Constantine 2',
         role: 'Admin',
-        DeptHead: ''
+        DeptHead: 'Information Technology (IT)'
     });
     const [logoPreview, setLogoPreview] = useState(null);
     const [logoFile, setLogoFile] = useState(null);
@@ -208,6 +208,7 @@ const AdminSignup = () => {
                                                     <option value="E-commerce">E-commerce</option>
                                                     <option value="Psychology">Psychology</option>
                                                     <option value="Sport">Sport</option>
+                                                    <option value="Other">Other</option>
                                                 </select>
                                                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-500">
                                                     <span className="material-symbols-outlined text-xl">expand_more</span>

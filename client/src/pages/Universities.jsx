@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logoImage from '../assets/logo.png';
 import ThemeToggle from '../components/ThemeToggle';
+import Footer from '../components/Footer';
+import LandingNavBar from '../components/LandingNavBar';
 
 const Universities = () => {
     const navigate = useNavigate();
@@ -13,38 +15,7 @@ const Universities = () => {
     return (
         <div className="bg-white dark:bg-slate-900 font-display text-slate-900 dark:text-slate-100 min-h-screen selection:bg-indigo-100 dark:selection:bg-indigo-900/30 antialiased flex flex-col">
             {/* Header */}
-            <header className="sticky top-0 z-50 w-full border-b border-slate-200/60 dark:border-slate-800/60 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl">
-                <div className="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-8 py-4">
-                    <div className="flex items-center gap-12">
-                        <Link to="/" className="flex items-center gap-2 group transition-transform hover:scale-[1.02] active:scale-[0.98]">
-                            <img src={logoImage} alt="stage.io logo" className="h-12 w-auto object-contain dark:invert dark:hue-rotate-180 mix-blend-multiply dark:mix-blend-screen" />
-                        </Link>
-                        
-                        <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
-                            <Link to="/" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Platform</Link>
-                            <Link to="/students" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Students</Link>
-                            <Link to="/companies" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Companies</Link>
-                            <Link to="/universities" className="text-indigo-600 dark:text-indigo-400 font-bold underline underline-offset-8 decoration-2">Universities</Link>
-                        </nav>
-                    </div>
-
-                    <div className="flex items-center gap-4">
-                        <ThemeToggle />
-                        <button 
-                            onClick={() => navigate('/login')}
-                            className="hidden sm:block text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors px-4"
-                        >
-                            Log In
-                        </button>
-                        <button 
-                            onClick={() => navigate('/admin-signup')}
-                            className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold py-2.5 px-6 rounded-full transition-all shadow-lg shadow-indigo-200 dark:shadow-none hover:translate-y-[-1px] active:translate-y-[1px]"
-                        >
-                            Partner With Us
-                        </button>
-                    </div>
-                </div>
-            </header>
+            <LandingNavBar />
 
             <main className="flex-grow">
                 {/* Hero Section */}
@@ -67,16 +38,18 @@ const Universities = () => {
                             Empower your students and eliminate paperwork with our automated placement ecosystem. Streamline internships from initial connection to the final contract.
                         </p>
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                            <button 
+                            <button
                                 onClick={() => navigate('/admin-signup')}
                                 className="w-full sm:w-auto bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-lg font-bold py-4 px-10 rounded-2xl hover:scale-105 transition-all shadow-xl shadow-slate-200 dark:shadow-none"
                             >
                                 Get Started for Free
                             </button>
-                            <button className="w-full sm:w-auto bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-lg font-bold py-4 px-10 rounded-2xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-750 transition-all flex items-center justify-center gap-2 group">
-                                Watch Tutorial
-                                <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">play_arrow</span>
-                            </button>
+                            <a href="/careers">
+                                <button className="w-full sm:w-auto bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-lg font-bold py-4 px-10 rounded-2xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-750 transition-all flex items-center justify-center gap-2 group">
+                                    Watch Tutorial
+                                    <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">play_arrow</span>
+                                </button>
+                            </a>
                         </div>
 
                         {/* Stats Bar */}
@@ -107,23 +80,23 @@ const Universities = () => {
                                 stag.io replaces fragmented job boards with a unified ecosystem where verified employers actively seek emerging talent directly from your programs.
                             </p>
                         </div>
-                        
+
                         <div className="grid md:grid-cols-3 gap-8">
                             {[
-                                { 
-                                    icon: 'hub', 
-                                    title: 'Unified Ecosystem', 
-                                    desc: 'A single platform connecting students, companies, and academic administrators in real-time.' 
+                                {
+                                    icon: 'hub',
+                                    title: 'Unified Ecosystem',
+                                    desc: 'A single platform connecting students, companies, and academic administrators in real-time.'
                                 },
-                                { 
-                                    icon: 'verified', 
-                                    title: 'Vetted Partners', 
-                                    desc: 'Access to a premium network of companies pre-screened for quality internship experiences.' 
+                                {
+                                    icon: 'verified',
+                                    title: 'Vetted Partners',
+                                    desc: 'Access to a premium network of companies pre-screened for quality internship experiences.'
                                 },
-                                { 
-                                    icon: 'bolt', 
-                                    title: 'Algorithmic Matching', 
-                                    desc: 'Direct matching aligns student skills with exact employer requirements automatically.' 
+                                {
+                                    icon: 'bolt',
+                                    title: 'Algorithmic Matching',
+                                    desc: 'Direct matching aligns student skills with exact employer requirements automatically.'
                                 }
                             ].map((feature, i) => (
                                 <div key={i} className="bg-white dark:bg-slate-900 p-8 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all hover:translate-y-[-8px] group">
@@ -166,7 +139,7 @@ const Universities = () => {
                                     ))}
                                 </div>
                             </div>
-                            
+
                             <div className="lg:w-1/2 relative">
                                 <div className="bg-gradient-to-br from-indigo-600 to-blue-500 rounded-[3rem] p-1 shadow-2xl">
                                     <div className="bg-white dark:bg-slate-900 rounded-[2.9rem] overflow-hidden aspect-square flex flex-col">
@@ -215,7 +188,7 @@ const Universities = () => {
                             <div className="absolute inset-0 opacity-10 pointer-events-none">
                                 <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-indigo-500 via-transparent to-transparent"></div>
                             </div>
-                            
+
                             <h2 className="text-4xl lg:text-6xl font-black text-white dark:text-slate-900 mb-8 relative z-10">
                                 Ready to elevate your <br />placement office?
                             </h2>
@@ -223,15 +196,15 @@ const Universities = () => {
                                 Join forward-thinking institutions that are redefining the student-to-professional transition.
                             </p>
                             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 relative z-10">
-                                <button 
+                                <button
                                     onClick={() => navigate('/admin-signup')}
                                     className="w-full sm:w-auto bg-indigo-600 text-white text-lg font-bold py-5 px-12 rounded-2xl hover:scale-105 transition-all shadow-xl shadow-indigo-900/20"
                                 >
                                     Become a Partner
                                 </button>
-                                <button className="w-full sm:w-auto bg-white/10 dark:bg-slate-100 text-white dark:text-slate-900 text-lg font-bold py-5 px-12 rounded-2xl hover:bg-white/20 dark:hover:bg-slate-200 transition-all border border-white/10 dark:border-slate-200">
+                                {/* <button className="w-full sm:w-auto bg-white/10 dark:bg-slate-100 text-white dark:text-slate-900 text-lg font-bold py-5 px-12 rounded-2xl hover:bg-white/20 dark:hover:bg-slate-200 transition-all border border-white/10 dark:border-slate-200">
                                     Request Information
-                                </button>
+                                </button> */}
                             </div>
                         </div>
                     </div>
@@ -239,54 +212,7 @@ const Universities = () => {
             </main>
 
             {/* Footer */}
-            <footer className="bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-900 pt-24 pb-12">
-                <div className="max-w-7xl mx-auto px-6 lg:px-8">
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 mb-16">
-                        <div className="col-span-2 lg:col-span-2">
-                            <Link to="/" className="flex items-center gap-2 mb-6">
-                                <img src={logoImage} alt="stage.io logo" className="h-12 w-auto object-contain dark:invert dark:hue-rotate-180 mix-blend-multiply dark:mix-blend-screen" />
-                            </Link>
-                            <p className="text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed">
-                                Bridging the gap between academic potential and professional opportunity through intelligent automation.
-                            </p>
-                        </div>
-                        <div>
-                            <h4 className="font-bold text-slate-900 dark:text-white mb-6">Platform</h4>
-                            <ul className="space-y-4 text-sm text-slate-600 dark:text-slate-400">
-                                <li><Link to="/students" className="hover:text-indigo-600 transition-colors">Students</Link></li>
-                                <li><Link to="/companies" className="hover:text-indigo-600 transition-colors">Companies</Link></li>
-                                <li><Link to="/universities" className="hover:text-indigo-600 transition-colors">Universities</Link></li>
-                                <li><Link to="/pricing" className="hover:text-indigo-600 transition-colors">Pricing</Link></li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 className="font-bold text-slate-900 dark:text-white mb-6">Company</h4>
-                            <ul className="space-y-4 text-sm text-slate-600 dark:text-slate-400">
-                                <li><Link to="/about-us" className="hover:text-indigo-600 transition-colors">About Us</Link></li>
-                                <li><Link to="/careers" className="hover:text-indigo-600 transition-colors">Careers</Link></li>
-                                <li><Link to="/blog" className="hover:text-indigo-600 transition-colors">Blog</Link></li>
-                                <li><Link to="/contact-us" className="hover:text-indigo-600 transition-colors">Contact Us</Link></li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 className="font-bold text-slate-900 dark:text-white mb-6">Legal</h4>
-                            <ul className="space-y-4 text-sm text-slate-600 dark:text-slate-400">
-                                <li><Link to="/privacy-policy" className="hover:text-indigo-600 transition-colors">Privacy Policy</Link></li>
-                                <li><Link to="/terms-of-service" className="hover:text-indigo-600 transition-colors">Terms of Service</Link></li>
-                                <li><Link to="/cookie-policy" className="hover:text-indigo-600 transition-colors">Cookie Policy</Link></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div className="pt-8 border-t border-slate-200 dark:border-slate-900 flex flex-col md:flex-row justify-between items-center gap-6">
-                        <p className="text-sm text-slate-500 dark:text-slate-400">© 2024 stag.io Inc. All rights reserved.</p>
-                        <div className="flex items-center gap-6">
-                            <a href="#" className="text-slate-400 hover:text-indigo-600 transition-colors"><span className="material-symbols-outlined">school</span></a>
-                            <a href="#" className="text-slate-400 hover:text-indigo-600 transition-colors"><span className="material-symbols-outlined">hub</span></a>
-                            <a href="#" className="text-slate-400 hover:text-indigo-600 transition-colors"><span className="material-symbols-outlined">workspace_premium</span></a>
-                        </div>
-                    </div>
-                </div>
-            </footer>
+            <Footer />
         </div>
     );
 };

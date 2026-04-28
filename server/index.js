@@ -2,14 +2,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
-const products = require('./routes/products.routes.js');
 const cookieParser = require('cookie-parser');
 const allRoutes = require('./routes/all.routes.js')
-const {requireAuth , checkUser} = require('./middleware/authmiddleware.js');
+const { requireAuth, checkUser } = require('./middleware/authmiddleware.js');
 require("dotenv").config();
 //middleware
 app.use(express.json());
-app.use(express.urlencoded({extends:false}))
+app.use(express.urlencoded({ extends: false }))
 app.use(express.static('public'));
 app.use(cookieParser());
 app.set('view engine', 'ejs');
@@ -18,7 +17,7 @@ app.use(checkUser);
 
 
 
- // load .env
+// load .env
 
 
 
@@ -32,7 +31,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 
 
-app.get('/' , (req , res)=> res.render('home'));
+app.get('/', (req, res) => res.render('home'));
 app.use(allRoutes);
 
 app.get('/api/test-password-reset', async (req, res) => {

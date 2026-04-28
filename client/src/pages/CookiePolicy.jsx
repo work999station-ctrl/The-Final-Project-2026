@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import logoImage from '../assets/logo.png';
+import Footer from '../components/Footer';
+import LandingNavBar from '../components/LandingNavBar';
 
 const CookiePolicy = () => {
     const navigate = useNavigate();
@@ -12,26 +14,7 @@ const CookiePolicy = () => {
     return (
         <div className="bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-body min-h-screen antialiased flex flex-col">
             {/* Top Navigation */}
-            <header className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
-                <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
-                    <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-                        <img src={logoImage} alt="stage.io logo" className="h-12 w-auto object-contain dark:invert dark:hue-rotate-180 mix-blend-multiply dark:mix-blend-screen" />
-                    </div>
-                    <nav className="hidden md:flex items-center space-x-8 font-display text-sm font-medium tracking-tight">
-                        <Link to="/" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 transition-all duration-200">Platform</Link>
-                        <Link to="/students" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 transition-all duration-200">Students</Link>
-                        <Link to="/companies" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 transition-all duration-200">Companies</Link>
-                        <Link to="/universities" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 transition-all duration-200">Universities</Link>
-                        <Link to="/about-us" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 transition-all duration-200">Culture</Link>
-                        <Link to="/pricing" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 transition-all duration-200">Pricing</Link>
-                        <Link to="/careers" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 transition-all duration-200">Team</Link>
-                    </nav>
-                    <div className="hidden md:flex items-center space-x-4">
-                        <Link to="/login" className="font-display text-sm font-medium tracking-tight text-slate-600 dark:text-slate-400 hover:text-indigo-600 transition-all duration-200">Sign In</Link>
-                        <Link to="/student-signup" className="bg-indigo-600 text-white font-display text-sm font-medium tracking-tight px-4 py-2 rounded-full hover:opacity-90 transition-all duration-200 shadow-sm hover:shadow-md">Apply Now</Link>
-                    </div>
-                </div>
-            </header>
+            <LandingNavBar />
 
             {/* Main Content */}
             <main className="flex-grow w-full max-w-5xl mx-auto px-6 py-12 md:py-16">
@@ -148,31 +131,7 @@ const CookiePolicy = () => {
             </main>
 
             {/* Footer */}
-            <footer className="w-full border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 mt-auto">
-                <div className="max-w-7xl mx-auto py-12 px-6 flex flex-col md:flex-row justify-between items-center gap-8">
-                    <div className="flex items-center">
-                         <img src={logoImage} alt="stage.io logo" className="h-10 w-auto object-contain dark:invert dark:hue-rotate-180 mix-blend-multiply dark:mix-blend-screen" />
-                    </div>
-                    <div className="flex flex-wrap justify-center gap-6 font-display text-sm text-slate-500 dark:text-slate-400">
-                        <Link to="/about-us" className="text-slate-500 hover:text-indigo-600 hover:underline decoration-indigo-600/30 transition-colors duration-200">About Us</Link>
-                        <Link to="/" className="text-slate-500 hover:text-indigo-600 hover:underline decoration-indigo-600/30 transition-colors duration-200">Platform</Link>
-                        <Link to="/about-us" className="text-slate-500 hover:text-indigo-600 hover:underline decoration-indigo-600/30 transition-colors duration-200">Mission</Link>
-                        <Link to="/careers" className="text-slate-500 hover:text-indigo-600 hover:underline decoration-indigo-600/30 transition-colors duration-200">Careers</Link>
-                        <Link to="/blog" className="text-slate-500 hover:text-indigo-600 hover:underline decoration-indigo-600/30 transition-colors duration-200">Blog</Link>
-                        <Link to="/contact-us" className="text-slate-500 hover:text-indigo-600 hover:underline decoration-indigo-600/30 transition-colors duration-200">Contact Us</Link>
-                        <Link to="/students" className="text-slate-500 hover:text-indigo-600 hover:underline decoration-indigo-600/30 transition-colors duration-200">Students</Link>
-                        <Link to="/companies" className="text-slate-500 hover:text-indigo-600 hover:underline decoration-indigo-600/30 transition-colors duration-200">Companies</Link>
-                        <Link to="/universities" className="text-slate-500 hover:text-indigo-600 hover:underline decoration-indigo-600/30 transition-colors duration-200">Universities</Link>
-                        <Link to="/pricing" className="text-slate-500 hover:text-indigo-600 hover:underline decoration-indigo-600/30 transition-colors duration-200">Pricing</Link>
-                        <Link to="/privacy-policy" className="text-slate-500 hover:text-indigo-600 hover:underline decoration-indigo-600/30 transition-colors duration-200">Privacy Policy</Link>
-                        <Link to="/cookie-policy" className="text-indigo-600 font-semibold hover:underline decoration-indigo-600/30 transition-colors duration-200">Cookie Policy</Link>
-                        <Link to="/terms-of-service" className="text-slate-500 hover:text-indigo-600 hover:underline decoration-indigo-600/30 transition-colors duration-200">Terms of Service</Link>
-                    </div>
-                    <div className="font-display text-sm text-slate-500 dark:text-slate-400 text-center md:text-right">
-                        © {new Date().getFullYear()} stage.io Inc. Bridging the gap between potential and opportunity.
-                    </div>
-                </div>
-            </footer>
+            <Footer />
         </div>
     );
 };

@@ -94,6 +94,8 @@ const AdminValidation = () => {
 
     const filteredApplications = applications
         .filter(app => {
+            if (activeFilters.deadline && app.status === 'validated') return false;
+
             const studentName = (app.studentId?.name || '').toLowerCase();
             const companyName = (app.offerId?.companyId?.companyName || '').toLowerCase();
             const offerTitle = (app.offerId?.title || '').toLowerCase();

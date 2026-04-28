@@ -10,6 +10,7 @@ const EditAdminProfile = () => {
         email: '',
         phone: '',
         universityName: '',
+        DeptHead: '',
         role: ''
     });
     const [profilePicFile, setProfilePicFile] = useState(null);
@@ -30,6 +31,7 @@ const EditAdminProfile = () => {
                         email: data.user.email || '',
                         phone: data.user.phone || '',
                         universityName: data.user.universityName || '',
+                        DeptHead: data.user.DeptHead || '',
                         role: data.user.role || ''
                     });
                     if (data.user.profilePicture) {
@@ -228,20 +230,36 @@ const EditAdminProfile = () => {
                                         </div> */}
                                     </div>
 
-                                    {/* Row 3: University Name */}
-                                    <div className="flex flex-col gap-2">
-                                        <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
-                                            <span className="material-symbols-outlined text-primary text-lg">school</span>
-                                            University / Institution Name
-                                        </label>
-                                        <input
-                                            className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all"
-                                            placeholder="University of Constantine 2 (IFA)"
-                                            type="text"
-                                            name="universityName"
-                                            value={formData.universityName}
-                                            onChange={handleChange}
-                                        />
+                                    {/* Row 3: University Name & Department Head */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                        <div className="flex flex-col gap-2">
+                                            <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
+                                                <span className="material-symbols-outlined text-primary text-lg">school</span>
+                                                University / Institution Name
+                                            </label>
+                                            <input
+                                                className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400 px-4 py-3 cursor-not-allowed"
+                                                placeholder="University of Constantine 2 (IFA)"
+                                                type="text"
+                                                name="universityName"
+                                                value={formData.universityName}
+                                                disabled
+                                            />
+                                        </div>
+                                        <div className="flex flex-col gap-2">
+                                            <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
+                                                <span className="material-symbols-outlined text-primary text-lg">account_balance</span>
+                                                Department Head
+                                            </label>
+                                            <input
+                                                className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400 px-4 py-3 cursor-not-allowed"
+                                                placeholder="Department name"
+                                                type="text"
+                                                name="DeptHead"
+                                                value={formData.DeptHead}
+                                                disabled
+                                            />
+                                        </div>
                                     </div>
                                 </div>
 

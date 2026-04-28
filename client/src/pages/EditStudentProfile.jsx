@@ -38,16 +38,26 @@ const EditStudentProfile = () => {
     const [showSkillsDropdown, setShowSkillsDropdown] = useState(false);
     const [student, setStudent] = useState(null);
 
-    const specialtySkills = {
-        'Information Technology (IT)': ['JavaScript', 'HTML', 'CSS', 'Docker', 'AWS', 'SQL', 'Git', 'Java', 'C++', 'Next.js', 'PostgreSQL', 'MongoDB', 'Go', 'Rust', 'Python', 'React', 'Node.js', 'TypeScript', 'Flutter', 'Express'],
-        'E-commerce': ['Shopify', 'WooCommerce', 'PrestaShop', 'Magento', 'Supply Chain', 'Dropshipping', 'Inventory Management', 'Payment Gateways', 'SEO', 'Google Analytics', 'Social Media Management', 'Facebook Ads', 'Google Ads', 'Copywriting', 'Email Marketing', 'Content Strategy', 'Project Management', 'Agile/Scrum', 'Business Analysis', 'CRM (Salesforce, HubSpot)', 'Market Research', 'Data Entry', 'Adobe Photoshop', 'Illustrator', 'Premiere Pro', 'Video Editing', 'Brand Identity', 'Graphic Design', 'Product Photography'],
-        'Psychology': ['Recruitment', 'Talent Acquisition', 'Organizational Behavior', 'Employee Well-being', 'Conflict Resolution', 'Training & Development', 'Psychometric Testing', 'Clinical Assessment', 'Cognitive Behavioral Therapy (CBT)', 'Patient Counseling', 'Child Psychology', 'Neuropsychology', 'Group Therapy', 'Case Management', 'Career Guidance', 'Special Education', 'Developmental Psychology', 'Speech Therapy (Orthophony)', 'Behavioral Intervention', 'Student Counseling'],
-        'Sport': ['Sports Coaching', 'Personal Training', 'Biomechanics', 'Sports Nutrition', 'Athletic Therapy', 'Exercise Physiology', 'Sports Management', 'Event Planning', 'Kinesiology', 'Sports Psychology', 'Fitness Assessment', 'Strength & Conditioning', 'Rehabilitation', 'First Aid', 'CPR']
-    };
+    const skillCategories = [
+        { name: 'Front-end', skills: ['React', 'Next.js', 'Vue.js', 'Tailwind CSS', 'Angular', 'HTML/CSS'] },
+        { name: 'Back-end', skills: ['Node.js', 'Express', 'Python', 'Django', 'Go', 'PHP', 'Java', 'C++', 'Rust'] },
+        { name: 'Mobile', skills: ['React Native', 'Flutter', 'Swift', 'Kotlin'] },
+        { name: 'Database', skills: ['PostgreSQL', 'MongoDB', 'Redis', 'MySQL', 'Firebase', 'SQL'] },
+        { name: 'DevOps', skills: ['Docker', 'AWS', 'CI/CD', 'Linux', 'Git'] },
+        { name: 'E-commerce & Marketing', skills: ['Shopify', 'WooCommerce', 'SEO', 'Google Analytics', 'Social Media Management', 'Email Marketing', 'Copywriting'] },
+        { name: 'Design & Media', skills: ['Adobe Photoshop', 'Illustrator', 'Premiere Pro', 'UI/UX Design', 'Graphic Design'] },
+        { name: 'Business & Management', skills: ['Project Management', 'Agile/Scrum', 'Business Analysis', 'CRM'] },
+        { name: 'Psychology & HR', skills: ['Recruitment', 'Talent Acquisition', 'Training & Development', 'Conflict Resolution'] },
+        { name: 'Sport & Health', skills: ['Sports Coaching', 'Personal Training', 'Sports Nutrition', 'First Aid'] }
+    ];
 
-    const availableSkills = formData.specialty && specialtySkills[formData.specialty]
-        ? specialtySkills[formData.specialty]
-        : specialtySkills['Information Technology (IT)'];
+    const toggleSkill = (skill) => {
+        if (skills.includes(skill)) {
+            setSkills(skills.filter(s => s !== skill));
+        } else {
+            setSkills([...skills, skill]);
+        }
+    };
 
     useEffect(() => {
         const fetchStudentProfile = async () => {
@@ -441,61 +451,66 @@ const EditStudentProfile = () => {
                                         <div className="flex items-center justify-between mt-2">
                                             <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5 border-none">
                                                 <span className="material-symbols-outlined text-primary text-xl">psychology</span>
-                                                <span className="font-header text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">Skills</span>
+                                                <span className="font-header text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">Skills &amp; Expertise</span>
                                             </label>
-                                            <div className="relative">
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setShowSkillsDropdown(!showSkillsDropdown)}
-                                                    className="flex items-center gap-1 px-4 h-9 bg-primary/10 text-primary rounded-full text-sm font-semibold hover:bg-primary/20 transition-all shrink-0"
-                                                >
-                                                    <span className="material-symbols-outlined text-lg">add</span>
-                                                    Add Skill
-                                                </button>
+                                        </div>
+
+                                        <div className="flex flex-wrap gap-2 p-4 rounded-xl border border-dashed border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/50 min-h-[72px]">
+                                            {skills.map((skill, index) => (
+                                                <div key={index} className="flex items-center gap-1 bg-primary text-white px-3 py-1.5 rounded-full text-sm font-medium">
+                                                    {skill}
+                                                    <span className="material-symbols-outlined text-[14px] cursor-pointer ml-1 hover:text-white/80 transition-colors" onClick={() => toggleSkill(skill)}>close</span>
+                                                </div>
+                                            ))}
+
+                                            <div className="relative inline-block w-full">
+                                                {!showSkillsDropdown && (
+                                                    <button
+                                                        className="flex items-center gap-1 px-4 py-1.5 rounded-full text-sm font-medium border border-primary text-primary hover:bg-primary/5 transition-colors mt-1"
+                                                        type="button"
+                                                        onClick={() => setShowSkillsDropdown(true)}
+                                                    >
+                                                        <span className="material-symbols-outlined text-sm">add</span> Add Skill
+                                                    </button>
+                                                )}
+                                                
                                                 {showSkillsDropdown && (
-                                                    <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg z-10 py-2 max-h-60 overflow-y-auto">
-                                                        <ul className="py-1 text-sm text-slate-700 dark:text-slate-300">
-                                                            {availableSkills
-                                                                .filter(s => !skills.includes(s))
-                                                                .map(skill => (
-                                                                    <li key={skill}>
-                                                                        <button
-                                                                            type="button"
-                                                                            key={skill}
-                                                                            onClick={() => handleAddSkill(skill)}
-                                                                            className="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-primary/10 hover:text-primary transition-colors"
-                                                                        >
-                                                                            {skill}
-                                                                        </button>
-                                                                    </li>
-                                                                ))}
-                                                            <li><hr className="border-slate-200 dark:border-slate-700 my-1" /></li>
-                                                            <li>
-                                                                <button type="button" className="w-full text-left px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors font-medium text-primary text-sm"
-                                                                    onClick={handleCustomSkill}>
-                                                                    <span className="material-symbols-outlined text-sm align-middle mr-1">edit</span>Type custom skill
-                                                                </button>
-                                                            </li>
-                                                        </ul>
+                                                    <div className="mt-2 w-full bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden relative">
+                                                        <div className="flex justify-between items-center px-4 py-3 border-b border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 z-10 sticky top-0">
+                                                            <span className="text-sm font-bold text-slate-700 dark:text-slate-300">Select Skills</span>
+                                                            <button 
+                                                                type="button" 
+                                                                onClick={() => setShowSkillsDropdown(false)}
+                                                                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors flex items-center justify-center p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700"
+                                                            >
+                                                                <span className="material-symbols-outlined text-lg">close</span>
+                                                            </button>
+                                                        </div>
+                                                        <div className="max-h-60 overflow-y-auto p-4 bg-slate-50/50 dark:bg-slate-800/30">
+                                                            {skillCategories.map((cat) => (
+                                                                <div key={cat.name} className="mb-4 last:mb-0">
+                                                                    <div className="px-1 py-1.5 text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">{cat.name}</div>
+                                                                    <div className="flex flex-wrap gap-2 px-1">
+                                                                        {cat.skills.map((skill) => (
+                                                                            <button
+                                                                                type="button"
+                                                                                key={skill}
+                                                                                className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${skills.includes(skill)
+                                                                                    ? 'border-[#4F46E5] text-[#4F46E5] bg-[#4F46E5]/10 shadow-sm'
+                                                                                    : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-[#4F46E5] hover:text-[#4F46E5] hover:bg-[#4F46E5]/5'
+                                                                                    }`}
+                                                                                onClick={() => toggleSkill(skill)}
+                                                                            >
+                                                                                {skill}
+                                                                            </button>
+                                                                        ))}
+                                                                    </div>
+                                                                </div>
+                                                            ))}
+                                                        </div>
                                                     </div>
                                                 )}
                                             </div>
-                                        </div>
-                                        <div className="flex flex-wrap gap-2 min-h-[40px] p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
-                                            {skills.length === 0 && (
-                                                <span className="text-slate-400 text-sm">No skills added yet. Click "Add Skill" to get started.</span>
-                                            )}
-                                            {skills.map(skill => (
-                                                <span key={skill} className="inline-flex items-center gap-1 px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-sm font-medium border border-primary/20">
-                                                    {skill}
-                                                    <button
-                                                        onClick={() => handleRemoveSkill(skill)}
-                                                        className="ml-1 hover:text-red-500 transition-colors"
-                                                    >
-                                                        <span className="material-symbols-outlined text-sm">close</span>
-                                                    </button>
-                                                </span>
-                                            ))}
                                         </div>
                                     </div>
 

@@ -15,6 +15,11 @@ const AdminDashboard = () => {
     const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentTime, setCurrentTime] = useState(new Date());
+    const [filterStatus, setFilterStatus] = useState('All Statuses');
+    const [stats, setStats] = useState({
+        placedStudents: 0,
+        unplacedStudents: 0
+    });
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -25,9 +30,10 @@ const AdminDashboard = () => {
     useEffect(() => {
         const fetchDashboardData = async () => {
             try {
-                const [userRes, appsRes] = await Promise.all([
+                const [userRes, appsRes, statsRes] = await Promise.all([
                     fetch('/api/admin/me'),
                     fetch('/api/admin/applications/pending-validation'),
+                    fetch('/api/admin/university-placement-stats?months=1')
                 ]);
 
                 if (userRes.ok) {
@@ -48,6 +54,16 @@ const AdminDashboard = () => {
                     const appsData = await appsRes.json();
                     setApplications(appsData.applications || []);
                 }
+
+                if (statsRes.ok) {
+                    const statsData = await statsRes.json();
+                    if (statsData.success && statsData.stats) {
+                        setStats({
+                            placedStudents: statsData.stats.placedStudents || 0,
+                            unplacedStudents: statsData.stats.unplacedStudents || 0
+                        });
+                    }
+                }
             } catch (err) {
                 console.error("Failed to fetch dashboard data:", err);
             } finally {
@@ -58,7 +74,16 @@ const AdminDashboard = () => {
     }, []);
 
     const pendingValidations = applications.filter(app => app.status === 'accepted');
-    const recentPlacements = applications.filter(app => ['accepted', 'validated'].includes(app.status));
+    const recentPlacements = applications.filter(app => {
+        if (!['accepted', 'validated'].includes(app.status)) return false;
+        if (filterStatus === 'Agreement Generated') return app.status === 'validated';
+        if (filterStatus === 'Pending') return app.status === 'accepted';
+        return true;
+    });
+
+    const totalStudents = stats.placedStudents + stats.unplacedStudents;
+    const placedPercentage = totalStudents > 0 ? Math.round((stats.placedStudents / totalStudents) * 100) : 0;
+    const unplacedPercentage = totalStudents > 0 ? 100 - placedPercentage : 0;
 
     return (
         <div className="bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white antialiased font-body min-h-screen flex flex-col">
@@ -88,6 +113,10 @@ const AdminDashboard = () => {
                                 <span className="text-[11px] uppercase tracking-wider font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 truncate" title={user.universityName}>{user.universityName}</span>
                             </div>
                             <div className="w-full pt-6 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-3 text-left">
+                                <div className="flex items-center gap-3 text-[12px] text-slate-600 dark:text-slate-300 dark:text-slate-400 dark:text-slate-500 hover:text-primary transition-colors cursor-default">
+                                    <span className="material-symbols-outlined text-[18px]">account_balance</span>
+                                    <span className="truncate font-medium" title={user.DeptHead}>{user.DeptHead || 'No Department'}</span>
+                                </div>
                                 <div className="flex items-center gap-3 text-[12px] text-slate-600 dark:text-slate-300 dark:text-slate-400 dark:text-slate-500 hover:text-primary transition-colors cursor-default">
                                     <span className="material-symbols-outlined text-[18px]">person</span>
                                     <span className="truncate font-medium" title={user.fullName}>{user.fullName}</span>
@@ -141,17 +170,17 @@ const AdminDashboard = () => {
                         {/* Placed Students KPI */}
                         <div className="bg-primary p-8 rounded-2xl shadow-xl shadow-primary/20 flex items-center justify-between text-white relative overflow-hidden">
                             <div className="relative z-10">
-                                <p className="text-primary-foreground/80 text-sm font-semibold mb-2 uppercase tracking-wider">Placed Students</p>
-                                <h4 className="text-5xl font-black mb-3 font-headline">1,666</h4>
+                                <p className="text-white/80 text-sm font-semibold mb-2 uppercase tracking-wider">Placed Students</p>
+                                <h4 className="text-5xl font-black mb-3 font-headline">{stats.placedStudents.toLocaleString()}</h4>
                                 <div className="flex items-center gap-2 text-white/90">
                                     <span className="material-symbols-outlined text-[16px]">check_circle</span>
-                                    <span className="text-xs font-semibold">68% of current term goal reached</span>
+                                    <span className="text-xs font-semibold">{placedPercentage}% of total students</span>
                                 </div>
                             </div>
                             <div className="relative z-10 w-24 h-24">
                                 <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
                                     <circle className="stroke-white/20" cx="18" cy="18" fill="none" r="16" strokeWidth="3"></circle>
-                                    <circle className="stroke-white" cx="18" cy="18" fill="none" r="16" strokeDasharray="100" strokeDashoffset="32" strokeLinecap="round" strokeWidth="3"></circle>
+                                    <circle className="stroke-white" cx="18" cy="18" fill="none" r="16" strokeDasharray="100" strokeDashoffset={100 - placedPercentage} strokeLinecap="round" strokeWidth="3"></circle>
                                 </svg>
                                 <div className="absolute inset-0 flex items-center justify-center">
                                     <span className="material-symbols-outlined text-white text-3xl">school</span>
@@ -164,10 +193,10 @@ const AdminDashboard = () => {
                         <div className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex items-center justify-between relative overflow-hidden">
                             <div>
                                 <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500 text-sm font-semibold mb-2 uppercase tracking-wider">Unplaced Students</p>
-                                <h4 className="text-5xl font-black text-slate-900 dark:text-white mb-3 font-headline">784</h4>
+                                <h4 className="text-5xl font-black text-slate-900 dark:text-white mb-3 font-headline">{stats.unplacedStudents.toLocaleString()}</h4>
                                 <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400 dark:text-slate-500 dark:text-slate-400 dark:text-slate-500">
                                     <span className="material-symbols-outlined text-[16px]">person_search</span>
-                                    <span className="text-xs font-semibold">32% currently seeking validation</span>
+                                    <span className="text-xs font-semibold">{unplacedPercentage}% currently seeking placements</span>
                                 </div>
                             </div>
                             <div className="p-6 bg-slate-50 dark:bg-slate-900 dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-800 dark:border-slate-800">
@@ -247,7 +276,11 @@ const AdminDashboard = () => {
                                     <div className="flex gap-2">
                                         <div className="relative">
                                             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 text-sm">filter_alt</span>
-                                            <select className="pl-9 pr-8 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-semibold focus:ring-primary focus:border-primary text-slate-600 dark:text-slate-300 appearance-none outline-none">
+                                            <select 
+                                                value={filterStatus}
+                                                onChange={(e) => setFilterStatus(e.target.value)}
+                                                className="pl-9 pr-8 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-semibold focus:ring-primary focus:border-primary text-slate-600 dark:text-slate-300 appearance-none outline-none"
+                                            >
                                                 <option>All Statuses</option>
                                                 <option>Agreement Generated</option>
                                                 <option>Pending</option>
@@ -333,7 +366,10 @@ const AdminDashboard = () => {
                                     </table>
                                 </div>
                                 <div className="p-4 bg-slate-50 dark:bg-slate-900 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-800 flex justify-center">
-                                    <button className="text-[11px] font-bold text-primary hover:text-primary/80 tracking-widest uppercase flex items-center gap-2 transition-colors">
+                                    <button 
+                                        onClick={() => navigate('/candidate-tracking-admin')}
+                                        className="text-[11px] font-bold text-primary hover:text-primary/80 tracking-widest uppercase flex items-center gap-2 transition-colors"
+                                    >
                                         <span className="material-symbols-outlined text-[16px]">database</span>
                                         Access Full Academic Database
                                     </button>

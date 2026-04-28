@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import logoImage from '../assets/logo.png';
 import ThemeToggle from '../components/ThemeToggle';
+import Footer from '../components/Footer';
+import LandingNavBar from '../components/LandingNavBar';
 
 const Home = () => {
     const navigate = useNavigate();
@@ -103,43 +105,7 @@ const Home = () => {
     return (
         <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display relative flex min-h-screen flex-col overflow-x-hidden">
             {/* Navigation */}
-            <header className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
-                <div className="container mx-auto flex items-center justify-between px-6 py-4">
-                    <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-                        <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain dark:invert dark:hue-rotate-180 mix-blend-multiply dark:mix-blend-screen" />
-                    </div>
-                    <nav className="hidden md:flex items-center gap-8">
-                        <Link className="text-sm font-semibold hover:text-primary transition-colors" to="/students">Students</Link>
-                        <Link className="text-sm font-semibold hover:text-primary transition-colors" to="/companies">Companies</Link>
-                        <Link className="text-sm font-semibold hover:text-primary transition-colors" to="/universities">Universities</Link>
-                        <Link className="text-sm font-semibold hover:text-primary transition-colors" to="/pricing">Pricing</Link>
-                    </nav>
-                    <div className="flex items-center gap-4">
-                        {!loading && (
-                            user ? (
-                                <div className="flex items-center gap-4">
-                                    <ThemeToggle />
-                                    <button onClick={handleDashboardClick} className="text-sm font-bold text-primary hover:underline">Dashboard</button>
-                                    <div
-                                        className="size-10 rounded-full border-2 border-primary bg-cover bg-center cursor-pointer shadow-sm"
-                                        style={{ backgroundImage: `url('${user.profilePicture || user.logo || '/images/default-avatar.png'}')` }}
-                                        onClick={handleDashboardClick}
-                                        title="View Profile"
-                                    ></div>
-                                </div>
-                            ) : (
-                                <>
-                                    <ThemeToggle />
-                                    <button className="hidden sm:block text-sm font-bold px-4 py-2 hover:text-primary" onClick={() => navigate('/login')}>Log In</button>
-                                    <button className="bg-primary text-white text-sm font-bold py-2.5 px-6 rounded-full hover:opacity-90 transition-all shadow-lg shadow-primary/20" onClick={() => navigate('/student-signup')}>
-                                        Get Started
-                                    </button>
-                                </>
-                            )
-                        )}
-                    </div>
-                </div>
-            </header>
+            <LandingNavBar />
 
             <main className="flex-1">
                 {/* Hero Section */}
@@ -351,9 +317,11 @@ const Home = () => {
                                     <button className="bg-white text-primary font-bold py-4 px-10 rounded-full hover:scale-105 transition-transform shadow-xl">
                                         Get Started Free
                                     </button>
-                                    <button className="bg-transparent border-2 border-white/30 text-white font-bold py-4 px-10 rounded-full hover:bg-white/10 transition-colors">
-                                        Book a Demo
-                                    </button>
+                                    <a href="/careers">
+                                        <button className="bg-transparent border-2 border-white/30 text-white font-bold py-4 px-10 rounded-full hover:bg-white/10 transition-colors">
+                                            Book a Demo
+                                        </button>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -362,60 +330,7 @@ const Home = () => {
             </main>
 
             {/* Footer */}
-            <footer className="bg-slate-900 text-slate-400 py-16">
-                <div className="container mx-auto px-6">
-                    <div className="grid md:grid-cols-4 gap-12 mb-16">
-                        <div className="col-span-1 md:col-span-1">
-                            <div className="flex items-center text-white mb-6">
-                                <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain brightness-0 invert mix-blend-screen" />
-                            </div>
-                            <p className="text-sm leading-relaxed mb-6">The premier platform for connecting academic brilliance with industrial innovation.</p>
-                            <div className="flex gap-4">
-                                <a className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary transition-colors" href="#">
-                                    <span className="material-symbols-outlined text-sm">public</span>
-                                </a>
-                                <a className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary transition-colors" href="#">
-                                    <span className="material-symbols-outlined text-sm">alternate_email</span>
-                                </a>
-                            </div>
-                        </div>
-                        <div>
-                            <h6 className="text-white font-bold mb-6">Platform</h6>
-                            <ul className="space-y-4 text-sm">
-                                <li><Link className="hover:text-white transition-colors" to="/students">Students</Link></li>
-                                <li><Link className="hover:text-white transition-colors" to="/companies">Companies</Link></li>
-                                <li><Link className="hover:text-white transition-colors" to="/universities">Universities</Link></li>
-                                <li><Link className="hover:text-white transition-colors" to="/pricing">Pricing</Link></li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h6 className="text-white font-bold mb-6">Company</h6>
-                            <ul className="space-y-4 text-sm">
-                                <li><Link className="hover:text-white transition-colors" to="/about-us">About Us</Link></li>
-                                <li><Link className="hover:text-white transition-colors" to="/careers">Careers</Link></li>
-                                <li><Link className="hover:text-white transition-colors" to="/blog">Blog</Link></li>
-                                <li><Link className="hover:text-white transition-colors" to="/contact-us">Contact</Link></li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h6 className="text-white font-bold mb-6">Legal</h6>
-                            <ul className="space-y-4 text-sm">
-                                <li><Link className="hover:text-white transition-colors" to="/privacy-policy">Privacy Policy</Link></li>
-                                <li><Link className="hover:text-white transition-colors" to="/terms-of-service">Terms of Service</Link></li>
-                                <li><Link className="hover:text-white transition-colors" to="/cookie-policy">Cookie Policy</Link></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div className="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
-                        <p>© 2024 stage.io Inc. All rights reserved.</p>
-                        <div className="flex gap-8">
-                            <a className="hover:text-white transition-colors" href="#">Facebook</a>
-                            <a className="hover:text-white transition-colors" href="#">Twitter</a>
-                            <a className="hover:text-white transition-colors" href="#">LinkedIn</a>
-                        </div>
-                    </div>
-                </div>
-            </footer>
+            <Footer />
         </div>
     );
 };

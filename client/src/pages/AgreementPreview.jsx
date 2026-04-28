@@ -211,7 +211,7 @@ const AgreementPreview = () => {
                                     <div className="flex-1">
                                         <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Document Authenticity</p>
                                         <p className="text-xs text-slate-500 leading-relaxed">
-                                            Scan this QR code to verify the authenticity of this internship agreement.
+                                            Scan this QR code or visit the link to verify the authenticity of this internship agreement.
                                             Each code is uniquely generated for <strong className="text-slate-700">{data.studentName}</strong> and encodes
                                             all critical agreement identifiers.
                                         </p>
@@ -230,7 +230,15 @@ const AgreementPreview = () => {
                                                 bgColor="#ffffff"
                                             />
                                         </div>
-                                        <p className="text-[8px] text-slate-400 uppercase tracking-widest font-medium">Scan to Verify</p>
+                                        <p className="text-[8px] text-slate-400 uppercase tracking-widest font-medium mb-0 pb-0">Scan to Verify</p>
+                                        <a 
+                                            href={`${window.location.origin}/verify-qr/${applicationId || 'DEMO'}`}
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                            className="text-[8px] font-mono text-blue-500 hover:text-blue-600 hover:underline break-all text-center"
+                                        >
+                                            {window.location.origin}/verify-qr/{applicationId || 'DEMO'}
+                                        </a>
                                     </div>
                                 </div>
                             </div>
