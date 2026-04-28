@@ -24,10 +24,8 @@ const StudentSidebar = ({ student, activePage, topOffset = "top-16" }) => {
 
     const navItems = [
         { page: 'dashboard', icon: 'dashboard', label: 'Dashboard', href: '/student-dashboard' },
-        { page: 'internships', icon: 'work', label: 'Internships', href: '/opportunities' },
         { page: 'applications', icon: 'description', label: 'Applications', href: '/ApplicationTracker' },
         { page: 'inbox', icon: 'mail', label: 'Messages', href: '/student-inbox' },
-        { page: 'settings', icon: 'settings', label: 'Settings', href: '/edit-student-profile' },
     ];
 
     return (

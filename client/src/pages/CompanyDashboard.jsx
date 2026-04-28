@@ -19,58 +19,51 @@ const CompanyDashboard = () => {
     });
 
 
-    useEffect(() => {
-        const fetchCompanyProfile = async () => {
-            try {
-                const res = await fetch('/api/company/me');
-                const data = await res.json();
+    const fetchDashboardData = async () => {
+        try {
+            const res = await fetch('/api/company/me');
+            const data = await res.json();
 
-                if (res.ok && data.user) {
-                    // Set fetched data, and provide default fallbacks for missing text fields
-                    setCompany({
-                        companyName: data.user.companyName || 'Unknown Company',
-                        description: data.user.description || 'No description provided.',
-                        email: data.user.email || '',
-                        phoneNumber: data.user.phoneNumber || 'Not set',
-                        address: data.user.address || 'Not set',
-                        website: data.user.website || 'Not set',
-                        logo: data.user.logo || '',
-                    });
+            if (res.ok && data.user) {
+                setCompany({
+                    companyName: data.user.companyName || 'Unknown Company',
+                    description: data.user.description || 'No description provided.',
+                    email: data.user.email || '',
+                    phoneNumber: data.user.phoneNumber || 'Not set',
+                    address: data.user.address || 'Not set',
+                    website: data.user.website || 'Not set',
+                    logo: data.user.logo || '',
+                });
 
-                    // Fetch associated offers
-                    try {
-                        setIsLoadingOffers(true);
-                        const offersRes = await fetch('/api/company/offers');
-                        const offersData = await offersRes.json();
-                        if (offersRes.ok && offersData.offers) {
-                            setOffers(offersData.offers);
-                        }
-
-                        // Fetch dashboard stats
-                        const statsRes = await fetch('/api/company/dashboard-stats');
-                        const statsData = await statsRes.json();
-                        if (statsRes.ok && statsData.success) {
-                            setStats(statsData.stats);
-                        }
-
-
-                    } catch (err) {
-                        console.error('Error fetching dashboard data:', err);
-                    } finally {
-                        setIsLoadingOffers(false);
+                try {
+                    const offersRes = await fetch('/api/company/offers');
+                    const offersData = await offersRes.json();
+                    if (offersRes.ok && offersData.offers) {
+                        setOffers(offersData.offers);
                     }
-                } else {
-                    console.error('Failed to fetch company profile:', data.error);
-                    // navigate('/company-Signup');
-                }
-            } catch (err) {
-                console.error('Error fetching company profile:', err);
-            } finally {
-                setIsLoading(false);
-            }
-        };
 
-        fetchCompanyProfile();
+                    const statsRes = await fetch('/api/company/dashboard-stats');
+                    const statsData = await statsRes.json();
+                    if (statsRes.ok && statsData.success) {
+                        setStats(statsData.stats);
+                    }
+                } catch (err) {
+                    console.error('Error fetching dashboard data:', err);
+                } finally {
+                    setIsLoadingOffers(false);
+                }
+            }
+        } catch (err) {
+            console.error('Error fetching company profile:', err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchDashboardData();
+        window.addEventListener('focus', fetchDashboardData);
+        return () => window.removeEventListener('focus', fetchDashboardData);
     }, [navigate]);
 
     const confirmDeleteOffer = async () => {
@@ -370,9 +363,9 @@ const CompanyDashboard = () => {
                                         <h2 className="text-lg font-bold font-header">Quick Actions</h2>
                                     </div>
                                     <div className="p-4 grid grid-cols-2 gap-3">
-                                        <button onClick={() => navigate('/company-inbox')} className="flex flex-col items-center justify-center p-4 rounded-xl border border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800 transition-all gap-2 group">
-                                            <span className="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">mail</span>
-                                            <span className="text-xs font-semibold text-center">Message All</span>
+                                        <button onClick={() => navigate('/company-direct-messages')} className="flex flex-col items-center justify-center p-4 rounded-xl border border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800 transition-all gap-2 group">
+                                            <span className="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">chat</span>
+                                            <span className="text-xs font-semibold text-center">Direct Messages</span>
                                         </button>
                                         <button onClick={() => navigate('/company-statistics')} className="flex flex-col items-center justify-center p-4 rounded-xl border border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800 transition-all gap-2 group">
                                             <span className="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">bar_chart</span>

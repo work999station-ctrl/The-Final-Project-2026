@@ -120,7 +120,7 @@ const StudentProfileRecruiterView = () => {
                             <div className="flex flex-wrap justify-center gap-3 mt-8">
                                 {applications.length > 0 ? (
                                     <button 
-                                        onClick={() => navigate(`/application-details/${applications[0]._id}`)} 
+                                        onClick={() => navigate(`/application-details/${applications[0]._id}?tab=Feedback`)} 
                                         className="bg-indigo-600 text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-indigo-700 transition-colors flex items-center gap-2"
                                     >
                                         <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>chat</span>
