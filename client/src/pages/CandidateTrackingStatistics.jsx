@@ -84,6 +84,13 @@ const CandidateTrackingStatistics = () => {
         ? Math.round(filteredApplications.reduce((acc, curr) => acc + curr.matchPercentage, 0) / totalApplicants)
         : 0;
 
+    const pendingFiltered = filteredApplications.filter(app => app.status === 'applied').length;
+    const totalAllApps = applications.length;
+    const acceptedAllApps = applications.filter(app => app.status === 'accepted' || app.status === 'validated').length;
+    const acceptanceRate = totalAllApps > 0 ? Math.round((acceptedAllApps / totalAllApps) * 100) : 0;
+    const highlyMatched = filteredApplications.filter(app => app.matchPercentage >= 70).length;
+
+
     const wilayas = [
         '01 - Adrar', '02 - Chlef', '03 - Laghouat', '04 - Oum El Bouaghi', '05 - Batna',
         '06 - Béjaïa', '07 - Biskra', '08 - Béchar', '09 - Blida', '10 - Bouira',
@@ -494,6 +501,13 @@ const CandidateTrackingStatistics = () => {
                                                                 </button>
                                                             </div>
                                                         )}
+                                                        <button
+                                                            className="p-2 flex items-center justify-center text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-full transition-colors active:scale-95 shadow-sm border border-blue-200"
+                                                            title="Message Candidate"
+                                                            onClick={(e) => { e.stopPropagation(); navigate(`/application-details/${app._id}`); }}
+                                                        >
+                                                            <span className="material-symbols-outlined text-[16px]">chat</span>
+                                                        </button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -533,8 +547,8 @@ const CandidateTrackingStatistics = () => {
                         <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-2xl p-6 text-white shadow-xl shadow-indigo-200/50 relative overflow-hidden group">
                             <div className="relative z-10">
                                 <p className="text-indigo-100 text-[11px] font-bold uppercase tracking-widest mb-1">Total Impact</p>
-                                <h3 className="text-3xl font-black mb-4">Real-time Data</h3>
-                                <p className="text-indigo-100 text-xs font-medium leading-relaxed">Displaying applications filtered from highest candidate match to lowest.</p>
+                                <h3 className="text-3xl font-black mb-4">{acceptedAllApps} Offers Made</h3>
+                                <p className="text-indigo-100 text-xs font-medium leading-relaxed">Out of {totalAllApps} total applications across all your offers, resulting in a {acceptanceRate}% acceptance rate.</p>
                             </div>
                             <div className="absolute -right-4 -bottom-4 opacity-10">
                                 <span className="material-symbols-outlined text-[120px]">analytics</span>
@@ -549,10 +563,10 @@ const CandidateTrackingStatistics = () => {
                                     </span>
                                     <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">LIVE COUNT</span>
                                 </div>
-                                <h4 className="font-bold text-slate-500 text-sm">Applications Received</h4>
+                                <h4 className="font-bold text-slate-500 text-sm">Filtered Candidates</h4>
                                 <div className="flex items-baseline gap-2 mt-1">
                                     <span className="text-4xl font-black text-slate-900 dark:text-white leading-none">{totalApplicants}</span>
-                                    <span className="text-[10px] font-bold text-emerald-600">Active Pipeline</span>
+                                    <span className="text-[10px] font-bold text-indigo-600">{pendingFiltered} Pending Review</span>
                                 </div>
                             </div>
                         </div>
@@ -568,7 +582,7 @@ const CandidateTrackingStatistics = () => {
                                 <h4 className="font-bold text-slate-500 text-sm">Average Match Score</h4>
                                 <div className="flex items-baseline gap-2 mt-1">
                                     <span className="text-4xl font-black text-slate-900 dark:text-white leading-none">{averageMatch}%</span>
-                                    <span className="text-[10px] font-bold text-emerald-600">Candidate Quality</span>
+                                    <span className="text-[10px] font-bold text-emerald-600">{highlyMatched} Highly Matched (70%+)</span>
                                 </div>
                             </div>
                         </div>

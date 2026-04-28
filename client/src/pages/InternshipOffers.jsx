@@ -1,15 +1,23 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import moment from 'moment';
 import StudentNavbar from '../components/StudentNavbar';
 
 const InternshipOffers = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const [openFilter, setOpenFilter] = useState(null);
     const filterRef = useRef(null);
     const [offers, setOffers] = useState([]);
     const [offersLoading, setOffersLoading] = useState(true);
     const [activeFilters, setActiveFilters] = useState({ wilaya: '', duration: '', type: '', skill: '' });
+    const [searchQuery, setSearchQuery] = useState(() => new URLSearchParams(location.search).get('search') || '');
+
+    // Sync search query whenever the URL ?search= param changes (e.g. navbar search)
+    useEffect(() => {
+        const urlSearch = new URLSearchParams(location.search).get('search') || '';
+        setSearchQuery(urlSearch);
+    }, [location.search]);
     const [student, setStudent] = useState(null);
 
     // Close dropdown when clicking outside
@@ -24,6 +32,8 @@ const InternshipOffers = () => {
     }, []);
 
     const [applyingTo, setApplyingTo] = useState(null);
+    const [applyModal, setApplyModal] = useState(null); // { offerId, title, company }
+    const [toastMessage, setToastMessage] = useState(null); // { type: 'success'|'error', text }
     const [limit, setLimit] = useState(6);
     const [hasMore, setHasMore] = useState(false);
 
@@ -50,9 +60,16 @@ const InternshipOffers = () => {
         }
     }, [activeFilters, limit]);
 
-    const handleApply = async (e, offerId) => {
+    const openApplyModal = (e, offer) => {
         e.stopPropagation();
+        setApplyModal({ offerId: offer._id, title: offer.title, company: offer.company?.name || 'Company' });
+    };
+
+    const handleApply = async () => {
+        if (!applyModal) return;
+        const offerId = applyModal.offerId;
         setApplyingTo(offerId);
+        setApplyModal(null);
         try {
             const res = await fetch('/api/applications', {
                 method: 'POST',
@@ -61,15 +78,18 @@ const InternshipOffers = () => {
             });
             const data = await res.json();
             if (res.ok && data.success) {
-                alert('Success! Your application has been submitted.');
+                setToastMessage({ type: 'success', text: 'Your application has been submitted successfully!' });
+                setTimeout(() => setToastMessage(null), 4000);
                 // Local update to set isApplied to true
                 setOffers(prev => prev.map(o => o._id === offerId ? { ...o, isApplied: true } : o));
             } else {
-                alert(data.message || 'Failed to apply.');
+                setToastMessage({ type: 'error', text: data.message || 'Failed to apply.' });
+                setTimeout(() => setToastMessage(null), 4000);
             }
         } catch (err) {
             console.error('Error applying:', err);
-            alert('An error occurred. Please try again later.');
+            setToastMessage({ type: 'error', text: 'An error occurred. Please try again later.' });
+            setTimeout(() => setToastMessage(null), 4000);
         } finally {
             setApplyingTo(null);
         }
@@ -112,7 +132,20 @@ const InternshipOffers = () => {
         setLimit(6);
     };
 
-    const hasActiveFilters = Object.values(activeFilters).some(Boolean);
+    const hasActiveFilters = Object.values(activeFilters).some(Boolean) || !!searchQuery;
+
+    // Client-side filter by search query (title, company name, tags)
+    const filteredOffers = searchQuery.trim()
+        ? offers.filter(o => {
+            const q = searchQuery.toLowerCase();
+            const allTags = o.techStack ? o.techStack.flatMap(s => s.tags || []) : [];
+            return (
+                (o.title || '').toLowerCase().includes(q) ||
+                (o.company?.companyName || o.company?.name || '').toLowerCase().includes(q) ||
+                allTags.some(t => t.toLowerCase().includes(q))
+            );
+          })
+        : offers;
 
     const wilayas = [
         '01 - Adrar', '02 - Chlef', '03 - Laghouat', '04 - Oum El Bouaghi', '05 - Batna',
@@ -157,7 +190,22 @@ const InternshipOffers = () => {
                             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#4F46E5]">
                                 <span className="material-symbols-outlined">search</span>
                             </div>
-                            <input className="block w-full pl-12 pr-4 py-3.5 bg-white dark:bg-slate-800 dark:text-white border-0 rounded-full text-slate-900 placeholder:text-slate-500 focus:ring-2 focus:ring-[#4F46E5] shadow-sm group-hover:shadow-lg transition-all duration-300 text-base font-medium outline-none" placeholder="React, Civil Engineering, Marketing..." type="text" />
+                            <input
+                                className="block w-full pl-12 pr-10 py-3.5 bg-white dark:bg-slate-800 dark:text-white border-0 rounded-full text-slate-900 placeholder:text-slate-500 focus:ring-2 focus:ring-[#4F46E5] shadow-sm group-hover:shadow-lg transition-all duration-300 text-base font-medium outline-none"
+                                placeholder="React, Civil Engineering, Marketing..."
+                                type="text"
+                                value={searchQuery}
+                                onChange={e => setSearchQuery(e.target.value)}
+                            />
+                            {searchQuery && (
+                                <button
+                                    className="absolute inset-y-0 right-4 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                                    onClick={() => setSearchQuery('')}
+                                    type="button"
+                                >
+                                    <span className="material-symbols-outlined text-lg">close</span>
+                                </button>
+                            )}
                         </div>
                         {/* Filters */}
                         <div className="flex gap-3 overflow-x-auto md:overflow-visible w-full md:w-auto pb-2 md:pb-0 scrollbar-hide" ref={filterRef}>
@@ -334,14 +382,14 @@ const InternshipOffers = () => {
                 <section className="max-w-[1200px] mx-auto w-full flex justify-between items-end pb-2">
                     <div>
                         <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-1">
-                            {hasActiveFilters ? 'Filtered Results' : 'Recommended for You'}
+                            {searchQuery ? `Results for "${searchQuery}"` : hasActiveFilters ? 'Filtered Results' : 'Recommended for You'}
                         </h1>
                         <p className="text-slate-500 text-sm">
                             {hasActiveFilters ? 'Showing offers matching your selected filters.' : 'Browse the latest opportunities available on the platform.'}
                         </p>
                     </div>
                     <div className="hidden sm:block text-sm font-medium text-slate-500">
-                        Showing <span className="text-slate-900 dark:text-white font-bold">{offers.length}</span> opportunities
+                        Showing <span className="text-slate-900 dark:text-white font-bold">{filteredOffers.length}</span> opportunities
                     </div>
                 </section>
 
@@ -351,13 +399,18 @@ const InternshipOffers = () => {
                         Array.from({ length: 6 }).map((_, i) => (
                             <div key={i} className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 animate-pulse h-72"></div>
                         ))
-                    ) : offers.length === 0 ? (
+                    ) : filteredOffers.length === 0 ? (
                         <div className="col-span-3 text-center py-20 text-slate-400">
-                            <span className="material-symbols-outlined text-5xl mb-4 block">inbox</span>
-                            <p className="text-lg font-semibold">No offers available yet.</p>
+                            <span className="material-symbols-outlined text-5xl mb-4 block">{searchQuery ? 'search_off' : 'inbox'}</span>
+                            <p className="text-lg font-semibold">
+                                {searchQuery ? `Offer not found for "${searchQuery}"` : 'No offers available yet.'}
+                            </p>
+                            {searchQuery && (
+                                <button onClick={() => setSearchQuery('')} className="mt-4 text-sm text-[#4F46E5] hover:underline font-medium">Clear search</button>
+                            )}
                         </div>
                     ) : (
-                        offers.map((offer) => {
+                        filteredOffers.map((offer) => {
                             // Flatten all tags from all techStack categories
                             const allTags = offer.techStack
                                 ? offer.techStack.flatMap(stack => stack.tags || [])
@@ -441,7 +494,7 @@ const InternshipOffers = () => {
                                             const isClosed = offer.status === 'Closed' || (offer.endDateOfApplay && moment().isAfter(moment(offer.endDateOfApplay).endOf('day')));
                                             return (
                                                 <button
-                                                    onClick={(e) => handleApply(e, offer._id)}
+                                                    onClick={(e) => openApplyModal(e, offer)}
                                                     disabled={applyingTo === offer._id || offer.isApplied || isClosed}
                                                     className={`flex-1 font-semibold py-2.5 px-4 rounded-full transition-all flex items-center justify-center gap-2 ${offer.isApplied ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/50 cursor-default' : (isClosed ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed border border-slate-200 dark:border-slate-700' : (applyingTo === offer._id ? 'bg-indigo-400 text-white cursor-not-allowed' : 'bg-[#4F46E5] hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 dark:shadow-none'))}`}
                                                 >
@@ -452,12 +505,6 @@ const InternshipOffers = () => {
                                                 </button>
                                             );
                                         })()}
-                                        <button
-                                            onClick={(e) => { e.stopPropagation(); /* handle favorite logic */ }}
-                                            className="w-10 h-10 flex items-center justify-center rounded-full border border-slate-200 dark:border-slate-600 text-slate-400 hover:text-rose-500 hover:border-rose-200 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all"
-                                        >
-                                            <span className="material-symbols-outlined fill-current">favorite</span>
-                                        </button>
                                     </div>
                                 </article>
                             );
@@ -476,7 +523,54 @@ const InternshipOffers = () => {
                     </div>
                 )}
             </main>
-        </div>
+
+            {/* Floating Apply Confirmation Modal */}
+            {applyModal && (
+                <div className="fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setApplyModal(null)}>
+                    <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-100 dark:border-slate-800 animate-in fade-in zoom-in-95" onClick={(e) => e.stopPropagation()}>
+                        <div className="w-16 h-16 bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800/30 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <span className="material-symbols-outlined text-3xl">send</span>
+                        </div>
+                        <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Apply to this offer?</h3>
+                        <p className="text-slate-500 dark:text-slate-400 text-sm mb-2 font-semibold">{applyModal.title}</p>
+                        <p className="text-slate-400 dark:text-slate-500 text-xs mb-8">at {applyModal.company}</p>
+                        <div className="flex gap-4">
+                            <button
+                                onClick={() => setApplyModal(null)}
+                                className="flex-1 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-sm uppercase tracking-wider rounded-xl transition-all"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleApply}
+                                className="flex-1 py-3 bg-[#4F46E5] hover:bg-indigo-700 text-white font-bold text-sm uppercase tracking-wider rounded-xl transition-all shadow-xl shadow-indigo-600/20 flex items-center justify-center gap-2"
+                            >
+                                <span className="material-symbols-outlined text-lg">send</span>
+                                Apply Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Toast Notification */}
+            {toastMessage && (
+                <div className="fixed bottom-6 right-6 z-[200] animate-fade-in-up">
+                    <div className={`${toastMessage.type === 'success' ? 'bg-emerald-600' : 'bg-red-600'} text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-4 max-w-sm`}>
+                        <div className="bg-white/20 p-2 rounded-full flex-shrink-0">
+                            <span className="material-symbols-outlined text-white text-xl">{toastMessage.type === 'success' ? 'check_circle' : 'error'}</span>
+                        </div>
+                        <p className="text-sm font-semibold">{toastMessage.text}</p>
+                        <button
+                            onClick={() => setToastMessage(null)}
+                            className="ml-auto text-white/80 hover:text-white transition-colors"
+                        >
+                            <span className="material-symbols-outlined text-xl">close</span>
+                        </button>
+                    </div>
+                </div>
+            )}
+    </div>
     );
 };
 

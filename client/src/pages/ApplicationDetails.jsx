@@ -399,18 +399,27 @@ const ApplicationDetails = () => {
                                 {company && (
                                 <section className="bg-white dark:bg-slate-800 dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-700 dark:border-slate-800 shadow-lg">
                                     <h3 className="font-display text-sm font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-4">Candidate Actions</h3>
-                                    {appData.status === 'accepted' ? (
-                                        <div className="flex flex-col items-center gap-3 py-4 px-2 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-xl text-center">
-                                            <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center">
-                                                <span className="material-symbols-outlined text-amber-600 dark:text-amber-400 text-2xl">hourglass_top</span>
+                                    {appData.status === 'validated' ? (
+                                        <div className="flex flex-col items-center gap-3 py-4 px-2 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800/50 rounded-xl text-center">
+                                            <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
+                                                <span className="material-symbols-outlined text-emerald-600 dark:text-emerald-400 text-2xl">verified</span>
                                             </div>
                                             <div>
-                                                <p className="font-bold text-amber-800 dark:text-amber-300 text-sm">Waiting for Admin Validation</p>
-                                                <p className="text-xs text-amber-600 dark:text-amber-500 mt-1 leading-relaxed">This application has been accepted. The university admin must now validate it before proceeding.</p>
+                                                <p className="font-bold text-emerald-800 dark:text-emerald-300 text-sm">Validated by University</p>
+                                                <p className="text-xs text-emerald-600 dark:text-emerald-500 mt-1 leading-relaxed">This application has been validated by the university admin. You can no longer update the status.</p>
                                             </div>
                                         </div>
                                     ) : (
                                         <div className="flex flex-col gap-3">
+                                            {appData.status === 'accepted' && (
+                                                <div className="flex flex-col items-center gap-2 py-3 px-2 mb-1 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-xl text-center">
+                                                    <span className="material-symbols-outlined text-amber-600 dark:text-amber-400">hourglass_top</span>
+                                                    <div>
+                                                        <p className="font-bold text-amber-800 dark:text-amber-300 text-sm">Waiting for Admin Validation</p>
+                                                        <p className="text-xs text-amber-600 dark:text-amber-500 mt-1 leading-relaxed">You have accepted this candidate. Waiting for university admin validation. You can still update the status if needed.</p>
+                                                    </div>
+                                                </div>
+                                            )}
                                             <button
                                                 disabled={actionLoading}
                                                 onClick={() => setConfirmationModal({ isOpen: true, status: 'Accepted' })}

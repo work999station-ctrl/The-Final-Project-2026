@@ -47,12 +47,12 @@ const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
                             <img alt="Company Logo" className="w-10 h-10 rounded-lg object-cover" src={company.logo} />
                         ) : (
                             <div className="w-10 h-10 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold italic">
-                                {company?.name?.substring(0, 2) || 'CP'}
+                                {company?.companyName?.substring(0, 2)?.toUpperCase() || 'CP'}
                             </div>
                         )}
                     </div>
                     <div className={`overflow-hidden whitespace-nowrap transition-all duration-300 ${isCollapsed ? 'w-0 opacity-0' : 'opacity-100'}`}>
-                        <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100 leading-tight truncate">{company?.name || 'TechCorp Inc.'}</h2>
+                        <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100 leading-tight truncate">{company?.companyName || '—'}</h2>
                         <p className="text-xs text-slate-500 truncate">Recruiter Dashboard</p>
                     </div>
                 </div>

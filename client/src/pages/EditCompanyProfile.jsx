@@ -317,7 +317,7 @@ const EditCompanyProfile = () => {
                     </main>
 
                     <footer className="py-10 text-center text-slate-400 text-sm">
-                        © 2024 stage.io Inc. All rights reserved.
+                        © 2026 stage.io Inc. All rights reserved.
                     </footer>
                 </div>
             </div>

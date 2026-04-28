@@ -11,6 +11,7 @@ const CompanyOffers = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [offerToDelete, setOfferToDelete] = useState(null);
     const [offerToToggle, setOfferToToggle] = useState(null);
+    const [toastMessage, setToastMessage] = useState(null);
 
     useEffect(() => {
         const fetchCompanyAndOffers = async () => {
@@ -49,6 +50,8 @@ const CompanyOffers = () => {
             if (res.ok) {
                 const updated = await res.json();
                 setOffers(offers.map(o => o._id === offerToToggle._id ? updated.offer : o));
+                setToastMessage(offerToToggle.newStatus === 'Closed' ? "Offer closed successfully." : "Offer re-opened successfully.");
+                setTimeout(() => setToastMessage(null), 4000);
                 setOfferToToggle(null);
             } else {
                 alert(`Failed to ${offerToToggle.newStatus === 'Closed' ? 'close' : 'reopen'} offer`);
@@ -199,7 +202,7 @@ const CompanyOffers = () => {
                                                     <button
                                                         className={`h-10 w-10 flex items-center justify-center bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl transition-all shadow-sm ${isClosed ? 'text-emerald-500 hover:text-emerald-600 hover:border-emerald-200 dark:hover:border-emerald-800' : 'text-slate-500 hover:text-amber-500 hover:border-amber-200 dark:hover:border-amber-800'}`}
                                                         title={isClosed ? "Reopen Offer" : "Close Offer"}
-                                                        onClick={(e) => { e.stopPropagation(); setOfferToToggle({ _id: offer._id, newStatus: isClosed ? 'Validation' : 'Closed' }); }}
+                                                        onClick={(e) => { e.stopPropagation(); setOfferToToggle({ _id: offer._id, newStatus: isClosed ? 'Open' : 'Closed' }); }}
                                                     >
                                                         <span className="material-symbols-outlined text-[20px]">{isClosed ? 'lock_open' : 'lock'}</span>
                                                     </button>
@@ -284,6 +287,24 @@ const CompanyOffers = () => {
                                 Delete
                             </button>
                         </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Toast Notification */}
+            {toastMessage && (
+                <div className="fixed bottom-6 right-6 z-[200] animate-fade-in-up">
+                    <div className="bg-emerald-600 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-4 max-w-sm">
+                        <div className="bg-white/20 p-2 rounded-full flex-shrink-0">
+                            <span className="material-symbols-outlined text-white text-xl">check_circle</span>
+                        </div>
+                        <p className="text-sm font-semibold">{toastMessage}</p>
+                        <button 
+                            onClick={() => setToastMessage(null)}
+                            className="ml-auto text-white/80 hover:text-white transition-colors"
+                        >
+                            <span className="material-symbols-outlined text-xl">close</span>
+                        </button>
                     </div>
                 </div>
             )}

@@ -25,6 +25,8 @@ const StudentDashboard = () => {
     const [hasMoreOffers, setHasMoreOffers] = useState(true);
     const [applyingTo, setApplyingTo] = useState(null);
     const [applications, setApplications] = useState([]);
+    const [applyModal, setApplyModal] = useState(null); // { offerId, title, company }
+    const [toastMessage, setToastMessage] = useState(null); // { type: 'success'|'error', text }
 
     const getStatusInfo = (status) => {
         switch (status) {
@@ -56,9 +58,16 @@ const StudentDashboard = () => {
         }
     };
 
-    const handleApply = async (e, offerId) => {
+    const openApplyModal = (e, offer) => {
         e.stopPropagation();
+        setApplyModal({ offerId: offer._id, title: offer.title, company: offer.company?.name || 'Company' });
+    };
+
+    const handleApply = async () => {
+        if (!applyModal) return;
+        const offerId = applyModal.offerId;
         setApplyingTo(offerId);
+        setApplyModal(null);
         try {
             const res = await fetch('/api/applications', {
                 method: 'POST',
@@ -67,15 +76,18 @@ const StudentDashboard = () => {
             });
             const data = await res.json();
             if (res.ok && data.success) {
-                alert('Success! Your application has been submitted.');
+                setToastMessage({ type: 'success', text: 'Your application has been submitted successfully!' });
+                setTimeout(() => setToastMessage(null), 4000);
                 // Local update
                 setOffers(prev => prev.map(o => o._id === offerId ? { ...o, isApplied: true } : o));
             } else {
-                alert(data.message || 'Failed to apply.');
+                setToastMessage({ type: 'error', text: data.message || 'Failed to apply.' });
+                setTimeout(() => setToastMessage(null), 4000);
             }
         } catch (err) {
             console.error('Error applying:', err);
-            alert('An error occurred. Please try again later.');
+            setToastMessage({ type: 'error', text: 'An error occurred. Please try again later.' });
+            setTimeout(() => setToastMessage(null), 4000);
         } finally {
             setApplyingTo(null);
         }
@@ -124,6 +136,7 @@ const StudentDashboard = () => {
     }, []);
 
     return (
+        <>
         <div className="bg-background-light dark:bg-background-dark text-text-main dark:text-gray-100 font-body min-h-screen flex flex-col antialiased selection:bg-primary/20 selection:text-primary">
             <StudentNavbar student={user} />
 
@@ -393,47 +406,48 @@ const StudentDashboard = () => {
                                     const matchColor = score >= 70 ? 'text-emerald-500' : score >= 40 ? 'text-yellow-500' : 'text-red-500';
 
                                     return (
-                                        <div key={offer._id} onClick={() => navigate(`/offer-details/${offer._id}`)} className="group bg-surface-light dark:bg-surface-dark rounded-xl shadow-soft hover:shadow-lift border border-border-color dark:border-slate-700/50 p-5 flex flex-col h-full transition-all duration-300 hover:-translate-y-1 cursor-pointer">
-                                            <div className="flex justify-between items-start mb-4">
-                                                <div className="size-10 rounded-lg bg-gray-50 dark:bg-slate-800 flex items-center justify-center border border-gray-100 dark:border-slate-700 overflow-hidden">
-                                                    {offer.company?.logo ? (
-                                                        <img alt={`${offer.company.name} Logo`} className="w-full h-full object-cover" src={offer.company.logo} />
-                                                    ) : (
-                                                        <span className="material-symbols-outlined text-gray-400">corporate_fare</span>
+                                        <div key={offer._id} onClick={() => navigate(`/offer-details/${offer._id}`)} className="group bg-surface-light dark:bg-surface-dark rounded-xl shadow-soft hover:shadow-lift border border-border-color dark:border-slate-700/50 p-5 flex flex-col transition-all duration-300 hover:-translate-y-1 cursor-pointer" style={{ minHeight: '320px' }}>
+                                            {/* Card content - grows to fill space */}
+                                            <div className="flex-1">
+                                                <div className="flex justify-between items-start mb-4">
+                                                    <div className="size-10 rounded-lg bg-gray-50 dark:bg-slate-800 flex items-center justify-center border border-gray-100 dark:border-slate-700 overflow-hidden">
+                                                        {offer.company?.logo ? (
+                                                            <img alt={`${offer.company.name} Logo`} className="w-full h-full object-cover" src={offer.company.logo} />
+                                                        ) : (
+                                                            <span className="material-symbols-outlined text-gray-400">corporate_fare</span>
+                                                        )}
+                                                    </div>
+                                                    <div className="relative w-10 h-10 flex flex-col items-center justify-center shrink-0" title={`${score}% Match`}>
+                                                        <svg className="w-full h-full absolute -rotate-90" viewBox="0 0 36 36">
+                                                            <path className="text-gray-100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3"></path>
+                                                            <path className={`${matchColor} drop-shadow-sm`} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeDasharray={`${score}, 100`} strokeWidth="3"></path>
+                                                        </svg>
+                                                        <span className="absolute text-[9px] font-bold text-slate-800 dark:text-slate-100 pointer-events-none">{score}%</span>
+                                                    </div>
+                                                </div>
+                                                <h3 className="font-display font-bold text-lg text-text-main dark:text-gray-100 leading-tight mb-1">{offer.title}</h3>
+                                                <p className="text-sm text-text-muted dark:text-gray-400 mb-4">{offer.company?.name || 'Company'} • {offer.wilaya || 'Algeria'}</p>
+                                                <div className="flex flex-wrap gap-1.5 mb-4">
+                                                    {allTags.slice(0, 3).map((tag, i) => (
+                                                        <span key={i} className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-[10px] font-mono border border-gray-200">
+                                                            {tag}
+                                                        </span>
+                                                    ))}
+                                                    {allTags.length === 0 && (
+                                                        <span className="text-[10px] text-gray-400 italic">No specific skills listed</span>
                                                     )}
                                                 </div>
-                                                <div className="relative w-10 h-10 flex flex-col items-center justify-center shrink-0" title={`${score}% Match`}>
-                                                    <svg className="w-full h-full absolute -rotate-90" viewBox="0 0 36 36">
-                                                        <path className="text-gray-100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3"></path>
-                                                        <path className={`${matchColor} drop-shadow-sm`} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeDasharray={`${score}, 100`} strokeWidth="3"></path>
-                                                    </svg>
-                                                    <span className="absolute text-[9px] font-bold text-slate-800 dark:text-slate-100 pointer-events-none">{score}%</span>
-                                                </div>
+                                                <p className="text-sm text-text-muted dark:text-gray-400 line-clamp-2">
+                                                    {offer.description || 'No description provided.'}
+                                                </p>
                                             </div>
-                                            <h3 className="font-display font-bold text-lg text-text-main dark:text-gray-100 leading-tight mb-1">{offer.title}</h3>
-                                            <p className="text-sm text-text-muted dark:text-gray-400 mb-4">{offer.company?.name || 'Company'} • {offer.wilaya || 'Algeria'}</p>
-                                            <div className="flex flex-wrap gap-1.5 mb-4">
-                                                {allTags.slice(0, 3).map((tag, i) => (
-                                                    <span key={i} className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-[10px] font-mono border border-gray-200">
-                                                        {tag}
-                                                    </span>
-                                                ))}
-                                                {allTags.length === 0 && (
-                                                    <span className="text-[10px] text-gray-400 italic">No specific skills listed</span>
-                                                )}
-                                            </div>
-                                            <p className="text-sm text-text-muted dark:text-gray-400 line-clamp-2 mb-4 flex-grow">
-                                                {offer.description || 'No description provided.'}
-                                            </p>
-                                            <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-slate-700 mt-auto">
-                                                <button onClick={(e) => { e.stopPropagation(); }} className="text-text-muted dark:text-gray-400 hover:text-primary transition-colors">
-                                                    <span className="material-symbols-outlined">bookmark</span>
-                                                </button>
+                                            {/* Button footer - always pinned to bottom */}
+                                            <div className="flex items-center justify-end pt-4 border-t border-gray-100 dark:border-slate-700">
                                                 {(() => {
                                                     const isClosed = offer.status === 'Closed' || (offer.endDateOfApplay && moment().isAfter(moment(offer.endDateOfApplay).endOf('day')));
                                                     return (
                                                         <button
-                                                            onClick={(e) => handleApply(e, offer._id)}
+                                                            onClick={(e) => openApplyModal(e, offer)}
                                                             disabled={applyingTo === offer._id || offer.isApplied || isClosed}
                                                             className={`text-sm font-semibold px-4 py-2 rounded-full transition-all flex items-center gap-1 shadow-lg ${offer.isApplied ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/50 cursor-default shadow-none' : (isClosed ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed border border-slate-200 dark:border-slate-700 shadow-none' : (applyingTo === offer._id ? 'bg-indigo-400 text-white cursor-not-allowed' : 'bg-primary hover:bg-indigo-700 text-white shadow-indigo-500/30'))}`}>
                                                             {offer.isApplied ? 'Applied' : (isClosed ? 'Offer Closed' : (applyingTo === offer._id ? 'Applying...' : 'Apply Now'))}
@@ -473,6 +487,54 @@ const StudentDashboard = () => {
                 </div>
             </main>
         </div>
+
+            {/* Floating Apply Confirmation Modal */}
+            {applyModal && (
+                <div className="fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setApplyModal(null)}>
+                    <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-100 dark:border-slate-800 animate-in fade-in zoom-in-95" onClick={(e) => e.stopPropagation()}>
+                        <div className="w-16 h-16 bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800/30 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <span className="material-symbols-outlined text-3xl">send</span>
+                        </div>
+                        <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Apply to this offer?</h3>
+                        <p className="text-slate-500 dark:text-slate-400 text-sm mb-2 font-semibold">{applyModal.title}</p>
+                        <p className="text-slate-400 dark:text-slate-500 text-xs mb-8">at {applyModal.company}</p>
+                        <div className="flex gap-4">
+                            <button
+                                onClick={() => setApplyModal(null)}
+                                className="flex-1 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-sm uppercase tracking-wider rounded-xl transition-all"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleApply}
+                                className="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm uppercase tracking-wider rounded-xl transition-all shadow-xl shadow-indigo-600/20 flex items-center justify-center gap-2"
+                            >
+                                <span className="material-symbols-outlined text-lg">send</span>
+                                Apply Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Toast Notification */}
+            {toastMessage && (
+                <div className="fixed bottom-6 right-6 z-[200] animate-fade-in-up">
+                    <div className={`${toastMessage.type === 'success' ? 'bg-emerald-600' : 'bg-red-600'} text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-4 max-w-sm`}>
+                        <div className="bg-white/20 p-2 rounded-full flex-shrink-0">
+                            <span className="material-symbols-outlined text-white text-xl">{toastMessage.type === 'success' ? 'check_circle' : 'error'}</span>
+                        </div>
+                        <p className="text-sm font-semibold">{toastMessage.text}</p>
+                        <button
+                            onClick={() => setToastMessage(null)}
+                            className="ml-auto text-white/80 hover:text-white transition-colors"
+                        >
+                            <span className="material-symbols-outlined text-xl">close</span>
+                        </button>
+                    </div>
+                </div>
+            )}
+        </>
     );
 };
 
