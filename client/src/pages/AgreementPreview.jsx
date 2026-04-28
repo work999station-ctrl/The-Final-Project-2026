@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
+import logo from '../assets/logo.png';
 
 const AgreementPreview = () => {
     const { applicationId } = useParams();
@@ -71,10 +72,7 @@ const AgreementPreview = () => {
                     <button onClick={() => navigate(-1)} className="p-2 hover:bg-slate-100 rounded-full text-slate-500 transition-colors">
                         <span className="material-symbols-outlined text-xl">arrow_back</span>
                     </button>
-                    <div className="h-8 w-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-['Space_Grotesk'] font-bold text-lg">M</div>
-                    <span className="font-['Space_Grotesk'] font-bold text-lg tracking-tight">Modern Connectivity</span>
-                    <span className="mx-2 text-slate-200">/</span>
-                    <span className="text-slate-500 text-sm font-medium">Agreement System</span>
+                    <img src={logo} alt="Stag.io Logo" className="h-10 w-auto object-contain" />
                 </div>
             </header>
 
@@ -126,10 +124,12 @@ const AgreementPreview = () => {
                                 {/* Header of Doc */}
                                 <div className="flex justify-between items-start border-b-2 border-slate-900 pb-6 mb-8">
                                     <div className="flex items-center gap-3">
-                                        <div className="h-12 w-12 bg-slate-900 text-white flex items-center justify-center font-['Space_Grotesk'] font-bold text-2xl rounded">U</div>
+                                        <div className="h-12 w-12 bg-slate-900 text-white flex items-center justify-center font-['Space_Grotesk'] font-bold text-2xl rounded">
+                                            {data.universityName?.charAt(0) || 'U'}
+                                        </div>
                                         <div>
                                             <h2 className="font-['Space_Grotesk'] font-bold text-xl uppercase tracking-tight text-slate-900">{data.universityName}</h2>
-                                            <p className="font-mono text-xs text-slate-500">Department of {data.studentDept}</p>
+                                            <p className="font-mono text-xs text-slate-500">Department of {data.studentDept || 'Technology'}</p>
                                         </div>
                                     </div>
                                     <div className="text-right">
@@ -211,7 +211,7 @@ const AgreementPreview = () => {
                                     <div className="flex-1">
                                         <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Document Authenticity</p>
                                         <p className="text-xs text-slate-500 leading-relaxed">
-                                            Scan this QR code to verify the authenticity of this internship agreement.
+                                            Scan this QR code or visit the link to verify the authenticity of this internship agreement.
                                             Each code is uniquely generated for <strong className="text-slate-700">{data.studentName}</strong> and encodes
                                             all critical agreement identifiers.
                                         </p>
@@ -222,7 +222,7 @@ const AgreementPreview = () => {
                                     <div className="flex flex-col items-center gap-2 shrink-0">
                                         <div className="p-2 bg-white border border-slate-200 rounded-lg shadow-sm">
                                             <QRCodeSVG
-                                                value={`INTERNSHIP AGREEMENT\nStudent: ${data.studentName}\nUniversity: ${data.universityName}\nCompany: ${data.companyName}\nRole: ${data.offerTitle}\nPeriod: ${data.startDate} to ${data.endDate}\nRef: AGR-${applicationId || 'DEMO'}-${data.studentName?.replace(/\s+/g, '').toUpperCase().slice(0, 6)}`}
+                                                value={`${window.location.origin}/verify-qr/${applicationId || 'DEMO'}`}
                                                 size={100}
                                                 level="M"
                                                 includeMargin={false}
@@ -230,7 +230,15 @@ const AgreementPreview = () => {
                                                 bgColor="#ffffff"
                                             />
                                         </div>
-                                        <p className="text-[8px] text-slate-400 uppercase tracking-widest font-medium">Scan to Verify</p>
+                                        <p className="text-[8px] text-slate-400 uppercase tracking-widest font-medium mb-0 pb-0">Scan to Verify</p>
+                                        <a 
+                                            href={`${window.location.origin}/verify-qr/${applicationId || 'DEMO'}`}
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                            className="text-[8px] font-mono text-blue-500 hover:text-blue-600 hover:underline break-all text-center"
+                                        >
+                                            {window.location.origin}/verify-qr/{applicationId || 'DEMO'}
+                                        </a>
                                     </div>
                                 </div>
                             </div>

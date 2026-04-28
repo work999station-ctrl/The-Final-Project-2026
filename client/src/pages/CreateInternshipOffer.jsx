@@ -13,7 +13,6 @@ const CreateInternshipOffer = () => {
     // Form States
     const [formData, setFormData] = useState({
         title: '',
-        category: '',
         durationMonths: '',
         internshipType: 'PFE',
         wilaya: '',
@@ -28,9 +27,6 @@ const CreateInternshipOffer = () => {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
-        if (name === 'category') {
-            setSelectedSkills([]);
-        }
     };
 
     const handleSubmit = async () => {
@@ -40,12 +36,22 @@ const CreateInternshipOffer = () => {
 
             let newErrors = {};
             if (!formData.title) newErrors.title = 'Please enter an internship title.';
-            if (!formData.category) newErrors.category = 'Please select a category.';
             if (!formData.durationMonths) newErrors.durationMonths = 'Please enter the duration.';
             if (!formData.wilaya) newErrors.wilaya = 'Please select a location.';
             if (!formData.description) newErrors.description = 'Please provide a description.';
             if (!formData.salary) newErrors.salary = 'Please enter the salary or specify "Unpaid".';
             if (!formData.endDateOfApplay) newErrors.endDateOfApplay = 'Please provide an application deadline.';
+
+            // Validation: Ensure every selected category has at least one selected skill
+            const selectedCategories = selectedSkills.filter(s => s.type === 'category');
+            for (let cat of selectedCategories) {
+                const rawCatId = cat.id.replace('cat-', '');
+                const hasSkills = selectedSkills.some(s => s.type === 'skill' && s.id.startsWith(`${rawCatId}-`));
+                if (!hasSkills) {
+                    newErrors.techStack = `Please select at least one skill for the category: ${cat.label}`;
+                    break;
+                }
+            }
 
             // Tech Stack format processing from selectedSkills
             const techStackMap = {};
@@ -67,7 +73,7 @@ const CreateInternshipOffer = () => {
                 tags: techStackMap[categoryName]
             }));
 
-            if (techStack.length === 0) {
+            if (!newErrors.techStack && techStack.length === 0) {
                 newErrors.techStack = 'Please select at least one technology or skill.';
             }
 
@@ -79,7 +85,6 @@ const CreateInternshipOffer = () => {
 
             const offerData = {
                 title: formData.title,
-                category: formData.category,
                 durationMonths: Number(formData.durationMonths),
                 internshipType: formData.internshipType,
                 wilaya: formData.wilaya,
@@ -145,14 +150,12 @@ const CreateInternshipOffer = () => {
         { id: 'sport3', name: 'Management & Business', skills: ['Sports Management', 'Event Planning', 'Sports Psychology', 'Sports Nutrition'] }
     ];
 
-    let categories = itCategories;
-    if (formData.category === 'E-commerce') {
-        categories = ecommerceCategories;
-    } else if (formData.category === 'Psychology') {
-        categories = psychologyCategories;
-    } else if (formData.category === 'Sport') {
-        categories = sportCategories;
-    }
+    const categories = [
+        ...itCategories,
+        ...ecommerceCategories,
+        ...psychologyCategories,
+        ...sportCategories
+    ];
 
     const toggleSkill = (skill, categoryId) => {
         const skillId = `${categoryId}-${skill}`.toLowerCase();
@@ -289,26 +292,7 @@ const CreateInternshipOffer = () => {
                             {errors.title && <span className="text-xs text-red-500 dark:text-red-400 font-medium">{errors.title}</span>}
                         </div>
 
-                        {/* Domain / Category Dropdown */}
-                        <div className="flex flex-col gap-2">
-                            <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Category</label>
-                            <div className="relative">
-                                <select
-                                    name="category"
-                                    value={formData.category}
-                                    onChange={handleInputChange}
-                                    className={`w-full appearance-none px-4 py-3 rounded-xl border ${errors.category ? 'border-red-400 dark:border-red-500 bg-red-50/50 dark:bg-red-900/10' : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800'} focus:ring-2 focus:ring-[#4f46e5]/20 focus:border-[#4f46e5] outline-none transition-all text-slate-600 dark:text-slate-300`}
-                                >
-                                    <option disabled value="">Select category...</option>
-                                    <option value="Information Technology (IT)">Information Technology (IT)</option>
-                                    <option value="E-commerce">E-commerce</option>
-                                    <option value="Psychology">Psychology</option>
-                                    <option value="Sport">Sport</option>
-                                </select>
-                                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">expand_more</span>
-                            </div>
-                            {errors.category && <span className="text-xs text-red-500 dark:text-red-400 font-medium">{errors.category}</span>}
-                        </div>
+
 
                         {/* Hierarchical Skills and Categories Selector */}
                         <div className="flex flex-col gap-2 relative">

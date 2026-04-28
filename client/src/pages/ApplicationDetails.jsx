@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import CompanyNavbar from '../components/CompanyNavbar';
 import StudentNavbar from '../components/StudentNavbar';
 import moment from 'moment';
@@ -7,12 +7,16 @@ import moment from 'moment';
 const ApplicationDetails = () => {
     const navigate = useNavigate();
     const { applicationId } = useParams();
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const initialTab = queryParams.get('tab') || 'Overview';
+
     const [company, setCompany] = useState(null);
     const [student, setStudent] = useState(null);
     const [fetchedApp, setFetchedApp] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState(false);
-    const [activeTab, setActiveTab] = useState('Overview');
+    const [activeTab, setActiveTab] = useState(initialTab);
     const [feedbackText, setFeedbackText] = useState('');
     const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
     const [confirmationModal, setConfirmationModal] = useState({ isOpen: false, status: null });

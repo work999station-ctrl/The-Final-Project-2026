@@ -27,6 +27,7 @@ const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
         { page: 'offers', icon: 'work', label: 'My Offers', href: '/company-offers' },
         { page: 'applications', icon: 'groups', label: 'Applications', href: '/candidate-tracking-statistics' },
         { page: 'create-offer', icon: 'add_box', label: 'Create Offer', href: '/create-offer' },
+        { page: 'messages', icon: 'chat', label: 'Messages', href: '/company-direct-messages' },
         { page: 'inbox', icon: 'inbox', label: 'Inbox', href: '/company-inbox' },
     ];
 

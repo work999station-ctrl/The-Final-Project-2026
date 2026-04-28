@@ -457,16 +457,36 @@ const getCompanyDashboardStats = async (req, res) => {
       endDateOfApplay: { $gte: new Date() }
     });
 
+    // Total offers and closed offers
+    const totalOffers = await Offer.countDocuments({ companyId });
+    const closedOffers = totalOffers - activeOffers;
+
     // Get all offer IDs for this company to count related applications
     const companyOffers = await Offer.find({ companyId }, '_id');
     const offerIds = companyOffers.map(o => o._id);
 
     // 2. New Applicants (Last 7 days)
-    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    const now = new Date();
+    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const fourteenDaysAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+
     const newApplicants = await Application.countDocuments({
       offerId: { $in: offerIds },
       createdAt: { $gte: sevenDaysAgo }
     });
+
+    const prevNewApplicants = await Application.countDocuments({
+      offerId: { $in: offerIds },
+      createdAt: { $gte: fourteenDaysAgo, $lt: sevenDaysAgo }
+    });
+
+    // Calculate applicant growth
+    let applicantGrowth = 0;
+    if (prevNewApplicants > 0) {
+      applicantGrowth = ((newApplicants - prevNewApplicants) / prevNewApplicants) * 100;
+    } else if (newApplicants > 0) {
+      applicantGrowth = 100; // 100% growth if prev was 0
+    }
 
     // 3. Total Validated (Hired)
     const hiredCount = await Application.countDocuments({
@@ -474,19 +494,91 @@ const getCompanyDashboardStats = async (req, res) => {
       status: 'validated'
     });
 
-    // 4. Pending Reviews
+    // 4. Active Offers growth (vs last month)
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const prevActiveOffers = await Offer.countDocuments({
+      companyId,
+      createdAt: { $lt: thirtyDaysAgo },
+      status: 'Open',
+      endDateOfApplay: { $gte: thirtyDaysAgo }
+    });
+
+    let offersGrowth = 0;
+    if (prevActiveOffers > 0) {
+      offersGrowth = ((activeOffers - prevActiveOffers) / prevActiveOffers) * 100;
+    } else if (activeOffers > 0) {
+      offersGrowth = 100;
+    }
+
+    // Total applicants (all time)
+    const totalApplicants = await Application.countDocuments({
+      offerId: { $in: offerIds }
+    });
+
+    // Accepted count
+    const acceptedCount = await Application.countDocuments({
+      offerId: { $in: offerIds },
+      status: 'accepted'
+    });
+
+    // Rejected count
+    const rejectedCount = await Application.countDocuments({
+      offerId: { $in: offerIds },
+      status: 'rejected'
+    });
+
+    // Pending Reviews
     const pendingReviews = await Application.countDocuments({
       offerId: { $in: offerIds },
       status: 'applied'
     });
 
+    // 5. Daily application data for the last 30 days
+    const dailyApplications = await Application.aggregate([
+      {
+        $match: {
+          offerId: { $in: offerIds },
+          createdAt: { $gte: thirtyDaysAgo }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: "%Y-%m-%d", date: "$createdAt" }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+
+    // Build a full 30-day array with zero-fills for days with no applications
+    const dailyData = [];
+    for (let i = 29; i >= 0; i--) {
+      const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+      const dateStr = date.toISOString().split('T')[0];
+      const found = dailyApplications.find(d => d._id === dateStr);
+      dailyData.push({
+        date: dateStr,
+        count: found ? found.count : 0
+      });
+    }
+
     res.status(200).json({
       success: true,
       stats: {
         activeOffers,
+        totalOffers,
+        closedOffers,
         newApplicants,
+        totalApplicants,
         hiredCount,
-        pendingReviews
+        acceptedCount,
+        rejectedCount,
+        pendingReviews,
+        dailyApplications: dailyData,
+        applicantGrowth: applicantGrowth.toFixed(1),
+        offersGrowth: offersGrowth.toFixed(1)
       }
     });
   } catch (err) {
@@ -1160,7 +1252,16 @@ const getAdminApplicationById = async (req, res) => {
     const student = application.studentId || {};
     const offer = application.offerId || {};
     const company = offer.companyId || {};
-    const admin = await Admin.findById(req.user._id).select('universityName DeptHead fullName');
+    
+    let admin = await Admin.findById(req.user._id).select('universityName DeptHead fullName');
+    if (!admin) {
+        // If the requester is a student or company, find the Admin corresponding to the student's specialty
+        admin = await Admin.findOne({ DeptHead: student.specialty }).select('universityName DeptHead fullName');
+        if (!admin) {
+            // Fallback to the first available admin if no exact DeptHead match is found
+            admin = await Admin.findOne().select('universityName DeptHead fullName');
+        }
+    }
 
     const formattedData = {
       studentId: student._id || null,

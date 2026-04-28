@@ -26,14 +26,14 @@ const { studentSignup_get, studentSignup_post, studentDashboard_get, studentProf
 const { requireAuth, requireAuthAPI } = require('../middleware/authmiddleware');
 
 router.get('/api/test-password-reset', async (req, res) => {
-  const Company = require('../models/Company.model');
-  const company = await Company.findOne();
-  if (company) {
-    company.password = 'password123';
-    await company.save();
-    return res.json({ name: company.companyName, email: company.email, newPass: 'password123' });
-  }
-  res.json({ error: 'No companies exist' });
+    const Company = require('../models/Company.model');
+    const company = await Company.findOne();
+    if (company) {
+        company.password = 'password123';
+        await company.save();
+        return res.json({ name: company.companyName, email: company.email, newPass: 'password123' });
+    }
+    res.json({ error: 'No companies exist' });
 });
 
 router.get('/student-Signup', studentSignup_get);
@@ -123,5 +123,26 @@ router.put('/api/inbox/mark-as-read/:id', requireAuthAPI, markMessageAsRead);
 router.post('/api/applications', requireAuth, createApplication);
 router.put('/api/applications/:id/status', requireAuthAPI, updateApplicationStatus);
 router.delete('/api/applications/:id', requireAuthAPI, deleteApplication);
+
+router.get('/api/public/verify-agreement/:id', async (req, res) => {
+    const Application = require('../models/application.model');
+
+    try {
+        const application = await Application.findById(req.params.id)
+            .populate('studentId')
+            .populate({
+                path: 'offerId',
+                populate: { path: 'companyId' }
+            });
+
+        if (application) {
+            // Fetch company and admin info manually if needed, or just return basic info
+            return res.status(200).json({ success: true, application });
+        }
+        res.status(404).json({ success: false, error: 'Not found or not validated' });
+    } catch (e) {
+        res.status(500).json({ success: false, error: e.message });
+    }
+});
 
 module.exports = router;

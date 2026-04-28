@@ -2,6 +2,8 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logoImage from '../assets/logo.png';
 import ThemeToggle from '../components/ThemeToggle';
+import Footer from '../components/Footer';
+import LandingNavBar from '../components/LandingNavBar';
 
 const Companies = () => {
     const navigate = useNavigate();
@@ -9,39 +11,7 @@ const Companies = () => {
     return (
         <div className="bg-white dark:bg-slate-900 font-display text-slate-900 dark:text-slate-100 min-h-screen selection:bg-indigo-100 dark:selection:bg-indigo-900/30">
             {/* Header */}
-            <header className="sticky top-0 z-50 w-full border-b border-slate-200/60 dark:border-slate-800/60 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl">
-                <div className="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-8 py-4">
-                    <div className="flex items-center gap-12">
-                        <Link to="/" className="flex items-center gap-2 group transition-transform hover:scale-[1.02] active:scale-[0.98]">
-                            <img src={logoImage} alt="stage.io logo" className="h-12 w-auto object-contain dark:invert dark:hue-rotate-180 mix-blend-multiply dark:mix-blend-screen" />
-                        </Link>
-                        
-                        <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
-                            <Link to="/" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Platform</Link>
-                            <Link to="/students" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Students</Link>
-                            <Link to="/companies" className="text-indigo-600 dark:text-indigo-400 font-semibold underline underline-offset-8 decoration-2">Companies</Link>
-                            <Link to="/universities" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Universities</Link>
-                            <Link to="/pricing" className="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Pricing</Link>
-                        </nav>
-                    </div>
-
-                    <div className="flex items-center gap-4">
-                        <ThemeToggle />
-                        <button 
-                            onClick={() => navigate('/login')}
-                            className="hidden sm:block text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors px-4"
-                        >
-                            Log In
-                        </button>
-                        <button 
-                            onClick={() => navigate('/company-signup')}
-                            className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold py-2.5 px-6 rounded-full transition-all shadow-lg shadow-indigo-200 dark:shadow-none hover:translate-y-[-1px] active:translate-y-[1px]"
-                        >
-                            Hire Talent
-                        </button>
-                    </div>
-                </div>
-            </header>
+            <LandingNavBar />
 
             <main>
                 {/* Hero Section */}
@@ -64,16 +34,18 @@ const Companies = () => {
                             Eliminate the friction of internship recruitment. stag.io connects you with vetted students and automates your administrative workflow from discovery to agreement.
                         </p>
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                            <button 
+                            <button
                                 onClick={() => navigate('/company-signup')}
                                 className="w-full sm:w-auto bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-lg font-bold py-4 px-10 rounded-2xl hover:scale-105 transition-all shadow-xl shadow-slate-200 dark:shadow-none"
                             >
                                 Start Hiring Now
                             </button>
-                            <button className="w-full sm:w-auto bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-lg font-bold py-4 px-10 rounded-2xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-750 transition-all flex items-center justify-center gap-2 group">
-                                View Demo
-                                <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">play_arrow</span>
-                            </button>
+                            <a href="/careers">
+                                <button className="w-full sm:w-auto bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-lg font-bold py-4 px-10 rounded-2xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-750 transition-all flex items-center justify-center gap-2 group">
+                                    View Demo
+                                    <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">play_arrow</span>
+                                </button>
+                            </a>
                         </div>
 
                         {/* Trust Bar */}
@@ -111,7 +83,7 @@ const Companies = () => {
                                 <p className="text-lg text-slate-600 dark:text-slate-400 mb-10 leading-relaxed">
                                     Stop wasting time on manual paperwork and unvetted candidates. stag.io provides a centralized command center for your entire internship program.
                                 </p>
-                                
+
                                 <div className="space-y-6">
                                     {[
                                         { icon: 'verified_user', title: 'Vetted Candidates', desc: 'Access a curated pool of students with verified academic backgrounds and skills.' },
@@ -130,7 +102,7 @@ const Companies = () => {
                                     ))}
                                 </div>
                             </div>
-                            
+
                             <div className="relative group">
                                 <div className="absolute -inset-4 bg-gradient-to-tr from-indigo-500 to-blue-500 rounded-[2.5rem] blur-2xl opacity-10 group-hover:opacity-20 transition-opacity"></div>
                                 <div className="relative bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden aspect-[4/3] flex items-center justify-center p-8">
@@ -179,25 +151,25 @@ const Companies = () => {
                     <div className="max-w-5xl mx-auto px-6 lg:px-8 text-center bg-indigo-600 rounded-[3rem] p-12 lg:p-20 relative overflow-hidden shadow-2xl shadow-indigo-200 dark:shadow-none">
                         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
                         <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-400/20 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
-                        
+
                         <div className="relative z-10">
                             <h2 className="text-4xl lg:text-5xl font-black text-white mb-8">Ready to transform your <br />internship program?</h2>
                             <p className="text-indigo-100 text-xl mb-12 max-w-2xl mx-auto leading-relaxed">
                                 Join hundreds of innovative companies already using stag.io to discover and manage their future talent.
                             </p>
                             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-                                <button 
+                                <button
                                     onClick={() => navigate('/company-signup')}
                                     className="w-full sm:w-auto bg-white text-indigo-600 text-lg font-bold py-4 px-12 rounded-2xl hover:scale-105 transition-all shadow-xl"
                                 >
                                     Get Started for Free
                                 </button>
-                                <button 
+                                {/* <button 
                                     onClick={() => navigate('/pricing')}
                                     className="w-full sm:w-auto bg-indigo-500/30 text-white border border-indigo-400/30 text-lg font-bold py-4 px-12 rounded-2xl hover:bg-indigo-500/40 transition-all"
                                 >
                                     View Pricing
-                                </button>
+                                </button> */}
                             </div>
                         </div>
                     </div>
@@ -205,55 +177,7 @@ const Companies = () => {
             </main>
 
             {/* Footer */}
-            <footer className="bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 pt-24 pb-12">
-                <div className="max-w-7xl mx-auto px-6 lg:px-8">
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 mb-16">
-                        <div className="col-span-2 lg:col-span-2">
-                            <Link to="/" className="flex items-center gap-2 mb-6">
-                                <img src={logoImage} alt="stage.io logo" className="h-12 w-auto object-contain dark:invert dark:hue-rotate-180 mix-blend-multiply dark:mix-blend-screen" />
-                            </Link>
-                            <p className="text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed">
-                                Modernizing internship connectivity for the next generation of global talent and innovative companies.
-                            </p>
-                        </div>
-                        <div>
-                            <h4 className="font-bold text-slate-900 dark:text-white mb-6">Platform</h4>
-                            <ul className="space-y-4 text-sm text-slate-600 dark:text-slate-400">
-                                <li><Link to="/students" className="hover:text-indigo-600 transition-colors">Students</Link></li>
-                                <li><Link to="/companies" className="hover:text-indigo-600 transition-colors">Companies</Link></li>
-                                <li><Link to="/universities" className="hover:text-indigo-600 transition-colors">Universities</Link></li>
-                                <li><Link to="/pricing" className="hover:text-indigo-600 transition-colors">Pricing</Link></li>
-                                <li><Link to="/opportunities" className="hover:text-indigo-600 transition-colors">Opportunities</Link></li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 className="font-bold text-slate-900 dark:text-white mb-6">Company</h4>
-                            <ul className="space-y-4 text-sm text-slate-600 dark:text-slate-400">
-                                <li><Link to="/about-us" className="hover:text-indigo-600 transition-colors">About Us</Link></li>
-                                <li><Link to="/careers" className="hover:text-indigo-600 transition-colors">Careers</Link></li>
-                                <li><Link to="/blog" className="hover:text-indigo-600 transition-colors">Blog</Link></li>
-                                <li><Link to="/contact-us" className="hover:text-indigo-600 transition-colors">Contact Us</Link></li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 className="font-bold text-slate-900 dark:text-white mb-6">Legal</h4>
-                            <ul className="space-y-4 text-sm text-slate-600 dark:text-slate-400">
-                                <li><Link to="/privacy-policy" className="hover:text-indigo-600 transition-colors">Privacy Policy</Link></li>
-                                <li><Link to="/terms-of-service" className="hover:text-indigo-600 transition-colors">Terms of Service</Link></li>
-                                <li><Link to="/cookie-policy" className="hover:text-indigo-600 transition-colors">Cookie Policy</Link></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div className="pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6">
-                        <p className="text-sm text-slate-500 dark:text-slate-400">© 2026 stag.io Inc. All rights reserved.</p>
-                        <div className="flex items-center gap-6">
-                            <a href="#" className="text-slate-400 hover:text-indigo-600 transition-colors"><span className="material-symbols-outlined">brand_family</span></a>
-                            <a href="#" className="text-slate-400 hover:text-indigo-600 transition-colors"><span className="material-symbols-outlined">public</span></a>
-                            <a href="#" className="text-slate-400 hover:text-indigo-600 transition-colors"><span className="material-symbols-outlined">share</span></a>
-                        </div>
-                    </div>
-                </div>
-            </footer>
+            <Footer />
         </div>
     );
 };
