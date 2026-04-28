@@ -1160,7 +1160,16 @@ const getAdminApplicationById = async (req, res) => {
     const student = application.studentId || {};
     const offer = application.offerId || {};
     const company = offer.companyId || {};
-    const admin = await Admin.findById(req.user._id).select('universityName DeptHead fullName');
+    
+    let admin = await Admin.findById(req.user._id).select('universityName DeptHead fullName');
+    if (!admin) {
+        // If the requester is a student or company, find the Admin corresponding to the student's specialty
+        admin = await Admin.findOne({ DeptHead: student.specialty }).select('universityName DeptHead fullName');
+        if (!admin) {
+            // Fallback to the first available admin if no exact DeptHead match is found
+            admin = await Admin.findOne().select('universityName DeptHead fullName');
+        }
+    }
 
     const formattedData = {
       studentId: student._id || null,

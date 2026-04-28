@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import logoImage from '../assets/logo.png';
 import ThemeToggle from '../components/ThemeToggle';
+import Footer from '../components/Footer';
+import LandingNavBar from '../components/LandingNavBar';
 
 const Students = () => {
     const navigate = useNavigate();
@@ -13,25 +15,7 @@ const Students = () => {
     return (
         <div className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-body min-h-screen antialiased flex flex-col">
             {/* Navigation */}
-            <header className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
-                <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
-                    <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-                        <img src={logoImage} alt="stage.io logo" className="h-12 w-auto object-contain dark:invert dark:hue-rotate-180 mix-blend-multiply dark:mix-blend-screen" />
-                    </div>
-                    <nav className="hidden md:flex items-center space-x-8 font-display text-sm font-medium tracking-tight">
-                        <Link to="/" className="text-slate-600 dark:text-slate-400 hover:text-primary transition-all duration-200">Platform</Link>
-                        <Link to="/companies" className="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors">Companies</Link>
-                        <Link to="/universities" className="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors">Universities</Link>
-                        <Link to="/about-us" className="text-slate-600 dark:text-slate-400 hover:text-primary transition-all duration-200">About</Link>
-                        <Link to="/students" className="text-primary font-bold">Students</Link>
-                    </nav>
-                    <div className="hidden md:flex items-center space-x-4">
-                        <ThemeToggle />
-                        <Link to="/login" className="font-display text-sm font-medium tracking-tight text-slate-600 dark:text-slate-400 hover:text-primary transition-all duration-200">Sign In</Link>
-                        <Link to="/student-signup" className="bg-primary text-white font-display text-sm font-medium tracking-tight px-6 py-2.5 rounded-full hover:opacity-90 transition-all duration-200 shadow-lg shadow-primary/20">Get Started</Link>
-                    </div>
-                </div>
-            </header>
+            <LandingNavBar />
 
             <main className="flex-grow">
                 {/* Hero Section */}
@@ -178,54 +162,7 @@ const Students = () => {
             </main>
 
             {/* Footer */}
-            <footer className="w-full border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 mt-auto">
-                <div className="max-w-7xl mx-auto py-16 px-6">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-                        <div className="col-span-1 md:col-span-1">
-                            <img src={logoImage} alt="stage.io logo" className="h-12 w-auto object-contain dark:invert dark:hue-rotate-180 mix-blend-multiply dark:mix-blend-screen mb-6" />
-                            <p className="text-slate-500 text-sm leading-relaxed">
-                                Empowering the next generation of talent through seamless digital connectivity.
-                            </p>
-                        </div>
-                        <div>
-                            <h4 className="font-display font-bold text-sm uppercase tracking-widest mb-6">Platform</h4>
-                            <ul className="space-y-4 text-sm text-slate-500">
-                                <li><Link to="/students" className="hover:text-primary transition-colors">Students</Link></li>
-                                <li><Link to="/pricing" className="hover:text-primary transition-colors">Pricing</Link></li>
-                                <li><Link to="/opportunities" className="hover:text-primary transition-colors">Opportunities</Link></li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 className="font-display font-bold text-sm uppercase tracking-widest mb-6">Company</h4>
-                            <ul className="space-y-4 text-sm text-slate-500">
-                                <li><Link to="/about-us" className="hover:text-primary transition-colors">About Us</Link></li>
-                                <li><Link to="/companies" className="hover:text-primary transition-colors">Companies</Link></li>
-                                <li><Link to="/universities" className="hover:text-primary transition-colors">Universities</Link></li>
-                                <li><Link to="/blog" className="hover:text-primary transition-colors">Blog</Link></li>
-                                <li><Link to="/contact-us" className="hover:text-primary transition-colors">Contact</Link></li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 className="font-display font-bold text-sm uppercase tracking-widest mb-6">Legal</h4>
-                            <ul className="space-y-4 text-sm text-slate-500">
-                                <li><Link to="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
-                                <li><Link to="/terms-of-service" className="hover:text-primary transition-colors">Terms of Service</Link></li>
-                                <li><Link to="/cookie-policy" className="hover:text-primary transition-colors">Cookie Policy</Link></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div className="pt-8 border-t border-slate-100 dark:border-slate-900 flex flex-col md:flex-row justify-between items-center gap-4">
-                        <div className="text-xs text-slate-400">
-                            © {new Date().getFullYear()} stag.io Inc. All rights reserved.
-                        </div>
-                        <div className="flex gap-6">
-                            <a href="#" className="text-slate-400 hover:text-primary transition-colors"><i className="fab fa-twitter"></i></a>
-                            <a href="#" className="text-slate-400 hover:text-primary transition-colors"><i className="fab fa-github"></i></a>
-                            <a href="#" className="text-slate-400 hover:text-primary transition-colors"><i className="fab fa-linkedin"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </footer>
+            <Footer />
         </div>
     );
 };

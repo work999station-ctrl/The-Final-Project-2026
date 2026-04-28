@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import logoImage from '../assets/logo.png';
 import ThemeToggle from '../components/ThemeToggle';
+import Footer from '../components/Footer';
+import LandingNavBar from '../components/LandingNavBar';
 
 const PrivacyPolicy = () => {
     const navigate = useNavigate();
@@ -20,32 +22,7 @@ const PrivacyPolicy = () => {
     return (
         <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen flex flex-col">
             {/* Navigation Header */}
-            <header className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
-                <div className="container mx-auto flex items-center justify-between px-6 py-4">
-                    <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-                        <img src={logoImage} alt="stage.io logo" className="h-12 w-auto object-contain dark:invert dark:hue-rotate-180 mix-blend-multiply dark:mix-blend-screen" />
-                    </div>
-                    <nav className="hidden md:flex items-center gap-8 text-sm font-semibold">
-                        <Link to="/students" className="hover:text-primary transition-colors">Students</Link>
-                        <Link to="/companies" className="hover:text-primary transition-colors">Companies</Link>
-                        <Link to="/universities" className="hover:text-primary transition-colors">Universities</Link>
-                        <Link to="/" className="hover:text-primary transition-colors">Opportunities</Link>
-                        <Link to="/" className="hover:text-primary transition-colors">Talent</Link>
-                        <Link to="/blog" className="hover:text-primary transition-colors">Resources</Link>
-                        <Link to="/pricing" className="hover:text-primary transition-colors">Pricing</Link>
-                    </nav>
-                    <div className="flex items-center gap-4">
-                        <ThemeToggle />
-                        <Link to="/login" className="text-sm font-bold px-4 py-2 hover:text-primary transition-colors">Log In</Link>
-                        <button 
-                            onClick={() => navigate('/student-signup')}
-                            className="bg-primary text-white text-sm font-bold py-2 px-6 rounded-full hover:opacity-90 transition-all shadow-lg shadow-primary/20"
-                        >
-                            Get Started
-                        </button>
-                    </div>
-                </div>
-            </header>
+            <LandingNavBar />
 
             <main className="flex-1 container mx-auto px-6 py-12 md:py-20">
                 <div className="flex flex-col lg:flex-row gap-16">
@@ -182,25 +159,7 @@ const PrivacyPolicy = () => {
             </main>
 
             {/* Simple Footer for Legal Pages */}
-            <footer className="border-t border-slate-200 dark:border-slate-800 py-12 bg-slate-50 dark:bg-slate-900/50">
-                <div className="container mx-auto px-6">
-                    <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-                        <div className="flex flex-wrap justify-center gap-8 text-sm font-bold text-slate-400 uppercase tracking-widest">
-                            <Link to="/privacy-policy" className="text-primary">Privacy Policy</Link>
-                            <Link to="/terms-of-service" className="hover:text-primary transition-colors">Terms of Service</Link>
-                            <Link to="/cookie-policy" className="hover:text-primary transition-colors">Cookie Policy</Link>
-                            <Link to="/contact-us" className="hover:text-primary transition-colors">Contact</Link>
-                            <Link to="/students" className="hover:text-primary transition-colors">Students</Link>
-                            <Link to="/companies" className="hover:text-primary transition-colors">Companies</Link>
-                            <Link to="/universities" className="hover:text-primary transition-colors">Universities</Link>
-                            <Link to="/pricing" className="hover:text-primary transition-colors">Pricing</Link>
-                        </div>
-                        <div className="text-sm text-slate-500 dark:text-slate-400">
-                            © {new Date().getFullYear()} stag.io. Empowering the next generation of talent.
-                        </div>
-                    </div>
-                </div>
-            </footer>
+            <Footer />
         </div>
     );
 };

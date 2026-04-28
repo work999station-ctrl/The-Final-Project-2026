@@ -31,6 +31,9 @@ import NotificationDetails from './pages/NotificationDetails';
 import CompanyProfileStudentView from './pages/CompanyProfileStudentView';
 import UniversityPlacementAnalytics from './pages/UniversityPlacementAnalytics';
 import ApplicationDetails from './pages/ApplicationDetails';
+import AgreementVerificationSuccess from './pages/AgreementVerificationSuccess';
+import AgreementVerificationInvalid from './pages/AgreementVerificationInvalid';
+import VerifyQR from './pages/VerifyQR';
 import AboutUs from './pages/AboutUs';
 import Careers from './pages/Careers';
 import ContactUs from './pages/ContactUs';
@@ -38,7 +41,6 @@ import Blog from './pages/Blog';
 import CookiePolicy from './pages/CookiePolicy';
 import TermsOfService from './pages/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy';
-import Pricing from './pages/Pricing';
 import Students from './pages/Students';
 import Companies from './pages/Companies';
 import Universities from './pages/Universities';
@@ -80,6 +82,9 @@ function App() {
         <Route path="/company-dashboard-student-view/:id" element={<CompanyProfileStudentView />} />
         <Route path="/university-placement-analytics" element={<UniversityPlacementAnalytics />} />
         <Route path="/application-details/:applicationId" element={<ApplicationDetails />} />
+        <Route path="/verification-success/:id" element={<AgreementVerificationSuccess />} />
+        <Route path="/verification-invalid" element={<AgreementVerificationInvalid />} />
+        <Route path="/verify-qr/:id" element={<VerifyQR />} />
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/careers" element={<Careers />} />
         <Route path="/contact-us" element={<ContactUs />} />
@@ -87,11 +92,9 @@ function App() {
         <Route path="/cookie-policy" element={<CookiePolicy />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="/pricing" element={<Pricing />} />
         <Route path="/students" element={<Students />} />
         <Route path="/companies" element={<Companies />} />
         <Route path="/universities" element={<Universities />} />
-
       </Routes>
     </Router>
   );
