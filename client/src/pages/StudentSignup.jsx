@@ -47,6 +47,14 @@ const StudentSignup = () => {
         }
     };
 
+    const handleCustomSkill = () => {
+        const s = prompt('Enter a new skill:');
+        if (s && s.trim() && !skills.includes(s.trim())) {
+            setSkills([...skills, s.trim()]);
+            setShowSkillDropdown(false);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
@@ -250,6 +258,15 @@ const StudentSignup = () => {
                                                                     </div>
                                                                 </div>
                                                             ))}
+                                                            <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700">
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={handleCustomSkill}
+                                                                    className="w-full px-3 py-2 rounded-lg text-sm font-medium border border-dashed border-primary text-primary hover:bg-primary/5 transition-all flex items-center justify-center gap-2"
+                                                                >
+                                                                    <span className="material-symbols-outlined text-sm">edit</span> Custom skill
+                                                                </button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 )}
