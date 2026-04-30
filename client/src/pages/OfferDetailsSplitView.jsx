@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useParams } from 'react-router-dom';
 import moment from 'moment';
+import { getProfileCompletion } from '../utils/profileCompletion';
 
 const OfferDetailsSplitView = () => {
     const { id } = useParams();
@@ -16,6 +17,8 @@ const OfferDetailsSplitView = () => {
     const [actionModal, setActionModal] = useState(null);
     const [applyModal, setApplyModal] = useState(false);
     const [toastMessage, setToastMessage] = useState(null);
+    const [studentData, setStudentData] = useState(null);
+    const [profileIncompleteModal, setProfileIncompleteModal] = useState(false);
 
     useEffect(() => {
         const fetchOfferDetails = async () => {
@@ -24,6 +27,8 @@ const OfferDetailsSplitView = () => {
                 const studentRes = await fetch('/api/student/me');
                 if (studentRes.ok) {
                     setUserType('student');
+                    const studentJson = await studentRes.json();
+                    if (studentJson && studentJson.user) setStudentData(studentJson.user);
                 } else {
                     const companyRes = await fetch('/api/company/me');
                     if (companyRes.ok) {
@@ -74,6 +79,15 @@ const OfferDetailsSplitView = () => {
     }, [id, userType]);
 
     const handleApply = async () => {
+        // Check profile completion before applying
+        if (studentData) {
+            const completion = getProfileCompletion(studentData);
+            if (completion < 80) {
+                setApplyModal(false);
+                setProfileIncompleteModal(true);
+                return;
+            }
+        }
         setApplyModal(false);
         setIsApplying(true);
         try {
@@ -243,10 +257,10 @@ const OfferDetailsSplitView = () => {
                                 <button
                                     onClick={() => setApplyModal(true)}
                                     disabled={isApplying || (offer && offer.isApplied) || isClosed}
-                                    className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-bold transition-all shadow-lg ${offer && offer.isApplied ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/50 cursor-default shadow-none' : (isClosed ? 'bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 cursor-not-allowed border border-slate-300 dark:border-slate-700 shadow-none' : (isApplying ? 'bg-indigo-400 text-white cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-200 dark:shadow-indigo-900/40'))}`}>
-                                    {offer && offer.isApplied ? 'Applied' : (isClosed ? 'Offer Closed' : (isApplying ? 'Applying...' : 'Apply now'))}
+                                    className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-bold transition-all shadow-lg ${offer && offer.applicationStatus === 'admin_rejected' ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-100 dark:border-red-800/50 cursor-default shadow-none' : (offer && offer.isApplied ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/50 cursor-default shadow-none' : (isClosed ? 'bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 cursor-not-allowed border border-slate-300 dark:border-slate-700 shadow-none' : (isApplying ? 'bg-indigo-400 text-white cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-200 dark:shadow-indigo-900/40')))}`}>
+                                    {offer && offer.applicationStatus === 'admin_rejected' ? 'Refused' : (offer && offer.isApplied ? 'Applied' : (isClosed ? 'Offer Closed' : (isApplying ? 'Applying...' : 'Apply now')))}
                                     <span className={`material-symbols-outlined text-lg ${isApplying ? 'animate-spin' : ''}`}>
-                                        {offer && offer.isApplied ? 'check_circle' : (isClosed ? 'lock' : (isApplying ? 'hourglass_empty' : 'send'))}
+                                        {offer && offer.applicationStatus === 'admin_rejected' ? 'block' : (offer && offer.isApplied ? 'check_circle' : (isClosed ? 'lock' : (isApplying ? 'hourglass_empty' : 'send')))}
                                     </span>
                                 </button>
                                 <button
@@ -548,6 +562,35 @@ const OfferDetailsSplitView = () => {
                             >
                                 <span className="material-symbols-outlined text-lg">send</span>
                                 Apply Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Profile Incomplete Modal */}
+            {profileIncompleteModal && (
+                <div className="fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setProfileIncompleteModal(false)}>
+                    <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-100 dark:border-slate-800" onClick={(e) => e.stopPropagation()}>
+                        <div className="w-16 h-16 bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800/30 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <span className="material-symbols-outlined text-3xl">warning</span>
+                        </div>
+                        <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Profile Incomplete</h3>
+                        <p className="text-slate-500 dark:text-slate-400 text-sm mb-2 font-semibold">Your profile is only {studentData ? getProfileCompletion(studentData) : 0}% complete.</p>
+                        <p className="text-slate-400 dark:text-slate-500 text-xs mb-8">You need at least 80% to apply to offers. Please complete your profile information first.</p>
+                        <div className="flex gap-4">
+                            <button
+                                onClick={() => setProfileIncompleteModal(false)}
+                                className="flex-1 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-sm uppercase tracking-wider rounded-xl transition-all"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={() => navigate('/edit-student-profile')}
+                                className="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm uppercase tracking-wider rounded-xl transition-all shadow-xl shadow-indigo-600/20 flex items-center justify-center gap-2"
+                            >
+                                <span className="material-symbols-outlined text-lg">edit</span>
+                                Complete Profile
                             </button>
                         </div>
                     </div>

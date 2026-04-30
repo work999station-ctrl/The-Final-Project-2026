@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import StudentNavbar from '../components/StudentNavbar';
+import { getProfileCompletion } from '../utils/profileCompletion';
 
 
 const StudentDashboard = () => {
@@ -27,12 +28,16 @@ const StudentDashboard = () => {
     const [applications, setApplications] = useState([]);
     const [applyModal, setApplyModal] = useState(null); // { offerId, title, company }
     const [toastMessage, setToastMessage] = useState(null); // { type: 'success'|'error', text }
+    const [profileIncompleteModal, setProfileIncompleteModal] = useState(false);
+
+    const profileCompletion = getProfileCompletion(user);
 
     const getStatusInfo = (status) => {
         switch (status) {
             case 'applied': return { text: 'In Review', colorClass: 'slate' };
             case 'accepted': return { text: 'Accepted', colorClass: 'indigo' };
             case 'rejected': return { text: 'Refused', colorClass: 'red' };
+            case 'admin_rejected': return { text: 'Refused by Admin', colorClass: 'red' };
             case 'validated': return { text: 'Validated', colorClass: 'green' };
             default: return { text: 'Unknown', colorClass: 'slate' };
         }
@@ -60,6 +65,10 @@ const StudentDashboard = () => {
 
     const openApplyModal = (e, offer) => {
         e.stopPropagation();
+        if (profileCompletion < 80) {
+            setProfileIncompleteModal(true);
+            return;
+        }
         setApplyModal({ offerId: offer._id, title: offer.title, company: offer.company?.name || 'Company' });
     };
 
@@ -208,6 +217,26 @@ const StudentDashboard = () => {
                                             </span>
                                         ))}
                                     </div>
+                                </div>
+
+                                {/* Profile Completion */}
+                                <div className="w-full text-left mt-4">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <h3 className="font-body text-xs font-bold uppercase tracking-wider text-text-muted dark:text-gray-400">Profile Completion</h3>
+                                        <span className={`text-xs font-bold ${profileCompletion >= 80 ? 'text-emerald-600' : 'text-amber-600'}`}>{profileCompletion}%</span>
+                                    </div>
+                                    <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div 
+                                            className={`h-full rounded-full transition-all duration-500 ${profileCompletion >= 80 ? 'bg-emerald-500' : 'bg-amber-500'}`}
+                                            style={{ width: `${profileCompletion}%` }}
+                                        ></div>
+                                    </div>
+                                    {profileCompletion < 80 && (
+                                        <p className="text-[11px] text-amber-600 dark:text-amber-400 mt-2 font-medium flex items-center gap-1">
+                                            <span className="material-symbols-outlined text-xs">warning</span>
+                                            Complete at least 80% to apply to offers
+                                        </p>
+                                    )}
                                 </div>
 
                                 <div className="w-full h-px bg-border-color my-6"></div>
@@ -449,9 +478,10 @@ const StudentDashboard = () => {
                                                         <button
                                                             onClick={(e) => openApplyModal(e, offer)}
                                                             disabled={applyingTo === offer._id || offer.isApplied || isClosed}
-                                                            className={`text-sm font-semibold px-4 py-2 rounded-full transition-all flex items-center gap-1 shadow-lg ${offer.isApplied ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/50 cursor-default shadow-none' : (isClosed ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed border border-slate-200 dark:border-slate-700 shadow-none' : (applyingTo === offer._id ? 'bg-indigo-400 text-white cursor-not-allowed' : 'bg-primary hover:bg-indigo-700 text-white shadow-indigo-500/30'))}`}>
-                                                            {offer.isApplied ? 'Applied' : (isClosed ? 'Offer Closed' : (applyingTo === offer._id ? 'Applying...' : 'Apply Now'))}
-                                                            {offer.isApplied && <span className="material-symbols-outlined text-[16px]">check_circle</span>}
+                                                            className={`text-sm font-semibold px-4 py-2 rounded-full transition-all flex items-center gap-1 shadow-lg ${offer.applicationStatus === 'admin_rejected' ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-100 dark:border-red-800/50 cursor-default shadow-none' : (offer.isApplied ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/50 cursor-default shadow-none' : (isClosed ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed border border-slate-200 dark:border-slate-700 shadow-none' : (applyingTo === offer._id ? 'bg-indigo-400 text-white cursor-not-allowed' : 'bg-primary hover:bg-indigo-700 text-white shadow-indigo-500/30')))}`}>
+                                                            {offer.applicationStatus === 'admin_rejected' ? 'Refused' : (offer.isApplied ? 'Applied' : (isClosed ? 'Offer Closed' : (applyingTo === offer._id ? 'Applying...' : 'Apply Now')))}
+                                                            {offer.applicationStatus === 'admin_rejected' && <span className="material-symbols-outlined text-[16px]">block</span>}
+                                                            {offer.isApplied && offer.applicationStatus !== 'admin_rejected' && <span className="material-symbols-outlined text-[16px]">check_circle</span>}
                                                             {isClosed && <span className="material-symbols-outlined text-[16px]">lock</span>}
                                                             {applyingTo === offer._id && <span className="material-symbols-outlined text-[14px] animate-spin">hourglass_empty</span>}
                                                         </button>
@@ -511,6 +541,35 @@ const StudentDashboard = () => {
                             >
                                 <span className="material-symbols-outlined text-lg">send</span>
                                 Apply Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Profile Incomplete Modal */}
+            {profileIncompleteModal && (
+                <div className="fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setProfileIncompleteModal(false)}>
+                    <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-100 dark:border-slate-800 animate-in fade-in zoom-in-95" onClick={(e) => e.stopPropagation()}>
+                        <div className="w-16 h-16 bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800/30 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <span className="material-symbols-outlined text-3xl">warning</span>
+                        </div>
+                        <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Profile Incomplete</h3>
+                        <p className="text-slate-500 dark:text-slate-400 text-sm mb-2 font-semibold">Your profile is only {profileCompletion}% complete.</p>
+                        <p className="text-slate-400 dark:text-slate-500 text-xs mb-8">You need at least 80% to apply to offers. Please complete your profile information first.</p>
+                        <div className="flex gap-4">
+                            <button
+                                onClick={() => setProfileIncompleteModal(false)}
+                                className="flex-1 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-sm uppercase tracking-wider rounded-xl transition-all"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={() => navigate('/edit-student-profile')}
+                                className="flex-1 py-3 bg-primary hover:bg-primary/90 text-white font-bold text-sm uppercase tracking-wider rounded-xl transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2"
+                            >
+                                <span className="material-symbols-outlined text-lg">edit</span>
+                                Complete Profile
                             </button>
                         </div>
                     </div>

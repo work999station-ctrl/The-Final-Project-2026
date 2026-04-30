@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import AdminSidebar from '../components/AdminSidebar';
+import AdminNavbar from '../components/AdminNavbar';
 
 const UniversityPlacementAnalytics = () => {
     const currentMonthYear = new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' });
@@ -56,14 +57,14 @@ const UniversityPlacementAnalytics = () => {
 
     const generateTrendPath = (data, isArea = false) => {
         if (!data || data.length === 0) return { path: '', coordinates: [], renderData: [] };
-        
+
         const renderData = data;
         const points = renderData.length;
         const maxCount = Math.max(...renderData.map(d => d.count), 10);
-        
-        const height = 140; 
+
+        const height = 140;
         const width = 600;
-        
+
         const coordinates = renderData.map((d, i) => {
             const x = i * (width / (points - 1 || 1));
             const y = 160 - (d.count / maxCount) * height;
@@ -92,33 +93,7 @@ const UniversityPlacementAnalytics = () => {
     return (
         <div className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased min-h-screen font-body">
             {/* TopNavBar */}
-            <header className="bg-white dark:bg-slate-950 text-indigo-600 dark:text-indigo-400 font-sans text-sm font-medium docked full-width top-0 border-b border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none flex justify-between items-center px-6 h-16 w-full md:w-[calc(100%-16rem)] md:ml-64 fixed z-30">
-                <div className="flex items-center gap-8">
-                    <span className="text-xl font-bold tracking-tight text-indigo-700 dark:text-indigo-300">InternHub Admin</span>
-                    <nav className="hidden md:flex items-center gap-6 h-full">
-                        <Link to="#" className="text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 pb-2">Dashboard</Link>
-                        <Link to="#" className="text-slate-500 dark:text-slate-400 hover:text-indigo-500 duration-200 ease-in-out">Students</Link>
-                        <Link to="#" className="text-slate-500 dark:text-slate-400 hover:text-indigo-500 duration-200 ease-in-out">Companies</Link>
-                        <Link to="#" className="text-slate-500 dark:text-slate-400 hover:text-indigo-500 duration-200 ease-in-out">Placements</Link>
-                    </nav>
-                </div>
-                <div className="flex items-center gap-4">
-                    <div className="relative hidden lg:block">
-                        <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
-                        <input className="pl-10 pr-4 py-1.5 bg-slate-100 dark:bg-slate-900 border-none rounded-full text-xs focus:ring-2 focus:ring-indigo-500 w-64" placeholder="Search analytics..." type="text" />
-                    </div>
-                    <button className="p-2 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors rounded-full relative">
-                        <span className="material-symbols-outlined" data-icon="notifications">notifications</span>
-                        <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border-2 border-white dark:border-slate-950"></span>
-                    </button>
-                    <button className="p-2 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors rounded-full">
-                        <span className="material-symbols-outlined" data-icon="settings">settings</span>
-                    </button>
-                    <div className="h-8 w-8 rounded-full bg-indigo-100 dark:bg-indigo-900 overflow-hidden border border-indigo-200 dark:border-indigo-800">
-                        <img alt="Administrator Profile" className="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBjd5MF_lykac1WwnmLCpbK__CbKHf8eKriEi_UGa33u-pYowVgcROPjKM5X8gxTl3hcWNNke5XSn0XwsHBEPS2QGOkChDwyolA2eOK5MZSSVfDXWYPLq0uoztESsCnJe-V_coLOeVPoSro-IJyLAKbCs7-nIc1s404VH_0psLcn44ea72uibctxILtdaq9tt6ZYY93FO3l_cdOFEY2PlFE-3vW_GXZot33pGP61yKxizm_-SBtPfWzm31VtqI2B0h85xR6-2lAhY" />
-                    </div>
-                </div>
-            </header>
+            <AdminNavbar admin={adminUser} />
 
             {/* SideNavBar */}
             <div className="hidden md:block">
@@ -130,7 +105,7 @@ const UniversityPlacementAnalytics = () => {
                 <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
                     <div>
                         <h1 className="text-3xl lg:text-4xl font-bold tracking-tight text-slate-900 dark:text-white mb-2 font-headline">Institutional Placement Analytics</h1>
-                        <p className="text-slate-500 dark:text-slate-400 max-w-2xl">Visualizing career transition performance and institutional placement metrics for Academic Year 2024.</p>
+                        <p className="text-slate-500 dark:text-slate-400 max-w-2xl">Visualizing career transition performance and institutional placement metrics for Academic Year 2026.</p>
                     </div>
                     <div className="flex gap-2">
                         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 text-xs font-semibold">
@@ -251,23 +226,23 @@ const UniversityPlacementAnalytics = () => {
                                         <span className="text-[10px] font-bold uppercase text-slate-400">Placements</span>
                                     </div>
                                     <div className="relative">
-                                        <button 
+                                        <button
                                             onClick={() => setIsTrendDropdownOpen(!isTrendDropdownOpen)}
                                             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-[10px] font-bold uppercase transition-colors"
                                         >
                                             <span>{trendFilter === 1 ? 'This Month' : `Last ${trendFilter} Months`}</span>
                                             <span className="material-symbols-outlined text-[14px]">expand_more</span>
                                         </button>
-                                        
+
                                         {isTrendDropdownOpen && (
                                             <div className="absolute right-0 mt-2 w-32 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-lg z-20 py-1 overflow-hidden">
-                                                <button 
+                                                <button
                                                     onClick={() => { setTrendFilter(1); setIsTrendDropdownOpen(false); }}
                                                     className={`w-full text-left px-4 py-2 text-xs font-semibold ${trendFilter === 1 ? 'text-indigo-600 bg-indigo-50 dark:bg-indigo-900/20' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50'} transition-colors`}
                                                 >
                                                     This Month
                                                 </button>
-                                                <button 
+                                                <button
                                                     onClick={() => { setTrendFilter(3); setIsTrendDropdownOpen(false); }}
                                                     className={`w-full text-left px-4 py-2 text-xs font-semibold ${trendFilter === 3 ? 'text-indigo-600 bg-indigo-50 dark:bg-indigo-900/20' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50'} transition-colors`}
                                                 >
@@ -292,11 +267,11 @@ const UniversityPlacementAnalytics = () => {
                                         {trendCoords.map((coord, i) => (
                                             <g key={i}>
                                                 <circle cx={coord.x} cy={coord.y} fill="white" r="4" stroke="#4F46E5" strokeWidth="2"></circle>
-                                                <text 
-                                                    x={coord.x} 
-                                                    y={coord.y - 12} 
-                                                    fill="#4F46E5" 
-                                                    className="text-[12px] font-bold" 
+                                                <text
+                                                    x={coord.x}
+                                                    y={coord.y - 12}
+                                                    fill="#4F46E5"
+                                                    className="text-[12px] font-bold"
                                                     textAnchor={i === 0 ? "start" : i === trendCoords.length - 1 ? "end" : "middle"}
                                                 >
                                                     {trendRenderData && trendRenderData[i] ? trendRenderData[i].count : 0}

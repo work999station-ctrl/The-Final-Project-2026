@@ -11,7 +11,7 @@ const AdminSidebar = ({ activePage, adminUser }) => {
     };
 
     return (
-        <aside className="fixed left-0 top-0 flex flex-col p-4 bg-slate-50 dark:bg-slate-950 h-screen w-64 border-r-0 z-40">
+        <aside className="fixed left-0 top-16 flex flex-col p-4 bg-slate-50 dark:bg-slate-950 h-[calc(100vh-4rem)] w-64 border-r-0 z-40">
             <div className="flex items-center gap-3 px-2 py-3 mb-6 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-900 rounded-xl transition-colors" onClick={() => navigate('/edit-admin-profile')}>
                 {adminUser?.profilePicture ? (
                     <img alt="Admin Avatar" className="w-10 h-10 rounded-lg object-cover" src={adminUser.profilePicture} />
@@ -37,10 +37,6 @@ const AdminSidebar = ({ activePage, adminUser }) => {
                 <a className={getNavClass('validate')} href="/candidate-tracking-admin">
                     <span className="material-symbols-outlined" style={activePage === 'validate' ? { fontVariationSettings: "'FILL' 1" } : {}}>verified</span>
                     <span className="font-['Inter'] font-medium text-sm">Validate</span>
-                </a>
-                <a className={getNavClass('documents')} href="#">
-                    <span className="material-symbols-outlined">folder_open</span>
-                    <span className="font-['Inter'] font-medium text-sm">Documents</span>
                 </a>
                 <a className={getNavClass('stats')} href="/university-placement-analytics">
                     <span className="material-symbols-outlined" style={activePage === 'stats' ? { fontVariationSettings: "'FILL' 1" } : {}}>bar_chart</span>
