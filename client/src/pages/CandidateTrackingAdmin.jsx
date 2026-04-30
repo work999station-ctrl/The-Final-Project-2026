@@ -7,6 +7,8 @@ const AdminValidation = () => {
     const navigate = useNavigate();
     const [adminUser, setAdminUser] = useState(null);
     const [validatingApp, setValidatingApp] = useState(null);
+    const [rejectingApp, setRejectingApp] = useState(null);
+    const [rejectionReason, setRejectionReason] = useState('');
     const [generatingDocs, setGeneratingDocs] = useState({});
     const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -90,6 +92,30 @@ const AdminValidation = () => {
         }, 3000);
 
         setValidatingApp(null);
+    };
+
+    const handleConfirmRejection = async () => {
+        if (!rejectingApp || !rejectionReason.trim()) return;
+
+        try {
+            const token = document.cookie.split('jwt=')[1]?.split(';')[0] || localStorage.getItem('token');
+            const res = await fetch(`/api/admin/applications/${rejectingApp._id}/reject`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(token ? { Authorization: `Bearer ${token}` } : {})
+                },
+                body: JSON.stringify({ reason: rejectionReason.trim() })
+            });
+            if (res.ok) {
+                setApplications(prev => prev.map(a => a._id === rejectingApp._id ? { ...a, status: 'admin_rejected' } : a));
+            }
+        } catch (err) {
+            console.error('Failed to reject application', err);
+        }
+
+        setRejectingApp(null);
+        setRejectionReason('');
     };
 
     const filteredApplications = applications
@@ -369,18 +395,33 @@ const AdminValidation = () => {
                                                         </td>
                                                         <td className="py-5 px-4 text-right">
                                                             <div className="flex justify-end items-center gap-3">
-                                                                {app.status !== 'validated' && !isOverdue && (
-                                                                    <button
-                                                                        className="bg-primary text-white font-bold text-xs px-5 py-2 rounded-full hover:shadow-md hover:shadow-primary/20 active:scale-95 transition-all"
-                                                                        onClick={() => setValidatingApp(app)}
-                                                                    >
-                                                                        Validate
-                                                                    </button>
+                                                                {app.status !== 'validated' && app.status !== 'admin_rejected' && !isOverdue && (
+                                                                    <>
+                                                                        <button
+                                                                            className="bg-primary text-white font-bold text-xs px-5 py-2 rounded-full hover:shadow-md hover:shadow-primary/20 active:scale-95 transition-all"
+                                                                            onClick={() => setValidatingApp(app)}
+                                                                        >
+                                                                            Validate
+                                                                        </button>
+                                                                        <button
+                                                                            className="bg-red-600 text-white font-bold text-xs px-5 py-2 rounded-full hover:shadow-md hover:shadow-red-600/20 active:scale-95 transition-all"
+                                                                            onClick={() => setRejectingApp(app)}
+                                                                        >
+                                                                            Refuse
+                                                                        </button>
+                                                                    </>
                                                                 )}
-                                                                {app.status !== 'validated' && isOverdue && (
+                                                                {app.status !== 'validated' && app.status !== 'admin_rejected' && isOverdue && (
                                                                     <span className="text-xs font-bold text-red-600 bg-red-50 px-3 py-1.5 rounded-full border border-red-200 flex items-center gap-1 shadow-sm opacity-80 cursor-not-allowed">
                                                                         <span className="material-symbols-outlined text-[14px]">warning</span>
                                                                         Deadline Passed
+                                                                    </span>
+                                                                )}
+
+                                                                {app.status === 'admin_rejected' && (
+                                                                    <span className="text-xs font-bold text-red-700 bg-red-50 px-3 py-1.5 rounded-full border border-red-200 flex items-center gap-1 shadow-sm">
+                                                                        <span className="material-symbols-outlined text-[14px]">block</span>
+                                                                        Refused
                                                                     </span>
                                                                 )}
 
@@ -524,6 +565,54 @@ const AdminValidation = () => {
                                         onClick={handleConfirmValidation}
                                     >
                                         Confirm Validation
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Rejection Modal Dialog */}
+            {rejectingApp && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    {/* Backdrop */}
+                    <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => { setRejectingApp(null); setRejectionReason(''); }}></div>
+                    {/* Modal Content */}
+                    <div className="relative bg-white rounded-xl shadow-2xl max-w-lg w-full overflow-hidden transform transition-all p-8 border border-outline-variant/20">
+                        <div className="flex items-start gap-6">
+                            <div className="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center shrink-0">
+                                <span className="material-symbols-outlined text-red-600 text-3xl">block</span>
+                            </div>
+                            <div className="flex-1">
+                                <h3 className="text-2xl font-headline font-bold text-slate-900 mb-4 leading-tight">Refuse Internship</h3>
+                                <p className="text-slate-600 leading-relaxed mb-4">
+                                    You are about to refuse <strong className="text-slate-900">{rejectingApp.studentId?.name || 'this student'}</strong>'s internship placement. Please provide a reason that will be sent to the student.
+                                </p>
+                                <textarea
+                                    className="w-full border border-slate-200 rounded-xl p-4 text-sm text-slate-800 placeholder:text-slate-400 focus:ring-2 focus:ring-red-500/20 focus:border-red-400 outline-none resize-none transition-all"
+                                    rows="4"
+                                    placeholder="Explain the reason for rejection (required)..."
+                                    value={rejectionReason}
+                                    onChange={(e) => setRejectionReason(e.target.value)}
+                                ></textarea>
+                                <div className="flex items-center gap-3 bg-red-50 p-4 rounded-lg my-4">
+                                    <span className="material-symbols-outlined text-red-400">info</span>
+                                    <p className="text-xs font-medium text-red-600 italic">The student will receive this message. The company will only be notified of the rejection without the cause.</p>
+                                </div>
+                                <div className="flex flex-col sm:flex-row gap-3 justify-end">
+                                    <button
+                                        className="px-6 py-3 rounded-full font-bold text-slate-600 hover:bg-slate-100 transition-colors"
+                                        onClick={() => { setRejectingApp(null); setRejectionReason(''); }}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        className="px-8 py-3 rounded-full bg-red-600 text-white font-bold shadow-lg shadow-red-600/30 hover:shadow-red-600/40 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                                        onClick={handleConfirmRejection}
+                                        disabled={!rejectionReason.trim()}
+                                    >
+                                        Confirm Rejection
                                     </button>
                                 </div>
                             </div>

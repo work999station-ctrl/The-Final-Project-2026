@@ -85,7 +85,7 @@ const NotificationDetails = () => {
                     <div className="text-sm font-bold text-slate-400 flex items-center gap-2">
                         <span className="cursor-pointer hover:text-slate-600" onClick={() => navigate(-1)}>Inbox</span>
                         <span className="material-symbols-outlined text-xs">chevron_right</span>
-                        <span className="text-slate-600 underline underline-offset-4 decoration-indigo-200">Agreement Details</span>
+                        <span className="text-slate-600 underline underline-offset-4 decoration-indigo-200">{notification.status === 'admin_rejected' ? 'Rejection Notice' : 'Agreement Details'}</span>
                     </div>
                 </div>
 
@@ -94,9 +94,15 @@ const NotificationDetails = () => {
                     {/* Header Section */}
                     <div className="p-10 border-b border-slate-50 flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${notification.status === 'validated' ? 'bg-green-100 text-green-700' : 'bg-indigo-100 text-indigo-700'}`}>
-                                <span className="material-symbols-outlined text-sm mr-1">verified</span>
-                                Status: {notification.status === 'validated' ? 'Validated by Admin' : 'In Progress'}
+                            <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${
+                                notification.status === 'admin_rejected'
+                                    ? 'bg-red-100 text-red-700'
+                                    : notification.status === 'validated'
+                                        ? 'bg-green-100 text-green-700'
+                                        : 'bg-indigo-100 text-indigo-700'
+                            }`}>
+                                <span className="material-symbols-outlined text-sm mr-1">{notification.status === 'admin_rejected' ? 'block' : 'verified'}</span>
+                                Status: {notification.status === 'admin_rejected' ? 'Rejected by Admin' : notification.status === 'validated' ? 'Validated by Admin' : 'In Progress'}
                             </span>
                             <span className="text-slate-200 px-1">|</span>
                             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
@@ -108,35 +114,67 @@ const NotificationDetails = () => {
                     {/* Body Section */}
                     <div className="p-10 flex flex-col items-center">
                         <div className="prose prose-slate max-w-2xl text-slate-600 leading-[1.8] space-y-6 font-medium text-center">
-                            {/* Title Positioned Above Validation Text */}
+                            {/* Title Positioned Above Content */}
                             <h1 className="text-4xl font-black text-slate-900 tracking-tight font-headline py-6 leading-tight">
-                                {isStudent ? 'Your Internship Agreement is Ready' : 'Internship Agreement Ready'}
+                                {notification.status === 'admin_rejected'
+                                    ? (isStudent ? 'Your Internship Application Was Rejected' : 'Internship Placement Rejected')
+                                    : (isStudent ? 'Your Internship Agreement is Ready' : 'Internship Agreement Ready')
+                                }
                             </h1>
 
                             <p >
                                 {isStudent ? "Dear, " + notification.studentName.toUpperCase() : ''}
                             </p>
 
-                            {isStudent ? (
-                                <>
-                                    <p>
-                                        We are pleased to confirm that the internship agreement for the <span className="text-slate-900 font-black decoration-indigo-300 decoration-4 underline underline-offset-8">{notification.offerTitle}</span> position has been processed and officially validated by the University Administration.
-                                    </p>
-                                    <p>
-                                        This document formalizes your placement and contains all necessary signatures. Please download and keep a copy for your records before your start date.
-                                    </p>
-                                </>
+                            {notification.status === 'admin_rejected' ? (
+                                /* Rejection content */
+                                isStudent ? (
+                                    <>
+                                        <p>
+                                            We regret to inform you that your internship application for the <span className="text-slate-900 font-black decoration-red-300 decoration-4 underline underline-offset-8">{notification.offerTitle}</span> position has been <span className="text-red-600 font-black">rejected</span> by the University Administration.
+                                        </p>
+                                        {notification.adminRejectionReason && (
+                                            <div className="bg-red-50 border border-red-200 rounded-2xl p-6 text-left">
+                                                <p className="text-[10px] font-black text-red-400 uppercase tracking-[0.2em] mb-3">Rejection Reason</p>
+                                                <p className="text-sm text-red-800 font-medium leading-relaxed">{notification.adminRejectionReason}</p>
+                                            </div>
+                                        )}
+                                        <p>
+                                            If you believe this was in error or have questions, please contact the university administration office for clarification.
+                                        </p>
+                                    </>
+                                ) : (
+                                    <>
+                                        <p>
+                                            The university has rejected the internship placement for the Candidate <span className="text-slate-900 font-black decoration-red-300 decoration-2 underline underline-offset-4">{notification.studentName}</span> for the <span className="text-slate-900 font-black decoration-red-300 decoration-2 underline underline-offset-4">{notification.offerTitle}</span> position.
+                                            The placement will not proceed. Please contact the university for further information.
+                                        </p>
+                                    </>
+                                )
                             ) : (
-                                <>
-                                    <p>
-                                        The university has officially validated the internship agreement for the Candidate <span className="text-slate-900 font-black decoration-indigo-300 decoration-2 underline underline-offset-4">{notification.studentName}</span> for the <span className="text-slate-900 font-black decoration-indigo-300 decoration-2 underline underline-offset-4">{notification.offerTitle}</span> position.
-                                        You can now download the finalized document for your records and proceed with the onboarding process.
-                                    </p>
-                                </>
+                                /* Validated content (existing) */
+                                isStudent ? (
+                                    <>
+                                        <p>
+                                            We are pleased to confirm that the internship agreement for the <span className="text-slate-900 font-black decoration-indigo-300 decoration-4 underline underline-offset-8">{notification.offerTitle}</span> position has been processed and officially validated by the University Administration.
+                                        </p>
+                                        <p>
+                                            This document formalizes your placement and contains all necessary signatures. Please download and keep a copy for your records before your start date.
+                                        </p>
+                                    </>
+                                ) : (
+                                    <>
+                                        <p>
+                                            The university has officially validated the internship agreement for the Candidate <span className="text-slate-900 font-black decoration-indigo-300 decoration-2 underline underline-offset-4">{notification.studentName}</span> for the <span className="text-slate-900 font-black decoration-indigo-300 decoration-2 underline underline-offset-4">{notification.offerTitle}</span> position.
+                                            You can now download the finalized document for your records and proceed with the onboarding process.
+                                        </p>
+                                    </>
+                                )
                             )}
                         </div>
 
-                        {/* Attachment Card */}
+                        {/* Attachment Card — only show for validated */}
+                        {notification.status !== 'admin_rejected' && (
                         <div className="mt-6 w-full max-w-2xl">
                             <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-6 text-center">Generated Documentation</h3>
                             <div
@@ -173,8 +211,10 @@ const NotificationDetails = () => {
                                 </button>
                             </div>
                         </div>
+                        )}
 
-                        {/* Summary Block */}
+                        {/* Summary Block — only show for validated */}
+                        {notification.status !== 'admin_rejected' && (
                         <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 p-8 bg-slate-50 rounded-3xl border border-slate-100 w-full max-w-2xl">
                             <div className="text-center">
                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Internship Period</p>
@@ -191,6 +231,7 @@ const NotificationDetails = () => {
                                 </div>
                             </div>
                         </div>
+                        )}
 
                         {/* Footer Actions */}
                         <div className="mt-12 flex flex-wrap gap-4 justify-center">

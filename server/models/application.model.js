@@ -11,8 +11,12 @@ const applicationSchema = mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['applied', 'accepted', 'rejected', 'validated'],
+        enum: ['applied', 'accepted', 'rejected', 'validated', 'admin_rejected'],
         default: 'applied'
+    },
+    adminRejectionReason: {
+        type: String,
+        default: ''
     },
     statusChangedAt: {
         type: Date
