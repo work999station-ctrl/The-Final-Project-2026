@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
+import logo from '../assets/logo.png';
 
 const AgreementPreview = () => {
     const { applicationId } = useParams();
@@ -71,10 +72,7 @@ const AgreementPreview = () => {
                     <button onClick={() => navigate(-1)} className="p-2 hover:bg-slate-100 rounded-full text-slate-500 transition-colors">
                         <span className="material-symbols-outlined text-xl">arrow_back</span>
                     </button>
-                    <div className="h-8 w-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-['Space_Grotesk'] font-bold text-lg">M</div>
-                    <span className="font-['Space_Grotesk'] font-bold text-lg tracking-tight">Modern Connectivity</span>
-                    <span className="mx-2 text-slate-200">/</span>
-                    <span className="text-slate-500 text-sm font-medium">Agreement System</span>
+                    <img src={logo} alt="Stag.io Logo" className="h-10 w-auto object-contain" />
                 </div>
             </header>
 
@@ -126,10 +124,12 @@ const AgreementPreview = () => {
                                 {/* Header of Doc */}
                                 <div className="flex justify-between items-start border-b-2 border-slate-900 pb-6 mb-8">
                                     <div className="flex items-center gap-3">
-                                        <div className="h-12 w-12 bg-slate-900 text-white flex items-center justify-center font-['Space_Grotesk'] font-bold text-2xl rounded">U</div>
+                                        <div className="h-12 w-12 bg-slate-900 text-white flex items-center justify-center font-['Space_Grotesk'] font-bold text-2xl rounded">
+                                            {data.universityName?.charAt(0) || 'U'}
+                                        </div>
                                         <div>
                                             <h2 className="font-['Space_Grotesk'] font-bold text-xl uppercase tracking-tight text-slate-900">{data.universityName}</h2>
-                                            <p className="font-mono text-xs text-slate-500">Department of {data.studentDept}</p>
+                                            <p className="font-mono text-xs text-slate-500">Department of {data.studentDept || 'Technology'}</p>
                                         </div>
                                     </div>
                                     <div className="text-right">

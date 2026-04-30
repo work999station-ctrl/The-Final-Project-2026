@@ -36,30 +36,35 @@ const CandidateTrackingStatistics = () => {
     const filterRef = useRef(null);
     const PAGE_SIZE = 4;
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const companyRes = await fetch('/api/company/me');
-                if (companyRes.ok) {
-                    const companyData = await companyRes.json();
-                    setCompany(companyData.user);
-                }
-                const appRes = await fetch('/api/company/applications');
-                if (appRes.ok) {
-                    const appData = await appRes.json();
-                    setApplications(appData.applications || []);
-                    console.log(appData.applications);
-                }
-            } catch (err) {
-                console.error("Error fetching data:", err);
-            } finally {
-                setLoading(false);
+    const fetchData = async () => {
+        try {
+            const companyRes = await fetch('/api/company/me');
+            if (companyRes.ok) {
+                const companyData = await companyRes.json();
+                setCompany(companyData.user);
             }
-        };
+            const appRes = await fetch('/api/company/applications');
+            if (appRes.ok) {
+                const appData = await appRes.json();
+                setApplications(appData.applications || []);
+            }
+        } catch (err) {
+            console.error("Error fetching data:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         fetchData();
+        
+        // Sync data when the user returns to this tab
+        window.addEventListener('focus', fetchData);
+        return () => window.removeEventListener('focus', fetchData);
     }, []);
 
     const filteredApplications = applications
+        .filter(app => app.studentId && app.offerId) // Ensure integrity
         .filter(app => {
             const matchesSearch = app.studentId?.name?.toLowerCase().includes(searchQuery.toLowerCase());
             const matchesLocation = !activeFilters.location || app.offerId?.wilaya === activeFilters.location;
@@ -84,7 +89,7 @@ const CandidateTrackingStatistics = () => {
         ? Math.round(filteredApplications.reduce((acc, curr) => acc + curr.matchPercentage, 0) / totalApplicants)
         : 0;
 
-    const pendingFiltered = filteredApplications.filter(app => app.status === 'applied').length;
+    const pendingFiltered = filteredApplications.filter(app => app.status === 'applied' || app.status === 'on hold').length;
     const totalAllApps = applications.length;
     const acceptedAllApps = applications.filter(app => app.status === 'accepted' || app.status === 'validated').length;
     const acceptanceRate = totalAllApps > 0 ? Math.round((acceptedAllApps / totalAllApps) * 100) : 0;
@@ -153,6 +158,7 @@ const CandidateTrackingStatistics = () => {
             case 'accepted': return 'bg-green-50 text-green-700 border-green-100 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800';
             case 'rejected': return 'bg-red-50 text-red-700 border-red-100 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800';
             case 'validated': return 'bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800';
+            case 'on hold': return 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800';
             default: return 'bg-blue-50 text-blue-700 border-blue-100 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800';
         }
     };
@@ -164,7 +170,7 @@ const CandidateTrackingStatistics = () => {
 
             {/* Main Content */}
             <main className="md:ml-64 pt-20 p-6 min-h-screen">
-                <div className="max-w-7xl mx-auto">
+                <div className="max-w-full mx-auto">
 
                     {/* Page Title */}
                     <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -262,7 +268,7 @@ const CandidateTrackingStatistics = () => {
                                             <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Application Status</span>
                                         </div>
                                         <div>
-                                            {['applied', 'accepted', 'rejected', 'validated'].map(status => (
+                                            {['applied', 'accepted', 'rejected', 'validated', 'on hold'].map(status => (
                                                 <button
                                                     key={status}
                                                     onClick={() => applyFilter('status', status)}
@@ -377,15 +383,15 @@ const CandidateTrackingStatistics = () => {
                         <div className="overflow-x-auto">
                             <table className="w-full text-left border-collapse">
                                 <thead>
-                                    <tr className="text-[11px] font-bold uppercase tracking-widest text-slate-400 bg-slate-50/50 dark:bg-slate-800/50">
-                                        <th className="px-6 py-4 border-b border-slate-100 dark:border-slate-800">Candidate</th>
-                                        <th className="px-6 py-4 border-b border-slate-100 dark:border-slate-800">University</th>
-                                        <th className="px-6 py-4 border-b border-slate-100 dark:border-slate-800">Offer Title</th>
-                                        <th className="px-6 py-4 border-b border-slate-100 dark:border-slate-800">Applied Date</th>
-                                        <th className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 text-center">Match The Offer %</th>
-                                        <th className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 text-center">Acceptance Deadline</th>
-                                        <th className="px-6 py-4 border-b border-slate-100 dark:border-slate-800">Status</th>
-                                        <th className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 text-right">Actions</th>
+                                    <tr className="text-[10px] font-bold uppercase tracking-widest text-slate-400 bg-slate-50/50 dark:bg-slate-800/50">
+                                        <th className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">Candidate</th>
+                                        <th className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">University</th>
+                                        <th className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">Offer</th>
+                                        <th className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">Applied</th>
+                                        <th className="px-4 py-3 border-b border-slate-100 dark:border-slate-800 text-center">Match %</th>
+                                        <th className="px-4 py-3 border-b border-slate-100 dark:border-slate-800 text-center">Deadline</th>
+                                        <th className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">Status</th>
+                                        <th className="px-4 py-3 border-b border-slate-100 dark:border-slate-800 text-right">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -408,63 +414,57 @@ const CandidateTrackingStatistics = () => {
                                             const isAcceptanceOverdue = new Date() > deadlineVal;
                                             return (
                                             <tr key={app._id} onClick={() => navigate(`/student-profile-recruiter/${app.studentId?._id}`)} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors group cursor-pointer">
-                                                <td className="px-6 py-6">
-                                                    <div className="flex items-center gap-4">
-                                                        <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center overflow-hidden">
+                                                <td className="px-4 py-4">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center overflow-hidden shrink-0">
                                                             {app.studentId?.profilePicture ? (
                                                                 <img alt={app.studentId.name} className="w-full h-full object-cover" src={app.studentId.profilePicture} />
                                                             ) : (
-                                                                <span className="material-symbols-outlined text-slate-400 text-3xl">person</span>
+                                                                <span className="material-symbols-outlined text-slate-400 text-2xl">person</span>
                                                             )}
                                                         </div>
-                                                        <div>
-                                                            <div className="font-bold text-slate-900 dark:text-slate-100 text-base leading-tight">{app.studentId?.name || 'Unknown Student'}</div>
-                                                            <div className="text-[12px] text-slate-500 font-medium mt-0.5">{app.studentId?.currentYear || 'Year'} Student</div>
+                                                        <div className="min-w-0">
+                                                            <div className="font-bold text-slate-900 dark:text-slate-100 text-sm leading-tight truncate">{app.studentId?.name || 'Unknown Student'}</div>
+                                                            <div className="text-[11px] text-slate-500 font-medium mt-0.5">{app.studentId?.currentYear || 'Year'} Student</div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td className="px-6 py-6 text-sm font-bold text-slate-600 dark:text-slate-400">
+                                                <td className="px-4 py-4 text-[13px] font-bold text-slate-600 dark:text-slate-400 max-w-[120px] truncate">
                                                     {app.studentId?.university || 'N/A'}
                                                 </td>
-                                                <td className="px-6 py-6">
-                                                    <span className="text-xs font-semibold text-slate-900 dark:text-slate-100 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg">
+                                                <td className="px-4 py-4">
+                                                    <span className="text-[11px] font-semibold text-slate-900 dark:text-slate-100 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-md max-w-[140px] truncate block">
                                                         {app.offerId?.title || 'Job Offer'}
                                                     </span>
                                                 </td>
-                                                <td className="px-6 py-6">
-                                                    <div className="text-sm font-medium text-slate-500">
+                                                <td className="px-4 py-4">
+                                                    <div className="text-[13px] font-medium text-slate-500">
                                                         {app.createdAt ? new Date(app.createdAt).toLocaleDateString() : 'N/A'}
                                                     </div>
                                                 </td>
-                                                <td className="px-6 py-6">
-                                                    <div className="flex items-center gap-3">
-                                                        <div className="w-24 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                                                            <div
-                                                                className={`h-full transition-all duration-1000 ${app.matchPercentage >= 70 ? 'bg-emerald-500' : app.matchPercentage >= 40 ? 'bg-amber-500' : 'bg-rose-500'}`}
-                                                                style={{ width: `${app.matchPercentage}%` }}
-                                                            ></div>
-                                                        </div>
-                                                        <span className={`text-[12px] font-black ${app.matchPercentage >= 70 ? 'text-emerald-600' : app.matchPercentage >= 40 ? 'text-amber-600' : 'text-rose-600'}`}>
+                                                <td className="px-4 py-4">
+                                                    <div className="flex items-center justify-center">
+                                                        <span className={`text-[12px] font-black px-2 py-1 rounded-md ${app.matchPercentage >= 70 ? 'bg-emerald-50 text-emerald-600' : app.matchPercentage >= 40 ? 'bg-amber-50 text-amber-600' : 'bg-rose-50 text-rose-600'}`}>
                                                             {app.matchPercentage}%
                                                         </span>
                                                     </div>
                                                 </td>
-                                                <td className="px-6 py-6 text-center">
-                                                    <span className="text-xs font-medium text-amber-700 bg-amber-50 border border-amber-200 px-2 py-1 rounded shadow-sm">
+                                                <td className="px-4 py-4 text-center">
+                                                    <span className="text-[11px] font-bold text-amber-700 bg-amber-50 border border-amber-100 px-2 py-1 rounded shadow-sm">
                                                         {app.offerId?.endDateOfApplay ? new Date(new Date(app.offerId.endDateOfApplay).getTime() + 10 * 24 * 60 * 60 * 1000).toLocaleDateString() : 'N/A'}
                                                     </span>
                                                 </td>
-                                                <td className="px-6 py-6">
-                                                    <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider border ${getStatusColor(app.status === 'applied' && isAcceptanceOverdue ? 'rejected' : app.status)}`}>
+                                                <td className="px-4 py-4">
+                                                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${getStatusColor(app.status === 'applied' && isAcceptanceOverdue ? 'rejected' : app.status)}`}>
                                                         {app.status === 'applied' && isAcceptanceOverdue ? 'rejected' : app.status}
                                                     </span>
                                                 </td>
-                                                <td className="px-6 py-6 text-right">
-                                                    <div className="flex items-center justify-end gap-3">
+                                                <td className="px-4 py-4 text-right">
+                                                    <div className="flex items-center justify-end gap-2">
                                                         {app.status === 'applied' && !isAcceptanceOverdue && (
                                                             <>
-                                                                <button onClick={(e) => { e.stopPropagation(); handleStatusChange(app._id, 'accepted'); }} className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-black uppercase tracking-widest rounded-xl transition-transform active:scale-[0.98] shadow-sm shadow-indigo-200">Accept</button>
-                                                                <button onClick={(e) => { e.stopPropagation(); handleStatusChange(app._id, 'rejected'); }} className="px-4 py-2 bg-white dark:bg-slate-800 text-slate-600 hover:text-rose-600 hover:bg-rose-50 border border-slate-200 dark:border-slate-700 text-[11px] font-black uppercase tracking-widest rounded-xl transition-all">Refuse</button>
+                                                                <button onClick={(e) => { e.stopPropagation(); handleStatusChange(app._id, 'accepted'); }} className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-black uppercase tracking-widest rounded-lg transition-transform active:scale-[0.98]">Accept</button>
+                                                                <button onClick={(e) => { e.stopPropagation(); handleStatusChange(app._id, 'rejected'); }} className="px-3 py-1.5 bg-white dark:bg-slate-800 text-slate-600 hover:text-rose-600 border border-slate-200 dark:border-slate-700 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all">Refuse</button>
                                                             </>
                                                         )}
                                                         {app.status === 'applied' && isAcceptanceOverdue && (

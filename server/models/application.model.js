@@ -11,7 +11,7 @@ const applicationSchema = mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['applied', 'accepted', 'rejected', 'validated', 'admin_rejected'],
+        enum: ['applied', 'accepted', 'rejected', 'validated', 'admin_rejected', 'on hold'],
         default: 'applied'
     },
     adminRejectionReason: {

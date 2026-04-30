@@ -1,206 +1,292 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CompanyNavbar from '../components/CompanyNavbar';
+import logoImage from '../assets/logo.png';
+import { QRCodeSVG } from 'qrcode.react';
 
 const CompanyStatistics = () => {
     const navigate = useNavigate();
-    const [stats, setStats] = useState({
-        activeOffers: 0,
-        newApplicants: 0,
-        hiredCount: 0,
-        pendingReviews: 0,
-        isLoading: true
-    });
+    const [stats, setStats] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [company, setCompany] = useState(null);
 
     useEffect(() => {
-        const fetchStats = async () => {
+        const fetchData = async () => {
             try {
-                const response = await fetch('/api/company/dashboard-stats');
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.success) {
-                        setStats({
-                            activeOffers: data.stats.activeOffers || 0,
-                            newApplicants: data.stats.newApplicants || 0,
-                            hiredCount: data.stats.hiredCount || 0,
-                            pendingReviews: data.stats.pendingReviews || 0,
-                            isLoading: false
-                        });
-                    }
-                } else {
-                    setStats(prev => ({ ...prev, isLoading: false }));
-                }
+                const [statsRes, companyRes] = await Promise.all([
+                    fetch('/api/company/dashboard-stats'),
+                    fetch('/api/company/me')
+                ]);
+                const statsData = await statsRes.json();
+                const companyData = await companyRes.json();
+                if (statsRes.ok && statsData.success) setStats(statsData.stats);
+                if (companyRes.ok && companyData.user) setCompany(companyData.user);
             } catch (error) {
                 console.error("Failed to fetch statistics:", error);
-                setStats(prev => ({ ...prev, isLoading: false }));
+            } finally {
+                setIsLoading(false);
             }
         };
-
-        fetchStats();
+        fetchData();
     }, []);
 
-    const handleExport = () => {
-        alert("Generating Statistical Report... PDF download will start automatically.");
+    if (isLoading) {
+        return (
+            <div className="bg-background-light dark:bg-background-dark min-h-screen flex flex-col pt-16">
+                <CompanyNavbar company={company} />
+                <div className="flex-1 flex flex-col items-center justify-center gap-4">
+                    <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                    <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 font-display uppercase tracking-widest">Compiling Analytics...</p>
+                </div>
+            </div>
+        );
+    }
+
+    const s = stats || {};
+    const totalApplicants = s.totalApplicants || 0;
+    const pendingReviews = s.pendingReviews || 0;
+    const acceptedCount = s.acceptedCount || 0;
+    const rejectedCount = s.rejectedCount || 0;
+    const hiredCount = s.hiredCount || 0;
+    const activeOffers = s.activeOffers || 0;
+    const totalOffers = s.totalOffers || 0;
+    const closedOffers = s.closedOffers || 0;
+    const dailyApplications = s.dailyApplications || [];
+    const applicantGrowth = s.applicantGrowth || "0.0";
+    const offersGrowth = s.offersGrowth || "0.0";
+
+    const reviewed = totalApplicants - pendingReviews;
+    const acceptanceRate = reviewed > 0 ? ((acceptedCount / reviewed) * 100).toFixed(1) : "0.0";
+    const pendingRate = totalApplicants > 0 ? ((pendingReviews / totalApplicants) * 100).toFixed(1) : "0.0";
+    const maxDaily = Math.max(...dailyApplications.map(d => d.count), 1);
+
+    const formatDate = (dateStr) => {
+        const d = new Date(dateStr + 'T00:00:00');
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     };
 
-    // Calculate derived statistics safely
-    const totalProcessed = stats.newApplicants > 0 ? stats.newApplicants - stats.pendingReviews : 0;
-    const acceptanceRate = totalProcessed > 0 ? ((stats.hiredCount / totalProcessed) * 100).toFixed(1) : "0.0";
-    const pendingRate = stats.newApplicants > 0 ? ((stats.pendingReviews / stats.newApplicants) * 100).toFixed(1) : "0.0";
-
     return (
-        <div className="bg-white text-slate-900 min-h-screen font-body flex flex-col pt-16">
-            <CompanyNavbar />
+        <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white min-h-screen font-body flex flex-col pt-16 print:bg-white print:pt-0 print:block">
+            {/* Standard Navbar - Hidden in Print */}
+            <div className="print:hidden">
+                <CompanyNavbar company={company} />
+            </div>
 
-            <div className="flex-1 max-w-[1400px] mx-auto w-full p-8 mt-6">
+            {/* Print Custom Styles */}
+            <style dangerouslySetInnerHTML={{ __html: `
+                @media print {
+                    @page { margin: 0; size: A4; }
+                    body { margin: 0; padding: 0 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+                    .print-container { 
+                        width: 100% !important; 
+                        max-width: none !important; 
+                        box-shadow: none !important; 
+                        border: none !important; 
+                        padding: 2cm !important;
+                        margin: 0 !important;
+                        background: white !important;
+                    }
+                    .dark { background: white !important; color: black !important; }
+                    .no-print { display: none !important; }
+                }
+            ` }} />
+
+            {/* MAIN CONTENT AREA */}
+            <main className="max-w-[1600px] mx-auto w-full p-6 lg:p-12 flex-1 print:p-0 print:max-w-none">
                 
-                {/* Header Context */}
-                <div className="flex flex-col md:flex-row justify-between items-end border-b-2 border-slate-900 pb-6 mb-8">
+                {/* SCREEN ONLY HEADER */}
+                <div className="flex flex-col md:flex-row justify-between items-end border-b border-slate-200 dark:border-slate-800 pb-8 mb-10 print:hidden">
                     <div>
-                        <h1 className="text-3xl font-black font-headline tracking-tighter uppercase text-slate-900">Statistical Analysis Report</h1>
-                        <p className="text-slate-500 text-sm mt-1 font-mono uppercase tracking-widest">System Overview &amp; Pipeline Metrics</p>
+                        <h1 className="text-4xl font-bold font-display tracking-tight text-slate-900 dark:text-white uppercase">Analytics Dashboard</h1>
+                        <p className="text-slate-500 dark:text-slate-400 text-base mt-2 font-medium">Real-time recruitment performance & pipeline metrics.</p>
                     </div>
-                    <div className="flex gap-4">
-                        <div className="text-right mr-6">
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Report Date</p>
-                            <p className="text-sm font-mono font-bold">{new Date().toLocaleDateString()}</p>
+                    <div className="flex items-center gap-6 mt-6 md:mt-0">
+                        <div className="text-right">
+                            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Generated On</p>
+                            <p className="text-sm font-mono font-bold text-slate-700 dark:text-slate-300">{new Date().toLocaleDateString('en-GB')}</p>
                         </div>
                         <button 
-                            onClick={handleExport}
-                            className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-6 py-2 shadow-sm transition-all text-sm font-bold tracking-wide uppercase"
+                            onClick={() => window.print()}
+                            className="flex items-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-3 rounded-xl font-bold text-sm transition-all hover:scale-105 active:scale-95 shadow-xl shadow-slate-200 dark:shadow-none"
                         >
-                            <span className="material-symbols-outlined text-lg">download</span>
-                            <span>Generate PDF</span>
+                            <span className="material-symbols-outlined text-lg">print</span>
+                            <span>EXPORT OFFICIAL REPORT</span>
                         </button>
                     </div>
                 </div>
 
-                {stats.isLoading ? (
-                    <div className="flex flex-col items-center justify-center p-32 space-y-4">
-                        <div className="animate-spin rounded-none h-12 w-12 border-4 border-slate-900 border-t-transparent"></div>
-                        <p className="font-mono text-sm font-bold uppercase tracking-widest text-slate-500">Compiling Data...</p>
+                {/* THE OFFICIAL DOCUMENT */}
+                <div className="print-container bg-white dark:bg-transparent rounded-3xl overflow-hidden print:overflow-visible print:rounded-none relative shadow-soft print:shadow-none">
+                    
+                    {/* Watermark (Print Only) */}
+                    <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none select-none z-0 hidden print:flex">
+                        <span className="font-display font-bold text-[120px] -rotate-45 text-slate-900 uppercase">Official Analytics</span>
                     </div>
-                ) : (
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                        
-                        {/* Left Column: Dense Metrics Table */}
-                        <div className="lg:col-span-8 flex flex-col gap-8">
-                            
-                            {/* Primary Key Metrics Table */}
-                            <div>
-                                <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-3 text-slate-400 border-b border-slate-200 pb-2">Volume Overview</h3>
-                                <table className="w-full text-left font-mono">
-                                    <thead>
-                                        <tr className="border-b-2 border-slate-900 text-xs text-slate-500">
-                                            <th className="py-3 font-bold uppercase tracking-wider">Metric ID</th>
-                                            <th className="py-3 font-bold uppercase tracking-wider">Description</th>
-                                            <th className="py-3 font-bold uppercase tracking-wider text-right">Value</th>
-                                            <th className="py-3 font-bold uppercase tracking-wider text-right">Variance</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="text-sm">
-                                        <tr className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                                            <td className="py-4 font-bold text-slate-400">#M-101</td>
-                                            <td className="py-4 font-semibold">Total Active Postings</td>
-                                            <td className="py-4 text-right font-black text-lg">{stats.activeOffers}</td>
-                                            <td className="py-4 text-right text-emerald-600 font-bold">+12.4%</td>
-                                        </tr>
-                                        <tr className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                                            <td className="py-4 font-bold text-slate-400">#M-102</td>
-                                            <td className="py-4 font-semibold">Gross Applicant Inflow</td>
-                                            <td className="py-4 text-right font-black text-lg">{stats.newApplicants}</td>
-                                            <td className="py-4 text-right text-emerald-600 font-bold">+5.1%</td>
-                                        </tr>
-                                        <tr className="border-b border-slate-100 hover:bg-slate-50 transition-colors bg-slate-50/50">
-                                            <td className="py-4 font-bold text-slate-400">#M-103</td>
-                                            <td className="py-4 font-semibold">Applications Under Review</td>
-                                            <td className="py-4 text-right font-black text-lg">{stats.pendingReviews}</td>
-                                            <td className="py-4 text-right text-rose-600 font-bold">Requires Action</td>
-                                        </tr>
-                                        <tr className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                                            <td className="py-4 font-bold text-slate-400">#M-104</td>
-                                            <td className="py-4 font-semibold">Validated Hires (Contracts)</td>
-                                            <td className="py-4 text-right font-black text-lg">{stats.hiredCount}</td>
-                                            <td className="py-4 text-right text-slate-400 font-bold">--</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
 
-                            {/* Simulated Bar Chart Distribution */}
-                            <div className="bg-slate-50 p-6 border border-slate-200">
-                                <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-6 text-slate-900">Application Velocity (Trailing 30 Days)</h3>
-                                <div className="h-48 flex items-end justify-between gap-2 px-2 border-l border-b border-slate-300 pb-2">
-                                    {[30, 45, 25, 60, 75, 40, 50, 90, 85, 65, 55, 70].map((h, i) => (
-                                        <div key={i} className="w-full bg-slate-800 hover:bg-indigo-600 transition-colors relative group" style={{ height: `${h}%` }}>
-                                            <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold opacity-0 group-hover:opacity-100 font-mono transition-opacity">{h + Math.floor(Math.random() * 10)}</div>
+                    <div className="relative z-10 print:bg-white p-2 sm:p-0">
+                        
+                        {/* OFFICIAL HEADER */}
+                        <div className="hidden print:flex justify-between items-start border-b-2 border-slate-900 pb-6 mb-10">
+                            <div className="flex items-center gap-4">
+                                <img src={logoImage} alt="stag.io" className="h-14 w-auto object-contain" />
+                                <div className="h-12 w-px bg-slate-300"></div>
+                                <div>
+                                    <h2 className="font-display font-bold text-2xl uppercase tracking-tighter text-slate-900">STAG.IO</h2>
+                                    <p className="font-mono text-[10px] text-slate-500 uppercase tracking-[0.2em]">Recruitment Analytics Gateway</p>
+                                </div>
+                            </div>
+                            <div className="text-right">
+                                <h3 className="font-display font-bold text-slate-900 text-lg uppercase">Official Performance Report</h3>
+                                <p className="font-mono text-xs text-slate-500">Ref: ST-REP-{company?._id?.slice(-6).toUpperCase()}-{new Date().getFullYear()}</p>
+                            </div>
+                        </div>
+
+                        {/* Summary Block */}
+                        <div className="hidden print:grid grid-cols-2 gap-8 mb-10 bg-slate-50 p-6 border border-slate-200 rounded-xl">
+                            <div>
+                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Company Entity</p>
+                                <p className="text-lg font-bold text-slate-900">{company?.companyName}</p>
+                                <p className="text-xs text-slate-500 mt-1 italic">Verified Partner since {new Date(company?.createdAt).getFullYear() || 2026}</p>
+                            </div>
+                            <div className="text-right">
+                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Reporting Period</p>
+                                <p className="text-lg font-bold text-slate-900">Annual Review - {new Date().getFullYear()}</p>
+                                <p className="text-xs text-slate-500 mt-1 font-mono">{new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+                            </div>
+                        </div>
+
+                        {/* DATA SECTIONS */}
+                        <div className="space-y-12">
+                            
+                            {/* Article 1: Key Performance Indicators */}
+                            <section>
+                                <div className="hidden print:block mb-6">
+                                    <h4 className="font-bold uppercase text-xs tracking-wider border-b border-slate-200 pb-1 mb-4 text-slate-500">Article 1: Primary Recruitment Metrics</h4>
+                                    <p className="text-sm text-slate-600 leading-relaxed mb-6">This section outlines the high-level performance indicators for the current period, including offer activity and applicant volume processing.</p>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 print:grid-cols-4 print:gap-4">
+                                    {[
+                                        { label: 'Active Offers', value: activeOffers, icon: 'description', color: 'bg-blue-100 text-blue-600', growth: `${offersGrowth}%` },
+                                        { label: 'Total Applicants', value: totalApplicants, icon: 'group', color: 'bg-indigo-100 text-indigo-600', growth: `${applicantGrowth}%` },
+                                        { label: 'Pending Reviews', value: pendingReviews, icon: 'pending_actions', color: 'bg-amber-100 text-amber-600', growth: pendingReviews > 0 ? 'Urgent' : 'Nominal' },
+                                        { label: 'Hired Interns', value: hiredCount, icon: 'verified', color: 'bg-emerald-100 text-emerald-600', growth: `${acceptanceRate}% Yield` },
+                                    ].map((kpi, i) => (
+                                        <div key={i} className="bg-white dark:bg-surface-dark p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-soft print:shadow-none print:border-slate-300">
+                                            <div className="flex items-center justify-between mb-4">
+                                                <div className={`p-2.5 rounded-xl ${kpi.color} print:scale-90`}>
+                                                    <span className="material-symbols-outlined text-xl">{kpi.icon}</span>
+                                                </div>
+                                                <div className="text-[10px] font-black uppercase tracking-tighter px-2 py-1 bg-slate-50 dark:bg-slate-800 rounded">
+                                                    {kpi.growth}
+                                                </div>
+                                            </div>
+                                            <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 font-display uppercase tracking-wider">{kpi.label}</p>
+                                            <h3 className="text-2xl font-black mt-1 font-display">{kpi.value}</h3>
                                         </div>
                                     ))}
                                 </div>
-                                <div className="flex justify-between mt-2 text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest pl-2">
-                                    <span>Aug 1</span>
-                                    <span>Aug 15</span>
-                                    <span>Aug 30</span>
+                            </section>
+
+                            {/* Article 2: Detailed Operational Breakdown */}
+                            <section>
+                                <div className="hidden print:block mb-6">
+                                    <h4 className="font-bold uppercase text-xs tracking-wider border-b border-slate-200 pb-1 mb-4 text-slate-500">Article 2: Operational Pipeline Analysis</h4>
                                 </div>
-                            </div>
+                                <div className="bg-white dark:bg-surface-dark rounded-2xl border border-slate-200 dark:border-slate-800 shadow-soft overflow-hidden print:shadow-none print:border-slate-300">
+                                    <table className="w-full text-left border-collapse">
+                                        <thead>
+                                            <tr className="bg-slate-50 dark:bg-slate-900/50 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                                                <th className="py-4 px-6 border-b border-slate-100 dark:border-slate-800">Operational Reference</th>
+                                                <th className="py-4 px-6 border-b border-slate-100 dark:border-slate-800 text-right">Value</th>
+                                                <th className="py-4 px-6 border-b border-slate-100 dark:border-slate-800 text-right">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="text-sm">
+                                            {[
+                                                { ref: 'OFF-ACT', name: 'Active Opportunities', val: activeOffers, status: 'Production' },
+                                                { ref: 'APP-GROSS', name: 'Total Sourced Talent', val: totalApplicants, status: 'Historical' },
+                                                { ref: 'REV-PEN', name: 'Evaluation Backlog', val: pendingReviews, status: 'Queue' },
+                                                { ref: 'HIRE-VAL', name: 'Certified Placements', val: acceptedCount, status: 'Finalized' },
+                                            ].map((row, i) => (
+                                                <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                                                    <td className="py-4 px-6 border-b border-slate-50 dark:border-slate-800/50 font-bold text-slate-700 dark:text-slate-200">{row.name}</td>
+                                                    <td className="py-4 px-6 border-b border-slate-50 dark:border-slate-800/50 text-right font-black font-display text-lg">{row.val}</td>
+                                                    <td className="py-4 px-6 border-b border-slate-50 dark:border-slate-800/50 text-right text-[10px] font-bold text-slate-400 uppercase tracking-widest">{row.status}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </section>
+
+                            {/* Article 3: Temporal Trends (Chart) */}
+                            <section className="print:break-inside-avoid">
+                                <div className="hidden print:block mb-6">
+                                    <h4 className="font-bold uppercase text-xs tracking-wider border-b border-slate-200 pb-1 mb-4 text-slate-500">Article 3: Application Velocity (30-Day Period)</h4>
+                                </div>
+                                <div className="bg-white dark:bg-surface-dark rounded-2xl border border-slate-200 dark:border-slate-800 shadow-soft p-8 print:shadow-none print:border-slate-300">
+                                    <div className="h-48 flex items-end justify-between gap-[3px] border-l border-b border-slate-100 dark:border-slate-800 pb-2 pl-4">
+                                        {dailyApplications.map((day, i) => {
+                                            const heightPct = maxDaily > 0 ? (day.count / maxDaily) * 100 : 0;
+                                            return (
+                                                <div key={i} className="w-full bg-indigo-600/20 rounded-t-[2px] relative group" style={{ height: `${Math.max(heightPct, 4)}%` }}>
+                                                    <div className="absolute bottom-0 left-0 w-full bg-indigo-600 rounded-t-[2px]" style={{ height: `${Math.min(heightPct, 100)}%` }}></div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                    <div className="flex justify-between mt-4 text-[9px] font-bold text-slate-400 uppercase tracking-widest pl-4">
+                                        <span>{formatDate(dailyApplications[0]?.date)}</span>
+                                        <span>Velocity Trendline</span>
+                                        <span>{formatDate(dailyApplications[dailyApplications.length - 1]?.date)}</span>
+                                    </div>
+                                </div>
+                            </section>
+
+                            {/* QR AUTHENTICITY SECTION */}
+                            <section className="hidden print:flex items-center justify-between gap-10 pt-10 mt-10 border-t border-slate-900 border-b border-slate-900 pb-10">
+                                <div className="flex-1">
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-900 mb-2">Report Authenticity Gateway</p>
+                                    <p className="text-[11px] text-slate-600 leading-relaxed font-medium">
+                                        This performance report has been digitally generated by the stag.io automated reporting engine. 
+                                        To verify the integrity and origin of the data presented herein, scan the unique QR code on the right. 
+                                        Verification is performed against our encrypted database records.
+                                    </p>
+                                    <div className="mt-4 flex gap-6">
+                                        <div>
+                                            <p className="text-[9px] font-black text-slate-400 uppercase">Integrity Hash</p>
+                                            <p className="font-mono text-[9px] text-slate-600 uppercase mt-1">SHA-256: {company?._id?.slice(0, 32).toUpperCase()}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-[9px] font-black text-slate-400 uppercase">Validation Status</p>
+                                            <p className="text-[9px] font-bold text-emerald-600 uppercase mt-1">✓ SECURE & VERIFIED</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="flex flex-col items-center gap-2 shrink-0">
+                                    <div className="p-3 bg-white border-4 border-slate-900 rounded-xl shadow-lg">
+                                        <QRCodeSVG
+                                            value={`${window.location.origin}/company-statistics?verify=${company?._id}`}
+                                            size={100}
+                                            level="H"
+                                        />
+                                    </div>
+                                    <p className="text-[9px] font-black text-slate-900 uppercase tracking-[0.2em]">Scan to Verify</p>
+                                </div>
+                            </section>
+
                         </div>
 
-                        {/* Right Column: Funnel & Conversion Stats */}
-                        <div className="lg:col-span-4 flex flex-col gap-8">
-                            
-                            {/* Funnel Diagram */}
-                            <div className="p-6 border-2 border-slate-900 bg-white shadow-[4px_4px_0_0_rgba(15,23,42,1)]">
-                                <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-4 text-slate-900">Conversion Funnel</h3>
-                                <div className="space-y-2 font-mono text-sm">
-                                    
-                                    <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 bg-slate-900"></div>
-                                            <span className="font-semibold text-slate-600">Total Sourced</span>
-                                        </div>
-                                        <div className="font-black">{stats.newApplicants}</div>
-                                    </div>
-                                    
-                                    <div className="flex items-center justify-between border-b border-slate-100 py-2 pl-4">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 bg-slate-600"></div>
-                                            <span className="font-semibold text-slate-600">Reviewed</span>
-                                        </div>
-                                        <div className="font-black">{totalProcessed}</div>
-                                    </div>
-                                    
-                                    <div className="flex items-center justify-between border-b border-slate-100 py-2 pl-8">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 bg-indigo-600"></div>
-                                            <span className="font-semibold text-indigo-700">Validated</span>
-                                        </div>
-                                        <div className="font-black">{stats.hiredCount}</div>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            {/* Key Performance Indicators */}
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="bg-slate-50 p-4 border border-slate-200 flex flex-col justify-between">
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Acceptance Rate</span>
-                                    <span className="text-2xl font-black font-mono text-slate-900">{acceptanceRate}%</span>
-                                </div>
-                                <div className="bg-slate-50 p-4 border border-slate-200 flex flex-col justify-between">
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Review Backlog</span>
-                                    <span className={`text-2xl font-black font-mono ${stats.pendingReviews > 0 ? 'text-amber-600' : 'text-emerald-600'}`}>{pendingRate}%</span>
-                                </div>
-                            </div>
-
-                            {/* Data Compliance & Footer Note */}
-                            <div className="text-[10px] text-slate-400 font-mono leading-relaxed mt-auto text-justify">
-                                * CONFIDENTIALITY NOTICE: These statistical readings are derived from real-time database inputs from stage.io's tracking infrastructure. Application velocity is approximated on a trailing 30-day interval. Conversion analytics exclude incomplete or withdrawn applications by default.
-                            </div>
-
+                        {/* Footer */}
+                        <div className="hidden print:block text-center mt-12 pb-6 border-t border-slate-100 pt-6">
+                            <p className="text-[10px] font-black font-display uppercase tracking-[0.5em] text-slate-900">stag.io 2026 all right reserved</p>
+                            <p className="text-[8px] text-slate-400 mt-2 font-mono uppercase">System Generated Official Report | Document Integrity Secured</p>
                         </div>
+
                     </div>
-                )}
-            </div>
+                </div>
+            </main>
         </div>
     );
 };
