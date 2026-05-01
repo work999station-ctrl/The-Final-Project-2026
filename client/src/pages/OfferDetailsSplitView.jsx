@@ -13,43 +13,46 @@ const OfferDetailsSplitView = () => {
     const [userType, setUserType] = useState(null); // 'student' or 'company'
     const [applicants, setApplicants] = useState([]);
     const [applicantsLoading, setApplicantsLoading] = useState(false);
-    const [actionModal, setActionModal] = useState(null);
-    const [applyModal, setApplyModal] = useState(false);
-    const [toastMessage, setToastMessage] = useState(null);
+    const [actionModal, setActionModal] = useState(null); // { type: 'apply' | 'close' | 'reopen' }
+    const [toast, setToast] = useState(null); // { message: string, type: 'success' | 'error' }
 
     useEffect(() => {
         const fetchOfferDetails = async () => {
             try {
-                // Also fetch user type to handle permissions
-                const studentRes = await fetch('/api/student/me');
-                if (studentRes.ok) {
+                setLoading(true);
+                // Parallelize user type fetching for performance
+                const [studentRes, companyRes, adminRes] = await Promise.allSettled([
+                    fetch('/api/student/me'),
+                    fetch('/api/company/me'),
+                    fetch('/api/admin/me')
+                ]);
+
+                if (studentRes.status === 'fulfilled' && studentRes.value.ok) {
                     setUserType('student');
-                } else {
-                    const companyRes = await fetch('/api/company/me');
-                    if (companyRes.ok) {
-                        setUserType('company');
-                    } else {
-                        const adminRes = await fetch('/api/admin/me');
-                        if (adminRes.ok) setUserType('admin');
-                    }
+                } else if (companyRes.status === 'fulfilled' && companyRes.value.ok) {
+                    setUserType('company');
+                } else if (adminRes.status === 'fulfilled' && adminRes.value.ok) {
+                    setUserType('admin');
                 }
 
                 const response = await fetch(`/api/offers/${id}`);
                 const data = await response.json();
+                
                 if (response.ok && data.success) {
                     setOffer(data.offer);
                     setCompany(data.company);
                 } else {
-                    setError(data.error || 'Failed to fetch offer details.');
+                    setError(data.error || 'Offer not found.');
                 }
             } catch (err) {
+                console.error("Error fetching offer details:", err);
                 setError('Failed to fetch offer details.');
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchOfferDetails();
+        if (id) fetchOfferDetails();
     }, [id]);
 
     useEffect(() => {
@@ -58,7 +61,9 @@ const OfferDetailsSplitView = () => {
 
             try {
                 setApplicantsLoading(true);
-                const res = await fetch(`/api/company/applications/offer/${id}`);
+                const res = await fetch(`/api/company/applications/offer/${id}`, {
+                    headers: { 'Content-Type': 'application/json' }
+                });
                 const data = await res.json();
                 if (res.ok && data.success) {
                     setApplicants(data.applications);
@@ -74,7 +79,6 @@ const OfferDetailsSplitView = () => {
     }, [id, userType]);
 
     const handleApply = async () => {
-        setApplyModal(false);
         setIsApplying(true);
         try {
             const res = await fetch('/api/applications', {
@@ -84,47 +88,41 @@ const OfferDetailsSplitView = () => {
             });
             const data = await res.json();
             if (res.ok && data.success) {
-                setToastMessage('Your application has been submitted successfully!');
-                setTimeout(() => setToastMessage(null), 4000);
+                setToast({ message: 'Success! Your application has been submitted.', type: 'success' });
                 setOffer(prev => ({ ...prev, isApplied: true }));
             } else {
-                setToastMessage(data.message || 'Failed to apply.');
-                setTimeout(() => setToastMessage(null), 4000);
+                setToast({ message: data.message || 'Failed to apply.', type: 'error' });
             }
         } catch (err) {
             console.error('Error applying:', err);
-            setToastMessage('An error occurred. Please try again later.');
-            setTimeout(() => setToastMessage(null), 4000);
+            setToast({ message: 'An error occurred. Please try again later.', type: 'error' });
         } finally {
             setIsApplying(false);
+            setActionModal(null);
+            setTimeout(() => setToast(null), 5000);
         }
     };
     const handleCloseOffer = async () => {
         try {
-            const token = document.cookie.split('jwt=')[1]?.split(';')[0] || localStorage.getItem('token');
             const res = await fetch(`/api/offers/${id}`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    ...(token ? { Authorization: `Bearer ${token}` } : {})
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status: 'Closed' })
             });
 
             if (res.ok) {
                 setOffer(prev => ({ ...prev, status: 'Closed' }));
-                setActionModal(null);
-                setToastMessage("Offer closed successfully.");
-                setTimeout(() => setToastMessage(null), 4000);
+                setToast({ message: "Offer closed successfully.", type: 'success' });
             } else {
                 const data = await res.json();
-                alert(data.error || "Failed to close offer");
-                setActionModal(null);
+                setToast({ message: data.error || "Failed to close offer", type: 'error' });
             }
         } catch (err) {
             console.error("Error closing offer:", err);
-            alert("Connection error. Please try again.");
+            setToast({ message: "Connection error. Please try again.", type: 'error' });
+        } finally {
             setActionModal(null);
+            setTimeout(() => setToast(null), 5000);
         }
     };
 
@@ -132,7 +130,6 @@ const OfferDetailsSplitView = () => {
         let newDeadline = offer.endDateOfApplay;
         const deadlineExpired = moment().isAfter(moment(offer.endDateOfApplay).endOf('day'));
 
-        // If deadline expired, automatically extend it by 14 days to make it truly 'open' again
         if (deadlineExpired) {
             newDeadline = moment().add(14, 'days').toDate();
         }
@@ -151,22 +148,23 @@ const OfferDetailsSplitView = () => {
                 const data = await res.json();
                 if (data.success) {
                     setOffer(data.offer);
-                    setActionModal(null);
-                    setToastMessage(deadlineExpired
-                        ? `Offer re-opened successfully. Application deadline has been extended to ${moment(newDeadline).format('LL')}.`
-                        : "Offer re-opened successfully."
-                    );
-                    setTimeout(() => setToastMessage(null), 4000);
+                    setToast({ 
+                        message: deadlineExpired
+                            ? `Offer re-opened. Deadline extended to ${moment(newDeadline).format('LL')}.`
+                            : "Offer re-opened successfully.",
+                        type: 'success' 
+                    });
                 }
             } else {
                 const errorData = await res.json();
-                alert(errorData.error || "Failed to re-open offer");
-                setActionModal(null);
+                setToast({ message: errorData.error || "Failed to re-open offer", type: 'error' });
             }
         } catch (err) {
             console.error("Error re-opening offer:", err);
-            alert("An error occurred while re-opening the offer.");
+            setToast({ message: "An error occurred while re-opening the offer.", type: 'error' });
+        } finally {
             setActionModal(null);
+            setTimeout(() => setToast(null), 5000);
         }
     };
 
@@ -179,10 +177,13 @@ const OfferDetailsSplitView = () => {
     }
 
     if (error || !offer) {
+        const dashboardPath = userType === 'student' ? '/student-dashboard' : (userType === 'admin' ? '/admin-dashboard' : '/company-dashboard');
         return (
             <div className="bg-slate-50 dark:bg-slate-900 min-h-screen flex items-center justify-center font-sans flex-col gap-4">
                 <div className="text-red-500 font-bold">{error || 'Offer not found.'}</div>
-                <button onClick={() => navigate('/company-dashboard')} className="px-4 py-2 bg-indigo-600 text-white rounded-lg">Go Back</button>
+                <button onClick={() => navigate(dashboardPath)} className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+                    Go Back to Dashboard
+                </button>
             </div>
         );
     }
@@ -241,7 +242,7 @@ const OfferDetailsSplitView = () => {
                         {userType === 'student' && (
                             <>
                                 <button
-                                    onClick={() => setApplyModal(true)}
+                                    onClick={() => setActionModal({ type: 'apply' })}
                                     disabled={isApplying || (offer && offer.isApplied) || isClosed}
                                     className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-bold transition-all shadow-lg ${offer && offer.isApplied ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/50 cursor-default shadow-none' : (isClosed ? 'bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 cursor-not-allowed border border-slate-300 dark:border-slate-700 shadow-none' : (isApplying ? 'bg-indigo-400 text-white cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-200 dark:shadow-indigo-900/40'))}`}>
                                     {offer && offer.isApplied ? 'Applied' : (isClosed ? 'Offer Closed' : (isApplying ? 'Applying...' : 'Apply now'))}
@@ -250,7 +251,7 @@ const OfferDetailsSplitView = () => {
                                     </span>
                                 </button>
                                 <button
-                                    onClick={() => navigate(`/company-dashboard-student-view/${company?._id}`)} // Placeholder for student view
+                                    onClick={() => navigate(`/company-dashboard-student-view/${company?._id}`)}
                                     className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 transition-all"
                                 >
                                     View Company
@@ -487,7 +488,7 @@ const OfferDetailsSplitView = () => {
                                                         <span className="text-[10px] text-slate-400">Applied {moment(app.createdAt).fromNow()}</span>
                                                         <div className="flex items-center gap-3">
                                                             <button
-                                                                onClick={() => navigate(`/student-profile-recruiter/${app.studentId._id}`)}
+                                                                onClick={() => navigate(`/student-profile-recruiter/${app.studentId?._id}`)}
                                                                 className="text-xs font-bold text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 hover:underline cursor-pointer"
                                                             >
                                                                 Profile
@@ -525,47 +526,30 @@ const OfferDetailsSplitView = () => {
                 </div>
             </main>
 
-            {/* Floating Apply Confirmation Modal */}
-            {applyModal && (
-                <div className="fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setApplyModal(false)}>
-                    <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-100 dark:border-slate-800" onClick={(e) => e.stopPropagation()}>
-                        <div className="w-16 h-16 bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800/30 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <span className="material-symbols-outlined text-3xl">send</span>
-                        </div>
-                        <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Apply to this offer?</h3>
-                        <p className="text-slate-500 dark:text-slate-400 text-sm mb-2 font-semibold">{offer?.title}</p>
-                        <p className="text-slate-400 dark:text-slate-500 text-xs mb-8">at {company?.companyName || 'Company'}</p>
-                        <div className="flex gap-4">
-                            <button
-                                onClick={() => setApplyModal(false)}
-                                className="flex-1 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-sm uppercase tracking-wider rounded-xl transition-all"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                onClick={handleApply}
-                                className="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm uppercase tracking-wider rounded-xl transition-all shadow-xl shadow-indigo-600/20 flex items-center justify-center gap-2"
-                            >
-                                <span className="material-symbols-outlined text-lg">send</span>
-                                Apply Now
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+
 
             {/* Floating Confirmation Modal */}
             {actionModal && (
                 <div className="fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
                     <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-100 dark:border-slate-800">
-                        <div className={`w-16 h-16 ${actionModal.type === 'close' ? 'bg-amber-50 dark:bg-amber-900/20 border-amber-100 dark:border-amber-800/30 text-amber-600' : 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-100 dark:border-emerald-800/30 text-emerald-600'} border rounded-full flex items-center justify-center mx-auto mb-6`}>
-                            <span className="material-symbols-outlined text-3xl">{actionModal.type === 'close' ? 'lock' : 'lock_open'}</span>
+                        <div className={`w-16 h-16 ${
+                            actionModal.type === 'close' ? 'bg-amber-50 dark:bg-amber-900/20 border-amber-100 dark:border-amber-800/30 text-amber-600' : 
+                            actionModal.type === 'apply' ? 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-100 dark:border-indigo-800/30 text-indigo-600' : 
+                            'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-100 dark:border-emerald-800/30 text-emerald-600'
+                        } border rounded-full flex items-center justify-center mx-auto mb-6`}>
+                            <span className="material-symbols-outlined text-3xl">
+                                {actionModal.type === 'close' ? 'lock' : actionModal.type === 'apply' ? 'send' : 'lock_open'}
+                            </span>
                         </div>
-                        <h3 className="text-2xl font-black text-slate-900 dark:text-white font-headline tracking-tight mb-2">{actionModal.type === 'close' ? 'Close Offer?' : 'Reopen Offer?'}</h3>
+                        <h3 className="text-2xl font-black text-slate-900 dark:text-white font-headline tracking-tight mb-2">
+                            {actionModal.type === 'close' ? 'Close Offer?' : actionModal.type === 'apply' ? 'Apply Now?' : 'Reopen Offer?'}
+                        </h3>
                         <p className="text-slate-500 dark:text-slate-400 text-sm mb-8 font-medium leading-relaxed">
                             {actionModal.type === 'close' 
                                 ? 'Are you sure you want to close this internship offer? Candidates will no longer be able to apply.' 
-                                : 'Are you sure you want to reopen this internship offer? Candidates will be able to apply again.'}
+                                : actionModal.type === 'apply' 
+                                    ? 'Are you sure you want to apply to this internship offer? Your profile details will be shared with the company.' 
+                                    : 'Are you sure you want to reopen this internship offer? Candidates will be able to apply again.'}
                         </p>
                         <div className="flex gap-4">
                             <button
@@ -575,26 +559,37 @@ const OfferDetailsSplitView = () => {
                                 Cancel
                             </button>
                             <button
-                                onClick={actionModal.type === 'close' ? handleCloseOffer : handleReopenOffer}
-                                className={`flex-1 py-3 ${actionModal.type === 'close' ? 'bg-amber-600 hover:bg-amber-700 shadow-amber-600/20' : 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/20'} text-white font-bold text-sm uppercase tracking-wider rounded-xl transition-all shadow-xl`}
+                                onClick={() => {
+                                    if (actionModal.type === 'apply') handleApply();
+                                    else if (actionModal.type === 'close') handleCloseOffer();
+                                    else handleReopenOffer();
+                                }}
+                                className={`flex-1 py-3 ${
+                                    actionModal.type === 'close' ? 'bg-amber-600 hover:bg-amber-700 shadow-amber-600/20' : 
+                                    actionModal.type === 'apply' ? 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-600/20' : 
+                                    'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/20'
+                                } text-white font-bold text-sm uppercase tracking-wider rounded-xl transition-all shadow-xl`}
                             >
-                                {actionModal.type === 'close' ? 'Close Offer' : 'Reopen Offer'}
+                                {actionModal.type === 'close' ? 'Close Offer' : actionModal.type === 'apply' ? 'Confirm Application' : 'Reopen Offer'}
                             </button>
                         </div>
                     </div>
                 </div>
             )}
 
+
             {/* Toast Notification */}
-            {toastMessage && (
+            {toast && (
                 <div className="fixed bottom-6 right-6 z-[200] animate-fade-in-up">
-                    <div className="bg-emerald-600 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-4 max-w-sm">
+                    <div className={`${toast.type === 'success' ? 'bg-emerald-600' : 'bg-rose-600'} text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-4 max-w-sm`}>
                         <div className="bg-white/20 p-2 rounded-full flex-shrink-0">
-                            <span className="material-symbols-outlined text-white text-xl">check_circle</span>
+                            <span className="material-symbols-outlined text-white text-xl">
+                                {toast.type === 'success' ? 'check_circle' : 'error'}
+                            </span>
                         </div>
-                        <p className="text-sm font-semibold">{toastMessage}</p>
+                        <p className="text-sm font-semibold">{toast.message}</p>
                         <button 
-                            onClick={() => setToastMessage(null)}
+                            onClick={() => setToast(null)}
                             className="ml-auto text-white/80 hover:text-white transition-colors"
                         >
                             <span className="material-symbols-outlined text-xl">close</span>
