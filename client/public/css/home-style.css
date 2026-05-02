@@ -1,28 +1,26 @@
-/* Modern Connectivity - Base Styles */
+/* ═══════════════════════════════════════════════════════════════════
+   STAGE.IO — Premium animation layer
+   ═══════════════════════════════════════════════════════════════════ */
 
 body {
     margin: 0;
     padding: 0;
     font-family: 'Inter', sans-serif;
-    background-color: #f8f9fc;
+    background-color: #FAFAFA;
     color: #0f172a;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
 }
 
-/* Add smooth scrolling to the page */
-html {
-    scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
-/* Ensure images maintain aspect ratios */
 img {
     max-width: 100%;
     height: auto;
     display: block;
 }
 
-/* Utility to hide elements for screen readers if needed */
 .sr-only {
     position: absolute;
     width: 1px;
@@ -33,4 +31,235 @@ img {
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border-width: 0;
+}
+
+/* ─── Aurora background ────────────────────────────────────────────── */
+@keyframes aurora-shift {
+    0%   { transform: translate(0, 0) scale(1); }
+    33%  { transform: translate(30px, -30px) scale(1.1); }
+    66%  { transform: translate(-20px, 20px) scale(0.95); }
+    100% { transform: translate(0, 0) scale(1); }
+}
+.aurora-blob {
+    animation: aurora-shift 20s ease-in-out infinite;
+    will-change: transform;
+}
+.aurora-blob-2 { animation-duration: 25s; animation-delay: -5s; }
+.aurora-blob-3 { animation-duration: 30s; animation-delay: -10s; }
+
+/* ─── Animated gradient text ───────────────────────────────────────── */
+@keyframes gradient-flow {
+    0%, 100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
+}
+.text-gradient-flow {
+    background: linear-gradient(90deg, #6366F1 0%, #A855F7 25%, #06B6D4 50%, #A855F7 75%, #6366F1 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradient-flow 6s ease infinite;
+}
+
+/* ─── Shimmer (text) ───────────────────────────────────────────────── */
+@keyframes shimmer-text {
+    0%   { background-position: -200% center; }
+    100% { background-position: 200% center; }
+}
+.shimmer-text {
+    background: linear-gradient(90deg, currentColor 0%, currentColor 35%, rgba(255,255,255,0.9) 50%, currentColor 65%, currentColor 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer-text 3s linear infinite;
+}
+
+/* ─── Scroll progress bar ──────────────────────────────────────────── */
+.scroll-progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #6366F1, #A855F7, #06B6D4);
+    z-index: 100;
+    transform-origin: 0 50%;
+    transition: transform 0.1s ease-out;
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.6);
+}
+
+/* ─── Marquee (infinite scroll) ────────────────────────────────────── */
+@keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+}
+.marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 30s linear infinite;
+}
+.marquee-mask {
+    -webkit-mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+            mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+}
+.marquee-pause:hover .marquee-track { animation-play-state: paused; }
+
+/* ─── 3D Tilt card ─────────────────────────────────────────────────── */
+.tilt-card {
+    transform-style: preserve-3d;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+}
+.tilt-card-inner { transform: translateZ(40px); }
+
+/* ─── Conic animated border (cards) ────────────────────────────────── */
+@keyframes conic-spin {
+    to { transform: rotate(360deg); }
+}
+.conic-border {
+    position: relative;
+    isolation: isolate;
+}
+.conic-border::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(from 0deg, transparent 0%, #6366F1 25%, #A855F7 50%, #06B6D4 75%, transparent 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+    z-index: -1;
+}
+.conic-border::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background: conic-gradient(from 0deg, transparent 0%, #6366F1 25%, #A855F7 50%, #06B6D4 75%, transparent 100%);
+    opacity: 0;
+    filter: blur(16px);
+    animation: conic-spin 4s linear infinite;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+    z-index: -2;
+}
+.conic-border:hover::before,
+.conic-border:hover::after { opacity: 1; }
+
+/* ─── Magnetic / spring button ─────────────────────────────────────── */
+.magnetic-btn {
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+}
+
+/* ─── Glow pulse on accent dots ────────────────────────────────────── */
+@keyframes glow-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); }
+    50%      { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
+}
+.glow-pulse { animation: glow-pulse 2s ease-out infinite; }
+
+/* ─── Floating particles ───────────────────────────────────────────── */
+@keyframes particle-rise {
+    0%   { transform: translateY(0) translateX(0); opacity: 0; }
+    10%  { opacity: 0.8; }
+    90%  { opacity: 0.6; }
+    100% { transform: translateY(-100vh) translateX(20px); opacity: 0; }
+}
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, #6366F1, #A855F7);
+    pointer-events: none;
+    animation: particle-rise linear infinite;
+}
+
+/* ─── Animated underline (nav) ─────────────────────────────────────── */
+.nav-underline {
+    position: relative;
+}
+.nav-underline::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 16px; right: 16px;
+    height: 2px;
+    background: linear-gradient(90deg, #6366F1, #A855F7);
+    border-radius: 2px;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-underline:hover::after { transform: scaleX(1); }
+
+/* ─── Slide-in stagger reveal ──────────────────────────────────────── */
+@keyframes stagger-in {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.stagger-item {
+    opacity: 0;
+    animation: stagger-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ─── Spotlight cursor follow ──────────────────────────────────────── */
+.spotlight {
+    position: relative;
+    overflow: hidden;
+}
+.spotlight::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+        600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(99, 102, 241, 0.12),
+        transparent 40%
+    );
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+.spotlight:hover::before { opacity: 1; }
+
+/* ─── Image reveal mask ────────────────────────────────────────────── */
+@keyframes image-mask-reveal {
+    from { clip-path: inset(0 100% 0 0); }
+    to   { clip-path: inset(0 0 0 0); }
+}
+.image-reveal { animation: image-mask-reveal 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
+/* ─── Bouncy tap ───────────────────────────────────────────────────── */
+.tap-bounce { transition: transform 0.15s ease; }
+.tap-bounce:active { transform: scale(0.96); }
+
+/* ─── Custom scrollbar ─────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #6366F1, #A855F7);
+    border-radius: 9999px;
+    border: 3px solid transparent;
+    background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #4F46E5, #9333EA);
+    background-clip: padding-box;
+    border: 3px solid transparent;
+}
+
+/* ─── Reduced motion ───────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }

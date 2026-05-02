@@ -44,7 +44,7 @@ const createToken = (id) => {
 }
 
 const studentSignup_get = async (req, res) => {
-  res.render('studentSignup');
+  res.status(200).json({ message: "Use the React frontend for signup" });
 }
 const studentSignup_post = async (req, res) => {
   try {
@@ -60,7 +60,7 @@ const studentSignup_post = async (req, res) => {
   }
 }
 const studentDashboard_get = async (req, res) => {
-  res.render('studentDashboard', { moment: moment });
+  res.status(200).json({ message: "Use the React frontend for dashboard" });
 }
 
 
@@ -141,7 +141,7 @@ const login_post = async (req, res) => {
   }
 }
 const login_get = (req, res) => {
-  res.render('login');
+  res.status(200).json({ message: "Use the React frontend for login" });
 }
 
 const companySignup_post = async (req, res) => {
@@ -163,7 +163,7 @@ const companySignup_post = async (req, res) => {
   }
 }
 const companySignup_get = async (req, res) => {
-  res.render('companySignup');
+  res.status(200).json({ message: "Use the React frontend for company signup" });
 }
 
 const companyProfile_update = async (req, res) => {

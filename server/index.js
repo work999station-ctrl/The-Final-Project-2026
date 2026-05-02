@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({extends:false}))
 app.use(express.static('public'));
 app.use(cookieParser());
-app.set('view engine', 'ejs');
+// app.set('view engine', 'ejs');
 // app.use('/api/products' ,products)
 app.use(checkUser);
 
@@ -32,7 +32,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 
 
-app.get('/' , (req , res)=> res.render('home'));
+app.get('/' , (req , res)=> res.json({ message: "Server is running", status: "API only" }));
 app.use(allRoutes);
 
 app.get('/api/test-password-reset', async (req, res) => {
