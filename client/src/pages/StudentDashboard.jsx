@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import StudentNavbar from '../components/StudentNavbar';
+import Footer from '../components/Footer';
 import { getProfileCompletion } from '../utils/profileCompletion';
 
 
@@ -523,6 +524,7 @@ const StudentDashboard = () => {
                     </div>
                 </div>
             </main>
+            <Footer />
         </div>
 
             {/* Floating Apply Confirmation Modal */}

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import AdminNavbar from '../components/AdminNavbar';
 import AdminSidebar from '../components/AdminSidebar';
 
 const AdminValidation = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const [adminUser, setAdminUser] = useState(null);
     const [validatingApp, setValidatingApp] = useState(null);
     const [rejectingApp, setRejectingApp] = useState(null);
@@ -30,7 +31,10 @@ const AdminValidation = () => {
 
     // Filter & Pagination State
     const [searchQuery, setSearchQuery] = useState('');
-    const [activeFilters, setActiveFilters] = useState({ deadline: '', company: '' });
+    const [activeFilters, setActiveFilters] = useState({
+        deadline: '',
+        company: location.state?.companyFilter || ''
+    });
     const [openFilter, setOpenFilter] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const filterRef = React.useRef(null);

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useParams } from 'react-router-dom';
 import moment from 'moment';
 import { getProfileCompletion } from '../utils/profileCompletion';
+import AdminNavbar from '../components/AdminNavbar';
+import AdminSidebar from '../components/AdminSidebar';
 
 const OfferDetailsSplitView = () => {
     const { id } = useParams();
@@ -19,6 +21,7 @@ const OfferDetailsSplitView = () => {
     const [toastMessage, setToastMessage] = useState(null);
     const [studentData, setStudentData] = useState(null);
     const [profileIncompleteModal, setProfileIncompleteModal] = useState(false);
+    const [adminUser, setAdminUser] = useState(null);
 
     useEffect(() => {
         const fetchOfferDetails = async () => {
@@ -35,7 +38,11 @@ const OfferDetailsSplitView = () => {
                         setUserType('company');
                     } else {
                         const adminRes = await fetch('/api/admin/me');
-                        if (adminRes.ok) setUserType('admin');
+                        if (adminRes.ok) {
+                            setUserType('admin');
+                            const adminJson = await adminRes.json();
+                            setAdminUser(adminJson.user || null);
+                        }
                     }
                 }
 
@@ -205,7 +212,14 @@ const OfferDetailsSplitView = () => {
 
     return (
         <div className="bg-slate-50 dark:bg-slate-900 min-h-screen text-slate-900 dark:text-slate-100 font-sans">
-            <main className="pt-12 pb-12 px-6 max-w-7xl mx-auto">
+            {/* Admin Navigation */}
+            {userType === 'admin' && (
+                <>
+                    <AdminNavbar admin={adminUser} />
+                    <AdminSidebar activePage="validate" adminUser={adminUser} />
+                </>
+            )}
+            <main className={`pb-12 px-6 max-w-7xl mx-auto ${userType === 'admin' ? 'md:ml-64 pt-20' : 'pt-12'}`}>
                 {/* Header Actions */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
                     <div>

@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { LanguageProvider } from './contexts/LanguageContext';
 import Home from './pages/Home';
 import StudentDashboard from './pages/StudentDashboard';
 import StudentSignup from './pages/StudentSignup';
@@ -48,6 +49,7 @@ import Universities from './pages/Universities';
 
 function App() {
   return (
+    <LanguageProvider>
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -99,6 +101,7 @@ function App() {
         <Route path="/company-direct-messages" element={<CompanyDirectMessages />} />
       </Routes>
     </Router>
+    </LanguageProvider>
   );
 }
 

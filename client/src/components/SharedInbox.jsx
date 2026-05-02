@@ -52,7 +52,7 @@ const SharedInbox = ({ userType, title, backLink, navTitle = "stage.io", hideHea
                 <div className="max-w-[1600px] mx-auto flex items-center justify-between">
                     <div className="flex items-center gap-8">
                         <div className="flex items-center cursor-pointer" onClick={() => navigate(backLink)}>
-                            <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain dark:invert dark:hue-rotate-180 mix-blend-multiply dark:mix-blend-screen" />
+                            <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain dark:brightness-0 dark:invert dark:sepia dark:saturate-[10] dark:hue-rotate-[350deg] mix-blend-multiply dark:mix-blend-screen" />
                         </div>
                         <nav className="hidden md:flex items-center gap-6">
                             <a className="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm font-medium" onClick={() => navigate(backLink)} href="#">Dashboard</a>

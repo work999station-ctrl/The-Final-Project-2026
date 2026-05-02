@@ -60,7 +60,7 @@ const Navbar = ({ userProfile }) => {
 
                 {/* Logo */}
                 <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-                    <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain dark:invert dark:hue-rotate-180 mix-blend-multiply dark:mix-blend-screen" />
+                    <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain dark:brightness-0 dark:invert dark:sepia dark:saturate-[10] dark:hue-rotate-[350deg] mix-blend-multiply dark:mix-blend-screen" />
                 </div>
 
                 {/* Right side */}

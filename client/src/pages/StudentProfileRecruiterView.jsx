@@ -118,20 +118,6 @@ const StudentProfileRecruiterView = () => {
                                 </div>
                             </div>
                             <div className="flex flex-wrap justify-center gap-3 mt-8">
-                                {applications.length > 0 ? (
-                                    <button 
-                                        onClick={() => navigate(`/application-details/${applications[0]._id}?tab=Feedback`)} 
-                                        className="bg-indigo-600 text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-indigo-700 transition-colors flex items-center gap-2"
-                                    >
-                                        <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>chat</span>
-                                        Message Candidate
-                                    </button>
-                                ) : (
-                                    <a href={`mailto:${student.email}`} className="bg-indigo-600 text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-indigo-700 transition-colors flex items-center gap-2">
-                                        <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>mail</span>
-                                        Contact Candidate
-                                    </a>
-                                )}
                                 {student.githubPortfolio && (
                                     <a
                                         href={student.githubPortfolio.startsWith('http') ? student.githubPortfolio : `https://${student.githubPortfolio}`}
@@ -340,6 +326,26 @@ const StudentProfileRecruiterView = () => {
                     </div>
                 </div>
             </main>
+
+            {/* Footer */}
+            <footer className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 mt-12">
+                <div className="max-w-5xl mx-auto px-4 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                        <span className="text-lg font-bold text-indigo-600 dark:text-indigo-400">stage.io</span>
+                        <span className="text-slate-300 dark:text-slate-700">|</span>
+                        <span className="text-sm text-slate-500 dark:text-slate-400">Admin · Candidate Profile View</span>
+                    </div>
+                    <div className="flex items-center gap-6 text-xs text-slate-400 dark:text-slate-500 font-medium">
+                        <button onClick={() => navigate('/admin-dashboard')} className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Dashboard</button>
+                        <button onClick={() => navigate('/candidate-tracking-admin')} className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Validate</button>
+                        <button onClick={() => navigate('/university-placement-analytics')} className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Analytics</button>
+                        <button onClick={() => navigate('/contact-us')} className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Help</button>
+                    </div>
+                    <p className="text-xs text-slate-400 dark:text-slate-600">
+                        © {new Date().getFullYear()} stage.io · University Career Services
+                    </p>
+                </div>
+            </footer>
         </div>
     );
 };
