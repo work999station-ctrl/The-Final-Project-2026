@@ -1,10 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   Capacitor / mobile WebView baseline
+   ============================================================ */
+:root {
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+    --kb-height: 0px;
+}
+
+html, body {
+    /* Prevent rubber-band scrolling on iOS */
+    overscroll-behavior-y: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+
+/* Buttons / clickable elements feel snappier on touch */
+button, a, [role="button"] {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+/* When running inside Capacitor — pad for notch / home indicator */
+html.is-native body {
+    padding-top: var(--safe-top);
+    padding-bottom: var(--safe-bottom);
+    padding-left: var(--safe-left);
+    padding-right: var(--safe-right);
+}
+
+/* When the soft keyboard is open, lift content above it */
+html.kb-open body {
+    padding-bottom: calc(var(--safe-bottom) + var(--kb-height));
+}
+
+/* Offline banner anchor (shown via the .offline class on <html>) */
+html.offline body::before {
+    content: 'Offline — some features may be unavailable';
+    display: block;
+    background: #ef4444;
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 12px;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+}
+
 @layer base {
     body {
         @apply bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 transition-colors duration-200;
+    }
+
+    html[dir="rtl"] body,
+    html[lang="ar"] body {
+        font-family: 'Cairo', 'Tajawal', 'Noto Sans Arabic', 'Inter', sans-serif;
+    }
+
+    html[dir="rtl"] .font-display,
+    html[lang="ar"] .font-display {
+        font-family: 'Cairo', 'Tajawal', 'Space Grotesk', sans-serif;
     }
 }
 
@@ -27,4 +93,36 @@
         mask: radial-gradient(transparent calc(var(--size) / 2 - 4px), #fff 0);
         -webkit-mask: radial-gradient(transparent calc(var(--size) / 2 - 4px), #fff 0);
     }
+
+    [dir="rtl"] .rtl-flip {
+        transform: scaleX(-1);
+    }
+
+    @keyframes fade-in-up {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in-up {
+        animation: fade-in-up 0.35s ease-out both;
+    }
+
+    @keyframes pop-in {
+        0% { opacity: 0; transform: scale(0.95); }
+        100% { opacity: 1; transform: scale(1); }
+    }
+    .animate-pop-in {
+        animation: pop-in 0.25s cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+
+    /* Safe-area helpers (use as Tailwind-friendly utilities) */
+    .pt-safe   { padding-top: max(env(safe-area-inset-top), 0.5rem); }
+    .pb-safe   { padding-bottom: max(env(safe-area-inset-bottom), 0.5rem); }
+    .mt-safe   { margin-top: env(safe-area-inset-top); }
+    .mb-safe   { margin-bottom: env(safe-area-inset-bottom); }
+    .h-safe-top    { height: env(safe-area-inset-top); }
+    .h-safe-bottom { height: env(safe-area-inset-bottom); }
+
+    /* Tap-press feedback on mobile (use class="tap") */
+    .tap { transition: transform .12s ease; }
+    .tap:active { transform: scale(0.96); }
 }

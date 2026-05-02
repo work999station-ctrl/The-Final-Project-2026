@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import moment from 'moment';
 import StudentNavbar from '../components/StudentNavbar';
+import StudentSidebar from '../components/StudentSidebar';
 
 const InternshipOffers = () => {
     const navigate = useNavigate();
@@ -178,10 +179,12 @@ const InternshipOffers = () => {
     return (
         <div className="bg-[#F8FAFC] dark:bg-[#121121] font-body text-slate-900 dark:text-white antialiased min-h-screen flex flex-col">
             {/* Top Navbar */}
-            <StudentNavbar />
+            <StudentNavbar student={student} />
+            <StudentSidebar student={student} activePage="offers" />
 
             {/* Main Content Area */}
-            <main className="flex-1 flex flex-col max-w-[1440px] mx-auto w-full px-4 md:px-8 lg:px-12 py-8 gap-8">
+            <div className="flex-1 flex flex-col md:ml-64 transition-all duration-300">
+                <main className="flex-1 flex flex-col max-w-[1440px] mx-auto w-full px-4 md:px-8 lg:px-12 py-8 gap-8">
                 {/* Sticky Filter Bar Section */}
                 <section className="sticky top-[73px] z-40 -mx-4 md:-mx-8 lg:-mx-12 px-4 md:px-8 lg:px-12 py-4 bg-[#F8FAFC]/95 dark:bg-[#121121]/95 backdrop-blur-sm transition-all duration-300">
                     <div className="max-w-[960px] mx-auto flex flex-col md:flex-row gap-4 items-center">
@@ -523,6 +526,7 @@ const InternshipOffers = () => {
                     </div>
                 )}
             </main>
+            </div>
 
             {/* Floating Apply Confirmation Modal */}
             {applyModal && (

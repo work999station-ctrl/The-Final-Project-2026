@@ -1073,14 +1073,46 @@ const validateApplicationAdmin = async (req, res) => {
   }
 };
 
+const rejectApplicationAdmin = async (req, res) => {
+  try {
+    const { id: applicationId } = req.params;
+    const { reason } = req.body;
+
+    if (req.userType !== 'admin') {
+      return res.status(403).json({ error: 'Only admins can reject applications' });
+    }
+
+    if (!reason || reason.trim() === '') {
+      return res.status(400).json({ error: 'A rejection reason is required' });
+    }
+
+    const application = await Application.findById(applicationId);
+    if (!application) {
+      return res.status(404).json({ error: 'Application not found' });
+    }
+
+    application.status = 'admin_rejected';
+    application.adminRejectionReason = reason.trim();
+    application.statusChangedAt = new Date();
+    application.studentRead = false;
+    application.companyRead = false;
+    await application.save();
+
+    res.status(200).json({ success: true, application });
+  } catch (err) {
+    console.error("Error rejecting application (admin):", err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 const getAdminApplicationsToValidate = async (req, res) => {
   try {
     if (req.userType !== 'admin') {
       return res.status(403).json({ error: 'Only admins can view these applications' });
     }
 
-    // Fetch accepted and validated applications
-    let applications = await Application.find({ status: { $in: ['accepted', 'validated'] } })
+    // Fetch accepted, validated, and admin_rejected applications
+    let applications = await Application.find({ status: { $in: ['accepted', 'validated', 'admin_rejected'] } })
       .populate('studentId')
       .populate({
         path: 'offerId',
@@ -1352,8 +1384,8 @@ const getInboxMessages = async (req, res) => {
       }));
 
     } else if (userType === 'company') {
-      // Company receives notifications from admin for validated agreements
-      const applications = await Application.find({ status: 'validated' })
+      // Company receives notifications from admin for validated/rejected agreements
+      const applications = await Application.find({ status: { $in: ['validated', 'admin_rejected'] } })
         .populate({
           path: 'offerId',
           match: { companyId: userId },
@@ -1366,24 +1398,31 @@ const getInboxMessages = async (req, res) => {
       // Filter out applications where offerId is null (because of match condition above)
       const validApplications = applications.filter(app => app.offerId !== null);
 
-      messages = validApplications.map(app => ({
-        id: app._id,
-        appData: app,
-        companyName: 'University Administration',
-        logo: app.studentId?.profilePicture || app.offerId?.companyId?.logo || null,
-        logoText: app.studentId?.name?.charAt(0) || 'U',
-        logoBg: 'bg-blue-600 text-white',
-        time: app.statusChangedAt ? moment(app.statusChangedAt).fromNow() : moment(app.updatedAt).fromNow(),
-        title: `Agreement Ready - ${app.studentId?.name || 'Student'}`,
-        snippet: `The university has validated the internship for ${app.offerId.title}. Please review the final agreement.`,
-        unread: !app.companyRead,
-        active: false
-      }));
+      messages = validApplications.map(app => {
+        const isRejected = app.status === 'admin_rejected';
+        return {
+          id: app._id,
+          appData: app,
+          companyName: 'University Administration',
+          logo: app.studentId?.profilePicture || app.offerId?.companyId?.logo || null,
+          logoText: app.studentId?.name?.charAt(0) || 'U',
+          logoBg: isRejected ? 'bg-red-600 text-white' : 'bg-blue-600 text-white',
+          time: app.statusChangedAt ? moment(app.statusChangedAt).fromNow() : moment(app.updatedAt).fromNow(),
+          title: isRejected
+            ? `Internship Rejected - ${app.studentId?.name || 'Student'}`
+            : `Agreement Ready - ${app.studentId?.name || 'Student'}`,
+          snippet: isRejected
+            ? `The university has rejected the internship placement for ${app.offerId.title}.`
+            : `The university has validated the internship for ${app.offerId.title}. Please review the final agreement.`,
+          unread: !app.companyRead,
+          active: false
+        };
+      });
 
     } else if (userType === 'student') {
-      // Student receives notifications from admin for validated agreements
+      // Student receives notifications from admin for validated/rejected agreements
       const [applications, adminUser] = await Promise.all([
-        Application.find({ status: 'validated', studentId: userId })
+        Application.find({ status: { $in: ['validated', 'admin_rejected'] }, studentId: userId })
           .populate({
             path: 'offerId',
             populate: { path: 'companyId', select: 'companyName logo' }
@@ -1394,19 +1433,26 @@ const getInboxMessages = async (req, res) => {
 
       const validApplications = applications.filter(app => app.offerId);
 
-      messages = validApplications.map(app => ({
-        id: app._id,
-        appData: app,
-        companyName: 'University Administration',
-        logo: adminUser?.profilePicture || null,
-        logoText: 'U',
-        logoBg: 'bg-amber-600 text-white',
-        time: app.statusChangedAt ? moment(app.statusChangedAt).fromNow() : moment(app.updatedAt).fromNow(),
-        title: `Internship Approved - ${app.offerId?.title || 'Position'}`,
-        snippet: `Your internship with ${app.offerId?.companyId?.companyName || 'the company'} has been fully validated. Your agreement is ready.`,
-        unread: !app.studentRead,
-        active: false
-      }));
+      messages = validApplications.map(app => {
+        const isRejected = app.status === 'admin_rejected';
+        return {
+          id: app._id,
+          appData: app,
+          companyName: 'University Administration',
+          logo: adminUser?.profilePicture || null,
+          logoText: 'U',
+          logoBg: isRejected ? 'bg-red-600 text-white' : 'bg-amber-600 text-white',
+          time: app.statusChangedAt ? moment(app.statusChangedAt).fromNow() : moment(app.updatedAt).fromNow(),
+          title: isRejected
+            ? `Internship Rejected - ${app.offerId?.title || 'Position'}`
+            : `Internship Approved - ${app.offerId?.title || 'Position'}`,
+          snippet: isRejected
+            ? `Your internship application for ${app.offerId?.companyId?.companyName || 'the company'} has been rejected by the administration.`
+            : `Your internship with ${app.offerId?.companyId?.companyName || 'the company'} has been fully validated. Your agreement is ready.`,
+          unread: !app.studentRead,
+          active: false
+        };
+      });
     }
 
     res.status(200).json({ success: true, messages });
@@ -1480,6 +1526,7 @@ const getNotificationDetails = async (req, res) => {
       companyName: company.companyName || "Unknown Company",
       companyLogo: company.logo,
       status: application.status,
+      adminRejectionReason: application.adminRejectionReason || '',
       receivedAt: application.statusChangedAt || application.updatedAt,
       startDate: offer.createdAt ? moment(offer.createdAt).format('MMMM Do, YYYY') : moment().format('MMMM Do, YYYY'),
       endDate: offer.durationMonths ? moment(offer.createdAt).add(offer.durationMonths, 'months').format('MMMM Do, YYYY') : moment().add(6, 'months').format('MMMM Do, YYYY')
@@ -1605,5 +1652,5 @@ const getUniversityPlacementStats = async (req, res) => {
 };
 
 module.exports = {
-  studentSignup_get, studentSignup_post, studentDashboard_get, studentProfile_update, logout_get, login_post, login_get, companySignup_post, companySignup_get, companyProfile_update, adminSignup_post, adminProfile_update, createOffer, getAllOffers, getCompanyOffers, updateOffer, deleteOffer, getOfferById, createApplication, getCompanyApplications, getStudentProfileForRecruiter, getApplicationsByOfferId, updateApplicationStatus, getAdminApplicationsToValidate, getAdminAllApplications, getAdminCompanyProfile, getAdminApplicationById, getCompanyApplicationById, addApplicationFeedback, validateApplicationAdmin, getStudentApplications, deleteApplication, getCompanyDashboardStats, getInboxMessages, markMessageAsRead, getNotificationDetails, getUniversityPlacementStats
+  studentSignup_get, studentSignup_post, studentDashboard_get, studentProfile_update, logout_get, login_post, login_get, companySignup_post, companySignup_get, companyProfile_update, adminSignup_post, adminProfile_update, createOffer, getAllOffers, getCompanyOffers, updateOffer, deleteOffer, getOfferById, createApplication, getCompanyApplications, getStudentProfileForRecruiter, getApplicationsByOfferId, updateApplicationStatus, getAdminApplicationsToValidate, getAdminAllApplications, getAdminCompanyProfile, getAdminApplicationById, getCompanyApplicationById, addApplicationFeedback, validateApplicationAdmin, rejectApplicationAdmin, getStudentApplications, deleteApplication, getCompanyDashboardStats, getInboxMessages, markMessageAsRead, getNotificationDetails, getUniversityPlacementStats
 };

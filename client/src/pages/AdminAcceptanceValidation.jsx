@@ -1,14 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import logoImage from '../assets/logo.png';
+import AdminNavbar from '../components/AdminNavbar';
+import AdminSidebar from '../components/AdminSidebar';
 
 const AdminAcceptanceValidation = () => {
     const { applicationId } = useParams();
     const navigate = useNavigate();
+    const [adminUser, setAdminUser] = useState(null);
     const [application, setApplication] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [validating, setValidating] = useState(false);
+
+    useEffect(() => {
+        const fetchAdmin = async () => {
+            try {
+                const res = await fetch('/api/admin/me');
+                if (res.ok) {
+                    const data = await res.json();
+                    setAdminUser(data.user || null);
+                }
+            } catch (err) { console.error('Failed to fetch admin:', err); }
+        };
+        fetchAdmin();
+    }, []);
 
     useEffect(() => {
         const fetchApplicationDetails = async () => {
@@ -84,18 +99,10 @@ const AdminAcceptanceValidation = () => {
 
     return (
         <div className="bg-slate-50 text-slate-900 antialiased min-h-screen font-body">
-            {/* Top Navigation Bar */}
-            <header className="bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none sticky top-0 z-50">
-                <div className="flex justify-between items-center h-16 px-6 w-full max-w-full mx-auto font-sans antialiased text-sm font-medium">
-                    <div className="flex items-center gap-8">
-                        <div className="flex items-center cursor-pointer" onClick={() => navigate('/admin-dashboard')}>
-                            <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain dark:invert dark:hue-rotate-180 mix-blend-multiply dark:mix-blend-screen" />
-                        </div>
-                    </div>
-                </div>
-            </header>
+            <AdminNavbar admin={adminUser} />
+            <AdminSidebar activePage="validate" adminUser={adminUser} />
 
-            <div className="flex min-h-[calc(100vh-64px)]">
+            <div className="md:ml-64 pt-20 min-h-[calc(100vh-80px)]">
                 {/* Main Content Area */}
                 <main className="flex-1 p-8 bg-slate-50/50">
                     <div className="max-w-4xl mx-auto">

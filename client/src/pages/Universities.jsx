@@ -37,20 +37,7 @@ const Universities = () => {
                         <p className="max-w-2xl mx-auto text-xl text-slate-600 dark:text-slate-400 mb-12 leading-relaxed">
                             Empower your students and eliminate paperwork with our automated placement ecosystem. Streamline internships from initial connection to the final contract.
                         </p>
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                            <button
-                                onClick={() => navigate('/admin-signup')}
-                                className="w-full sm:w-auto bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-lg font-bold py-4 px-10 rounded-2xl hover:scale-105 transition-all shadow-xl shadow-slate-200 dark:shadow-none"
-                            >
-                                Get Started for Free
-                            </button>
-                            <a href="/careers">
-                                <button className="w-full sm:w-auto bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-lg font-bold py-4 px-10 rounded-2xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-750 transition-all flex items-center justify-center gap-2 group">
-                                    Watch Tutorial
-                                    <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">play_arrow</span>
-                                </button>
-                            </a>
-                        </div>
+
 
                         {/* Stats Bar */}
                         <div className="mt-24 pt-12 border-t border-slate-100 dark:border-slate-800/50 grid grid-cols-2 md:grid-cols-4 gap-8">
