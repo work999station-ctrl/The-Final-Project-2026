@@ -298,8 +298,8 @@ const StudentDashboard = () => {
                                 // Show the most recent application
                                 const app = [...applications].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
                                 const info = getStatusInfo(app.status);
-                                const step2Color = ['accepted', 'rejected', 'validated'].includes(app.status) ? `bg-${info.colorClass}-600` : 'bg-slate-200 dark:bg-slate-700';
-                                const step3Color = app.status === 'validated' ? 'bg-green-600' : 'bg-slate-200 dark:bg-slate-700';
+                                const step2Color = ['accepted', 'rejected', 'validated', 'admin_rejected'].includes(app.status) ? (app.status === 'admin_rejected' ? 'bg-green-600' : `bg-${info.colorClass}-600`) : 'bg-slate-200 dark:bg-slate-700';
+                                const step3Color = app.status === 'validated' ? 'bg-green-600' : (app.status === 'admin_rejected' ? 'bg-red-600' : 'bg-slate-200 dark:bg-slate-700');
                                 const dateApplied = new Date(app.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
                                 return (
@@ -328,11 +328,11 @@ const StudentDashboard = () => {
                                             <div className="flex items-center w-full">
                                                 {/* Step 1: Applied */}
                                                 <div className="flex flex-col items-center gap-1">
-                                                    <div className={`w-10 h-10 rounded-full bg-${info.colorClass}-600 ring-4 ring-${info.colorClass}-100 flex items-center justify-center shadow-md`}>
+                                                    <div className={`w-10 h-10 rounded-full ${app.status === 'admin_rejected' ? 'bg-green-600 ring-4 ring-green-100' : `bg-${info.colorClass}-600 ring-4 ring-${info.colorClass}-100`} flex items-center justify-center shadow-md`}>
                                                         <span className="material-symbols-outlined text-white text-base" style={{ fontVariationSettings: "'FILL' 1" }}>send</span>
                                                     </div>
                                                 </div>
-                                                <div className={`flex-1 h-1 rounded-full mx-1 ${step2Color !== 'bg-slate-200 dark:bg-slate-700' ? `bg-${info.colorClass}-500` : 'bg-slate-200 dark:bg-slate-700'}`}></div>
+                                                <div className={`flex-1 h-1 rounded-full mx-1 ${step2Color !== 'bg-slate-200 dark:bg-slate-700' ? (app.status === 'admin_rejected' ? 'bg-green-500' : `bg-${info.colorClass}-500`) : 'bg-slate-200 dark:bg-slate-700'}`}></div>
 
                                                 {/* Step 2: Accepted / Refused */}
                                                 <div className="flex flex-col items-center gap-1">
@@ -342,7 +342,9 @@ const StudentDashboard = () => {
                                                             ? 'bg-red-600 ring-red-100'
                                                             : ['accepted', 'validated'].includes(app.status)
                                                                 ? 'bg-indigo-600 ring-indigo-100'
-                                                                : 'bg-slate-200 dark:bg-slate-700 ring-slate-100'
+                                                                : app.status === 'admin_rejected'
+                                                                    ? 'bg-green-600 ring-green-100'
+                                                                    : 'bg-slate-200 dark:bg-slate-700 ring-slate-100'
                                                         }`}>
                                                         <span className={`material-symbols-outlined text-base ${app.status === 'applied' ? `text-${info.colorClass}-400` :
                                                             app.status === 'rejected' ? 'text-white' : 'text-white'
@@ -351,30 +353,35 @@ const StudentDashboard = () => {
                                                         </span>
                                                     </div>
                                                 </div>
-                                                <div className={`flex-1 h-1 rounded-full mx-1 ${step3Color !== 'bg-slate-200 dark:bg-slate-700' ? 'bg-green-500' : 'bg-slate-200 dark:bg-slate-700'}`}></div>
+                                                <div className={`flex-1 h-1 rounded-full mx-1 ${step3Color !== 'bg-slate-200 dark:bg-slate-700' ? (app.status === 'admin_rejected' ? 'bg-red-500' : 'bg-green-500') : 'bg-slate-200 dark:bg-slate-700'}`}></div>
 
                                                 {/* Step 3: Validated */}
                                                 <div className="flex flex-col items-center gap-1">
                                                     <div className={`w-10 h-10 rounded-full flex items-center justify-center shadow-md ring-4 ${app.status === 'validated'
                                                         ? 'bg-green-600 ring-green-100'
-                                                        : ['accepted', 'rejected'].includes(app.status)
-                                                            ? 'bg-white dark:bg-slate-800 border-2 border-green-400 ring-green-100'
-                                                            : 'bg-slate-200 dark:bg-slate-700 ring-slate-100'
+                                                        : app.status === 'admin_rejected'
+                                                            ? 'bg-red-600 ring-red-100'
+                                                            : ['accepted', 'rejected'].includes(app.status)
+                                                                ? 'bg-white dark:bg-slate-800 border-2 border-green-400 ring-green-100'
+                                                                : 'bg-slate-200 dark:bg-slate-700 ring-slate-100'
                                                         }`}>
                                                         <span className={`material-symbols-outlined text-base ${app.status === 'validated' ? 'text-white' :
+                                                            app.status === 'admin_rejected' ? 'text-white' :
                                                             ['accepted', 'rejected'].includes(app.status) ? 'text-green-400' : 'text-slate-400 dark:text-slate-500'
-                                                            }`} style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
+                                                            }`} style={{ fontVariationSettings: "'FILL' 1" }}>{app.status === 'admin_rejected' ? 'block' : 'verified'}</span>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             {/* Labels */}
                                             <div className="flex justify-between w-full mt-3">
-                                                <span className={`text-xs font-bold text-${info.colorClass}-600 text-center w-10`}>Applied</span>
-                                                <span className={`text-xs font-bold text-center flex-1 ${['accepted', 'rejected'].includes(app.status) ? `text-${info.colorClass}-600` : 'text-slate-400 dark:text-slate-500'}`}>
+                                                <span className={`text-xs font-bold ${app.status === 'admin_rejected' ? 'text-green-600' : `text-${info.colorClass}-600`} text-center w-10`}>Applied</span>
+                                                <span className={`text-xs font-bold text-center flex-1 ${['accepted', 'rejected', 'admin_rejected'].includes(app.status) ? (app.status === 'admin_rejected' ? 'text-green-600' : `text-${info.colorClass}-600`) : 'text-slate-400 dark:text-slate-500'}`}>
                                                     {app.status === 'rejected' ? 'Refused' : 'Accepted'}
                                                 </span>
-                                                <span className={`text-xs font-bold text-center w-10 ${app.status === 'validated' ? 'text-green-600' : 'text-slate-400 dark:text-slate-500'}`}>Valid.</span>
+                                                <span className={`text-xs font-bold text-center w-10 ${app.status === 'validated' ? 'text-green-600' : (app.status === 'admin_rejected' ? 'text-red-600' : 'text-slate-400 dark:text-slate-500')}`}>
+                                                    {app.status === 'admin_rejected' ? 'Refused' : 'Valid.'}
+                                                </span>
                                             </div>
                                         </div>
 

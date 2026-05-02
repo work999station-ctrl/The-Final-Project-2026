@@ -83,7 +83,9 @@ const NotificationDetails = () => {
                         <span className="material-symbols-outlined group-hover:-translate-x-0.5 transition-transform">arrow_back</span>
                     </button>
                     <div className="text-sm font-bold text-slate-400 flex items-center gap-2">
-                        <span className="cursor-pointer hover:text-slate-600" onClick={() => navigate(-1)}>Inbox</span>
+                        <span className="cursor-pointer hover:text-slate-600" onClick={() => navigate(isStudent ? '/student-dashboard' : '/company-dashboard')}>Dashboard</span>
+                        <span className="material-symbols-outlined text-xs">chevron_right</span>
+                        <span className="cursor-pointer hover:text-slate-600" onClick={() => navigate(isStudent ? '/student-inbox' : '/company-inbox')}>messages</span>
                         <span className="material-symbols-outlined text-xs">chevron_right</span>
                         <span className="text-slate-600 underline underline-offset-4 decoration-indigo-200">{notification.status === 'admin_rejected' ? 'Rejection Notice' : 'Agreement Details'}</span>
                     </div>
@@ -94,13 +96,12 @@ const NotificationDetails = () => {
                     {/* Header Section */}
                     <div className="p-10 border-b border-slate-50 flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${
-                                notification.status === 'admin_rejected'
+                            <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${notification.status === 'admin_rejected'
                                     ? 'bg-red-100 text-red-700'
                                     : notification.status === 'validated'
                                         ? 'bg-green-100 text-green-700'
                                         : 'bg-indigo-100 text-indigo-700'
-                            }`}>
+                                }`}>
                                 <span className="material-symbols-outlined text-sm mr-1">{notification.status === 'admin_rejected' ? 'block' : 'verified'}</span>
                                 Status: {notification.status === 'admin_rejected' ? 'Rejected by Admin' : notification.status === 'validated' ? 'Validated by Admin' : 'In Progress'}
                             </span>
@@ -175,62 +176,62 @@ const NotificationDetails = () => {
 
                         {/* Attachment Card — only show for validated */}
                         {notification.status !== 'admin_rejected' && (
-                        <div className="mt-6 w-full max-w-2xl">
-                            <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-6 text-center">Generated Documentation</h3>
-                            <div
-                                onClick={() => navigate(`/agreement/${notification.id}`)}
-                                className="bg-indigo-50/40 border-2 border-dashed border-indigo-200 rounded-3xl p-8 flex flex-col items-center gap-6 group hover:bg-indigo-50 transition-all cursor-pointer shadow-sm hover:shadow-md"
-                            >
-                                <div className="w-16 h-20 bg-white rounded-xl shadow-lg flex flex-col items-center justify-center gap-1 border border-indigo-50 relative overflow-hidden group-hover:scale-105 transition-transform">
-                                    <div className="absolute top-0 left-0 w-full h-1 bg-indigo-500"></div>
-                                    <span className="material-symbols-outlined text-3xl text-indigo-500">download</span>
-                                    <span className="text-[8px] font-black text-slate-400 tracking-tighter uppercase">Download</span>
-                                </div>
-                                <div className="text-center">
-                                    <h4 className="text-base font-black text-slate-900 leading-tight mb-1">
-                                        Internship_Agreement_{notification.companyName.replace(/\s+/g, '_')}.pdf
-                                    </h4>
-                                    <div className="flex flex-wrap justify-center gap-3 text-[11px] font-bold text-slate-500">
-                                        <span className="flex items-center gap-1.5 text-green-600 font-black uppercase tracking-tighter">
-                                            <span className="material-symbols-outlined text-sm">verified</span>
-                                            Digitally Signed
-                                        </span>
-                                        <span className="text-slate-300">|</span>
-                                        <span>PDF Document Preview</span>
-                                    </div>
-                                </div>
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        navigate(`/agreement/${notification.id}`);
-                                    }}
-                                    className="w-full sm:w-auto px-10 py-4 rounded-xl bg-indigo-600 text-white font-black text-sm hover:bg-slate-900 transition-all shadow-xl shadow-indigo-100 flex items-center justify-center gap-2 group"
+                            <div className="mt-6 w-full max-w-2xl">
+                                <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-6 text-center">Generated Documentation</h3>
+                                <div
+                                    onClick={() => navigate(`/agreement/${notification.id}`)}
+                                    className="bg-indigo-50/40 border-2 border-dashed border-indigo-200 rounded-3xl p-8 flex flex-col items-center gap-6 group hover:bg-indigo-50 transition-all cursor-pointer shadow-sm hover:shadow-md"
                                 >
-                                    Download
-                                    <span className="material-symbols-outlined text-lg group-hover:translate-y-0.5 transition-transform">download</span>
-                                </button>
+                                    <div className="w-16 h-20 bg-white rounded-xl shadow-lg flex flex-col items-center justify-center gap-1 border border-indigo-50 relative overflow-hidden group-hover:scale-105 transition-transform">
+                                        <div className="absolute top-0 left-0 w-full h-1 bg-indigo-500"></div>
+                                        <span className="material-symbols-outlined text-3xl text-indigo-500">download</span>
+                                        <span className="text-[8px] font-black text-slate-400 tracking-tighter uppercase">Download</span>
+                                    </div>
+                                    <div className="text-center">
+                                        <h4 className="text-base font-black text-slate-900 leading-tight mb-1">
+                                            Internship_Agreement_{notification.companyName.replace(/\s+/g, '_')}.pdf
+                                        </h4>
+                                        <div className="flex flex-wrap justify-center gap-3 text-[11px] font-bold text-slate-500">
+                                            <span className="flex items-center gap-1.5 text-green-600 font-black uppercase tracking-tighter">
+                                                <span className="material-symbols-outlined text-sm">verified</span>
+                                                Digitally Signed
+                                            </span>
+                                            <span className="text-slate-300">|</span>
+                                            <span>PDF Document Preview</span>
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            navigate(`/agreement/${notification.id}`);
+                                        }}
+                                        className="w-full sm:w-auto px-10 py-4 rounded-xl bg-indigo-600 text-white font-black text-sm hover:bg-slate-900 transition-all shadow-xl shadow-indigo-100 flex items-center justify-center gap-2 group"
+                                    >
+                                        Download
+                                        <span className="material-symbols-outlined text-lg group-hover:translate-y-0.5 transition-transform">download</span>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
                         )}
 
                         {/* Summary Block — only show for validated */}
                         {notification.status !== 'admin_rejected' && (
-                        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 p-8 bg-slate-50 rounded-3xl border border-slate-100 w-full max-w-2xl">
-                            <div className="text-center">
-                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Internship Period</p>
-                                <div className="flex items-center gap-3 justify-center">
-                                    <span className="material-symbols-outlined text-indigo-600">calendar_month</span>
-                                    <p className="text-sm font-bold text-slate-900">{notification.startDate} — {notification.endDate}</p>
+                            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 p-8 bg-slate-50 rounded-3xl border border-slate-100 w-full max-w-2xl">
+                                <div className="text-center">
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Internship Period</p>
+                                    <div className="flex items-center gap-3 justify-center">
+                                        <span className="material-symbols-outlined text-indigo-600">calendar_month</span>
+                                        <p className="text-sm font-bold text-slate-900">{notification.startDate} — {notification.endDate}</p>
+                                    </div>
+                                </div>
+                                <div className="text-center">
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Reference Number</p>
+                                    <div className="flex items-center gap-3 justify-center">
+                                        <span className="material-symbols-outlined text-indigo-600">fingerprint</span>
+                                        <p className="text-sm font-bold text-slate-900 uppercase">{notification.id.substring(0, 14)}...</p>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="text-center">
-                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Reference Number</p>
-                                <div className="flex items-center gap-3 justify-center">
-                                    <span className="material-symbols-outlined text-indigo-600">fingerprint</span>
-                                    <p className="text-sm font-bold text-slate-900 uppercase">{notification.id.substring(0, 14)}...</p>
-                                </div>
-                            </div>
-                        </div>
                         )}
 
                         {/* Footer Actions */}
@@ -262,17 +263,17 @@ const NotificationDetails = () => {
                         <h3 className="text-2xl font-black text-slate-900 font-headline tracking-tight mb-2">Archive Notice?</h3>
                         <p className="text-slate-500 text-sm mb-8 font-medium leading-relaxed">This notification will be securely moved to your archive. You can still access its details later if necessary.</p>
                         <div className="flex gap-4">
-                            <button 
-                                onClick={() => setShowArchiveModal(false)} 
+                            <button
+                                onClick={() => setShowArchiveModal(false)}
                                 className="flex-1 py-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-sm uppercase tracking-wider rounded-xl transition-all"
                             >
                                 Cancel
                             </button>
-                            <button 
+                            <button
                                 onClick={() => {
                                     setShowArchiveModal(false);
                                     navigate(isStudent ? '/student-inbox' : '/company-inbox');
-                                }} 
+                                }}
                                 className="flex-1 py-3 bg-slate-900 hover:bg-indigo-600 text-white font-bold text-sm uppercase tracking-wider rounded-xl transition-all shadow-xl shadow-slate-900/20"
                             >
                                 Confirm

@@ -217,6 +217,12 @@ const OfferDetailsSplitView = () => {
                                 Dashboard
                             </Link>
                             <span className="material-symbols-outlined text-[10px]">chevron_right</span>
+                            {userType === 'student' ? (
+                                <>
+                                    <Link to="/opportunities" className="hover:text-indigo-600 cursor-pointer">Offers</Link>
+                                    <span className="material-symbols-outlined text-[10px]">chevron_right</span>
+                                </>
+                            ) : null}
                             <span className="text-slate-900 dark:text-slate-200 font-medium">{offer.title}</span>
                         </nav>
                         <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
