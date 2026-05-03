@@ -6,11 +6,13 @@ import CompanySidebar from '../components/CompanySidebar';
 import Footer from '../components/Footer';
 import ActionSuccessConfirmation from '../components/ActionSuccessConfirmation';
 import ActionRejectionConfirmation from '../components/ActionRejectionConfirmation';
+import useSocket from '../hooks/useSocket';
 
 const CandidateTrackingStatistics = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { t, lang, setLang } = useLang();
+    const socket = useSocket();
     const searchParams = new URLSearchParams(location.search);
     const initialSearch = searchParams.get('search') || '';
     const [applications, setApplications] = useState([]);
@@ -65,6 +67,30 @@ const CandidateTrackingStatistics = () => {
         window.addEventListener('focus', fetchData);
         return () => window.removeEventListener('focus', fetchData);
     }, []);
+
+    // ── Real-time: patch status instantly when company updates application ──
+    useEffect(() => {
+        if (!socket) return;
+        const handleStatusChanged = (payload) => {
+            setApplications(prev =>
+                prev.map(app =>
+                    app._id === payload.applicationId
+                        ? { ...app, status: payload.status }
+                        : app
+                )
+            );
+        };
+        socket.on('application:statusChanged', handleStatusChanged);
+        return () => socket.off('application:statusChanged', handleStatusChanged);
+    }, [socket]);
+
+    // ── Real-time: when a new application arrives, refresh the list ──
+    useEffect(() => {
+        if (!socket) return;
+        const handleNewApplication = () => { fetchData(); };
+        socket.on('application:new', handleNewApplication);
+        return () => socket.off('application:new', handleNewApplication);
+    }, [socket]);
 
     const filteredApplications = applications
         .filter(app => app.studentId && app.offerId) // Ensure integrity

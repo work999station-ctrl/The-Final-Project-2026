@@ -1,13 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import StudentNavbar from '../components/StudentNavbar';
 import Footer from '../components/Footer';
 import { getProfileCompletion } from '../utils/profileCompletion';
+import useSocket from '../hooks/useSocket';
 
 
 const StudentDashboard = () => {
     const navigate = useNavigate();
+    const socket = useSocket();
     const [user, setUser] = useState({
         name: "Student Name",
         email: "student@university.edu",
@@ -144,6 +146,34 @@ const StudentDashboard = () => {
         };
         fetchApplications();
     }, []);
+
+    // ── Real-time: refresh profile when this student's data changes ──
+    useEffect(() => {
+        if (!socket) return;
+        const handleUserUpdated = (payload) => {
+            if (payload.type === 'student' && payload.data) {
+                setUser(prev => ({ ...prev, ...payload.data, skills: payload.data.skills || prev.skills }));
+            }
+        };
+        socket.on('user:updated', handleUserUpdated);
+        return () => socket.off('user:updated', handleUserUpdated);
+    }, [socket]);
+
+    // ── Real-time: update application status badge instantly ──
+    useEffect(() => {
+        if (!socket) return;
+        const handleStatusChanged = (payload) => {
+            setApplications(prev =>
+                prev.map(app =>
+                    app._id === payload.applicationId
+                        ? { ...app, status: payload.status }
+                        : app
+                )
+            );
+        };
+        socket.on('application:statusChanged', handleStatusChanged);
+        return () => socket.off('application:statusChanged', handleStatusChanged);
+    }, [socket]);
 
     return (
         <>

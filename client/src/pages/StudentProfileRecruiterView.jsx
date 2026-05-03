@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import CompanyNavbar from '../components/CompanyNavbar';
-import Footer from '../components/Footer';
 
 const StudentProfileRecruiterView = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const socket = useSocket();
     const [student, setStudent] = useState(null);
     const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -36,6 +35,18 @@ const StudentProfileRecruiterView = () => {
             fetchStudentProfile();
         }
     }, [id]);
+
+    // ── Real-time: if this student updates their profile, reflect it immediately ──
+    useEffect(() => {
+        if (!socket) return;
+        const handleUserUpdated = (payload) => {
+            if (payload.type === 'student' && payload.data && String(payload.userId) === String(id)) {
+                setStudent(prev => prev ? { ...prev, ...payload.data } : prev);
+            }
+        };
+        socket.on('user:updated', handleUserUpdated);
+        return () => socket.off('user:updated', handleUserUpdated);
+    }, [socket, id]);
 
     if (loading) {
         return (

@@ -5,6 +5,12 @@ const Offer = require('../models/Offer.model');
 const Application = require('../models/application.model');
 const moment = require('moment');
 const jwt = require('jsonwebtoken');
+const socketManager = require('../socket');
+
+// Helper — safely emit so the app doesn't crash if socket isn't ready
+const emit = (event, payload) => {
+  try { socketManager.getIO().emit(event, payload); } catch (_) {}
+};
 
 
 
@@ -94,8 +100,10 @@ const studentProfile_update = async (req, res) => {
       updateData.profilePicture = `/uploads/student/${req.file.filename}`;
     }
 
-    const result = await Student.findByIdAndUpdate(req.user._id, updateData, { new: true });
+    const result = await Student.findByIdAndUpdate(req.user._id, updateData, { returnDocument: 'after' });
     console.log('Profile updated:', result);
+    // Notify all connected clients that this student's profile changed
+    emit('user:updated', { type: 'student', userId: String(req.user._id), data: result });
     res.status(200).json({ success: true, user: result });
   } catch (err) {
     console.error('Update error:', err);
@@ -198,6 +206,8 @@ const companyProfile_update = async (req, res) => {
     await company.save();
 
     console.log('Company profile updated:', company._id);
+    // Notify all connected clients that this company's profile changed
+    emit('user:updated', { type: 'company', userId: String(company._id), data: company });
     res.status(200).json({ success: true, user: company });
   } catch (err) {
     console.error('Update error:', err);
@@ -231,6 +241,8 @@ const adminProfile_update = async (req, res) => {
     await admin.save();
 
     console.log('Admin profile updated:', admin._id);
+    // Notify all connected clients that this admin's profile changed
+    emit('user:updated', { type: 'admin', userId: String(admin._id), data: admin });
     res.status(200).json({ success: true, user: admin });
   } catch (err) {
     console.error('Update error:', err);
@@ -617,7 +629,7 @@ const updateOffer = async (req, res) => {
     const updatedOffer = await Offer.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true, runValidators: true }
+      { returnDocument: 'after', runValidators: true }
     );
 
     // If a logo was uploaded, update the associated company logo
@@ -749,6 +761,11 @@ const createApplication = async (req, res) => {
       status: 'applied'
     });
 
+    // Notify the company that a new application arrived for their offer
+    const relatedOffer = await Offer.findById(offerId).select('companyId');
+    if (relatedOffer) {
+      emit('application:new', { offerId: String(offerId), companyId: String(relatedOffer.companyId) });
+    }
     res.status(201).json({ success: true, application });
   } catch (err) {
     console.error("Error creating application:", err);
@@ -1047,6 +1064,13 @@ const updateApplicationStatus = async (req, res) => {
     application.statusChangedAt = new Date();
     await application.save();
 
+    // Notify all clients about the status change
+    emit('application:statusChanged', {
+      applicationId: String(applicationId),
+      status: application.status,
+      studentId: String(application.studentId),
+      offerId: String(application.offerId._id || application.offerId)
+    });
     res.status(200).json({ success: true, application });
   } catch (err) {
     console.error("Error updating application status:", err);
@@ -1072,6 +1096,13 @@ const validateApplicationAdmin = async (req, res) => {
     application.statusChangedAt = new Date();
     await application.save();
 
+    // Notify all clients about the admin validation
+    emit('application:statusChanged', {
+      applicationId: String(applicationId),
+      status: 'validated',
+      studentId: String(application.studentId),
+      offerId: String(application.offerId)
+    });
     res.status(200).json({ success: true, application });
   } catch (err) {
     console.error("Error validating application (admin):", err);
@@ -1104,6 +1135,13 @@ const rejectApplicationAdmin = async (req, res) => {
     application.companyRead = false;
     await application.save();
 
+    // Notify all clients about the admin rejection
+    emit('application:statusChanged', {
+      applicationId: String(applicationId),
+      status: 'admin_rejected',
+      studentId: String(application.studentId),
+      offerId: String(application.offerId)
+    });
     res.status(200).json({ success: true, application });
   } catch (err) {
     console.error("Error rejecting application (admin):", err);

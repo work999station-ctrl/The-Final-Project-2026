@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useParams } from 'react-router-dom';
 import moment from 'moment';
-import { getProfileCompletion } from '../utils/profileCompletion';
-import AdminNavbar from '../components/AdminNavbar';
-import AdminSidebar from '../components/AdminSidebar';
-import Footer from '../components/Footer';
 
 const OfferDetailsSplitView = () => {
     const { id } = useParams();
