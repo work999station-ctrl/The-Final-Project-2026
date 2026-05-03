@@ -177,6 +177,7 @@ const Footer = () => {
                                 </p>
                             </form>
                         </div>
+
                     </div>
                 </div>
 

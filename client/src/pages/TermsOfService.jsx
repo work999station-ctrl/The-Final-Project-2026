@@ -44,6 +44,12 @@ const TermsOfService = () => {
                                 <li><a className="font-body text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 transition-colors" href="#privacy">5. Privacy</a></li>
                                 <li><a className="font-body text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 transition-colors" href="#termination">6. Termination</a></li>
                                 <li><a className="font-body text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 transition-colors" href="#limitation-liability">7. Limitation of Liability</a></li>
+                                <li>
+                                    <a className="font-body text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 flex items-center gap-1" href="#official-documents">
+                                        <span className="material-symbols-outlined text-xs">verified</span>
+                                        8. Official Digital Documents
+                                    </a>
+                                </li>
                             </ul>
                         </nav>
                     </div>
@@ -128,7 +134,71 @@ const TermsOfService = () => {
                                 IN NO EVENT SHALL STAG.IO, ITS DIRECTORS, EMPLOYEES, PARTNERS, AGENTS, SUPPLIERS, OR AFFILIATES, BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL OR PUNITIVE DAMAGES, INCLUDING WITHOUT LIMITATION, LOSS OF PROFITS, DATA, USE, GOODWILL, OR OTHER INTANGIBLE LOSSES, RESULTING FROM (I) YOUR ACCESS TO OR USE OF OR INABILITY TO ACCESS OR USE THE PLATFORM; (II) ANY CONDUCT OR CONTENT OF ANY THIRD PARTY ON THE PLATFORM.
                             </p>
                         </section>
-                        
+
+                        {/* ── Section 8 — Official Digital Documents (highlighted) ── */}
+                        <section id="official-documents" className="relative rounded-2xl overflow-hidden">
+                            {/* Gradient glow border */}
+                            <div className="absolute -inset-px rounded-2xl bg-gradient-to-br from-indigo-500 via-violet-500 to-cyan-400 opacity-80" />
+                            <div className="relative bg-white dark:bg-slate-800 rounded-2xl p-8">
+
+                                {/* Badge */}
+                                <div className="inline-flex items-center gap-2 bg-indigo-50 dark:bg-indigo-900/40 border border-indigo-200 dark:border-indigo-700 text-indigo-700 dark:text-indigo-300 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-5">
+                                    <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
+                                    Official Notice
+                                </div>
+
+                                <h2 className="font-display text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
+                                    8. Official Digital Documents &amp; Legal Validity
+                                </h2>
+
+                                <div className="space-y-5 text-slate-600 dark:text-slate-300">
+
+                                    {/* Point 1 */}
+                                    <div className="flex gap-4 p-5 bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800/50 rounded-xl">
+                                        <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                                            <span className="material-symbols-outlined text-white text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>description</span>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-display font-bold text-slate-900 dark:text-white mb-1 text-base">Recognition by Ministry of Higher Education</h4>
+                                            <p className="text-sm leading-relaxed">
+                                                All documents generated through this platform are considered <strong className="text-slate-800 dark:text-slate-100">official digital documents</strong>. They are issued in accordance with the guidelines and standards established by the <strong className="text-slate-800 dark:text-slate-100">Ministry of Higher Education and Scientific Research</strong>, as outlined in the <strong className="text-slate-800 dark:text-slate-100">2024 national program</strong>.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {/* Point 2 */}
+                                    <div className="flex gap-4 p-5 bg-violet-50 dark:bg-violet-900/20 border border-violet-100 dark:border-violet-800/50 rounded-xl">
+                                        <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-500/30">
+                                            <span className="material-symbols-outlined text-white text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>qr_code_2</span>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-display font-bold text-slate-900 dark:text-white mb-1 text-base">QR Code Authentication</h4>
+                                            <p className="text-sm leading-relaxed">
+                                                Each document is electronically generated and includes a <strong className="text-slate-800 dark:text-slate-100">unique QR code</strong> to ensure authenticity and traceability. This QR code allows verification that the document was officially issued by the Stag.io platform and <strong className="text-slate-800 dark:text-slate-100">has not been altered</strong>.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {/* Point 3 — highlighted acknowledgement */}
+                                    <div className="relative p-5 rounded-xl bg-gradient-to-br from-indigo-600 to-violet-700 text-white shadow-xl shadow-indigo-500/20 overflow-hidden">
+                                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl pointer-events-none" />
+                                        <div className="relative flex gap-4">
+                                            <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+                                                <span className="material-symbols-outlined text-white text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>gavel</span>
+                                            </div>
+                                            <div>
+                                                <h4 className="font-display font-bold text-white mb-1 text-base">User Acknowledgement &amp; Legal Acceptance</h4>
+                                                <p className="text-sm leading-relaxed text-white/85">
+                                                    By using this service, users <strong className="text-white">acknowledge and accept</strong> the legal and administrative validity of the documents generated through the platform.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </section>
+
                         <div className="flex justify-center pt-8">
                             <button className="flex items-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-display font-bold px-8 py-3 rounded-full shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200">
                                 <span className="material-symbols-outlined">download</span>
