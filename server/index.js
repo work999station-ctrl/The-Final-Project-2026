@@ -12,7 +12,6 @@ app.use(express.urlencoded({ extends: false }))
 app.use(express.static('public'));
 app.use(cookieParser());
 app.set('view engine', 'ejs');
-// app.use('/api/products' ,products)
 app.use(checkUser);
 
 
@@ -46,6 +45,6 @@ app.get('/api/test-password-reset', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

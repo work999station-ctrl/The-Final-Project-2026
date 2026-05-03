@@ -37,6 +37,7 @@ const EditStudentProfile = () => {
     const [error, setError] = useState('');
     const [showSkillsDropdown, setShowSkillsDropdown] = useState(false);
     const [student, setStudent] = useState(null);
+    const [isExtractingCV, setIsExtractingCV] = useState(false);
 
     const skillCategories = [
         { name: 'Front-end', skills: ['React', 'Next.js', 'Vue.js', 'Tailwind CSS', 'Angular', 'HTML/CSS'] },
@@ -136,6 +137,59 @@ const EditStudentProfile = () => {
 
     const handleRemoveSkill = (skillToRemove) => {
         setSkills(skills.filter(s => s !== skillToRemove));
+    };
+
+    const handleCVUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        setIsExtractingCV(true);
+        const form = new FormData();
+        form.append('cv', file);
+
+        try {
+            const response = await fetch('/api/student/parse-cv', {
+                method: 'POST',
+                body: form
+            });
+            const result = await response.json();
+
+            if (result.success && result.data) {
+                const data = result.data;
+                
+                setFormData(prev => ({
+                    ...prev,
+                    baccalaureate: prev.baccalaureate || data.baccalaureate || '',
+                    githubPortfolio: prev.githubPortfolio || data.githubPortfolio || '',
+                    phoneNumber: prev.phoneNumber || data.phoneNumber || '',
+                    bio: prev.bio || data.bio || '',
+                    expectedGraduationDate: prev.expectedGraduationDate || data.expectedGraduationDate || ''
+                }));
+                
+                if (data.skills && Array.isArray(data.skills)) {
+                    setSkills(prev => Array.from(new Set([...prev, ...data.skills])));
+                }
+
+                if (data.academicProjects && Array.isArray(data.academicProjects)) {
+                    setAcademicProjects(prev => [...prev, ...data.academicProjects]);
+                }
+
+                if (data.experience && Array.isArray(data.experience)) {
+                    setExperience(prev => [...prev, ...data.experience]);
+                }
+
+                alert('CV Successfully Parsed! Extracted information has been filled.');
+            } else {
+                alert(result.error || 'Failed to parse CV.');
+            }
+        } catch (error) {
+            console.error('Error uploading CV:', error);
+            alert('An error occurred while parsing the CV.');
+        } finally {
+            setIsExtractingCV(false);
+            // Clear the input so the same file can be uploaded again if needed
+            e.target.value = null;
+        }
     };
 
     const handleSave = async () => {
@@ -299,14 +353,23 @@ const EditStudentProfile = () => {
                                                 <span className="material-symbols-outlined text-primary text-lg">workspace_premium</span>
                                                 Degree Name
                                             </label>
-                                            <input
+                                            <select
                                                 className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all"
-                                                placeholder="e.g. Bachelor of Science in IT"
-                                                type="text"
                                                 name="degreeName"
                                                 value={formData.degreeName}
                                                 onChange={handleChange}
-                                            />
+                                            >
+                                                <option value="">Select a degree</option>
+                                                <option value="Licence (LMD)">Licence (LMD)</option>
+                                                <option value="Master">Master</option>
+                                                <option value="Doctorat">Doctorat</option>
+                                                <option value="Ingénieur d'État">Ingénieur d'État</option>
+                                                <option value="Technicien Supérieur (BTS/DTS)">Technicien Supérieur (BTS/DTS)</option>
+                                                <option value="Bachelor of Science">Bachelor of Science</option>
+                                                <option value="Bachelor of Arts">Bachelor of Arts</option>
+                                                <option value="MBA">MBA</option>
+                                                <option value="Other">Other</option>
+                                            </select>
                                         </div>
                                         <div className="flex flex-col gap-2">
                                             <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
@@ -622,6 +685,49 @@ const EditStudentProfile = () => {
                                                 </div>
                                             </div>
                                         ))}
+                                    </div>
+
+                                    {/* Divider */}
+                                    <div className="flex items-center gap-4 py-2">
+                                        <div className="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div>
+                                        <span className="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 whitespace-nowrap">Or — Upload your CV</span>
+                                        <div className="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div>
+                                    </div>
+
+                                    {/* CV Upload Section */}
+                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2 border-slate-200 dark:border-slate-800">
+                                        <div>
+                                            <h3 className="font-header text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                                <span className="material-symbols-outlined text-primary">description</span>
+                                                Auto-fill with CV
+                                            </h3>
+                                            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Upload your resume to automatically extract and fill your profile details.</p>
+                                        </div>
+                                        <div className="relative shrink-0">
+                                            <input 
+                                                type="file" 
+                                                accept=".pdf,.doc,.docx" 
+                                                onChange={handleCVUpload}
+                                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
+                                                disabled={isExtractingCV}
+                                                title="Upload CV"
+                                            />
+                                            <button
+                                                type="button"
+                                                disabled={isExtractingCV}
+                                                className={`flex items-center gap-2 px-6 h-12 rounded-full text-sm font-bold transition-all ${
+                                                    isExtractingCV 
+                                                    ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed' 
+                                                    : 'bg-primary text-white hover:bg-primary/90 shadow-lg shadow-primary/20'
+                                                }`}
+                                            >
+                                                {isExtractingCV ? (
+                                                    <><span className="material-symbols-outlined text-lg animate-spin">progress_activity</span> Extracting...</>
+                                                ) : (
+                                                    <><span className="material-symbols-outlined text-lg">upload_file</span> Upload CV</>
+                                                )}
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
 
