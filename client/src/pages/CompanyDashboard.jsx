@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import moment from 'moment';
 import CompanyNavbar from '../components/CompanyNavbar';
+import useSocket from '../hooks/useSocket';
 
 const CompanyDashboard = () => {
     const navigate = useNavigate();
+    const socket = useSocket();
 
     const [company, setCompany] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -65,6 +67,41 @@ const CompanyDashboard = () => {
         window.addEventListener('focus', fetchDashboardData);
         return () => window.removeEventListener('focus', fetchDashboardData);
     }, [navigate]);
+
+    // ── Real-time: refresh when company profile is updated ──
+    useEffect(() => {
+        if (!socket) return;
+        const handleUserUpdated = (payload) => {
+            if (payload.type === 'company' && payload.data) {
+                setCompany(prev => ({
+                    ...prev,
+                    companyName: payload.data.companyName || prev?.companyName,
+                    description: payload.data.description || prev?.description,
+                    email: payload.data.email || prev?.email,
+                    phoneNumber: payload.data.phoneNumber || prev?.phoneNumber,
+                    address: payload.data.address || prev?.address,
+                    website: payload.data.website || prev?.website,
+                    logo: payload.data.logo || prev?.logo,
+                }));
+            }
+        };
+        socket.on('user:updated', handleUserUpdated);
+        return () => socket.off('user:updated', handleUserUpdated);
+    }, [socket]);
+
+    // ── Real-time: refresh stats when a new application arrives ──
+    useEffect(() => {
+        if (!socket) return;
+        const handleNewApplication = () => {
+            // Just re-fetch dashboard stats for live counters
+            fetch('/api/company/dashboard-stats')
+                .then(r => r.json())
+                .then(d => { if (d.success) setStats(d.stats); })
+                .catch(() => {});
+        };
+        socket.on('application:new', handleNewApplication);
+        return () => socket.off('application:new', handleNewApplication);
+    }, [socket]);
 
     const confirmDeleteOffer = async () => {
         if (!offerToDelete) return;

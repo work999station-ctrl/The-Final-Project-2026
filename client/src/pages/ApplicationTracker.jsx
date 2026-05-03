@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import StudentNavbar from '../components/StudentNavbar';
 import StudentSidebar from '../components/StudentSidebar';
 import StudentDeleteAlert from '../components/StudentDeleteAlert';
+import useSocket from '../hooks/useSocket';
 
 const ApplicationTracker = () => {
     const navigate = useNavigate();
+    const socket = useSocket();
     const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(true);
     const [student, setStudent] = useState(null);
@@ -50,6 +52,22 @@ const ApplicationTracker = () => {
         };
         fetchAppsAndStudent();
     }, []);
+
+    // ── Real-time: update status badge when company/admin acts on an application ──
+    useEffect(() => {
+        if (!socket) return;
+        const handleStatusChanged = (payload) => {
+            setApplications(prev =>
+                prev.map(app =>
+                    app._id === payload.applicationId
+                        ? { ...app, status: payload.status }
+                        : app
+                )
+            );
+        };
+        socket.on('application:statusChanged', handleStatusChanged);
+        return () => socket.off('application:statusChanged', handleStatusChanged);
+    }, [socket]);
 
     const getStatusInfo = (status) => {
         switch (status) {

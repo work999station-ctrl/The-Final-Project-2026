@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { LanguageProvider } from './contexts/LanguageContext';
+import { SocketProvider } from './contexts/SocketContext';
 import Home from './pages/Home';
 import StudentDashboard from './pages/StudentDashboard';
 import StudentSignup from './pages/StudentSignup';
@@ -49,6 +50,7 @@ import Universities from './pages/Universities';
 
 function App() {
   return (
+    <SocketProvider>
     <LanguageProvider>
     <Router>
       <Routes>
@@ -102,6 +104,7 @@ function App() {
       </Routes>
     </Router>
     </LanguageProvider>
+    </SocketProvider>
   );
 }
 
