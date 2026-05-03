@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import CompanyNavbar from '../components/CompanyNavbar';
+import Footer from '../components/Footer';
+import { useLang } from '../contexts/LanguageContext';
 
 const EditCompanyOffer = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { t, lang, setLang } = useLang();
 
     // UI States
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -94,11 +97,11 @@ const EditCompanyOffer = () => {
                         setSelectedSkills(reconstructed);
                     }
                 } else {
-                    setError(data.error || 'Failed to load offer data.');
+                    setError(data.error || t('editOffer.errorLoad'));
                 }
             } catch (err) {
                 console.error('Error fetching offer:', err);
-                setError('Connection error loading offer.');
+                setError(t('editOffer.errorConn'));
             } finally {
                 setIsLoading(false);
             }
@@ -215,14 +218,14 @@ const EditCompanyOffer = () => {
             const data = await res.json();
 
             if (res.ok) {
-                setSuccess('Offer updated successfully!');
+                setSuccess(t('editOffer.success'));
                 setTimeout(() => navigate(`/offer-details/${id}`), 1500);
             } else {
-                setError(data.error || 'Failed to update offer.');
+                setError(data.error || t('editOffer.errorSave'));
             }
         } catch (err) {
             console.error('Save error:', err);
-            setError('Connection error saving offer.');
+            setError(t('editOffer.errorSave'));
         } finally {
             setIsSaving(false);
         }
@@ -241,13 +244,13 @@ const EditCompanyOffer = () => {
             <CompanyNavbar />
             <div className="max-w-4xl mx-auto py-12 px-6">
                 {/* Header */}
-                <div className="mb-8">
+                <div className="mb-8 text-left">
                     <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-slate-500 hover:text-indigo-600 transition-colors mb-4 text-sm font-medium">
                         <span className="material-symbols-outlined text-base">arrow_back</span>
-                        Back to Offer
+                        {t('editOffer.back')}
                     </button>
-                    <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Edit Internship Offer</h1>
-                    <p className="text-slate-500 dark:text-slate-400 mt-2">Update the details and requirements for this posting.</p>
+                    <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">{t('editOffer.title')}</h1>
+                    <p className="text-slate-500 dark:text-slate-400 mt-2">{t('editOffer.subtitle')}</p>
                 </div>
 
                 {/* Form Card */}
@@ -268,15 +271,15 @@ const EditCompanyOffer = () => {
                                         <span className="material-symbols-outlined text-white text-3xl">photo_camera</span>
                                     </div>
                                 </div>
-                                <div className="flex flex-col">
-                                    <h3 className="text-slate-900 dark:text-white text-xl font-bold">Company Logo</h3>
-                                    <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Updates your company logo globally.</p>
-                                    <p className="text-slate-400 dark:text-slate-500 text-xs mt-0.5">PNG, JPG or SVG. Max 5MB.</p>
+                                <div className="flex flex-col text-left">
+                                    <h3 className="text-slate-900 dark:text-white text-xl font-bold">{t('editOffer.logoTitle')}</h3>
+                                    <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">{t('editOffer.logoDesc')}</p>
+                                    <p className="text-slate-400 dark:text-slate-500 text-xs mt-0.5">{t('editOffer.logoSpecs')}</p>
                                 </div>
                             </div>
                             <label className="flex items-center justify-center gap-2 px-6 h-11 bg-indigo-600 text-white rounded-full font-semibold hover:bg-indigo-700 transition-all shadow-md shadow-indigo-600/20 cursor-pointer">
                                 <span className="material-symbols-outlined text-lg">upload_file</span>
-                                <span>Change Logo</span>
+                                <span>{t('editOffer.changeLogo')}</span>
                                 <input type="file" accept="image/*" onChange={handleLogoChange} className="hidden" />
                             </label>
                         </div>
@@ -297,20 +300,20 @@ const EditCompanyOffer = () => {
 
                     <div className="p-8 space-y-6">
                         {/* Title */}
-                        <div className="space-y-2">
-                            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Internship Title</label>
+                        <div className="space-y-2 text-left">
+                            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">{t('createOffer.fieldTitle')}</label>
                             <input
                                 name="title"
                                 value={formData.title}
                                 onChange={handleInputChange}
                                 className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
-                                placeholder="e.g. Senior Product Designer"
+                                placeholder={t('createOffer.fieldTitlePlaceholder')}
                             />
                         </div>
 
                         {/* Tech Stack */}
-                        <div className="space-y-2 relative">
-                            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Required Tech Stack</label>
+                        <div className="space-y-2 relative text-left">
+                            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">{t('createOffer.fieldTechStack')}</label>
                             <div
                                 className="min-h-[52px] w-full px-4 py-2 flex items-center justify-between rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 hover:border-indigo-500/50 cursor-pointer transition-all"
                                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -326,7 +329,7 @@ const EditCompanyOffer = () => {
                                             </div>
                                         ))
                                     ) : (
-                                        <span className="text-sm text-slate-400">Select categories and skills...</span>
+                                        <span className="text-sm text-slate-400">{t('createOffer.fieldTechStackPlaceholder')}</span>
                                     )}
                                 </div>
                                 <span className={`material-symbols-outlined text-slate-400 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}>expand_more</span>
@@ -378,9 +381,9 @@ const EditCompanyOffer = () => {
                         </div>
 
                         {/* Grid: Duration, Slots, Salary, Type */}
-                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-left">
                             <div className="space-y-2">
-                                <label className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Duration (Mo)</label>
+                                <label className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">{t('createOffer.fieldDuration')}</label>
                                 <input
                                     name="durationMonths"
                                     type="number"
@@ -391,7 +394,7 @@ const EditCompanyOffer = () => {
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Slots</label>
+                                <label className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">{t('createOffer.fieldSlots')}</label>
                                 <input
                                     name="slotsAvailable"
                                     type="number"
@@ -402,17 +405,17 @@ const EditCompanyOffer = () => {
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Salary</label>
+                                <label className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">{t('createOffer.fieldSalary')}</label>
                                 <input
                                     name="salary"
                                     value={formData.salary}
                                     onChange={handleInputChange}
                                     className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
-                                    placeholder="e.g. 25000"
+                                    placeholder={t('createOffer.fieldSalaryPlaceholder')}
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Work Type</label>
+                                <label className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">{t('createOffer.fieldWorkType')}</label>
                                 <div className="relative">
                                     <select
                                         name="internshipType"
@@ -431,8 +434,8 @@ const EditCompanyOffer = () => {
                         </div>
 
                         {/* Location (Wilaya) */}
-                        <div className="space-y-2">
-                            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Location (Wilaya)</label>
+                        <div className="space-y-2 text-left">
+                            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">{t('createOffer.fieldLocation')}</label>
                             <div className="relative">
                                 <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">location_on</span>
                                 <input
@@ -440,21 +443,21 @@ const EditCompanyOffer = () => {
                                     value={formData.wilaya}
                                     onChange={handleInputChange}
                                     className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
-                                    placeholder="e.g. 16 - Alger"
+                                    placeholder={t('createOffer.fieldLocationPlaceholder')}
                                 />
                             </div>
                         </div>
 
                         {/* Description */}
-                        <div className="space-y-2">
-                            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Description</label>
+                        <div className="space-y-2 text-left">
+                            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">{t('createOffer.fieldDescription')}</label>
                             <textarea
                                 name="description"
                                 rows="6"
                                 value={formData.description}
                                 onChange={handleInputChange}
                                 className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all resize-none"
-                                placeholder="Describe the role and responsibilities..."
+                                placeholder={t('createOffer.fieldDescriptionPlaceholder')}
                             />
                         </div>
                     </div>
@@ -466,7 +469,7 @@ const EditCompanyOffer = () => {
                             className="px-8 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-bold hover:bg-slate-100 dark:hover:bg-slate-700 transition-all shadow-sm"
                             disabled={isSaving}
                         >
-                            Cancel
+                            {t('createOffer.cancel')}
                         </button>
                         <button
                             onClick={handleSave}
@@ -474,17 +477,22 @@ const EditCompanyOffer = () => {
                             disabled={isSaving}
                         >
                             {isSaving ? (
-                                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                <>
+                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                    <span>{t('editOffer.updating')}</span>
+                                </>
                             ) : (
                                 <>
                                     <span className="material-symbols-outlined text-lg">check_circle</span>
-                                    Update Offer
+                                    {t('editOffer.updateOffer')}
                                 </>
                             )}
                         </button>
                     </div>
                 </div>
             </div>
+
+            <Footer />
         </div>
     );
 };

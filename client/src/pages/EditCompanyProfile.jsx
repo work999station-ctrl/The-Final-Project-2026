@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { useLang } from '../contexts/LanguageContext';
 import CompanyNavbar from '../components/CompanyNavbar';
+import Footer from '../components/Footer';
 
 const EditCompanyProfile = () => {
     const navigate = useNavigate();
+    const { t, lang, setLang } = useLang();
 
     const [formData, setFormData] = useState({
         companyName: '',
@@ -40,11 +43,11 @@ const EditCompanyProfile = () => {
                         setLogoPreview(data.user.logo);
                     }
                 } else {
-                    setError('Failed to load profile data.');
+                    setError(t('editProfile.errorLoad'));
                 }
             } catch (err) {
                 console.error('Error fetching profile:', err);
-                setError('Connection error updating profile.');
+                setError(t('editProfile.errorUpdate'));
             } finally {
                 setIsLoading(false);
             }
@@ -93,11 +96,11 @@ const EditCompanyProfile = () => {
             if (res.ok) {
                 navigate('/company-dashboard');
             } else {
-                setError(data.error || 'Failed to save changes.');
+                setError(data.error || t('editProfile.errorSave'));
             }
         } catch (err) {
             console.error('Save error:', err);
-            setError('Connection error saving profile.');
+            setError(t('editProfile.errorConnSave'));
         } finally {
             setIsSaving(false);
         }
@@ -120,9 +123,9 @@ const EditCompanyProfile = () => {
                     <main className="flex-1 flex flex-col items-center py-10 px-4 md:px-10">
                         <div className="max-w-4xl w-full">
                             {/* Page Header */}
-                            <div className="mb-8">
-                                <h1 className="font-header text-3xl font-bold text-slate-900 dark:text-white mb-2">Edit Company Profile</h1>
-                                <p className="text-slate-500 dark:text-slate-400">Manage your company's public identity and digital presence across the platform.</p>
+                            <div className="mb-8 text-left">
+                                <h1 className="font-header text-3xl font-bold text-slate-900 dark:text-white mb-2">{t('editProfile.title')}</h1>
+                                <p className="text-slate-500 dark:text-slate-400">{t('editProfile.subtitle')}</p>
                             </div>
 
                             {/* Main Form Card */}
@@ -150,15 +153,15 @@ const EditCompanyProfile = () => {
                                                     <span className="material-symbols-outlined text-white text-3xl">photo_camera</span>
                                                 </div>
                                             </div>
-                                            <div className="flex flex-col">
-                                                <h3 className="font-header text-slate-900 dark:text-white text-xl font-bold">Company Logo</h3>
-                                                <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Recommended: 800x800px. PNG, JPG or SVG.</p>
-                                                <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5">Max size of 5MB.</p>
+                                            <div className="flex flex-col text-left">
+                                                <h3 className="font-header text-slate-900 dark:text-white text-xl font-bold">{t('editOffer.logoTitle')}</h3>
+                                                <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">{t('editProfile.logoSpecs')}</p>
+                                                <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5">{t('editProfile.logoMaxSize')}</p>
                                             </div>
                                         </div>
                                         <label className="flex items-center justify-center gap-2 px-6 h-11 bg-primary text-white rounded-full font-semibold hover:bg-primary/90 transition-all shadow-md shadow-primary/20 cursor-pointer">
                                             <span className="material-symbols-outlined text-lg">upload_file</span>
-                                            <span>Change Logo</span>
+                                            <span>{t('editOffer.changeLogo')}</span>
                                             <input type="file" accept="image/*" onChange={handleLogoChange} className="hidden" />
                                         </label>
                                     </div>
@@ -168,56 +171,56 @@ const EditCompanyProfile = () => {
                                 <div className="p-8 space-y-8">
                                     {/* Row 1: Name, Email and Phone */}
                                     <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-                                        <div className="flex flex-col gap-2">
+                                        <div className="flex flex-col gap-2 text-left">
                                             <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
                                                 <span className="material-symbols-outlined text-primary text-lg">business</span>
-                                                Company Name
+                                                {t('editProfile.fieldCompanyName')}
                                             </label>
                                             <input
                                                 className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all"
-                                                placeholder="e.g. Acme Corp"
+                                                placeholder={t('editProfile.fieldCompanyNamePlaceholder')}
                                                 type="text"
                                                 name="companyName"
                                                 value={formData.companyName}
                                                 onChange={handleChange}
                                             />
                                         </div>
-                                        <div className="flex flex-col gap-2">
+                                        <div className="flex flex-col gap-2 text-left">
                                             <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
                                                 <span className="material-symbols-outlined text-primary text-lg">business</span>
-                                                Internship Office
+                                                {t('editProfile.fieldInternshipOffice')}
                                             </label>
                                             <input
                                                 className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all"
-                                                placeholder="e.g. Acme Corp"
+                                                placeholder={t('editProfile.fieldCompanyNamePlaceholder')}
                                                 type="text"
                                                 name="internshipOffice"
                                                 value={formData.internshipOffice}
                                                 onChange={handleChange}
                                             />
                                         </div>
-                                        <div className="flex flex-col gap-2">
+                                        <div className="flex flex-col gap-2 text-left">
                                             <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
                                                 <span className="material-symbols-outlined text-primary text-lg">mail</span>
-                                                Business Email
+                                                {t('editProfile.fieldEmail')}
                                             </label>
                                             <input
                                                 className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all"
-                                                placeholder="contact@company.com"
+                                                placeholder={t('editProfile.fieldEmailPlaceholder')}
                                                 type="email"
                                                 name="email"
                                                 value={formData.email}
                                                 onChange={handleChange}
                                             />
                                         </div>
-                                        <div className="flex flex-col gap-2">
+                                        <div className="flex flex-col gap-2 text-left">
                                             <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
                                                 <span className="material-symbols-outlined text-primary text-lg">call</span>
-                                                Phone Number
+                                                {t('editProfile.fieldPhone')}
                                             </label>
                                             <input
                                                 className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all"
-                                                placeholder="+1 (555) 000-0000"
+                                                placeholder={t('editProfile.fieldPhonePlaceholder')}
                                                 type="tel"
                                                 name="phoneNumber"
                                                 value={formData.phoneNumber}
@@ -228,28 +231,28 @@ const EditCompanyProfile = () => {
 
                                     {/* Row 2: Website and Address */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                        <div className="flex flex-col gap-2">
+                                        <div className="flex flex-col gap-2 text-left">
                                             <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
                                                 <span className="material-symbols-outlined text-primary text-lg">language</span>
-                                                Website URL
+                                                {t('editProfile.fieldWebsite')}
                                             </label>
                                             <input
                                                 className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all"
-                                                placeholder="https://www.example.com"
+                                                placeholder={t('editProfile.fieldWebsitePlaceholder')}
                                                 type="url"
                                                 name="website"
                                                 value={formData.website}
                                                 onChange={handleChange}
                                             />
                                         </div>
-                                        <div className="flex flex-col gap-2">
+                                        <div className="flex flex-col gap-2 text-left">
                                             <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
                                                 <span className="material-symbols-outlined text-primary text-lg">location_on</span>
-                                                Address
+                                                {t('editProfile.fieldAddress')}
                                             </label>
                                             <input
                                                 className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all"
-                                                placeholder="Main St, City Country"
+                                                placeholder={t('editProfile.fieldAddressPlaceholder')}
                                                 type="text"
                                                 name="address"
                                                 value={formData.address}
@@ -259,21 +262,21 @@ const EditCompanyProfile = () => {
                                     </div>
 
                                     {/* Row 3: Description */}
-                                    <div className="flex flex-col gap-2">
+                                    <div className="flex flex-col gap-2 text-left">
                                         <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
                                             <span className="material-symbols-outlined text-primary text-lg">description</span>
-                                            Company Description
+                                            {t('editProfile.fieldDescription')}
                                         </label>
                                         <textarea
                                             className="form-textarea w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all resize-none"
-                                            placeholder="Tell candidates what makes your company special..."
+                                            placeholder={t('editProfile.fieldDescriptionPlaceholder')}
                                             rows="6"
                                             name="description"
                                             value={formData.description}
                                             onChange={handleChange}
                                         ></textarea>
                                         <div className="flex justify-end">
-                                            <span className="text-xs text-slate-400">Character count: {formData.description.length}/2000</span>
+                                            <span className="text-xs text-slate-400">{t('editProfile.charCount')} {formData.description.length}/2000</span>
                                         </div>
                                     </div>
                                 </div>
@@ -285,7 +288,7 @@ const EditCompanyProfile = () => {
                                         className="px-8 h-12 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-full font-semibold hover:bg-slate-100 dark:hover:bg-slate-700 transition-all text-sm"
                                         disabled={isSaving}
                                     >
-                                        Cancel
+                                        {t('createOffer.cancel')}
                                     </button>
                                     <button
                                         onClick={handleSave}
@@ -297,28 +300,26 @@ const EditCompanyProfile = () => {
                                         ) : (
                                             <>
                                                 <span className="material-symbols-outlined text-lg">check_circle</span>
-                                                Save Changes
+                                                {t('editProfile.saveChanges')}
                                             </>
                                         )}
                                     </button>
                                 </div>
                             </div>
 
-                            {/* Additional Help Section */}
-                            <div className="mt-8 p-6 bg-primary/5 dark:bg-primary/10 border border-primary/20 rounded-xl flex items-start gap-4">
+                             {/* Additional Help Section */}
+                            <div className="mt-8 p-6 bg-primary/5 dark:bg-primary/10 border border-primary/20 rounded-xl flex items-start gap-4 text-left">
                                 <span className="material-symbols-outlined text-primary">info</span>
                                 <div>
-                                    <h4 className="font-header text-primary font-bold">Public Profile Preview</h4>
-                                    <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">Changes made here will be visible to all candidates viewing your job postings. It may take up to 5 minutes for your public profile to refresh across all search results.</p>
+                                    <h4 className="font-header text-primary font-bold">{t('editProfile.helpTitle')}</h4>
+                                    <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">{t('editProfile.helpDesc')}</p>
                                 </div>
                             </div>
 
                         </div>
                     </main>
 
-                    <footer className="py-10 text-center text-slate-400 text-sm">
-                        © 2026 stage.io Inc. All rights reserved.
-                    </footer>
+                    <Footer />
                 </div>
             </div>
         </div>

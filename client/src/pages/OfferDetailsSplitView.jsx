@@ -4,6 +4,7 @@ import moment from 'moment';
 import { getProfileCompletion } from '../utils/profileCompletion';
 import AdminNavbar from '../components/AdminNavbar';
 import AdminSidebar from '../components/AdminSidebar';
+import Footer from '../components/Footer';
 
 const OfferDetailsSplitView = () => {
     const { id } = useParams();
@@ -659,6 +660,7 @@ const OfferDetailsSplitView = () => {
                     </div>
                 </div>
             )}
+            <Footer />
         </div>
     );
 };

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLang } from '../contexts/LanguageContext';
 
 const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
     const navigate = useNavigate();
+    const { t } = useLang();
     const [isCollapsed, setIsCollapsed] = useState(() => {
         return localStorage.getItem('companySidebarCollapsed') === 'true';
     });
@@ -23,12 +25,12 @@ const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
     };
 
     const navItems = [
-        { page: 'overview', icon: 'business', label: 'Dashboard', href: '/company-dashboard' },
-        { page: 'offers', icon: 'work', label: 'My Offers', href: '/company-offers' },
-        { page: 'applications', icon: 'groups', label: 'Applications', href: '/candidate-tracking-statistics' },
-        { page: 'create-offer', icon: 'add_box', label: 'Create Offer', href: '/create-offer' },
-        { page: 'messages', icon: 'chat', label: 'Messages', href: '/company-direct-messages' },
-        { page: 'inbox', icon: 'inbox', label: 'Inbox', href: '/company-inbox' },
+        { page: 'overview', icon: 'business', label: t('companySidebar.dashboard'), href: '/company-dashboard' },
+        { page: 'offers', icon: 'work', label: t('companySidebar.myOffers'), href: '/company-offers' },
+        { page: 'applications', icon: 'groups', label: t('companySidebar.applications'), href: '/candidate-tracking-statistics' },
+        { page: 'create-offer', icon: 'add_box', label: t('companySidebar.createOffer'), href: '/create-offer' },
+        { page: 'messages', icon: 'chat', label: t('companySidebar.messages'), href: '/company-direct-messages' },
+        { page: 'inbox', icon: 'inbox', label: t('companySidebar.inbox'), href: '/company-inbox' },
     ];
 
     return (
@@ -54,7 +56,7 @@ const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
                     </div>
                     <div className={`overflow-hidden whitespace-nowrap transition-all duration-300 ${isCollapsed ? 'w-0 opacity-0' : 'opacity-100'}`}>
                         <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100 leading-tight truncate">{company?.companyName || '—'}</h2>
-                        <p className="text-xs text-slate-500 truncate">Recruiter Dashboard</p>
+                        <p className="text-xs text-slate-500 truncate">{t('companySidebar.recruiterDashboard')}</p>
                     </div>
                 </div>
 
@@ -79,7 +81,7 @@ const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
                     >
                         <span className="material-symbols-outlined text-lg shrink-0">edit</span>
                         <span className={`overflow-hidden whitespace-nowrap transition-all duration-300 ${isCollapsed ? 'w-0 opacity-0' : 'opacity-100'}`}>
-                            Edit Profile
+                            {t('companySidebar.editProfile')}
                         </span>
                     </button>
                     <button
@@ -92,7 +94,7 @@ const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
                     >
                         <span className="material-symbols-outlined text-lg shrink-0">logout</span>
                         <span className={`overflow-hidden whitespace-nowrap transition-all duration-300 ${isCollapsed ? 'w-0 opacity-0' : 'opacity-100'}`}>
-                            Logout
+                            {t('companySidebar.logout')}
                         </span>
                     </button>
                 </div>
@@ -101,7 +103,7 @@ const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
             {/* Toggle Button — fixed, tracks the right edge of the sidebar */}
             <button
                 onClick={() => setIsCollapsed(prev => !prev)}
-                title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                title={isCollapsed ? t('companySidebar.expandSidebar') : t('companySidebar.collapseSidebar')}
                 className="fixed top-20 z-[60] w-6 h-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full hidden md:flex items-center justify-center shadow-md hover:shadow-lg hover:scale-110 transition-all text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400"
                 style={{ left: `calc(${sidebarWidth} - 12px)`, transition: 'left 300ms ease-in-out' }}
             >

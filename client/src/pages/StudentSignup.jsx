@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import logoImage from '../assets/logo.png';
 import { submitStudentSignup } from '../services/api';
+import Footer from '../components/Footer';
 
 
 const Input = ({ icon, ...props }) => (
@@ -482,9 +483,7 @@ const StudentSignup = () => {
                 {role === 'company' && <CompanyForm onBack={() => setRole(null)} />}
             </main>
 
-            <footer className="py-6 text-center text-slate-400 text-xs border-t border-slate-200 dark:border-slate-800">
-                ┬⌐ 2026 stag.io Inc. All rights reserved.
-            </footer>
+            <Footer />
         </div>
     );
 };

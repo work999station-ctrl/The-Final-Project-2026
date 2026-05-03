@@ -1,6 +1,8 @@
 import React from 'react';
+import { useLang } from '../contexts/LanguageContext';
 
 const ActionRejectionConfirmation = ({ isOpen, onClose }) => {
+  const { t } = useLang();
   if (!isOpen) return null;
 
   return (
@@ -20,10 +22,10 @@ const ActionRejectionConfirmation = ({ isOpen, onClose }) => {
         </div>
         
         {/* Content Hierarchy */}
-        <div className="space-y-4 mb-10">
-          <h1 className="font-display text-3xl font-bold tracking-tight text-[#0b1c30]">Candidate Rejected</h1>
+        <div className="space-y-4 mb-10 text-center">
+          <h1 className="font-display text-3xl font-bold tracking-tight text-[#0b1c30]">{t('modals.rejectedTitle')}</h1>
           <p className="text-[#464555] font-body leading-relaxed px-4">
-            The candidate has been notified that their application was not successful for this cycle.
+            {t('modals.rejectedDesc')}
           </p>
         </div>
         
@@ -33,11 +35,11 @@ const ActionRejectionConfirmation = ({ isOpen, onClose }) => {
             onClick={onClose}
             className="w-full bg-gradient-to-br from-[#3525cd] to-[#4f46e5] text-[#ffffff] font-semibold py-4 px-8 rounded-full shadow-lg shadow-[#3525cd]/20 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
           >
-            Done
+            {t('modals.done')}
           </button>
           <div className="pt-2">
             <span className="text-xs font-body uppercase tracking-widest text-[#777587]">
-              Academic Pulse Talent Manager
+              {t('modals.manager')}
             </span>
           </div>
         </div>

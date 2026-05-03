@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import logoImage from '../assets/logo.png';
+import Footer from '../components/Footer';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -179,9 +180,7 @@ const Login = () => {
                         </div>
                     </main>
 
-                    <footer className="p-8 text-center text-slate-400 text-xs font-medium tracking-tight mt-auto border-t border-slate-200 dark:border-slate-800">
-                        © 2026 Modern Connectivity Platform. All rights reserved.
-                    </footer>
+                    <Footer />
                 </div>
             </div>
         </div>

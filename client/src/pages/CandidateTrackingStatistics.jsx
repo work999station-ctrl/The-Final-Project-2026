@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useLang } from '../contexts/LanguageContext';
 import CompanyNavbar from '../components/CompanyNavbar';
 import CompanySidebar from '../components/CompanySidebar';
+import Footer from '../components/Footer';
 import ActionSuccessConfirmation from '../components/ActionSuccessConfirmation';
 import ActionRejectionConfirmation from '../components/ActionRejectionConfirmation';
 
 const CandidateTrackingStatistics = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { t, lang, setLang } = useLang();
     const searchParams = new URLSearchParams(location.search);
     const initialSearch = searchParams.get('search') || '';
     const [applications, setApplications] = useState([]);
@@ -175,9 +178,11 @@ const CandidateTrackingStatistics = () => {
                     {/* Page Title */}
                     <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div>
-                            <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Applicant Management</h1>
-                            <p className="text-slate-500 text-sm font-medium">
-                                Reviewing <span className="text-indigo-600 font-bold">{totalApplicants}</span> active candidates across your open roles.
+                            <h1 className="text-3xl font-black font-header tracking-tight text-slate-900 dark:text-white leading-tight">
+                                {t('candidateTracking.title')}
+                            </h1>
+                            <p className="text-slate-500 font-medium text-sm mt-1">
+                                {t('candidateTracking.subtitle')}
                             </p>
                         </div>
                     </div>
@@ -186,15 +191,13 @@ const CandidateTrackingStatistics = () => {
                     <div className="flex items-center gap-4 mb-8 flex-wrap">
                         {/* Search Bar */}
                         <div className="relative flex-1 min-w-[200px] group">
-                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#4F46E5]">
-                                <span className="material-symbols-outlined">search</span>
-                            </div>
+                            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
                             <input
-                                className="block w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 dark:text-white border-0 rounded-full text-slate-900 placeholder:text-slate-500 focus:ring-2 focus:ring-[#4F46E5] shadow-sm group-hover:shadow-lg transition-all duration-300 text-sm font-medium outline-none"
-                                placeholder="Search candidates by name..."
                                 type="text"
+                                placeholder={t('candidateTracking.searchPlaceholder')}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
+                                className="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all outline-none text-slate-700 dark:text-slate-200 shadow-sm"
                             />
                         </div>
 
@@ -205,8 +208,7 @@ const CandidateTrackingStatistics = () => {
                             <div className="relative">
                                 {activeFilters.offer ? (
                                     <span className="flex items-center gap-1.5 pl-3 pr-2 py-2 bg-[#4F46E5]/10 text-[#4F46E5] rounded-full text-sm font-semibold border border-[#4F46E5]/30 shadow-sm whitespace-nowrap cursor-default">
-                                        <span className="material-symbols-outlined text-[16px]">work</span>
-                                        {activeFilters.offer}
+                                        <span className="material-symbols-outlined text-lg">work</span> {activeFilters.offer || t('candidateTracking.filters.offer')}
                                         <button onClick={() => applyFilter('offer', '')} className="ml-0.5 rounded-full hover:bg-[#4F46E5]/20 p-0.5 transition-colors">
                                             <span className="material-symbols-outlined text-[14px]">close</span>
                                         </button>
@@ -217,7 +219,7 @@ const CandidateTrackingStatistics = () => {
                                         className={`flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-full text-sm font-medium text-slate-900 dark:text-white border shadow-sm hover:shadow-md transition-all whitespace-nowrap ${openFilter === 'offer' ? 'border-[#4F46E5] ring-2 ring-[#4F46E5]/20' : 'border-transparent hover:border-[#4F46E5]/30'}`}
                                     >
                                         <span className="material-symbols-outlined text-[18px] text-slate-500">work</span>
-                                        Job Offer
+                                        {t('candidateTracking.filters.offer')}
                                         <span className={`material-symbols-outlined text-[18px] text-slate-500 transition-transform ${openFilter === 'offer' ? 'rotate-180' : ''}`}>expand_more</span>
                                     </button>
                                 )}
@@ -258,7 +260,7 @@ const CandidateTrackingStatistics = () => {
                                         className={`flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-full text-sm font-medium text-slate-900 dark:text-white border shadow-sm hover:shadow-md transition-all whitespace-nowrap ${openFilter === 'status' ? 'border-[#4F46E5] ring-2 ring-[#4F46E5]/20' : 'border-transparent hover:border-[#4F46E5]/30'}`}
                                     >
                                         <span className="material-symbols-outlined text-[18px] text-slate-500">clinical_notes</span>
-                                        Status
+                                        {t('candidateTracking.filters.status')}
                                         <span className={`material-symbols-outlined text-[18px] text-slate-500 transition-transform ${openFilter === 'status' ? 'rotate-180' : ''}`}>expand_more</span>
                                     </button>
                                 )}
@@ -287,8 +289,7 @@ const CandidateTrackingStatistics = () => {
                             <div className="relative">
                                 {activeFilters.location ? (
                                     <span className="flex items-center gap-1.5 pl-3 pr-2 py-2 bg-[#4F46E5]/10 text-[#4F46E5] rounded-full text-sm font-semibold border border-[#4F46E5]/30 shadow-sm whitespace-nowrap cursor-default">
-                                        <span className="material-symbols-outlined text-[16px]">location_on</span>
-                                        {activeFilters.location}
+                                        <span className="material-symbols-outlined text-lg">location_on</span> {activeFilters.location || t('candidateTracking.filters.location')}
                                         <button onClick={() => applyFilter('location', '')} className="ml-0.5 rounded-full hover:bg-[#4F46E5]/20 p-0.5 transition-colors">
                                             <span className="material-symbols-outlined text-[14px]">close</span>
                                         </button>
@@ -299,7 +300,7 @@ const CandidateTrackingStatistics = () => {
                                         className={`flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-full text-sm font-medium text-slate-900 dark:text-white border shadow-sm hover:shadow-md transition-all whitespace-nowrap ${openFilter === 'location' ? 'border-[#4F46E5] ring-2 ring-[#4F46E5]/20' : 'border-transparent hover:border-[#4F46E5]/30'}`}
                                     >
                                         <span className="material-symbols-outlined text-[18px] text-slate-500">location_on</span>
-                                        Wilaya
+                                        {t('candidateTracking.filters.location')}
                                         <span className={`material-symbols-outlined text-[18px] text-slate-500 transition-transform ${openFilter === 'location' ? 'rotate-180' : ''}`}>expand_more</span>
                                     </button>
                                 )}
@@ -327,8 +328,7 @@ const CandidateTrackingStatistics = () => {
                             <div className="relative">
                                 {activeFilters.date ? (
                                     <span className="flex items-center gap-1.5 pl-3 pr-2 py-2 bg-[#4F46E5]/10 text-[#4F46E5] rounded-full text-sm font-semibold border border-[#4F46E5]/30 shadow-sm whitespace-nowrap cursor-default">
-                                        <span className="material-symbols-outlined text-[16px]">date_range</span>
-                                        {activeFilters.date}
+                                        <span className="material-symbols-outlined text-lg">event</span> {activeFilters.date === 'newest' ? t('candidateTracking.filters.newest') : activeFilters.date === 'oldest' ? t('candidateTracking.filters.oldest') : t('candidateTracking.filters.date')}
                                         <button onClick={() => applyFilter('date', '')} className="ml-0.5 rounded-full hover:bg-[#4F46E5]/20 p-0.5 transition-colors">
                                             <span className="material-symbols-outlined text-[14px]">close</span>
                                         </button>
@@ -339,14 +339,14 @@ const CandidateTrackingStatistics = () => {
                                         className={`flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-full text-sm font-medium text-slate-900 dark:text-white border shadow-sm hover:shadow-md transition-all whitespace-nowrap ${openFilter === 'date' ? 'border-[#4F46E5] ring-2 ring-[#4F46E5]/20' : 'border-transparent hover:border-[#4F46E5]/30'}`}
                                     >
                                         <span className="material-symbols-outlined text-[18px] text-slate-500">date_range</span>
-                                        Date
+                                        {t('candidateTracking.filters.date')}
                                         <span className={`material-symbols-outlined text-[18px] text-slate-500 transition-transform ${openFilter === 'date' ? 'rotate-180' : ''}`}>expand_more</span>
                                     </button>
                                 )}
                                 {openFilter === 'date' && (
                                     <div className="absolute top-full left-0 mt-2 w-64 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl z-50 overflow-hidden">
                                         <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
-                                            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Select Wilaya</span>
+                                            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Select Date</span>
                                         </div>
                                         <div className="max-h-72 overflow-y-auto">
 
@@ -356,7 +356,7 @@ const CandidateTrackingStatistics = () => {
                                                     onClick={() => applyFilter('date', date)}
                                                     className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${activeFilters.date === date ? 'bg-[#4F46E5]/10 text-[#4F46E5] font-semibold' : 'text-slate-700 dark:text-slate-300 hover:bg-[#4F46E5]/5 hover:text-[#4F46E5]'}`}
                                                 >
-                                                    {date}
+                                                    {date === 'newest' ? t('candidateTracking.filters.newest') : t('candidateTracking.filters.oldest')}
                                                     {activeFilters.date === date && <span className="material-symbols-outlined text-[16px]">check</span>}
                                                 </button>
                                             ))}
@@ -384,14 +384,13 @@ const CandidateTrackingStatistics = () => {
                             <table className="w-full text-left border-collapse">
                                 <thead>
                                     <tr className="text-[10px] font-bold uppercase tracking-widest text-slate-400 bg-slate-50/50 dark:bg-slate-800/50">
-                                        <th className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">Candidate</th>
-                                        <th className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">University</th>
-                                        <th className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">Offer</th>
-                                        <th className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">Applied</th>
-                                        <th className="px-4 py-3 border-b border-slate-100 dark:border-slate-800 text-center">Match %</th>
-                                        <th className="px-4 py-3 border-b border-slate-100 dark:border-slate-800 text-center">Deadline</th>
-                                        <th className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">Status</th>
-                                        <th className="px-4 py-3 border-b border-slate-100 dark:border-slate-800 text-right">Actions</th>
+                                        <th className="px-6 py-4 text-left text-xs font-bold text-slate-400 uppercase tracking-widest">{t('candidateTracking.table.student')}</th>
+                                        <th className="px-6 py-4 text-left text-xs font-bold text-slate-400 uppercase tracking-widest">{t('candidateTracking.table.university')}</th>
+                                        <th className="px-6 py-4 text-left text-xs font-bold text-slate-400 uppercase tracking-widest">{t('candidateTracking.table.offer')}</th>
+                                        <th className="px-6 py-4 text-left text-xs font-bold text-slate-400 uppercase tracking-widest hidden lg:table-cell">{t('candidateTracking.table.date')}</th>
+                                        <th className="px-6 py-4 text-left text-xs font-bold text-slate-400 uppercase tracking-widest">{t('candidateTracking.table.match')}</th>
+                                        <th className="px-6 py-4 text-left text-xs font-bold text-slate-400 uppercase tracking-widest">{t('candidateTracking.table.status')}</th>
+                                        <th className="px-6 py-4 text-right text-xs font-bold text-slate-400 uppercase tracking-widest">{t('candidateTracking.table.actions')}</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -404,8 +403,7 @@ const CandidateTrackingStatistics = () => {
                                     ) : paginatedApplications.length === 0 ? (
                                         <tr>
                                             <td colSpan="7" className="px-6 py-20 text-center text-slate-400 font-medium">
-                                                <span className="material-symbols-outlined text-4xl block mb-2">search_off</span>
-                                                No candidates match your current filters.
+                                                <h4 className="font-bold text-lg text-slate-800 dark:text-slate-200 mb-2">{t('candidateTracking.noResults')}</h4>
                                             </td>
                                         </tr>
                                     ) : (
@@ -479,11 +477,6 @@ const CandidateTrackingStatistics = () => {
                                                                     <span className="material-symbols-outlined text-[14px] text-amber-500">schedule</span>
                                                                     Waiting for Admin ...
                                                                 </span>
-                                                                {/* {app.statusChangedAt && (
-                                                                    <span className="text-[10px] text-slate-400 font-semibold bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full">
-                                                                        Accepted: {new Date(app.statusChangedAt).toLocaleDateString()}
-                                                                    </span>
-                                                                )} */}
                                                             </div>
                                                         )}
                                                         {app.status === 'validated' && (
@@ -497,7 +490,7 @@ const CandidateTrackingStatistics = () => {
                                                                     title="View Agreement"
                                                                     onClick={(e) => { e.stopPropagation(); navigate(`/agreement/${app._id}`); }}
                                                                 >
-                                                                    <span className="material-symbols-outlined text-[16px]">description</span>
+                                                                    <span className="material-symbols-outlined text-lg">description</span>
                                                                 </button>
                                                             </div>
                                                         )}
@@ -519,9 +512,9 @@ const CandidateTrackingStatistics = () => {
                         </div>
                         {/* Pagination Footer */}
                         <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100 dark:border-slate-800">
-                            <span className="text-xs font-medium text-slate-500">
-                                Showing <span className="font-bold text-slate-700 dark:text-slate-300">{currentPage}–{totalPages || 1}</span> of <span className="font-bold text-slate-700 dark:text-slate-300">{totalApplicants}</span> candidates
-                            </span>
+                                <p className="text-sm text-slate-500 font-medium">
+                                    {t('candidateTracking.showing')} <span className="text-slate-900 dark:text-white font-bold">{_showingFrom}</span> {t('candidateTracking.to')} <span className="text-slate-900 dark:text-white font-bold">{_showingTo}</span> {t('candidateTracking.of')} <span className="text-slate-900 dark:text-white font-bold">{totalApplicants}</span> {t('candidateTracking.results')}
+                                </p>
                             <div className="flex items-center gap-1">
                                 <button
                                     onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
@@ -548,7 +541,7 @@ const CandidateTrackingStatistics = () => {
                             <div className="relative z-10">
                                 <p className="text-indigo-100 text-[11px] font-bold uppercase tracking-widest mb-1">Total Impact</p>
                                 <h3 className="text-3xl font-black mb-4">{acceptedAllApps} Offers Made</h3>
-                                <p className="text-indigo-100 text-xs font-medium leading-relaxed">Out of {totalAllApps} total applications across all your offers, resulting in a {acceptanceRate}% acceptance rate.</p>
+                                <p className="text-slate-500 dark:text-gray-400 text-sm font-medium">{t('candidateTracking.stats.pending')}</p>
                             </div>
                             <div className="absolute -right-4 -bottom-4 opacity-10">
                                 <span className="material-symbols-outlined text-[120px]">analytics</span>
@@ -590,6 +583,8 @@ const CandidateTrackingStatistics = () => {
 
                 </div>
             </main>
+            
+            <Footer />
             <ActionSuccessConfirmation isOpen={isSuccessModalOpen} onClose={() => setIsSuccessModalOpen(false)} />
             <ActionRejectionConfirmation isOpen={isRejectionModalOpen} onClose={() => setIsRejectionModalOpen(false)} />
         </div>

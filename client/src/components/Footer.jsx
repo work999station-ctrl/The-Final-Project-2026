@@ -23,7 +23,6 @@ const buildColumns = (t) => [
             { label: t('footer.links.forStudents'),     to: '/students' },
             { label: t('footer.links.forCompanies'),    to: '/companies' },
             { label: t('footer.links.forUniversities'), to: '/universities' },
-            { label: t('footer.links.pricing'),         to: '/pricing' },
             { label: t('footer.links.browseOffers'),    to: '/opportunities' },
         ],
     },

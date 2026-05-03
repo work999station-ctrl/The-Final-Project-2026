@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import AdminNavbar from '../components/AdminNavbar';
 import AdminSidebar from '../components/AdminSidebar';
+import Footer from '../components/Footer';
+
 
 const CompanyProfileAdminView = () => {
     const navigate = useNavigate();
@@ -256,6 +258,7 @@ const CompanyProfileAdminView = () => {
                     </section>
                 </div>
             </main>
+            <Footer />
         </div>
     );
 };

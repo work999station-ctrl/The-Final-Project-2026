@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import CompanyNavbar from '../components/CompanyNavbar';
 import CompanySidebar from '../components/CompanySidebar';
+import Footer from '../components/Footer';
+import { useLang } from '../contexts/LanguageContext';
 
 const CompanyDirectMessages = () => {
     const navigate = useNavigate();
+    const { t, lang, setLang } = useLang();
     const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(true);
     const [company, setCompany] = useState(null);
@@ -66,10 +69,10 @@ const CompanyDirectMessages = () => {
                 <div className="max-w-5xl mx-auto">
                     {/* Header */}
                     <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
-                        <div>
-                            <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Direct Messages</h1>
+                        <div className="text-left">
+                            <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{t('directMessages.title')}</h1>
                             <p className="text-slate-500 text-sm font-medium mt-1">
-                                Showing <span className="text-primary font-bold">{totalCandidates}</span> candidates available for direct feedback.
+                                {t('directMessages.subtitle').replace('{count}', totalCandidates)}
                             </p>
                         </div>
                         
@@ -80,7 +83,7 @@ const CompanyDirectMessages = () => {
                             </div>
                             <input
                                 className="block w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 dark:text-white border-0 rounded-2xl text-slate-900 placeholder:text-slate-500 focus:ring-2 focus:ring-primary shadow-sm group-hover:shadow-md transition-all duration-300 text-sm font-medium outline-none"
-                                placeholder="Search candidates..."
+                                placeholder={t('directMessages.searchPlaceholder')}
                                 type="text"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -103,8 +106,8 @@ const CompanyDirectMessages = () => {
                         ) : paginatedCandidates.length === 0 ? (
                             <div className="text-center py-20 bg-white dark:bg-slate-900 rounded-3xl border border-dashed border-slate-200 dark:border-slate-800">
                                 <span className="material-symbols-outlined text-6xl text-slate-300 mb-4">forum</span>
-                                <h3 className="text-xl font-bold text-slate-700 dark:text-slate-300">No candidates found</h3>
-                                <p className="text-slate-500 text-sm">Try adjusting your search criteria.</p>
+                                <h3 className="text-xl font-bold text-slate-700 dark:text-slate-300">{t('directMessages.noCandidates')}</h3>
+                                <p className="text-slate-500 text-sm">{t('directMessages.adjustSearch')}</p>
                             </div>
                         ) : (
                             paginatedCandidates.map((app) => (
@@ -126,19 +129,19 @@ const CompanyDirectMessages = () => {
                                                 <div className="absolute -top-1 -right-1 w-4 h-4 bg-primary border-2 border-white dark:border-slate-900 rounded-full"></div>
                                             )}
                                         </div>
-                                        <div className="min-w-0">
+                                        <div className="min-w-0 text-left">
                                             <h3 className="font-bold text-slate-900 dark:text-white text-lg leading-tight truncate group-hover:text-primary transition-colors">
-                                                {app.studentId?.name || 'Unknown Student'}
+                                                {app.studentId?.name || t('directMessages.unknownStudent')}
                                             </h3>
                                             <div className="flex items-center gap-2 mt-1">
-                                                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{app.offerId?.title || 'Job Offer'}</span>
+                                                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{app.offerId?.title || t('directMessages.jobOffer')}</span>
                                                 <span className="text-slate-300 dark:text-slate-700">•</span>
-                                                <span className="text-xs text-slate-400">{app.studentId?.university || 'University'}</span>
+                                                <span className="text-xs text-slate-400">{app.studentId?.university || t('directMessages.university')}</span>
                                             </div>
                                             <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 line-clamp-1 italic font-medium">
                                                 {app.feedback?.length > 0 
-                                                    ? `Last message: ${app.feedback[app.feedback.length - 1].text}` 
-                                                    : 'No messages yet. Start the conversation!'}
+                                                    ? `${t('directMessages.lastMessage')} ${app.feedback[app.feedback.length - 1].text}` 
+                                                    : t('directMessages.noMessages')}
                                             </p>
                                         </div>
                                     </div>
@@ -146,7 +149,7 @@ const CompanyDirectMessages = () => {
                                         <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">
                                             {app.feedback?.length > 0 
                                                 ? new Date(app.feedback[app.feedback.length - 1].createdAt).toLocaleDateString()
-                                                : 'New Applicant'}
+                                                : t('directMessages.newApplicant')}
                                         </span>
                                         <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary opacity-0 group-hover:opacity-100 transition-opacity">
                                             <span className="material-symbols-outlined">chevron_right</span>
@@ -161,7 +164,7 @@ const CompanyDirectMessages = () => {
                     {!loading && totalPages > 1 && (
                         <div className="flex items-center justify-between px-6 py-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
                             <span className="text-xs font-medium text-slate-500">
-                                Page <span className="font-bold text-slate-900 dark:text-white">{currentPage}</span> of <span className="font-bold text-slate-900 dark:text-white">{totalPages}</span>
+                                {t('directMessages.pageOf').replace('{current}', currentPage).replace('{total}', totalPages)}
                             </span>
                             <div className="flex items-center gap-2">
                                 <button
@@ -194,6 +197,8 @@ const CompanyDirectMessages = () => {
                     )}
                 </div>
             </main>
+
+            <Footer />
         </div>
     );
 };

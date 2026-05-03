@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import CompanyNavbar from '../components/CompanyNavbar';
+import Footer from '../components/Footer';
 
 const StudentProfileRecruiterView = () => {
     const { id } = useParams();
@@ -66,20 +68,7 @@ const StudentProfileRecruiterView = () => {
 
     return (
         <div className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen font-body">
-            {/* TopAppBar Component */}
-            <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm sticky top-0 z-50">
-                <div className="flex justify-between items-center px-6 h-16 w-full max-w-7xl mx-auto">
-                    <div className="flex items-center gap-8">
-                        <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white font-headline">stage.io</span>
-                        <nav className="hidden md:flex gap-6 items-center h-full">
-                            <button onClick={() => navigate('/company-dashboard')} className="text-slate-600 dark:text-slate-400 pb-4 pt-5 hover:text-blue-500 dark:hover:text-blue-300 transition-colors font-sans text-sm font-medium">Dashboard</button>
-                            <button onClick={() => navigate('/candidate-tracking-statistics')} className="text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400 pb-4 pt-5 font-sans text-sm font-medium">Candidates</button>
-                            <button className="text-slate-600 dark:text-slate-400 pb-4 pt-5 hover:text-blue-500 dark:hover:text-blue-300 transition-colors font-sans text-sm font-medium">Inbox</button>
-                            <button className="text-slate-600 dark:text-slate-400 pb-4 pt-5 hover:text-blue-500 dark:hover:text-blue-300 transition-colors font-sans text-sm font-medium">Schedule</button>
-                        </nav>
-                    </div>
-                </div>
-            </header>
+            <CompanyNavbar />
 
             <main className="max-w-5xl mx-auto px-4 py-8">
                 {/* Back Navigation */}
@@ -327,25 +316,7 @@ const StudentProfileRecruiterView = () => {
                 </div>
             </main>
 
-            {/* Footer */}
-            <footer className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 mt-12">
-                <div className="max-w-5xl mx-auto px-4 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                        <span className="text-lg font-bold text-indigo-600 dark:text-indigo-400">stage.io</span>
-                        <span className="text-slate-300 dark:text-slate-700">|</span>
-                        <span className="text-sm text-slate-500 dark:text-slate-400">Admin · Candidate Profile View</span>
-                    </div>
-                    <div className="flex items-center gap-6 text-xs text-slate-400 dark:text-slate-500 font-medium">
-                        <button onClick={() => navigate('/admin-dashboard')} className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Dashboard</button>
-                        <button onClick={() => navigate('/candidate-tracking-admin')} className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Validate</button>
-                        <button onClick={() => navigate('/university-placement-analytics')} className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Analytics</button>
-                        <button onClick={() => navigate('/contact-us')} className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Help</button>
-                    </div>
-                    <p className="text-xs text-slate-400 dark:text-slate-600">
-                        © {new Date().getFullYear()} stage.io · University Career Services
-                    </p>
-                </div>
-            </footer>
+            <Footer />
         </div>
     );
 };

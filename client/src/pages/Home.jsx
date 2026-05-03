@@ -201,7 +201,6 @@ const Home = () => {
         { label: t('nav.students'),     to: '/students' },
         { label: t('nav.companies'),    to: '/companies' },
         { label: t('nav.universities'), to: '/universities' },
-        { label: t('nav.pricing'),      to: '/pricing' },
     ];
 
     useEffect(() => {

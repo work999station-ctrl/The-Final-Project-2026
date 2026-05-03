@@ -1,6 +1,8 @@
 import React from 'react';
+import { useLang } from '../contexts/LanguageContext';
 
 const ActionSuccessConfirmation = ({ isOpen, onClose }) => {
+  const { t } = useLang();
   if (!isOpen) return null;
 
   return (
@@ -16,9 +18,9 @@ const ActionSuccessConfirmation = ({ isOpen, onClose }) => {
         
         {/* Content */}
         <div className="space-y-3">
-          <h2 className="text-3xl font-display font-bold text-[#0b1c30] tracking-tight">Success! Candidate Accepted</h2>
+          <h2 className="text-3xl font-display font-bold text-[#0b1c30] tracking-tight">{t('modals.successTitle')}</h2>
           <p className="text-[#464555] font-medium leading-relaxed font-body">
-            The student has been notified. The digital enrollment agreement is now ready for electronic signature in the portal.
+            {t('modals.successDesc')}
           </p>
         </div>
         
@@ -26,11 +28,11 @@ const ActionSuccessConfirmation = ({ isOpen, onClose }) => {
         <div className="flex flex-wrap justify-center gap-2">
           <div className="px-4 py-2 bg-[#eff4ff] rounded-full flex items-center gap-2 text-xs font-bold text-[#006591]">
             <span className="material-symbols-outlined text-sm">mail</span>
-            Email Sent
+            {t('modals.emailSent')}
           </div>
           <div className="px-4 py-2 bg-[#eff4ff] rounded-full flex items-center gap-2 text-xs font-bold text-[#006591]">
             <span className="material-symbols-outlined text-sm">description</span>
-            Contract Drafted
+            {t('modals.contractDrafted')}
           </div>
         </div>
         
@@ -39,7 +41,7 @@ const ActionSuccessConfirmation = ({ isOpen, onClose }) => {
           onClick={onClose}
           className="w-full bg-gradient-to-br from-[#3525cd] to-[#4f46e5] text-white py-4 rounded-full font-bold text-lg hover:opacity-90 active:scale-[0.98] transition-all duration-200 shadow-xl shadow-[#3525cd]/20"
         >
-          Done
+          {t('modals.done')}
         </button>
       </div>
     </div>

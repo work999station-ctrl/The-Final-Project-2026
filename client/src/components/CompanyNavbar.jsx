@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useLang } from '../contexts/LanguageContext';
 import logoImage from '../assets/logo.png';
 import ThemeToggle from './ThemeToggle';
 
 const CompanyNavbar = ({ company: companyProp }) => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { t } = useLang();
     const [company, setCompany] = useState(companyProp || null);
     const [hasUnread, setHasUnread] = useState(false);
     const [messages, setMessages] = useState([]);
@@ -85,20 +87,20 @@ const CompanyNavbar = ({ company: companyProp }) => {
                             onClick={() => navigate('/company-offers')}
                             className={`text-sm font-medium transition-colors hover:text-primary ${isActive('/company-offers', '/create-offer') ? 'text-primary font-semibold' : 'text-slate-500 dark:text-slate-400'}`}
                         >
-                            My Offers
+                            {t('companyNavbar.myOffers')}
                         </button>
                         <button
                             onClick={() => navigate('/candidate-tracking-statistics')}
                             className={`text-sm font-medium transition-colors hover:text-primary ${isActive('/candidate-tracking', '/candidate-tracking-statistics') ? 'text-primary font-semibold' : 'text-slate-500 dark:text-slate-400'}`}
                         >
-                            Candidates
+                            {t('companyNavbar.candidates')}
                         </button>
                         <button
                             onClick={() => navigate('/company-inbox')}
                             className={`text-sm font-medium transition-colors hover:text-primary flex items-center gap-1.5 ${isActive('/company-inbox') ? 'text-primary font-semibold' : 'text-slate-500 dark:text-slate-400'}`}
                         >
                             <span className="material-symbols-outlined text-[16px]">mail</span>
-                            Inbox
+                            {t('companyNavbar.inbox')}
                         </button>
                     </nav>
                 </div>
@@ -110,7 +112,7 @@ const CompanyNavbar = ({ company: companyProp }) => {
                         <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
                         <input
                             className="bg-slate-100 dark:bg-slate-800 border-none rounded-full pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/50 w-56 outline-none text-slate-700 dark:text-slate-200"
-                            placeholder="Search students..."
+                            placeholder={t('companyNavbar.searchPlaceholder')}
                             type="text"
                             defaultValue={new URLSearchParams(location.search).get('search') || ''}
                             onKeyDown={(e) => {
@@ -128,7 +130,7 @@ const CompanyNavbar = ({ company: companyProp }) => {
                         <button
                             className="relative p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
                             onClick={() => setShowNotifications(!showNotifications)}
-                            title="Notifications"
+                            title={t('companyNavbar.notifications')}
                         >
                             <span className="material-symbols-outlined">notifications</span>
                             {hasUnread && (
@@ -140,7 +142,7 @@ const CompanyNavbar = ({ company: companyProp }) => {
                         {showNotifications && (
                             <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2">
                                 <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 flex justify-between items-center">
-                                    <span className="text-xs font-bold uppercase tracking-widest text-slate-400">Notifications</span>
+                                    <span className="text-xs font-bold uppercase tracking-widest text-slate-400">{t('companyNavbar.notifications')}</span>
                                 </div>
                                 <div className="max-h-72 overflow-y-auto">
                                     {messages.length > 0 ? (
@@ -170,7 +172,7 @@ const CompanyNavbar = ({ company: companyProp }) => {
                                         ))
                                     ) : (
                                         <div className="px-4 py-6 text-center text-slate-500 text-sm font-medium">
-                                            No new notifications
+                                            {t('companyNavbar.noNotifications')}
                                         </div>
                                     )}
                                 </div>
@@ -179,7 +181,7 @@ const CompanyNavbar = ({ company: companyProp }) => {
                                         onClick={() => { setShowNotifications(false); navigate('/company-inbox'); }}
                                         className="w-full text-center px-4 py-3 text-sm font-bold text-primary hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
                                     >
-                                        View All
+                                        {t('companyNavbar.viewAll')}
                                     </button>
                                 </div>
                             </div>

@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import logoImage from '../assets/logo.png';
+import Footer from '../components/Footer';
+
 
 const AdminSignup = () => {
     const navigate = useNavigate();
@@ -303,10 +305,7 @@ const AdminSignup = () => {
                         </div>
                     </main>
 
-                    {/* Footer */}
-                    <footer className="py-8 text-center text-slate-400 text-sm font-medium border-t border-slate-100 dark:border-slate-800/50 mt-auto">
-                        © 2026 stage.io Inc. All rights reserved.
-                    </footer>
+                    <Footer />
                 </div>
             </div>
         </div>

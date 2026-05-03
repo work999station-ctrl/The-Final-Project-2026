@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminNavbar from '../components/AdminNavbar';
+import AdminSidebar from '../components/AdminSidebar';
+import Footer from '../components/Footer';
+
 
 const AdminDashboard = () => {
     const navigate = useNavigate();
@@ -95,64 +98,10 @@ const AdminDashboard = () => {
             <AdminNavbar admin={user} />
 
             <div className="flex flex-1 overflow-hidden">
-                {/* SideNavBar (Shared Component) */}
-                <aside className="fixed left-0 top-16 bottom-0 w-80 bg-slate-50 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-700 dark:border-slate-800 flex flex-col p-4 z-40 overflow-y-auto hidden md:flex">
-                    <div className="mb-8 px-2">
-                        <div className="flex flex-col items-center text-center py-10 px-6 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 dark:border-slate-700 mb-8">
-                            <div className="w-24 h-24 rounded-full mb-5 ring-4 ring-primary/10 bg-primary/20 flex items-center justify-center text-primary bg-cover bg-center shadow-lg" style={{ backgroundImage: user.profilePicture ? `url('${user.profilePicture}')` : 'none' }}>
-                                {!user.profilePicture && <span className="material-symbols-outlined text-4xl">school</span>}
-                            </div>
-                            <h3 className="text-lg font-black text-slate-900 dark:text-white truncate w-full px-2 mb-1" title={user.fullName}>{user.fullName}</h3>
-                            <p className="text-[12px] text-primary font-black mb-4 uppercase tracking-widest bg-primary/5 px-3 py-1 rounded-full">{user.role}</p>
-
-                            <button
-                                onClick={() => navigate('/edit-admin-profile')}
-                                className="flex items-center justify-center gap-1.5 px-4 py-1.5 mb-6 bg-slate-100 dark:bg-slate-800 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-full text-[11px] font-bold hover:bg-primary/10 hover:text-primary transition-all group"
-                            >
-                                <span className="material-symbols-outlined text-[16px] transition-transform group-hover:rotate-12">edit</span>
-                                Edit Profile
-                            </button>
-
-                            <div className="flex items-center justify-center gap-2 mb-6 w-full px-4">
-                                <span className="material-symbols-outlined text-slate-400 dark:text-slate-500 text-sm">school</span>
-                                <span className="text-[11px] uppercase tracking-wider font-bold text-slate-500 dark:text-slate-400 dark:text-slate-500 truncate" title={user.universityName}>{user.universityName}</span>
-                            </div>
-                            <div className="w-full pt-6 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-3 text-left">
-                                <div className="flex items-center gap-3 text-[12px] text-slate-600 dark:text-slate-300 dark:text-slate-400 dark:text-slate-500 hover:text-primary transition-colors cursor-default">
-                                    <span className="material-symbols-outlined text-[18px]">account_balance</span>
-                                    <span className="truncate font-medium" title={user.DeptHead}>{user.DeptHead || 'No Department'}</span>
-                                </div>
-                                <div className="flex items-center gap-3 text-[12px] text-slate-600 dark:text-slate-300 dark:text-slate-400 dark:text-slate-500 hover:text-primary transition-colors cursor-default">
-                                    <span className="material-symbols-outlined text-[18px]">person</span>
-                                    <span className="truncate font-medium" title={user.fullName}>{user.fullName}</span>
-                                </div>
-                                <div className="flex items-center gap-3 text-[12px] text-slate-600 dark:text-slate-300 dark:text-slate-400 dark:text-slate-500 hover:text-primary transition-colors cursor-default">
-                                    <span className="material-symbols-outlined text-[18px]">mail</span>
-                                    <span className="truncate font-medium" title={user.email}>{user.email}</span>
-                                </div>
-                                <div className="flex items-center gap-3 text-[12px] text-slate-600 dark:text-slate-300 dark:text-slate-400 dark:text-slate-500 hover:text-primary transition-colors cursor-default">
-                                    <span className="material-symbols-outlined text-[18px]">call</span>
-                                    <span className="truncate font-medium" title={user.phone}>{user.phone || 'No phone provided'}</span>
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </div>
-
-                    <div className="mt-auto space-y-1 px-2">
-                        <a onClick={async () => {
-                            await fetch('/api/logout', { method: 'POST' });
-                            navigate('/login');
-                        }} className="flex items-center gap-3 text-slate-600 dark:text-slate-300 dark:text-slate-400 dark:text-slate-500 px-4 py-3 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 rounded-lg transition-all cursor-pointer">
-                            <span className="material-symbols-outlined">logout</span>
-                            <span className="text-sm font-semibold">Logout</span>
-                        </a>
-                    </div>
-                </aside>
+                <AdminSidebar activePage="dashboard" adminUser={user} />
 
                 {/* Main Content (Center/Right) */}
-                <main className="md:ml-80 flex-1 p-8 overflow-y-auto">
+                <main className="md:ml-64 flex-1 p-8 overflow-y-auto">
                     {/* Header Section */}
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
                         <div>
@@ -388,6 +337,7 @@ const AdminDashboard = () => {
                     </div>
                 </main>
             </div>
+            <Footer />
         </div>
     );
 };

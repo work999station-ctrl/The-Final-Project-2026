@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import AdminNavbar from '../components/AdminNavbar';
 import AdminSidebar from '../components/AdminSidebar';
+import Footer from '../components/Footer';
+
 
 const AdminAcceptanceValidation = () => {
     const { applicationId } = useParams();
@@ -239,6 +241,7 @@ const AdminAcceptanceValidation = () => {
                     </div>
                 </main>
             </div>
+            <Footer />
         </div>
     );
 };

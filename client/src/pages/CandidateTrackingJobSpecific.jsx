@@ -1,7 +1,11 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { useLang } from '../contexts/LanguageContext';
 import CompanyNavbar from '../components/CompanyNavbar';
+import Footer from '../components/Footer';
 
 const CandidateTrackingJobSpecific = () => {
+    const { t, lang, setLang } = useLang();
     return (
         <div className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased min-h-screen">
             <CompanyNavbar />
@@ -10,44 +14,44 @@ const CandidateTrackingJobSpecific = () => {
                 {/* SideNavBar */}
                 <aside className="bg-slate-50 dark:bg-slate-950 font-sans text-sm h-[calc(100vh-56px)] w-64 sticky left-0 top-[56px] border-r border-slate-200 dark:border-slate-800 flex flex-col p-4">
                     <div className="mb-8 px-2">
-                        <div className="flex items-center gap-3 mb-6">
+                        <div className="flex items-center gap-3 mb-6 text-left">
                             <div className="h-10 w-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold italic">MC</div>
                             <div>
                                 <h3 className="font-bold text-slate-900 dark:text-slate-100 leading-tight">Senior UI Dev</h3>
-                                <p className="text-xs text-slate-500">Internship Offer</p>
+                                <p className="text-xs text-slate-500">{t('jobTracking.sidebarOffer')}</p>
                             </div>
                         </div>
                         <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-lg transition-transform active:scale-[0.98] flex items-center justify-center gap-2">
                             <span className="material-symbols-outlined text-sm">add</span>
-                            Add Candidate
+                            {t('jobTracking.addCandidate')}
                         </button>
                     </div>
-                    <nav className="flex-1 space-y-1">
+                    <nav className="flex-1 space-y-1 text-left">
                         <a className="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-3 py-2 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" href="#">
                             <span className="material-symbols-outlined" data-icon="dashboard">dashboard</span>
-                            Overview
+                            {t('jobTracking.overview')}
                         </a>
                         <a className="flex items-center gap-3 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-200 rounded-lg px-3 py-2 font-bold transition-transform active:scale-[0.98]" href="#">
                             <span className="material-symbols-outlined" data-icon="view_kanban">view_kanban</span>
-                            Pipeline
+                            {t('jobTracking.pipeline')}
                         </a>
                         <a className="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-3 py-2 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" href="#">
                             <span className="material-symbols-outlined" data-icon="mail">mail</span>
-                            Messages
+                            {t('jobTracking.messages')}
                         </a>
                         <a className="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-3 py-2 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" href="#">
                             <span className="material-symbols-outlined" data-icon="event_available">event_available</span>
-                            Interviews
+                            {t('jobTracking.interviews')}
                         </a>
                         <a className="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-3 py-2 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" href="#">
                             <span className="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
-                            Archive
+                            {t('jobTracking.archive')}
                         </a>
                     </nav>
-                    <div className="mt-auto pt-4 border-t border-slate-200 dark:border-slate-800">
+                    <div className="mt-auto pt-4 border-t border-slate-200 dark:border-slate-800 text-left">
                         <a className="flex items-center gap-3 text-slate-600 dark:text-slate-400 px-3 py-2 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" href="#">
                             <span className="material-symbols-outlined" data-icon="help">help</span>
-                            Help Center
+                            {t('jobTracking.help')}
                         </a>
                     </div>
                 </aside>
@@ -58,23 +62,23 @@ const CandidateTrackingJobSpecific = () => {
                     <div className="mb-8">
                         <div className="flex justify-between items-end mb-4">
                             <div>
-                                <nav className="flex text-xs text-slate-500 gap-2 mb-2">
-                                    <span>Jobs</span>
+                                <nav className="flex text-xs text-slate-500 gap-2 mb-2 text-left">
+                                    <span>{t('jobTracking.breadcrumbJobs')}</span>
                                     <span>/</span>
                                     <span>Engineering</span>
                                     <span>/</span>
                                     <span className="text-indigo-600 font-medium">Senior UI Developer</span>
                                 </nav>
-                                <h1 className="text-3xl font-black text-slate-900 tracking-tight">Applicant Management - Senior UI Developer</h1>
+                                <h1 className="text-3xl font-black text-slate-900 tracking-tight text-left">{t('jobTracking.title')} - Senior UI Developer</h1>
                             </div>
                             <div className="flex gap-2">
                                 <button className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium bg-white hover:bg-slate-50 transition-colors flex items-center gap-2">
                                     <span className="material-symbols-outlined text-sm">filter_list</span>
-                                    Filter
+                                    {t('jobTracking.filter')}
                                 </button>
                                 <button className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium bg-white hover:bg-slate-50 transition-colors flex items-center gap-2">
                                     <span className="material-symbols-outlined text-sm">share</span>
-                                    Share Role
+                                    {t('jobTracking.share')}
                                 </button>
                             </div>
                         </div>
@@ -85,18 +89,18 @@ const CandidateTrackingJobSpecific = () => {
                                 <div className="h-10 w-10 bg-white/20 rounded-full flex items-center justify-center">
                                     <span className="material-symbols-outlined">group</span>
                                 </div>
-                                <div>
-                                    <p className="font-bold text-lg leading-none">Reviewing 48 active candidates for this role</p>
-                                    <p className="text-indigo-100 text-xs mt-1">12 new applicants in the last 24 hours</p>
+                                <div className="text-left">
+                                    <p className="font-bold text-lg leading-none">{t('jobTracking.reviewing').replace('{count}', '48')}</p>
+                                    <p className="text-indigo-100 text-xs mt-1">{t('jobTracking.newApplicants').replace('{count}', '12')}</p>
                                 </div>
                             </div>
                             <div className="flex gap-8">
                                 <div className="text-right">
-                                    <p className="text-[10px] uppercase tracking-wider text-indigo-200">Total Applicants</p>
+                                    <p className="text-[10px] uppercase tracking-wider text-indigo-200">{t('jobTracking.totalApplicants')}</p>
                                     <p className="text-xl font-bold">152</p>
                                 </div>
                                 <div className="text-right border-l border-white/20 pl-8">
-                                    <p className="text-[10px] uppercase tracking-wider text-indigo-200">Average Match</p>
+                                    <p className="text-[10px] uppercase tracking-wider text-indigo-200">{t('jobTracking.averageMatch')}</p>
                                     <p className="text-xl font-bold">84%</p>
                                 </div>
                             </div>
@@ -109,13 +113,13 @@ const CandidateTrackingJobSpecific = () => {
                             <table className="w-full text-left border-collapse">
                                 <thead>
                                     <tr className="bg-slate-50/50 border-b border-slate-100">
-                                        <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Candidate Name</th>
-                                        <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">University</th>
-                                        <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Skills</th>
-                                        <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Match %</th>
-                                        <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Date Applied</th>
-                                        <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
-                                        <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
+                                        <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">{t('jobTracking.tableCandidate')}</th>
+                                        <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">{t('jobTracking.tableUniversity')}</th>
+                                        <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">{t('jobTracking.tableSkills')}</th>
+                                        <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">{t('jobTracking.tableMatch')}</th>
+                                        <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">{t('jobTracking.tableDate')}</th>
+                                        <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">{t('jobTracking.tableStatus')}</th>
+                                        <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">{t('jobTracking.tableActions')}</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-100">
@@ -149,16 +153,16 @@ const CandidateTrackingJobSpecific = () => {
                                         <td className="px-6 py-4 text-sm text-slate-500">Oct 12, 2023</td>
                                         <td className="px-6 py-4">
                                             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-100">
-                                                Interviewing
+                                                {t('jobTracking.statusInterviewing')}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex justify-end gap-2 transition-opacity">
                                                 <button className="px-3 py-1 text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-lg hover:bg-emerald-100 transition-colors flex items-center gap-1">
-                                                    <span className="material-symbols-outlined text-sm">check_circle</span>Accept
+                                                    <span className="material-symbols-outlined text-sm">check_circle</span>{t('jobTracking.btnAccept')}
                                                 </button>
                                                 <button className="px-3 py-1 text-xs font-bold text-rose-700 bg-rose-50 border border-rose-100 rounded-lg hover:bg-rose-100 transition-colors flex items-center gap-1">
-                                                    <span className="material-symbols-outlined text-sm">cancel</span>Refuse
+                                                    <span className="material-symbols-outlined text-sm">cancel</span>{t('jobTracking.btnRefuse')}
                                                 </button>
                                             </div>
                                         </td>
@@ -194,16 +198,16 @@ const CandidateTrackingJobSpecific = () => {
                                         <td className="px-6 py-4 text-sm text-slate-500">Oct 14, 2023</td>
                                         <td className="px-6 py-4">
                                             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-100">
-                                                In Review
+                                                {t('jobTracking.statusInReview')}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex justify-end gap-2 transition-opacity">
                                                 <button className="px-3 py-1 text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-lg hover:bg-emerald-100 transition-colors flex items-center gap-1">
-                                                    <span className="material-symbols-outlined text-sm">check_circle</span>Accept
+                                                    <span className="material-symbols-outlined text-sm">check_circle</span>{t('jobTracking.btnAccept')}
                                                 </button>
                                                 <button className="px-3 py-1 text-xs font-bold text-rose-700 bg-rose-50 border border-rose-100 rounded-lg hover:bg-rose-100 transition-colors flex items-center gap-1">
-                                                    <span className="material-symbols-outlined text-sm">cancel</span>Refuse
+                                                    <span className="material-symbols-outlined text-sm">cancel</span>{t('jobTracking.btnRefuse')}
                                                 </button>
                                             </div>
                                         </td>
@@ -239,16 +243,16 @@ const CandidateTrackingJobSpecific = () => {
                                         <td className="px-6 py-4 text-sm text-slate-500">Oct 15, 2023</td>
                                         <td className="px-6 py-4">
                                             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">
-                                                Offer Sent
+                                                {t('jobTracking.statusOfferSent')}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex justify-end gap-2 transition-opacity">
                                                 <button className="px-3 py-1 text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-lg hover:bg-emerald-100 transition-colors flex items-center gap-1">
-                                                    <span className="material-symbols-outlined text-sm">check_circle</span>Accept
+                                                    <span className="material-symbols-outlined text-sm">check_circle</span>{t('jobTracking.btnAccept')}
                                                 </button>
                                                 <button className="px-3 py-1 text-xs font-bold text-rose-700 bg-rose-50 border border-rose-100 rounded-lg hover:bg-rose-100 transition-colors flex items-center gap-1">
-                                                    <span className="material-symbols-outlined text-sm">cancel</span>Refuse
+                                                    <span className="material-symbols-outlined text-sm">cancel</span>{t('jobTracking.btnRefuse')}
                                                 </button>
                                             </div>
                                         </td>
@@ -258,7 +262,7 @@ const CandidateTrackingJobSpecific = () => {
                         </div>
 
                         <div className="px-6 py-4 bg-slate-50/50 flex items-center justify-between">
-                            <p className="text-xs text-slate-500 font-medium">Showing 1-10 of 48 candidates</p>
+                            <p className="text-xs text-slate-500 font-medium">{t('jobTracking.showingCandidates').replace('{start}', '1').replace('{end}', '10').replace('{total}', '48')}</p>
                             <div className="flex gap-1">
                                 <button className="p-1.5 rounded-md border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-50" disabled>
                                     <span className="material-symbols-outlined text-sm">chevron_left</span>
@@ -277,7 +281,7 @@ const CandidateTrackingJobSpecific = () => {
                             <div className="absolute -right-4 -top-4 opacity-5 text-indigo-900 group-hover:scale-110 transition-transform">
                                 <span className="material-symbols-outlined text-8xl">schedule</span>
                             </div>
-                            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Time to Fill</p>
+                            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 text-left">{t('jobTracking.statTimeFill')}</p>
                             <div className="flex items-baseline gap-2">
                                 <h4 className="text-3xl font-black text-slate-900">18 Days</h4>
                                 <span className="text-xs font-bold text-emerald-600 flex items-center gap-0.5">
@@ -285,7 +289,7 @@ const CandidateTrackingJobSpecific = () => {
                                     12%
                                 </span>
                             </div>
-                            <p className="text-xs text-slate-400 mt-2">vs. company average of 24 days</p>
+                            <p className="text-xs text-slate-400 mt-2 text-left">{t('jobTracking.statVsAvg').replace('{days}', '24')}</p>
                         </div>
 
                         {/* Stat Card 2 */}
@@ -293,7 +297,7 @@ const CandidateTrackingJobSpecific = () => {
                             <div className="absolute -right-4 -top-4 opacity-5 text-indigo-900 group-hover:scale-110 transition-transform">
                                 <span className="material-symbols-outlined text-8xl">person_add</span>
                             </div>
-                            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Accepted Candidates</p>
+                            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 text-left">{t('jobTracking.statAccepted')}</p>
                             <div className="flex items-baseline gap-2">
                                 <h4 className="text-3xl font-black text-slate-900">12</h4>
                                 <span className="text-xs font-bold text-emerald-600 flex items-center gap-0.5">
@@ -301,7 +305,7 @@ const CandidateTrackingJobSpecific = () => {
                                     3%
                                 </span>
                             </div>
-                            <p className="text-xs text-slate-400 mt-2">Total students accepted for this role</p>
+                            <p className="text-xs text-slate-400 mt-2 text-left">{t('jobTracking.statAcceptedDesc')}</p>
                         </div>
 
                         {/* Stat Card 3 */}
@@ -309,7 +313,7 @@ const CandidateTrackingJobSpecific = () => {
                             <div className="absolute -right-4 -top-4 opacity-5 text-indigo-900 group-hover:scale-110 transition-transform">
                                 <span className="material-symbols-outlined text-8xl">handshake</span>
                             </div>
-                            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Offer Acceptance Rate</p>
+                            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 text-left">{t('jobTracking.statAcceptRate')}</p>
                             <div className="flex items-baseline gap-2">
                                 <h4 className="text-3xl font-black text-slate-900">92%</h4>
                                 <span className="text-xs font-bold text-emerald-600 flex items-center gap-0.5">
@@ -317,11 +321,13 @@ const CandidateTrackingJobSpecific = () => {
                                     5%
                                 </span>
                             </div>
-                            <p className="text-xs text-slate-400 mt-2">Historical data for UI roles</p>
+                            <p className="text-xs text-slate-400 mt-2 text-left">{t('jobTracking.statHistorical')}</p>
                         </div>
                     </div>
                 </main>
             </div>
+
+            <Footer />
         </div>
     );
 };

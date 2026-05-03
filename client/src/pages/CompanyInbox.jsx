@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import SharedInbox from '../components/SharedInbox';
 import CompanySidebar from '../components/CompanySidebar';
+import { useLang } from '../contexts/LanguageContext';
 
 const CompanyInbox = () => {
+    const { t } = useLang();
     const [company, setCompany] = useState(null);
 
     useEffect(() => {
@@ -26,7 +28,7 @@ const CompanyInbox = () => {
                 <CompanySidebar company={company} activePage="inbox" topOffset="top-0" />
             </div>
             <div className="flex-1 w-full min-w-0">
-                <SharedInbox userType="company" title="Inbox" backLink="/company-dashboard" />
+                <SharedInbox userType="company" title={t('inbox.title')} backLink="/company-dashboard" />
             </div>
         </div>
     );
