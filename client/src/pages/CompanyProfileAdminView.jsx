@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import AdminNavbar from '../components/AdminNavbar';
+import AdminSidebar from '../components/AdminSidebar';
 
 const CompanyProfileAdminView = () => {
     const navigate = useNavigate();
@@ -8,6 +10,22 @@ const CompanyProfileAdminView = () => {
     const [company, setCompany] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [adminUser, setAdminUser] = useState(null);
+
+    useEffect(() => {
+        const fetchAdmin = async () => {
+            try {
+                const res = await fetch('/api/admin/me');
+                if (res.ok) {
+                    const data = await res.json();
+                    setAdminUser(data.user || null);
+                }
+            } catch (err) {
+                console.error('Failed to fetch admin:', err);
+            }
+        };
+        fetchAdmin();
+    }, []);
 
     useEffect(() => {
         const fetchCompanyProfile = async () => {
@@ -40,53 +58,11 @@ const CompanyProfileAdminView = () => {
 
     return (
         <div className="bg-slate-50 text-slate-900 antialiased min-h-screen">
-            {/* TopAppBar */}
-            <header className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm font-sans antialiased">
-                <div className="flex items-center gap-8">
-                    <span className="text-xl font-bold text-indigo-700 dark:text-indigo-300">EduConnect Admin</span>
-                    <nav className="hidden md:flex items-center gap-6">
-                        <button onClick={() => navigate('/admin-dashboard')} className="text-slate-600 dark:text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors cursor-pointer active:opacity-80 font-medium">Dashboard</button>
-                        <button className="text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400 pb-1 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors cursor-pointer active:opacity-80 font-medium">Companies</button>
-                    </nav>
-                </div>
-                <div className="flex items-center gap-4">
-                    <div className="relative hidden sm:block">
-                        <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
-                        <input className="pl-10 pr-4 py-1.5 rounded-full border-slate-200 bg-slate-50 text-sm focus:ring-indigo-500 focus:border-indigo-500 w-64" placeholder="Search companies..." type="text" />
-                    </div>
-                    <button className="text-slate-600 dark:text-slate-400 hover:text-indigo-500 cursor-pointer p-2">
-                        <span className="material-symbols-outlined">notifications</span>
-                    </button>
-                    <button className="text-slate-600 dark:text-slate-400 hover:text-indigo-500 cursor-pointer p-2 flex items-center justify-center">
-                        <span className="w-8 h-8 rounded-full border border-slate-200 shadow-sm bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold">A</span>
-                    </button>
-                </div>
-            </header>
-
-            {/* SideNavBar */}
-            <aside className="hidden lg:flex flex-col fixed left-0 top-16 h-[calc(100vh-64px)] p-4 bg-slate-50 dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 w-64 text-sm font-medium">
-                <div className="mb-8 px-4">
-                    <h2 className="text-lg font-black text-slate-900 dark:text-slate-100">Admin Portal</h2>
-                    <p className="text-xs text-slate-500">Career Services</p>
-                </div>
-                <nav className="space-y-1">
-                    <button onClick={() => navigate('/admin-dashboard')} className="w-full flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all duration-200 rounded-lg">
-                        <span className="material-symbols-outlined">domain</span>
-                        Overview
-                    </button>
-                    <button onClick={() => navigate('/candidate-tracking-admin')} className="w-full flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all duration-200 rounded-lg">
-                        <span className="material-symbols-outlined">check_circle</span>
-                        Validations
-                    </button>
-                    <button className="w-full flex items-center gap-3 px-4 py-3 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-lg transition-all duration-200">
-                        <span className="material-symbols-outlined">corporate_fare</span>
-                        Company Profiles
-                    </button>
-                </nav>
-            </aside>
+            <AdminNavbar admin={adminUser} />
+            <AdminSidebar activePage="validate" adminUser={adminUser} />
 
             {/* Main Content */}
-            <main className="lg:ml-64 pt-24 pb-12 px-6">
+            <main className="md:ml-64 pt-20 pb-12 px-6">
                 <div className="max-w-5xl mx-auto space-y-8">
 
                     {/* Main Profile Hero Card */}
@@ -112,11 +88,10 @@ const CompanyProfileAdminView = () => {
 
                                 {/* Action Row */}
                                 <div className="flex flex-wrap justify-center gap-3 mt-8">
-                                    <button className="bg-indigo-600 text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-200 flex items-center gap-2">
-                                        <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>mail</span>
-                                        Contact Company
-                                    </button>
-                                    <button className="bg-white border border-slate-200 text-slate-700 px-6 py-2.5 rounded-lg font-semibold hover:bg-slate-50 transition-colors flex items-center gap-2">
+                                    <button
+                                        onClick={() => navigate('/candidate-tracking-admin', { state: { companyFilter: company.companyName || company.name } })}
+                                        className="bg-white border border-slate-200 text-slate-700 px-6 py-2.5 rounded-lg font-semibold hover:bg-slate-50 transition-colors flex items-center gap-2"
+                                    >
                                         <span className="material-symbols-outlined text-sm">visibility</span>
                                         View Active Offers
                                     </button>
@@ -246,11 +221,20 @@ const CompanyProfileAdminView = () => {
                     <section className="space-y-4">
                         <div className="flex items-center justify-between">
                             <h2 className="text-2xl font-bold text-slate-900">Recent Internship Postings {company.recentPostings.length}</h2>
-                            <button className="text-indigo-600 text-sm font-bold">View Archive</button>
+                            <button
+                                onClick={() => navigate('/candidate-tracking-admin', { state: { companyFilter: company.companyName || company.name } })}
+                                className="text-indigo-600 text-sm font-bold hover:text-indigo-800 transition-colors"
+                            >
+                                View Archive
+                            </button>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {company.recentPostings.map((posting) => (
-                                <div key={posting.id} className="bg-white p-5 rounded-xl border border-slate-100 shadow-sm flex items-center justify-between hover:border-indigo-200 hover:bg-indigo-50/10 transition-all cursor-pointer group">
+                                <div
+                                    key={posting.id || posting._id}
+                                    onClick={() => (posting._id || posting.id) && navigate(`/offer-details/${posting._id || posting.id}`)}
+                                    className="bg-white p-5 rounded-xl border border-slate-100 shadow-sm flex items-center justify-between hover:border-indigo-200 hover:bg-indigo-50/10 transition-all cursor-pointer group"
+                                >
                                     <div className="flex items-center gap-4">
                                         <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${posting.iconColor}`}>
                                             <span className="material-symbols-outlined">{posting.icon}</span>

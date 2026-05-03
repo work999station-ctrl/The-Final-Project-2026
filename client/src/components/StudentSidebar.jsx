@@ -18,12 +18,13 @@ const StudentSidebar = ({ student, activePage, topOffset = "top-16" }) => {
         const active = activePage === page;
         return `flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-all ${active
                 ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300'
-                : 'text-slate-600 dark:text-slate-300 dark:text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-900'
+                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900'
             }`;
     };
 
     const navItems = [
         { page: 'dashboard', icon: 'dashboard', label: 'Dashboard', href: '/student-dashboard' },
+        { page: 'offers', icon: 'search', label: 'Offer Discovery', href: '/opportunities' },
         { page: 'applications', icon: 'description', label: 'Applications', href: '/ApplicationTracker' },
         { page: 'inbox', icon: 'mail', label: 'Messages', href: '/student-inbox' },
     ];
@@ -32,13 +33,13 @@ const StudentSidebar = ({ student, activePage, topOffset = "top-16" }) => {
         <>
             {/* Sidebar */}
             <aside
-                className={`fixed left-0 ${topOffset} bottom-0 flex flex-col p-3 gap-2 border-r border-slate-200 dark:border-slate-700 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 dark:bg-slate-950 hidden md:flex z-40 transition-all duration-300 ease-in-out overflow-hidden`}
+                className={`fixed left-0 ${topOffset} bottom-0 flex flex-col p-3 gap-2 border-r border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 hidden md:flex z-40 transition-all duration-300 ease-in-out overflow-hidden`}
                 style={{ width: sidebarWidth, height: 'auto' }}
             >
                 {/* Student Header */}
                 <div
                     onClick={() => navigate('/edit-student-profile')}
-                    className="flex items-center gap-3 px-2 py-3 mb-2 cursor-pointer hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-900 rounded-xl transition-colors"
+                    className="flex items-center gap-3 px-2 py-3 mb-2 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-900 rounded-xl transition-colors"
                 >
                     <div className="shrink-0">
                         {student?.profilePicture ? (
@@ -50,8 +51,8 @@ const StudentSidebar = ({ student, activePage, topOffset = "top-16" }) => {
                         )}
                     </div>
                     <div className={`overflow-hidden whitespace-nowrap transition-all duration-300 ${isCollapsed ? 'w-0 opacity-0' : 'opacity-100'}`}>
-                        <h2 className="text-base font-semibold text-slate-900 dark:text-white dark:text-slate-100 leading-tight truncate">{student?.name || 'Student Name'}</h2>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 truncate">University Portal</p>
+                        <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100 leading-tight truncate">{student?.name || 'Student Name'}</h2>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 truncate">Student Portal</p>
                     </div>
                 </div>
 

@@ -14,12 +14,59 @@ const AdminDashboard = () => {
     });
     const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [isRefreshing, setIsRefreshing] = useState(false);
     const [currentTime, setCurrentTime] = useState(new Date());
     const [filterStatus, setFilterStatus] = useState('All Statuses');
     const [stats, setStats] = useState({
         placedStudents: 0,
         unplacedStudents: 0
     });
+
+    const fetchDashboardData = async (isManualRefresh = false) => {
+        if (isManualRefresh) setIsRefreshing(true);
+        else setLoading(true);
+        try {
+            const [userRes, appsRes, statsRes] = await Promise.all([
+                fetch('/api/admin/me'),
+                fetch('/api/admin/applications/pending-validation'),
+                fetch('/api/admin/university-placement-stats?months=1')
+            ]);
+
+            if (userRes.ok) {
+                const data = await userRes.json();
+                console.log(data);
+                if (data && data.user) {
+                    setUser(prev => ({
+                        ...prev,
+                        ...data.user
+                    }));
+                }
+            } else if (userRes.status === 401) {
+                window.location.href = '/login';
+                return;
+            }
+
+            if (appsRes.ok) {
+                const appsData = await appsRes.json();
+                setApplications(appsData.applications || []);
+            }
+
+            if (statsRes.ok) {
+                const statsData = await statsRes.json();
+                if (statsData.success && statsData.stats) {
+                    setStats({
+                        placedStudents: statsData.stats.placedStudents || 0,
+                        unplacedStudents: statsData.stats.unplacedStudents || 0
+                    });
+                }
+            }
+        } catch (err) {
+            console.error("Failed to fetch dashboard data:", err);
+        } finally {
+            setLoading(false);
+            setIsRefreshing(false);
+        }
+    };
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -28,48 +75,6 @@ const AdminDashboard = () => {
         return () => clearInterval(timer);
     }, []);
     useEffect(() => {
-        const fetchDashboardData = async () => {
-            try {
-                const [userRes, appsRes, statsRes] = await Promise.all([
-                    fetch('/api/admin/me'),
-                    fetch('/api/admin/applications/pending-validation'),
-                    fetch('/api/admin/university-placement-stats?months=1')
-                ]);
-
-                if (userRes.ok) {
-                    const data = await userRes.json();
-                    console.log(data);
-                    if (data && data.user) {
-                        setUser(prev => ({
-                            ...prev,
-                            ...data.user
-                        }));
-                    }
-                } else if (userRes.status === 401) {
-                    window.location.href = '/login';
-                    return;
-                }
-
-                if (appsRes.ok) {
-                    const appsData = await appsRes.json();
-                    setApplications(appsData.applications || []);
-                }
-
-                if (statsRes.ok) {
-                    const statsData = await statsRes.json();
-                    if (statsData.success && statsData.stats) {
-                        setStats({
-                            placedStudents: statsData.stats.placedStudents || 0,
-                            unplacedStudents: statsData.stats.unplacedStudents || 0
-                        });
-                    }
-                }
-            } catch (err) {
-                console.error("Failed to fetch dashboard data:", err);
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchDashboardData();
     }, []);
 
@@ -158,9 +163,13 @@ const AdminDashboard = () => {
                             </p>
                         </div>
                         <div className="flex gap-3">
-                            <button className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 dark:text-slate-300 px-4 py-2.5 rounded-lg flex items-center gap-2 font-semibold text-sm hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-700 transition-all shadow-sm">
-                                <span className="material-symbols-outlined text-[18px]">sync</span>
-                                Refresh
+                            <button
+                                onClick={() => fetchDashboardData(true)}
+                                disabled={isRefreshing}
+                                className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 px-4 py-2.5 rounded-lg flex items-center gap-2 font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-sm disabled:opacity-60"
+                            >
+                                <span className={`material-symbols-outlined text-[18px] ${isRefreshing ? 'animate-spin' : ''}`}>sync</span>
+                                {isRefreshing ? 'Refreshing...' : 'Refresh'}
                             </button>
                         </div>
                     </div>

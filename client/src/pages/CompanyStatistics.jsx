@@ -128,7 +128,7 @@ const CompanyStatistics = () => {
                         {/* OFFICIAL HEADER */}
                         <div className="hidden print:flex justify-between items-start border-b-2 border-slate-900 pb-6 mb-10">
                             <div className="flex items-center gap-4">
-                                <img src={logoImage} alt="stag.io" className="h-14 w-auto object-contain" />
+                                <img src={logoImage} alt="stag.io" className="h-14 w-auto object-contain dark:brightness-0 dark:invert dark:sepia dark:saturate-[10] dark:hue-rotate-[350deg] mix-blend-multiply dark:mix-blend-screen" />
                                 <div className="h-12 w-px bg-slate-300"></div>
                                 <div>
                                     <h2 className="font-display font-bold text-2xl uppercase tracking-tighter text-slate-900">STAG.IO</h2>

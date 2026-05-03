@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useParams } from 'react-router-dom';
 import moment from 'moment';
-import { getProfileCompletion } from '../utils/profileCompletion';
 
 const OfferDetailsSplitView = () => {
     const { id } = useParams();
@@ -17,6 +16,9 @@ const OfferDetailsSplitView = () => {
     const [actionModal, setActionModal] = useState(null);
     const [applyModal, setApplyModal] = useState(false);
     const [toastMessage, setToastMessage] = useState(null);
+    const [studentData, setStudentData] = useState(null);
+    const [profileIncompleteModal, setProfileIncompleteModal] = useState(false);
+    const [adminUser, setAdminUser] = useState(null);
 
     useEffect(() => {
         const fetchOfferDetails = async () => {
@@ -31,13 +33,19 @@ const OfferDetailsSplitView = () => {
 
                 if (studentRes.status === 'fulfilled' && studentRes.value.ok) {
                     setUserType('student');
+                    const studentJson = await studentRes.json();
+                    if (studentJson && studentJson.user) setStudentData(studentJson.user);
                 } else {
                     const companyRes = await fetch('/api/company/me');
                     if (companyRes.ok) {
                         setUserType('company');
                     } else {
                         const adminRes = await fetch('/api/admin/me');
-                        if (adminRes.ok) setUserType('admin');
+                        if (adminRes.ok) {
+                            setUserType('admin');
+                            const adminJson = await adminRes.json();
+                            setAdminUser(adminJson.user || null);
+                        }
                     }
                 }
 
@@ -85,6 +93,15 @@ const OfferDetailsSplitView = () => {
     }, [id, userType]);
 
     const handleApply = async () => {
+        // Check profile completion before applying
+        if (studentData) {
+            const completion = getProfileCompletion(studentData);
+            if (completion < 80) {
+                setApplyModal(false);
+                setProfileIncompleteModal(true);
+                return;
+            }
+        }
         setApplyModal(false);
         setIsApplying(true);
         try {
@@ -199,7 +216,14 @@ const OfferDetailsSplitView = () => {
 
     return (
         <div className="bg-slate-50 dark:bg-slate-900 min-h-screen text-slate-900 dark:text-slate-100 font-sans">
-            <main className="pt-12 pb-12 px-6 max-w-7xl mx-auto">
+            {/* Admin Navigation */}
+            {userType === 'admin' && (
+                <>
+                    <AdminNavbar admin={adminUser} />
+                    <AdminSidebar activePage="validate" adminUser={adminUser} />
+                </>
+            )}
+            <main className={`pb-12 px-6 max-w-7xl mx-auto ${userType === 'admin' ? 'md:ml-64 pt-20' : 'pt-12'}`}>
                 {/* Header Actions */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
                     <div>
@@ -562,13 +586,42 @@ const OfferDetailsSplitView = () => {
                 </div>
             )}
 
+            {/* Profile Incomplete Modal */}
+            {profileIncompleteModal && (
+                <div className="fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setProfileIncompleteModal(false)}>
+                    <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-100 dark:border-slate-800" onClick={(e) => e.stopPropagation()}>
+                        <div className="w-16 h-16 bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800/30 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <span className="material-symbols-outlined text-3xl">warning</span>
+                        </div>
+                        <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Profile Incomplete</h3>
+                        <p className="text-slate-500 dark:text-slate-400 text-sm mb-2 font-semibold">Your profile is only {studentData ? getProfileCompletion(studentData) : 0}% complete.</p>
+                        <p className="text-slate-400 dark:text-slate-500 text-xs mb-8">You need at least 80% to apply to offers. Please complete your profile information first.</p>
+                        <div className="flex gap-4">
+                            <button
+                                onClick={() => setProfileIncompleteModal(false)}
+                                className="flex-1 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-sm uppercase tracking-wider rounded-xl transition-all"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={() => navigate('/edit-student-profile')}
+                                className="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm uppercase tracking-wider rounded-xl transition-all shadow-xl shadow-indigo-600/20 flex items-center justify-center gap-2"
+                            >
+                                <span className="material-symbols-outlined text-lg">edit</span>
+                                Complete Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* Floating Confirmation Modal */}
             {actionModal && (
                 <div className="fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
                     <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center border border-slate-100 dark:border-slate-800">
                         <div className={`w-16 h-16 ${actionModal.type === 'close' ? 'bg-amber-50 dark:bg-amber-900/20 border-amber-100 dark:border-amber-800/30 text-amber-600' :
-                                actionModal.type === 'apply' ? 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-100 dark:border-indigo-800/30 text-indigo-600' :
-                                    'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-100 dark:border-emerald-800/30 text-emerald-600'
+                            actionModal.type === 'apply' ? 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-100 dark:border-indigo-800/30 text-indigo-600' :
+                                'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-100 dark:border-emerald-800/30 text-emerald-600'
                             } border rounded-full flex items-center justify-center mx-auto mb-6`}>
                             <span className="material-symbols-outlined text-3xl">
                                 {actionModal.type === 'close' ? 'lock' : actionModal.type === 'apply' ? 'send' : 'lock_open'}
@@ -598,8 +651,8 @@ const OfferDetailsSplitView = () => {
                                     else handleReopenOffer();
                                 }}
                                 className={`flex-1 py-3 ${actionModal.type === 'close' ? 'bg-amber-600 hover:bg-amber-700 shadow-amber-600/20' :
-                                        actionModal.type === 'apply' ? 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-600/20' :
-                                            'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/20'
+                                    actionModal.type === 'apply' ? 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-600/20' :
+                                        'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/20'
                                     } text-white font-bold text-sm uppercase tracking-wider rounded-xl transition-all shadow-xl`}
                             >
                                 {actionModal.type === 'close' ? 'Close Offer' : actionModal.type === 'apply' ? 'Confirm Application' : 'Reopen Offer'}
