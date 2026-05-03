@@ -99,7 +99,6 @@ function App() {
         <Route path="/companies" element={<Companies />} />
         <Route path="/universities" element={<Universities />} />
         <Route path="/company-direct-messages" element={<CompanyDirectMessages />} />
-
       </Routes>
     </Router>
     </LanguageProvider>
