@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useParams } from 'react-router-dom';
 import moment from 'moment';
+import AdminNavbar from '../components/AdminNavbar';
+import AdminSidebar from '../components/AdminSidebar';
+import { getProfileCompletion } from '../utils/profileCompletion';
+
 
 const OfferDetailsSplitView = () => {
     const { id } = useParams();
@@ -15,7 +19,7 @@ const OfferDetailsSplitView = () => {
     const [applicantsLoading, setApplicantsLoading] = useState(false);
     const [actionModal, setActionModal] = useState(null);
     const [applyModal, setApplyModal] = useState(false);
-    const [toastMessage, setToastMessage] = useState(null);
+    const [toast, setToast] = useState(null);
     const [studentData, setStudentData] = useState(null);
     const [profileIncompleteModal, setProfileIncompleteModal] = useState(false);
     const [adminUser, setAdminUser] = useState(null);
