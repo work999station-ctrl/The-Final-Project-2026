@@ -1,6 +1,7 @@
 
 const express = require('express');
 const mongoose = require('mongoose');
+const path = require('path');
 const app = express();
 const cookieParser = require('cookie-parser');
 const allRoutes = require('./routes/all.routes.js')
@@ -8,8 +9,8 @@ const { requireAuth, checkUser } = require('./middleware/authmiddleware.js');
 require("dotenv").config();
 //middleware
 app.use(express.json());
-app.use(express.urlencoded({ extends: false }))
-app.use(express.static('public'));
+app.use(express.urlencoded({ extended: false }))
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
 // app.set('view engine', 'ejs');
 app.use(checkUser);
@@ -42,6 +43,16 @@ app.get('/api/test-password-reset', async (req, res) => {
     return res.json({ name: company.companyName, email: company.email, newPass: 'password123' });
   }
   res.json({ error: 'No companies exist' });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Unhandled Error:', err);
+  res.status(500).json({ 
+    error: 'Internal server error', 
+    message: err.message,
+    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+  });
 });
 
 const PORT = process.env.PORT || 3000;

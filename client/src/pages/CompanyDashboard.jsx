@@ -24,9 +24,15 @@ const CompanyDashboard = () => {
     const fetchDashboardData = async () => {
         try {
             const res = await fetch('/api/company/me');
+            if (!res.ok) {
+                const errText = await res.text();
+                console.error(`Failed to fetch company profile: ${res.status}`, errText);
+                setIsLoading(false);
+                return;
+            }
             const data = await res.json();
 
-            if (res.ok && data.user) {
+            if (data.user) {
                 setCompany({
                     companyName: data.user.companyName || 'Unknown Company',
                     description: data.user.description || 'No description provided.',
@@ -39,24 +45,26 @@ const CompanyDashboard = () => {
 
                 try {
                     const offersRes = await fetch('/api/company/offers');
+                    if (!offersRes.ok) throw new Error(`Offers fetch failed: ${offersRes.status}`);
                     const offersData = await offersRes.json();
-                    if (offersRes.ok && offersData.offers) {
+                    if (offersData.offers) {
                         setOffers(offersData.offers);
                     }
 
                     const statsRes = await fetch('/api/company/dashboard-stats');
+                    if (!statsRes.ok) throw new Error(`Stats fetch failed: ${statsRes.status}`);
                     const statsData = await statsRes.json();
-                    if (statsRes.ok && statsData.success) {
+                    if (statsData.success) {
                         setStats(statsData.stats);
                     }
                 } catch (err) {
-                    console.error('Error fetching dashboard data:', err);
+                    console.error('Error fetching dashboard sub-data:', err);
                 } finally {
                     setIsLoadingOffers(false);
                 }
             }
         } catch (err) {
-            console.error('Error fetching company profile:', err);
+            console.error('Network error fetching company profile:', err);
         } finally {
             setIsLoading(false);
         }

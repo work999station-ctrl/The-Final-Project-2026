@@ -19,7 +19,7 @@ const OfferDetailsSplitView = () => {
     const [applicantsLoading, setApplicantsLoading] = useState(false);
     const [actionModal, setActionModal] = useState(null);
     const [applyModal, setApplyModal] = useState(false);
-    const [toastMessage, setToastMessage] = useState(null);
+    const [toast, setToast] = useState(null);
     const [studentData, setStudentData] = useState(null);
     const [profileIncompleteModal, setProfileIncompleteModal] = useState(false);
     const [adminUser, setAdminUser] = useState(null);
@@ -37,20 +37,14 @@ const OfferDetailsSplitView = () => {
 
                 if (studentRes.status === 'fulfilled' && studentRes.value.ok) {
                     setUserType('student');
-                    const studentJson = await studentRes.json();
+                    const studentJson = await studentRes.value.json();
                     if (studentJson && studentJson.user) setStudentData(studentJson.user);
-                } else {
-                    const companyRes = await fetch('/api/company/me');
-                    if (companyRes.ok) {
-                        setUserType('company');
-                    } else {
-                        const adminRes = await fetch('/api/admin/me');
-                        if (adminRes.ok) {
-                            setUserType('admin');
-                            const adminJson = await adminRes.json();
-                            setAdminUser(adminJson.user || null);
-                        }
-                    }
+                } else if (companyRes.status === 'fulfilled' && companyRes.value.ok) {
+                    setUserType('company');
+                } else if (adminRes.status === 'fulfilled' && adminRes.value.ok) {
+                    setUserType('admin');
+                    const adminJson = await adminRes.value.json();
+                    setAdminUser(adminJson.user || null);
                 }
 
                 const response = await fetch(`/api/offers/${id}`);
