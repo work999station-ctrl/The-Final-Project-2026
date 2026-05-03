@@ -3,6 +3,8 @@
  * Capacitor WebView (Android / iOS).
  *
  * Imported once from `main.jsx`. Safe no-op on the web.
+ * On web builds, @capacitor/* is aliased to a stub (see vite.config.js).
+ * The stub returns isNativePlatform() = false, so this function exits immediately.
  */
 
 let initialized = false;
@@ -15,7 +17,7 @@ export const initMobile = async () => {
     try {
         ({ Capacitor } = await import('@capacitor/core'));
     } catch {
-        return; // Capacitor not installed → web build, nothing to do
+        return;
     }
     if (!Capacitor?.isNativePlatform?.()) return;
 
@@ -41,7 +43,6 @@ export const initMobile = async () => {
     // ---------------- Splash screen ----------------
     try {
         const { SplashScreen } = await import('@capacitor/splash-screen');
-        // The native splash auto-hides via capacitor.config; force-hide as a safety net.
         setTimeout(() => SplashScreen.hide().catch(() => {}), 1500);
     } catch (e) {
         console.warn('[mobile] SplashScreen init failed', e);
@@ -76,7 +77,7 @@ export const initMobile = async () => {
         /* ignore */
     }
 
-    // ---------------- Network status (sync with global event) ----------------
+    // ---------------- Network status ----------------
     try {
         const { Network } = await import('@capacitor/network');
         const status = await Network.getStatus();
@@ -91,7 +92,6 @@ export const initMobile = async () => {
 
 /**
  * Re-apply status bar style when the user toggles dark mode at runtime.
- * Call from your ThemeContext after a theme change.
  */
 export const syncStatusBarToTheme = async (theme) => {
     try {

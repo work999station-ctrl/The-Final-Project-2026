@@ -125,4 +125,39 @@ html.offline body::before {
     /* Tap-press feedback on mobile (use class="tap") */
     .tap { transition: transform .12s ease; }
     .tap:active { transform: scale(0.96); }
+
+    /* ── Infinite marquee (trust bar) ─────────────────────────────── */
+    @keyframes marquee-scroll {
+        0%   { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
+
+    .marquee-mask {
+        -webkit-mask-image: linear-gradient(
+            to right,
+            transparent 0%,
+            black 12%,
+            black 88%,
+            transparent 100%
+        );
+        mask-image: linear-gradient(
+            to right,
+            transparent 0%,
+            black 12%,
+            black 88%,
+            transparent 100%
+        );
+    }
+
+    .marquee-track {
+        display: flex;
+        width: max-content;
+        animation: marquee-scroll 28s linear infinite;
+        will-change: transform;
+    }
+
+    /* Pause on hover */
+    .marquee-pause:hover .marquee-track {
+        animation-play-state: paused;
+    }
 }

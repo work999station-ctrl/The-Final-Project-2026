@@ -40,7 +40,6 @@ const AdminSidebar = ({ activePage, adminUser }) => {
                 <div
                     onClick={() => navigate('/edit-admin-profile')}
                     className="flex items-center gap-3 px-2 py-3 mb-2 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-900 rounded-xl transition-colors flex-shrink-0"
->
                 >
                     <div className="shrink-0">
                         {adminUser?.profilePicture ? (
