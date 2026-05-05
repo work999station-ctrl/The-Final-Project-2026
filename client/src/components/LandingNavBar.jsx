@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ThemeToggle from './ThemeToggle';
 import logoImage from '../assets/logo.png';
+import { useLang } from '../contexts/LanguageContext';
+import LanguageSwitcher from './LanguageSwitcher';
 
 const LandingNavBar = () => {
     const navigate = useNavigate();
@@ -55,6 +57,8 @@ const LandingNavBar = () => {
         }
     }, []);
 
+    const { t } = useLang();
+
     const handleDashboardClick = () => {
         if (!user) return;
 
@@ -76,16 +80,17 @@ const LandingNavBar = () => {
                     <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain dark:brightness-0 dark:invert dark:sepia dark:saturate-[10] dark:hue-rotate-[350deg] mix-blend-multiply dark:mix-blend-screen" />
                 </div>
                 <nav className="hidden md:flex items-center gap-8">
-                    <Link className="text-sm font-semibold hover:text-primary transition-colors" to="/students">Students</Link>
-                    <Link className="text-sm font-semibold hover:text-primary transition-colors" to="/companies">Companies</Link>
-                    <Link className="text-sm font-semibold hover:text-primary transition-colors" to="/universities">Universities</Link>
+                    <Link className="text-sm font-semibold hover:text-primary transition-colors" to="/students">{t('nav.students')}</Link>
+                    <Link className="text-sm font-semibold hover:text-primary transition-colors" to="/companies">{t('nav.companies')}</Link>
+                    <Link className="text-sm font-semibold hover:text-primary transition-colors" to="/universities">{t('nav.universities')}</Link>
                 </nav>
                 <div className="flex items-center gap-4">
+                    <LanguageSwitcher />
                     {!loading && (
                         user ? (
                             <div className="flex items-center gap-4">
                                 <ThemeToggle />
-                                <button onClick={handleDashboardClick} className="text-sm font-bold text-primary hover:underline">Dashboard</button>
+                                <button onClick={handleDashboardClick} className="text-sm font-bold text-primary hover:underline">{t('nav.dashboard')}</button>
                                 <div
                                     className="size-10 rounded-full border-2 border-primary bg-cover bg-center cursor-pointer shadow-sm"
                                     style={{ backgroundImage: `url('${user.profilePicture || user.logo || '/images/default-avatar.png'}')` }}
@@ -96,9 +101,9 @@ const LandingNavBar = () => {
                         ) : (
                             <>
                                 <ThemeToggle />
-                                <button className="hidden sm:block text-sm font-bold px-4 py-2 hover:text-primary" onClick={() => navigate('/login')}>Log In</button>
+                                <button className="hidden sm:block text-sm font-bold px-4 py-2 hover:text-primary" onClick={() => navigate('/login')}>{t('nav.login')}</button>
                                 <button className="bg-primary text-white text-sm font-bold py-2.5 px-6 rounded-full hover:opacity-90 transition-all shadow-lg shadow-primary/20" onClick={() => navigate('/student-signup')}>
-                                    Get Started
+                                    {t('nav.signup')}
                                 </button>
                             </>
                         )
