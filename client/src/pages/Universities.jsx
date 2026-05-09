@@ -183,15 +183,12 @@ const Universities = () => {
                                 Join forward-thinking institutions that are redefining the student-to-professional transition.
                             </p>
                             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 relative z-10">
-                                <button
-                                    onClick={() => navigate('/admin-signup')}
+                                <button 
+                                    onClick={() => navigate('/contact-us')}
                                     className="w-full sm:w-auto bg-indigo-600 text-white text-lg font-bold py-5 px-12 rounded-2xl hover:scale-105 transition-all shadow-xl shadow-indigo-900/20"
                                 >
-                                    Become a Partner
-                                </button>
-                                {/* <button className="w-full sm:w-auto bg-white/10 dark:bg-slate-100 text-white dark:text-slate-900 text-lg font-bold py-5 px-12 rounded-2xl hover:bg-white/20 dark:hover:bg-slate-200 transition-all border border-white/10 dark:border-slate-200">
                                     Request Information
-                                </button> */}
+                                </button>
                             </div>
                         </div>
                     </div>

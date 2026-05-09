@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import useSocket from '../hooks/useSocket';
 
 const CompanyProfileAdminView = () => {
     const navigate = useNavigate();
-    const { id } = useParams(); // Can be used later when connecting to backend
+    const { id } = useParams();
+    const socket = useSocket();
 
     const [company, setCompany] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -32,6 +34,18 @@ const CompanyProfileAdminView = () => {
             fetchCompanyProfile();
         }
     }, [id]);
+
+    // ── Real-time: patch company profile data when a company updates their profile ──
+    useEffect(() => {
+        if (!socket) return;
+        const handleUserUpdated = (payload) => {
+            if (payload.type === 'company' && payload.data && String(payload.userId) === String(id)) {
+                setCompany(prev => prev ? { ...prev, ...payload.data } : prev);
+            }
+        };
+        socket.on('user:updated', handleUserUpdated);
+        return () => socket.off('user:updated', handleUserUpdated);
+    }, [socket, id]);
 
     if (loading) return <div className="min-h-screen flex items-center justify-center bg-slate-50"><div className="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div></div>;
     if (error) return <div className="min-h-screen flex items-center justify-center bg-slate-50"><p className="text-red-500 font-bold">{error}</p></div>;
