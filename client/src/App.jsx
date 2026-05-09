@@ -10,6 +10,7 @@ import CompanyDashboard from './pages/CompanyDashboard';
 import EditCompanyProfile from './pages/EditCompanyProfile';
 import EditStudentProfile from './pages/EditStudentProfile';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminSignup from './pages/AdminSignup';
 import EditAdminProfile from './pages/EditAdminProfile';
 import InternshipOffers from './pages/InternshipOffers';
 import CompanyOffers from './pages/CompanyOffers';
@@ -62,6 +63,7 @@ function App() {
         <Route path="/edit-company-profile" element={<EditCompanyProfile />} />
         <Route path="/edit-student-profile" element={<EditStudentProfile />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/admin-signup" element={<AdminSignup />} />
         <Route path="/edit-admin-profile" element={<EditAdminProfile />} />
         <Route path="/opportunities" element={<InternshipOffers />} />
         <Route path="/company-offers" element={<CompanyOffers />} />

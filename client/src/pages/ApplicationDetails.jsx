@@ -190,7 +190,7 @@ const ApplicationDetails = () => {
                             <nav className="flex text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 mb-2 gap-2">
                                 <span className="hover:text-primary cursor-pointer" onClick={() => navigate(company ? '/company-dashboard' : '/application-tracker')}>Dashboard</span>
                                 <span>›</span>
-                                <span className="hover:text-primary cursor-pointer">Applications</span>
+                                <span className="hover:text-primary cursor-pointer" onClick={() => navigate('/ApplicationTracker')}>Applications</span>
                                 <span>›</span>
                                 <span className="text-slate-900 dark:text-white font-medium">{appData.name}</span>
                             </nav>

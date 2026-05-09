@@ -23,6 +23,58 @@ const StudentDashboard = () => {
         profilePicture: "https://lh3.googleusercontent.com/aida-public/AB6AXuDjBPPlZgqCxXn4rLkoiUfFHy3MP2QaQAbHzCF--6xNTr52Hop8mjrnlAeaIN-fCEshDEM6yUsNXF0GTpdEmLd_HxUV25KKAkcvhbYOTiZ2-t2MXeOexxuRZ3AXjdAYkGHQZkSS_KBwH14mHdxTRwTuzl_hmkabWkPMyWilyA5bApTa4vFXFuW7MjFwQCE6XUlleuLy2M-TUhBAaD_-MM92RVVtnN6fSGGoH-coRgTEIZdsXtrPeNx8JRpzFeGPOkfqcyWdRU8ZdBo"
     });
 
+    // Real logos for programming/tech skills (Devicon CDN)
+    const DI = 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons';
+    const skillLogos = {
+        'React': `${DI}/react/react-original.svg`, 'Next.js': `${DI}/nextjs/nextjs-original.svg`,
+        'Vue.js': `${DI}/vuejs/vuejs-original.svg`, 'Tailwind CSS': `${DI}/tailwindcss/tailwindcss-original.svg`,
+        'Angular': `${DI}/angularjs/angularjs-original.svg`, 'HTML/CSS': `${DI}/html5/html5-original.svg`,
+        'TypeScript': `${DI}/typescript/typescript-original.svg`, 'JavaScript': `${DI}/javascript/javascript-original.svg`,
+        'Svelte': `${DI}/svelte/svelte-original.svg`, 'Bootstrap': `${DI}/bootstrap/bootstrap-original.svg`,
+        'Sass': `${DI}/sass/sass-original.svg`, 'jQuery': `${DI}/jquery/jquery-original.svg`,
+        'Node.js': `${DI}/nodejs/nodejs-original.svg`, 'Express': `${DI}/express/express-original.svg`,
+        'Python': `${DI}/python/python-original.svg`, 'Django': `${DI}/django/django-plain.svg`,
+        'Go': `${DI}/go/go-original.svg`, 'PHP': `${DI}/php/php-original.svg`,
+        'Java': `${DI}/java/java-original.svg`, 'C++': `${DI}/cplusplus/cplusplus-original.svg`,
+        'Rust': `${DI}/rust/rust-original.svg`, 'C#': `${DI}/csharp/csharp-original.svg`,
+        '.NET': `${DI}/dotnetcore/dotnetcore-original.svg`, 'Ruby': `${DI}/ruby/ruby-original.svg`,
+        'Laravel': `${DI}/laravel/laravel-original.svg`, 'Flask': `${DI}/flask/flask-original.svg`,
+        'FastAPI': `${DI}/fastapi/fastapi-original.svg`, 'Spring Boot': `${DI}/spring/spring-original.svg`,
+        'Scala': `${DI}/scala/scala-original.svg`, 'R': `${DI}/r/r-original.svg`,
+        'React Native': `${DI}/react/react-original.svg`, 'Flutter': `${DI}/flutter/flutter-original.svg`,
+        'Swift': `${DI}/swift/swift-original.svg`, 'Kotlin': `${DI}/kotlin/kotlin-original.svg`,
+        'Dart': `${DI}/dart/dart-original.svg`, 'Ionic': `${DI}/ionic/ionic-original.svg`,
+        'PostgreSQL': `${DI}/postgresql/postgresql-original.svg`, 'MongoDB': `${DI}/mongodb/mongodb-original.svg`,
+        'Redis': `${DI}/redis/redis-original.svg`, 'MySQL': `${DI}/mysql/mysql-original.svg`,
+        'Firebase': `${DI}/firebase/firebase-original.svg`, 'SQL': `${DI}/azuresqldatabase/azuresqldatabase-original.svg`,
+        'SQLite': `${DI}/sqlite/sqlite-original.svg`, 'Oracle': `${DI}/oracle/oracle-original.svg`,
+        'Supabase': `${DI}/supabase/supabase-original.svg`,
+        'Docker': `${DI}/docker/docker-original.svg`, 'AWS': `${DI}/amazonwebservices/amazonwebservices-plain-wordmark.svg`,
+        'CI/CD': `${DI}/githubactions/githubactions-original.svg`, 'Linux': `${DI}/linux/linux-original.svg`,
+        'Git': `${DI}/git/git-original.svg`, 'Kubernetes': `${DI}/kubernetes/kubernetes-original.svg`,
+        'Terraform': `${DI}/terraform/terraform-original.svg`, 'Jenkins': `${DI}/jenkins/jenkins-original.svg`,
+        'Nginx': `${DI}/nginx/nginx-original.svg`, 'Azure': `${DI}/azure/azure-original.svg`,
+        'Google Cloud': `${DI}/googlecloud/googlecloud-original.svg`, 'Ansible': `${DI}/ansible/ansible-original.svg`,
+        'TensorFlow': `${DI}/tensorflow/tensorflow-original.svg`, 'PyTorch': `${DI}/pytorch/pytorch-original.svg`,
+        'Pandas': `${DI}/pandas/pandas-original.svg`, 'NumPy': `${DI}/numpy/numpy-original.svg`,
+        'Jupyter': `${DI}/jupyter/jupyter-original.svg`, 'OpenCV': `${DI}/opencv/opencv-original.svg`,
+        'Matlab': `${DI}/matlab/matlab-original.svg`, 'Keras': `${DI}/keras/keras-original.svg`,
+        'Figma': `${DI}/figma/figma-original.svg`, 'Canva': `${DI}/canva/canva-original.svg`,
+        'Blender': `${DI}/blender/blender-original.svg`, 'After Effects': `${DI}/aftereffects/aftereffects-original.svg`,
+        'Adobe Photoshop': `${DI}/photoshop/photoshop-original.svg`, 'Illustrator': `${DI}/illustrator/illustrator-plain.svg`,
+        'Premiere Pro': `${DI}/premierepro/premierepro-original.svg`,
+    };
+    const skillIcons = {
+        'Shopify': 'storefront', 'WooCommerce': 'shopping_cart', 'SEO': 'travel_explore',
+        'Google Analytics': 'monitoring', 'Social Media Management': 'share',
+        'Email Marketing': 'mail', 'Copywriting': 'edit_note',
+        'Project Management': 'assignment', 'Agile/Scrum': 'sprint', 'Business Analysis': 'analytics',
+        'CRM': 'contacts', 'Graphic Design': 'palette', 'UI/UX Design': 'design_services',
+        'Recruitment': 'person_search', 'Talent Acquisition': 'star', 'Training & Development': 'school',
+        'Conflict Resolution': 'handshake', 'Sports Coaching': 'sports', 'Personal Training': 'fitness_center',
+        'Sports Nutrition': 'restaurant', 'First Aid': 'medical_services',
+    };
+
     const [offers, setOffers] = useState([]);
     const [offersLoading, setOffersLoading] = useState(false);
     const [page, setPage] = useState(1);
@@ -243,7 +295,12 @@ const StudentDashboard = () => {
                                     </div>
                                     <div className="flex flex-wrap gap-2">
                                         {user.skills.map(skill => (
-                                            <span key={skill} className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-md font-mono text-xs border border-slate-200 dark:border-slate-700 hover:scale-105 hover:border-primary hover:text-primary transition-all cursor-default">
+                                            <span key={skill} className="flex items-center gap-1.5 px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-md font-mono text-xs border border-slate-200 dark:border-slate-700 hover:scale-105 hover:border-primary hover:text-primary transition-all cursor-default">
+                                                {skillLogos[skill] ? (
+                                                    <img src={skillLogos[skill]} alt="" className="w-4 h-4 object-contain" />
+                                                ) : skillIcons[skill] ? (
+                                                    <span className="material-symbols-outlined text-[14px]">{skillIcons[skill]}</span>
+                                                ) : null}
                                                 {skill}
                                             </span>
                                         ))}
@@ -329,8 +386,8 @@ const StudentDashboard = () => {
                                 // Show the most recent application
                                 const app = [...applications].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
                                 const info = getStatusInfo(app.status);
-                                const step2Color = ['accepted', 'rejected', 'validated'].includes(app.status) ? `bg-${info.colorClass}-600` : 'bg-slate-200 dark:bg-slate-700';
-                                const step3Color = app.status === 'validated' ? 'bg-green-600' : 'bg-slate-200 dark:bg-slate-700';
+                                const step2Color = ['accepted', 'rejected', 'validated', 'admin_rejected'].includes(app.status) ? (app.status === 'admin_rejected' ? 'bg-green-600' : `bg-${info.colorClass}-600`) : 'bg-slate-200 dark:bg-slate-700';
+                                const step3Color = app.status === 'validated' ? 'bg-green-600' : (app.status === 'admin_rejected' ? 'bg-red-600' : 'bg-slate-200 dark:bg-slate-700');
                                 const dateApplied = new Date(app.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
                                 return (
@@ -359,11 +416,11 @@ const StudentDashboard = () => {
                                             <div className="flex items-center w-full">
                                                 {/* Step 1: Applied */}
                                                 <div className="flex flex-col items-center gap-1">
-                                                    <div className={`w-10 h-10 rounded-full bg-${info.colorClass}-600 ring-4 ring-${info.colorClass}-100 flex items-center justify-center shadow-md`}>
+                                                    <div className={`w-10 h-10 rounded-full ${app.status === 'admin_rejected' ? 'bg-green-600 ring-4 ring-green-100' : `bg-${info.colorClass}-600 ring-4 ring-${info.colorClass}-100`} flex items-center justify-center shadow-md`}>
                                                         <span className="material-symbols-outlined text-white text-base" style={{ fontVariationSettings: "'FILL' 1" }}>send</span>
                                                     </div>
                                                 </div>
-                                                <div className={`flex-1 h-1 rounded-full mx-1 ${step2Color !== 'bg-slate-200 dark:bg-slate-700' ? `bg-${info.colorClass}-500` : 'bg-slate-200 dark:bg-slate-700'}`}></div>
+                                                <div className={`flex-1 h-1 rounded-full mx-1 ${step2Color !== 'bg-slate-200 dark:bg-slate-700' ? (app.status === 'admin_rejected' ? 'bg-green-500' : `bg-${info.colorClass}-500`) : 'bg-slate-200 dark:bg-slate-700'}`}></div>
 
                                                 {/* Step 2: Accepted / Refused */}
                                                 <div className="flex flex-col items-center gap-1">
@@ -373,7 +430,9 @@ const StudentDashboard = () => {
                                                             ? 'bg-red-600 ring-red-100'
                                                             : ['accepted', 'validated'].includes(app.status)
                                                                 ? 'bg-indigo-600 ring-indigo-100'
-                                                                : 'bg-slate-200 dark:bg-slate-700 ring-slate-100'
+                                                                : app.status === 'admin_rejected'
+                                                                    ? 'bg-green-600 ring-green-100'
+                                                                    : 'bg-slate-200 dark:bg-slate-700 ring-slate-100'
                                                         }`}>
                                                         <span className={`material-symbols-outlined text-base ${app.status === 'applied' ? `text-${info.colorClass}-400` :
                                                             app.status === 'rejected' ? 'text-white' : 'text-white'
@@ -382,30 +441,35 @@ const StudentDashboard = () => {
                                                         </span>
                                                     </div>
                                                 </div>
-                                                <div className={`flex-1 h-1 rounded-full mx-1 ${step3Color !== 'bg-slate-200 dark:bg-slate-700' ? 'bg-green-500' : 'bg-slate-200 dark:bg-slate-700'}`}></div>
+                                                <div className={`flex-1 h-1 rounded-full mx-1 ${step3Color !== 'bg-slate-200 dark:bg-slate-700' ? (app.status === 'admin_rejected' ? 'bg-red-500' : 'bg-green-500') : 'bg-slate-200 dark:bg-slate-700'}`}></div>
 
                                                 {/* Step 3: Validated */}
                                                 <div className="flex flex-col items-center gap-1">
                                                     <div className={`w-10 h-10 rounded-full flex items-center justify-center shadow-md ring-4 ${app.status === 'validated'
                                                         ? 'bg-green-600 ring-green-100'
-                                                        : ['accepted', 'rejected'].includes(app.status)
-                                                            ? 'bg-white dark:bg-slate-800 border-2 border-green-400 ring-green-100'
-                                                            : 'bg-slate-200 dark:bg-slate-700 ring-slate-100'
+                                                        : app.status === 'admin_rejected'
+                                                            ? 'bg-red-600 ring-red-100'
+                                                            : ['accepted', 'rejected'].includes(app.status)
+                                                                ? 'bg-white dark:bg-slate-800 border-2 border-green-400 ring-green-100'
+                                                                : 'bg-slate-200 dark:bg-slate-700 ring-slate-100'
                                                         }`}>
                                                         <span className={`material-symbols-outlined text-base ${app.status === 'validated' ? 'text-white' :
+                                                            app.status === 'admin_rejected' ? 'text-white' :
                                                             ['accepted', 'rejected'].includes(app.status) ? 'text-green-400' : 'text-slate-400 dark:text-slate-500'
-                                                            }`} style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
+                                                            }`} style={{ fontVariationSettings: "'FILL' 1" }}>{app.status === 'admin_rejected' ? 'block' : 'verified'}</span>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             {/* Labels */}
                                             <div className="flex justify-between w-full mt-3">
-                                                <span className={`text-xs font-bold text-${info.colorClass}-600 text-center w-10`}>Applied</span>
-                                                <span className={`text-xs font-bold text-center flex-1 ${['accepted', 'rejected'].includes(app.status) ? `text-${info.colorClass}-600` : 'text-slate-400 dark:text-slate-500'}`}>
+                                                <span className={`text-xs font-bold ${app.status === 'admin_rejected' ? 'text-green-600' : `text-${info.colorClass}-600`} text-center w-10`}>Applied</span>
+                                                <span className={`text-xs font-bold text-center flex-1 ${['accepted', 'rejected', 'admin_rejected'].includes(app.status) ? (app.status === 'admin_rejected' ? 'text-green-600' : `text-${info.colorClass}-600`) : 'text-slate-400 dark:text-slate-500'}`}>
                                                     {app.status === 'rejected' ? 'Refused' : 'Accepted'}
                                                 </span>
-                                                <span className={`text-xs font-bold text-center w-10 ${app.status === 'validated' ? 'text-green-600' : 'text-slate-400 dark:text-slate-500'}`}>Valid.</span>
+                                                <span className={`text-xs font-bold text-center w-10 ${app.status === 'validated' ? 'text-green-600' : (app.status === 'admin_rejected' ? 'text-red-600' : 'text-slate-400 dark:text-slate-500')}`}>
+                                                    {app.status === 'admin_rejected' ? 'Refused' : 'Valid.'}
+                                                </span>
                                             </div>
                                         </div>
 
@@ -489,7 +553,12 @@ const StudentDashboard = () => {
                                                 <p className="text-sm text-text-muted dark:text-gray-400 mb-4">{offer.company?.name || 'Company'} • {offer.wilaya || 'Algeria'}</p>
                                                 <div className="flex flex-wrap gap-1.5 mb-4">
                                                     {allTags.slice(0, 3).map((tag, i) => (
-                                                        <span key={i} className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-[10px] font-mono border border-gray-200">
+                                                        <span key={i} className="flex items-center gap-1 px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-[10px] font-mono border border-gray-200">
+                                                            {skillLogos[tag] ? (
+                                                                <img src={skillLogos[tag]} alt="" className="w-3.5 h-3.5 object-contain" />
+                                                            ) : skillIcons[tag] ? (
+                                                                <span className="material-symbols-outlined text-[12px]">{skillIcons[tag]}</span>
+                                                            ) : null}
                                                             {tag}
                                                         </span>
                                                     ))}

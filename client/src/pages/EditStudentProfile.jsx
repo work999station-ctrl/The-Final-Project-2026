@@ -40,17 +40,109 @@ const EditStudentProfile = () => {
     const [isExtractingCV, setIsExtractingCV] = useState(false);
 
     const skillCategories = [
-        { name: 'Front-end', skills: ['React', 'Next.js', 'Vue.js', 'Tailwind CSS', 'Angular', 'HTML/CSS'] },
-        { name: 'Back-end', skills: ['Node.js', 'Express', 'Python', 'Django', 'Go', 'PHP', 'Java', 'C++', 'Rust'] },
-        { name: 'Mobile', skills: ['React Native', 'Flutter', 'Swift', 'Kotlin'] },
-        { name: 'Database', skills: ['PostgreSQL', 'MongoDB', 'Redis', 'MySQL', 'Firebase', 'SQL'] },
-        { name: 'DevOps', skills: ['Docker', 'AWS', 'CI/CD', 'Linux', 'Git'] },
+        { name: 'Front-end', skills: ['React', 'Next.js', 'Vue.js', 'Tailwind CSS', 'Angular', 'HTML/CSS', 'TypeScript', 'JavaScript', 'Svelte', 'Bootstrap', 'Sass', 'jQuery'] },
+        { name: 'Back-end', skills: ['Node.js', 'Express', 'Python', 'Django', 'Go', 'PHP', 'Java', 'C++', 'Rust', 'C#', '.NET', 'Ruby', 'Laravel', 'Flask', 'FastAPI', 'Spring Boot', 'Scala', 'R'] },
+        { name: 'Mobile', skills: ['React Native', 'Flutter', 'Swift', 'Kotlin', 'Dart', 'Ionic'] },
+        { name: 'Database', skills: ['PostgreSQL', 'MongoDB', 'Redis', 'MySQL', 'Firebase', 'SQL', 'SQLite', 'Oracle', 'Supabase'] },
+        { name: 'DevOps', skills: ['Docker', 'AWS', 'CI/CD', 'Linux', 'Git', 'Kubernetes', 'Terraform', 'Jenkins', 'Nginx', 'Azure', 'Google Cloud', 'Ansible'] },
+        { name: 'AI & Data Science', skills: ['TensorFlow', 'PyTorch', 'Pandas', 'NumPy', 'Jupyter', 'OpenCV', 'Matlab', 'Keras'] },
         { name: 'E-commerce & Marketing', skills: ['Shopify', 'WooCommerce', 'SEO', 'Google Analytics', 'Social Media Management', 'Email Marketing', 'Copywriting'] },
-        { name: 'Design & Media', skills: ['Adobe Photoshop', 'Illustrator', 'Premiere Pro', 'UI/UX Design', 'Graphic Design'] },
+        { name: 'Design & Media', skills: ['Adobe Photoshop', 'Illustrator', 'Premiere Pro', 'Figma', 'Canva', 'Blender', 'After Effects', 'UI/UX Design', 'Graphic Design'] },
         { name: 'Business & Management', skills: ['Project Management', 'Agile/Scrum', 'Business Analysis', 'CRM'] },
         { name: 'Psychology & HR', skills: ['Recruitment', 'Talent Acquisition', 'Training & Development', 'Conflict Resolution'] },
         { name: 'Sport & Health', skills: ['Sports Coaching', 'Personal Training', 'Sports Nutrition', 'First Aid'] }
     ];
+
+    // Real logos for programming/tech skills (Devicon CDN)
+    const DI = 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons';
+    const skillLogos = {
+        'React': `${DI}/react/react-original.svg`,
+        'Next.js': `${DI}/nextjs/nextjs-original.svg`,
+        'Vue.js': `${DI}/vuejs/vuejs-original.svg`,
+        'Tailwind CSS': `${DI}/tailwindcss/tailwindcss-original.svg`,
+        'Angular': `${DI}/angularjs/angularjs-original.svg`,
+        'HTML/CSS': `${DI}/html5/html5-original.svg`,
+        'TypeScript': `${DI}/typescript/typescript-original.svg`,
+        'JavaScript': `${DI}/javascript/javascript-original.svg`,
+        'Svelte': `${DI}/svelte/svelte-original.svg`,
+        'Bootstrap': `${DI}/bootstrap/bootstrap-original.svg`,
+        'Sass': `${DI}/sass/sass-original.svg`,
+        'jQuery': `${DI}/jquery/jquery-original.svg`,
+        'Node.js': `${DI}/nodejs/nodejs-original.svg`,
+        'Express': `${DI}/express/express-original.svg`,
+        'Python': `${DI}/python/python-original.svg`,
+        'Django': `${DI}/django/django-plain.svg`,
+        'Go': `${DI}/go/go-original.svg`,
+        'PHP': `${DI}/php/php-original.svg`,
+        'Java': `${DI}/java/java-original.svg`,
+        'C++': `${DI}/cplusplus/cplusplus-original.svg`,
+        'Rust': `${DI}/rust/rust-original.svg`,
+        'C#': `${DI}/csharp/csharp-original.svg`,
+        '.NET': `${DI}/dotnetcore/dotnetcore-original.svg`,
+        'Ruby': `${DI}/ruby/ruby-original.svg`,
+        'Laravel': `${DI}/laravel/laravel-original.svg`,
+        'Flask': `${DI}/flask/flask-original.svg`,
+        'FastAPI': `${DI}/fastapi/fastapi-original.svg`,
+        'Spring Boot': `${DI}/spring/spring-original.svg`,
+        'Scala': `${DI}/scala/scala-original.svg`,
+        'R': `${DI}/r/r-original.svg`,
+        'React Native': `${DI}/react/react-original.svg`,
+        'Flutter': `${DI}/flutter/flutter-original.svg`,
+        'Swift': `${DI}/swift/swift-original.svg`,
+        'Kotlin': `${DI}/kotlin/kotlin-original.svg`,
+        'Dart': `${DI}/dart/dart-original.svg`,
+        'Ionic': `${DI}/ionic/ionic-original.svg`,
+        'PostgreSQL': `${DI}/postgresql/postgresql-original.svg`,
+        'MongoDB': `${DI}/mongodb/mongodb-original.svg`,
+        'Redis': `${DI}/redis/redis-original.svg`,
+        'MySQL': `${DI}/mysql/mysql-original.svg`,
+        'Firebase': `${DI}/firebase/firebase-original.svg`,
+        'SQL': `${DI}/azuresqldatabase/azuresqldatabase-original.svg`,
+        'SQLite': `${DI}/sqlite/sqlite-original.svg`,
+        'Oracle': `${DI}/oracle/oracle-original.svg`,
+        'Supabase': `${DI}/supabase/supabase-original.svg`,
+        'Docker': `${DI}/docker/docker-original.svg`,
+        'AWS': `${DI}/amazonwebservices/amazonwebservices-plain-wordmark.svg`,
+        'CI/CD': `${DI}/githubactions/githubactions-original.svg`,
+        'Linux': `${DI}/linux/linux-original.svg`,
+        'Git': `${DI}/git/git-original.svg`,
+        'Kubernetes': `${DI}/kubernetes/kubernetes-original.svg`,
+        'Terraform': `${DI}/terraform/terraform-original.svg`,
+        'Jenkins': `${DI}/jenkins/jenkins-original.svg`,
+        'Nginx': `${DI}/nginx/nginx-original.svg`,
+        'Azure': `${DI}/azure/azure-original.svg`,
+        'Google Cloud': `${DI}/googlecloud/googlecloud-original.svg`,
+        'Ansible': `${DI}/ansible/ansible-original.svg`,
+        'TensorFlow': `${DI}/tensorflow/tensorflow-original.svg`,
+        'PyTorch': `${DI}/pytorch/pytorch-original.svg`,
+        'Pandas': `${DI}/pandas/pandas-original.svg`,
+        'NumPy': `${DI}/numpy/numpy-original.svg`,
+        'Jupyter': `${DI}/jupyter/jupyter-original.svg`,
+        'OpenCV': `${DI}/opencv/opencv-original.svg`,
+        'Matlab': `${DI}/matlab/matlab-original.svg`,
+        'Keras': `${DI}/keras/keras-original.svg`,
+        'Figma': `${DI}/figma/figma-original.svg`,
+        'Canva': `${DI}/canva/canva-original.svg`,
+        'Blender': `${DI}/blender/blender-original.svg`,
+        'After Effects': `${DI}/aftereffects/aftereffects-original.svg`,
+        'Adobe Photoshop': `${DI}/photoshop/photoshop-original.svg`,
+        'Illustrator': `${DI}/illustrator/illustrator-plain.svg`,
+        'Premiere Pro': `${DI}/premierepro/premierepro-original.svg`,
+    };
+
+    // Material icons for non-tech skills
+    const skillIcons = {
+        'Shopify': 'storefront', 'WooCommerce': 'shopping_cart', 'SEO': 'travel_explore',
+        'Google Analytics': 'monitoring', 'Social Media Management': 'share',
+        'Email Marketing': 'mail', 'Copywriting': 'edit_note',
+        'UI/UX Design': 'design_services', 'Graphic Design': 'palette',
+        'Project Management': 'assignment', 'Agile/Scrum': 'sprint', 'Business Analysis': 'analytics',
+        'CRM': 'contacts',
+        'Recruitment': 'person_search', 'Talent Acquisition': 'star', 'Training & Development': 'school',
+        'Conflict Resolution': 'handshake',
+        'Sports Coaching': 'sports', 'Personal Training': 'fitness_center',
+        'Sports Nutrition': 'restaurant', 'First Aid': 'medical_services'
+    };
 
     const toggleSkill = (skill) => {
         if (skills.includes(skill)) {
@@ -558,12 +650,17 @@ const EditStudentProfile = () => {
                                                                             <button
                                                                                 type="button"
                                                                                 key={skill}
-                                                                                className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${skills.includes(skill)
+                                                                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${skills.includes(skill)
                                                                                     ? 'border-[#4F46E5] text-[#4F46E5] bg-[#4F46E5]/10 shadow-sm'
                                                                                     : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-[#4F46E5] hover:text-[#4F46E5] hover:bg-[#4F46E5]/5'
                                                                                     }`}
                                                                                 onClick={() => toggleSkill(skill)}
                                                                             >
+                                                                                {skillLogos[skill] ? (
+                                                                                    <img src={skillLogos[skill]} alt="" className="w-4 h-4 object-contain" />
+                                                                                ) : skillIcons[skill] ? (
+                                                                                    <span className="material-symbols-outlined text-[14px]">{skillIcons[skill]}</span>
+                                                                                ) : null}
                                                                                 {skill}
                                                                             </button>
                                                                         ))}
