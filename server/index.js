@@ -6,10 +6,11 @@ const cookieParser = require('cookie-parser');
 const allRoutes = require('./routes/all.routes.js')
 const { requireAuth, checkUser } = require('./middleware/authmiddleware.js');
 require("dotenv").config();
+const path = require('path');
 //middleware
 app.use(express.json());
 app.use(express.urlencoded({ extends: false }))
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
 // app.set('view engine', 'ejs');
 app.use(checkUser);
