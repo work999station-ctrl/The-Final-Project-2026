@@ -3,10 +3,12 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import moment from 'moment';
 import StudentNavbar from '../components/StudentNavbar';
 import StudentSidebar from '../components/StudentSidebar';
+import { useLang } from '../contexts/LanguageContext';
 
 const InternshipOffers = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { t } = useLang();
     const [openFilter, setOpenFilter] = useState(null);
     const filterRef = useRef(null);
     const [offers, setOffers] = useState([]);
@@ -247,7 +249,7 @@ const InternshipOffers = () => {
                             </div>
                             <input
                                 className="block w-full pl-12 pr-10 py-3.5 bg-white dark:bg-slate-800 dark:text-white border-0 rounded-full text-slate-900 placeholder:text-slate-500 focus:ring-2 focus:ring-[#4F46E5] shadow-sm group-hover:shadow-lg transition-all duration-300 text-base font-medium outline-none"
-                                placeholder="React, Civil Engineering, Marketing..."
+                                placeholder={t('offers.searchPlaceholder')}
                                 type="text"
                                 value={searchQuery}
                                 onChange={e => setSearchQuery(e.target.value)}
@@ -285,7 +287,7 @@ const InternshipOffers = () => {
                                 {openFilter === 'wilaya' && (
                                     <div className="absolute top-full left-0 mt-2 w-64 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2">
                                         <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
-                                            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Select Wilaya</span>
+                                            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{t('offers.filterWilayaHeader')}</span>
                                         </div>
                                         <div className="max-h-72 overflow-y-auto">
                                             {wilayas.map((w) => (
@@ -304,7 +306,7 @@ const InternshipOffers = () => {
                                 {activeFilters.duration ? (
                                     <span className="flex items-center gap-1.5 pl-3 pr-2 py-2 bg-[#4F46E5]/10 text-[#4F46E5] rounded-full text-sm font-semibold border border-[#4F46E5]/30 shadow-sm whitespace-nowrap cursor-default">
                                         <span className="material-symbols-outlined text-[16px]">schedule</span>
-                                        {activeFilters.duration} {activeFilters.duration === '1' ? 'Month' : 'Months'}
+                                        {activeFilters.duration} {activeFilters.duration === '1' ? t('offers.month') : t('offers.months')}
                                         <button onClick={() => clearFilter('duration')} className="ml-0.5 rounded-full hover:bg-[#4F46E5]/20 p-0.5 transition-colors"><span className="material-symbols-outlined text-[14px]">close</span></button>
                                     </span>
                                 ) : (
@@ -313,19 +315,19 @@ const InternshipOffers = () => {
                                         className={`flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-full text-sm font-medium text-slate-900 dark:text-white border shadow-sm hover:shadow-md transition-all whitespace-nowrap ${openFilter === 'duration' ? 'border-[#4F46E5] ring-2 ring-[#4F46E5]/20' : 'border-transparent hover:border-[#4F46E5]/30'}`}
                                     >
                                         <span className="material-symbols-outlined text-[18px] text-slate-500">schedule</span>
-                                        Duration
+                                        {t('offers.filterDuration')}
                                         <span className={`material-symbols-outlined text-[18px] text-slate-500 transition-transform ${openFilter === 'duration' ? 'rotate-180' : ''}`}>expand_more</span>
                                     </button>
                                 )}
                                 {openFilter === 'duration' && (
                                     <div className="absolute top-full left-0 mt-2 w-52 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2">
                                         <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
-                                            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Select Duration</span>
+                                            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{t('offers.filterDurationHeader')}</span>
                                         </div>
                                         <div className="max-h-72 overflow-y-auto">
                                             {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
                                                 <button key={m} className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${activeFilters.duration === String(m) ? 'bg-[#4F46E5]/10 text-[#4F46E5] font-semibold' : 'text-slate-700 dark:text-slate-300 hover:bg-[#4F46E5]/5 hover:text-[#4F46E5]'}`} onClick={() => applyFilter('duration', String(m))}>
-                                                    {m} {m === 1 ? 'Month' : 'Months'}
+                                                    {m} {m === 1 ? t('offers.month') : t('offers.months')}
                                                     {activeFilters.duration === String(m) && <span className="material-symbols-outlined text-[16px]">check</span>}
                                                 </button>
                                             ))}
@@ -348,14 +350,14 @@ const InternshipOffers = () => {
                                         className={`flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-full text-sm font-medium text-slate-900 dark:text-white border shadow-sm hover:shadow-md transition-all whitespace-nowrap ${openFilter === 'type' ? 'border-[#4F46E5] ring-2 ring-[#4F46E5]/20' : 'border-transparent hover:border-[#4F46E5]/30'}`}
                                     >
                                         <span className="material-symbols-outlined text-[18px] text-slate-500">laptop_mac</span>
-                                        Remote / Onsite
+                                        {t('offers.filterType')}
                                         <span className={`material-symbols-outlined text-[18px] text-slate-500 transition-transform ${openFilter === 'type' ? 'rotate-180' : ''}`}>expand_more</span>
                                     </button>
                                 )}
                                 {openFilter === 'type' && (
                                     <div className="absolute top-full left-0 mt-2 w-56 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2">
                                         <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
-                                            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Internship Type</span>
+                                            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{t('offers.filterTypeHeader')}</span>
                                         </div>
                                         <div>
                                             {['PFE', 'Remote', 'Perfectionnement', 'Observation'].map((type) => (
@@ -386,14 +388,14 @@ const InternshipOffers = () => {
                                         className={`flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-full text-sm font-medium text-slate-900 dark:text-white border shadow-sm hover:shadow-md transition-all whitespace-nowrap ${openFilter === 'skills' ? 'border-[#4F46E5] ring-2 ring-[#4F46E5]/20' : 'border-transparent hover:border-[#4F46E5]/30'}`}
                                     >
                                         <span className="material-symbols-outlined text-[18px] text-slate-500">code</span>
-                                        Skills / Tech
+                                        {t('offers.filterSkills')}
                                         <span className={`material-symbols-outlined text-[18px] text-slate-500 transition-transform ${openFilter === 'skills' ? 'rotate-180' : ''}`}>expand_more</span>
                                     </button>
                                 )}
                                 {openFilter === 'skills' && (
                                     <div className="absolute top-full right-0 mt-2 w-72 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2">
                                         <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
-                                            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Skills & Technologies</span>
+                                            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{t('offers.filterSkillsHeader')}</span>
                                         </div>
                                         <div className="max-h-80 overflow-y-auto p-2">
                                             {skillCategories.map((cat) => (
@@ -426,7 +428,7 @@ const InternshipOffers = () => {
                                     className="flex items-center gap-1.5 px-4 py-2 text-slate-500 hover:text-[#4F46E5] dark:hover:text-[#4F46E5] text-sm font-bold transition-all whitespace-nowrap hover:bg-white dark:hover:bg-slate-800 rounded-full"
                                 >
                                     <span className="material-symbols-outlined text-[18px]">filter_alt_off</span>
-                                    Clear All
+                                    {t('offers.clearAll')}
                                 </button>
                             )}
                         </div>
@@ -437,14 +439,14 @@ const InternshipOffers = () => {
                 <section className="max-w-[1200px] mx-auto w-full flex justify-between items-end pb-2">
                     <div>
                         <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-1">
-                            {searchQuery ? `Results for "${searchQuery}"` : hasActiveFilters ? 'Filtered Results' : 'Recommended for You'}
+                            {searchQuery ? `${t('offers.resultsFor')} "${searchQuery}"` : hasActiveFilters ? t('offers.filteredResults') : t('offers.recommendedForYou')}
                         </h1>
                         <p className="text-slate-500 text-sm">
-                            {hasActiveFilters ? 'Showing offers matching your selected filters.' : 'Browse the latest opportunities available on the platform.'}
+                            {hasActiveFilters ? t('offers.showingFiltered') : t('offers.browseLatest')}
                         </p>
                     </div>
                     <div className="hidden sm:block text-sm font-medium text-slate-500">
-                        Showing <span className="text-slate-900 dark:text-white font-bold">{filteredOffers.length}</span> opportunities
+                        {t('offers.showingCount', { count: filteredOffers.length })}
                     </div>
                 </section>
 
@@ -458,10 +460,10 @@ const InternshipOffers = () => {
                         <div className="col-span-3 text-center py-20 text-slate-400">
                             <span className="material-symbols-outlined text-5xl mb-4 block">{searchQuery ? 'search_off' : 'inbox'}</span>
                             <p className="text-lg font-semibold">
-                                {searchQuery ? `Offer not found for "${searchQuery}"` : 'No offers available yet.'}
+                                {searchQuery ? `${t('offers.notFoundFor')} "${searchQuery}"` : t('offers.noOffersYet')}
                             </p>
                             {searchQuery && (
-                                <button onClick={() => setSearchQuery('')} className="mt-4 text-sm text-[#4F46E5] hover:underline font-medium">Clear search</button>
+                                <button onClick={() => setSearchQuery('')} className="mt-4 text-sm text-[#4F46E5] hover:underline font-medium">{t('offers.clearSearch')}</button>
                             )}
                         </div>
                     ) : (
@@ -501,7 +503,7 @@ const InternshipOffers = () => {
                                                     {offer.durationMonths && (
                                                         <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-slate-50 dark:bg-slate-700 text-slate-500 dark:text-slate-400 rounded-md text-[11px] font-semibold border border-slate-100 dark:border-slate-600">
                                                             <span className="material-symbols-outlined text-[12px]">schedule</span>
-                                                            {offer.durationMonths} {offer.durationMonths === 1 ? 'Month' : 'Months'}
+                                                            {offer.durationMonths} {offer.durationMonths === 1 ? t('offers.month') : t('offers.months')}
                                                         </span>
                                                     )}
                                                 </div>
@@ -541,12 +543,12 @@ const InternshipOffers = () => {
                                             </span>
                                         )}
                                         {allTags.length === 0 && (
-                                            <span className="text-xs text-slate-400 italic">No specific skills listed</span>
+                                            <span className="text-xs text-slate-400 italic">{t('offerDetail.noSkillsListed')}</span>
                                         )}
                                     </div>
 
                                     <p className="text-sm text-slate-600 dark:text-slate-400 mb-6 line-clamp-3 leading-relaxed flex-grow">
-                                        {offer.description || 'No description available.'}
+                                        {offer.description || t('offerDetail.noDescriptionProvided')}
                                     </p>
 
                                     <div className="flex items-center gap-3 mt-auto pt-4 border-t border-slate-50 dark:border-slate-700">
@@ -558,7 +560,7 @@ const InternshipOffers = () => {
                                                     disabled={applyingTo === offer._id || offer.isApplied || isClosed}
                                                     className={`flex-1 font-semibold py-2.5 px-4 rounded-full transition-all flex items-center justify-center gap-2 ${offer.isApplied ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/50 cursor-default' : (isClosed ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed border border-slate-200 dark:border-slate-700' : (applyingTo === offer._id ? 'bg-indigo-400 text-white cursor-not-allowed' : 'bg-[#4F46E5] hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200 dark:shadow-none'))}`}
                                                 >
-                                                    {offer.isApplied ? 'Applied' : (isClosed ? 'Offer Closed' : (applyingTo === offer._id ? 'Applying...' : 'Apply Now'))}
+                                                    {offer.isApplied ? t('offerDetail.applied') : (isClosed ? t('offerDetail.offerClosed') : (applyingTo === offer._id ? t('offerDetail.applying') : t('offerDetail.applyBtn')))}
                                                     {offer.isApplied && <span className="material-symbols-outlined text-[18px]">check_circle</span>}
                                                     {isClosed && <span className="material-symbols-outlined text-[18px]">lock</span>}
                                                     {applyingTo === offer._id && <span className="material-symbols-outlined text-[16px] animate-spin">hourglass_empty</span>}
@@ -577,7 +579,7 @@ const InternshipOffers = () => {
                 {hasMore && (
                     <div className="flex justify-center pb-12">
                         <button onClick={() => setLimit(prev => prev + 6)} className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full text-sm font-medium text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-300 transition-all shadow-sm">
-                            Show More Opportunities
+                        Show More Opportunities
                             <span className="material-symbols-outlined text-[18px]">expand_more</span>
                         </button>
                     </div>
@@ -592,22 +594,22 @@ const InternshipOffers = () => {
                         <div className="w-16 h-16 bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800/30 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6">
                             <span className="material-symbols-outlined text-3xl">send</span>
                         </div>
-                        <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Apply to this offer?</h3>
-                        <p className="text-slate-500 dark:text-slate-400 text-sm mb-2 font-semibold">{applyModal.title}</p>
-                        <p className="text-slate-400 dark:text-slate-500 text-xs mb-8">at {applyModal.company}</p>
+                        <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">{t('offerDetail.applyConfirmTitle')}</h3>
+                         <p className="text-slate-500 dark:text-slate-400 text-sm mb-2 font-semibold">{applyModal.title}</p>
+                        <p className="text-slate-400 dark:text-slate-500 text-xs mb-8">{t('offerDetail.at')} {applyModal.company}</p>
                         <div className="flex gap-4">
                             <button
                                 onClick={() => setApplyModal(null)}
                                 className="flex-1 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-sm uppercase tracking-wider rounded-xl transition-all"
                             >
-                                Cancel
+                                {t('offerDetail.cancel')}
                             </button>
                             <button
                                 onClick={handleApply}
                                 className="flex-1 py-3 bg-[#4F46E5] hover:bg-indigo-700 text-white font-bold text-sm uppercase tracking-wider rounded-xl transition-all shadow-xl shadow-indigo-600/20 flex items-center justify-center gap-2"
                             >
                                 <span className="material-symbols-outlined text-lg">send</span>
-                                Apply Now
+                                {t('offerDetail.applyBtn')}
                             </button>
                         </div>
                     </div>

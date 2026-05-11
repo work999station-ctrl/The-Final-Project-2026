@@ -2,9 +2,12 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Logo from '../components/Logo';
 import Footer from '../components/Footer';
+import { useLang } from '../contexts/LanguageContext';
+
 
 const Login = () => {
     const navigate = useNavigate();
+    const { t } = useLang();
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -49,14 +52,14 @@ const Login = () => {
                 if (data.errors) {
                     if (data.errors.email) setError(data.errors.email);
                     else if (data.errors.password) setError(data.errors.password);
-                    else setError('Invalid login credentials');
+                    else setError(t('auth.errorInvalid'));
                 } else {
-                    setError('An error occurred during login');
+                    setError(t('auth.errorGeneric'));
                 }
             }
         } catch (err) {
             console.error('Login error:', err);
-            setError('Connection error. Please try again later.');
+            setError(t('errors.connectionError'));
         } finally {
             setLoading(false);
         }
@@ -70,9 +73,9 @@ const Login = () => {
                     <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 px-6 lg:px-40 py-4 bg-white dark:bg-slate-900 sticky top-0 z-50">
                         <Logo size={36} onClick={() => navigate('/')} />
                         <div className="flex items-center gap-4">
-                            <span className="hidden md:block text-slate-500 text-sm">New here?</span>
+                            <span className="hidden md:block text-slate-500 text-sm">{t('auth.noAccount')}</span>
                             <button onClick={() => navigate('/student-signup')} className="flex min-w-[100px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 transition-colors">
-                                Sign Up
+                                {t('auth.signupLink')}
                             </button>
                         </div>
                     </header>
@@ -86,8 +89,8 @@ const Login = () => {
 
                         <div className="w-full max-w-[480px] bg-white dark:bg-slate-900/50 backdrop-blur-sm border border-slate-200 dark:border-slate-800 p-8 md:p-12 rounded-xl shadow-2xl shadow-primary/5">
                             <div className="flex flex-col gap-2 mb-10 text-center">
-                                <h1 className="text-slate-900 dark:text-white text-4xl font-black leading-tight tracking-tight">Welcome Back</h1>
-                                <p className="text-slate-500 dark:text-slate-400 text-base">Login to manage your global network connections.</p>
+                                <h1 className="text-slate-900 dark:text-white text-4xl font-black leading-tight tracking-tight">{t('auth.title')}</h1>
+                                <p className="text-slate-500 dark:text-slate-400 text-base">{t('auth.subtitle')}</p>
                             </div>
 
                             {error && (
@@ -99,14 +102,14 @@ const Login = () => {
 
                             <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
                                 <div className="flex flex-col gap-2">
-                                    <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold px-1">Email Address</label>
+                                    <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold px-1">{t('auth.emailLabel')}</label>
                                     <div className="relative group">
                                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-primary transition-colors">
                                             <span className="material-symbols-outlined text-xl">mail</span>
                                         </div>
                                         <input
                                             className="w-full pl-11 pr-4 py-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-slate-400"
-                                            placeholder="name@company.com"
+                                            placeholder={t('auth.emailPlaceholder')}
                                             type="email"
                                             name="email"
                                             value={formData.email}
@@ -118,8 +121,8 @@ const Login = () => {
 
                                 <div className="flex flex-col gap-2">
                                     <div className="flex justify-between items-center px-1">
-                                        <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold">Password</label>
-                                        <a className="text-primary text-xs font-bold hover:underline" href="#">Forgot Password?</a>
+                                        <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold">{t('auth.passwordLabel')}</label>
+                                        <a className="text-primary text-xs font-bold hover:underline" href="#">{t('auth.forgotPassword')}</a>
                                     </div>
                                     <div className="relative group">
                                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-primary transition-colors">
@@ -152,13 +155,13 @@ const Login = () => {
                                     {loading ? (
                                         <div className="size-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                                     ) : (
-                                        "Log In"
+                                        t('auth.loginBtn')
                                     )}
                                 </button>
 
                                 <div className="relative flex py-4 items-center">
                                     <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
-                                    <span className="flex-shrink mx-4 text-slate-400 text-xs font-bold uppercase tracking-widest">Or continue with</span>
+                                    <span className="flex-shrink mx-4 text-slate-400 text-xs font-bold uppercase tracking-widest">{t('auth.orContinueWith', {}, 'Or continue with')}</span>
                                     <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
                                 </div>
 

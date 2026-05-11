@@ -4,11 +4,13 @@ import moment from 'moment';
 import StudentNavbar from '../components/StudentNavbar';
 import { getProfileCompletion } from '../utils/profileCompletion';
 import useSocket from '../hooks/useSocket';
+import { useLang } from '../contexts/LanguageContext';
 
 
 const StudentDashboard = () => {
     const navigate = useNavigate();
     const socket = useSocket();
+    const { t } = useLang();
     const [user, setUser] = useState({
         name: "Student Name",
         email: "student@university.edu",
@@ -235,8 +237,8 @@ const StudentDashboard = () => {
             <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Welcome Header */}
                 <div className="mb-8">
-                    <h1 className="font-display text-3xl font-bold tracking-tight text-text-main dark:text-gray-100">Welcome back, {user.name.split(' ')[0]}</h1>
-                    <p className="text-text-muted dark:text-gray-400 mt-1">Here's what's happening with your applications today.</p>
+                    <h1 className="font-display text-3xl font-bold tracking-tight text-text-main dark:text-gray-100">{t('dashboard.welcomeBack', { name: user.name.split(' ')[0] })}</h1>
+                    <p className="text-text-muted dark:text-gray-400 mt-1">{t('dashboard.todaySummary')}</p>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -252,7 +254,7 @@ const StudentDashboard = () => {
                                 </div>
                                 <h2 className="font-display text-xl font-bold text-text-main dark:text-gray-100">{user.name}</h2>
                                 <p className="text-primary font-medium text-sm mt-1">{user.specialty}</p>
-                                <p className="text-text-muted dark:text-gray-400 text-xs mt-1 mb-4">{user.currentYear} • Ready to work</p>
+                                <p className="text-text-muted dark:text-gray-400 text-xs mt-1 mb-4">{user.currentYear} • {t('dashboard.readyToWork')}</p>
 
                                 {/* User Details section */}
                                 <div className="w-full flex flex-col gap-2 mb-6 text-left">
@@ -268,12 +270,12 @@ const StudentDashboard = () => {
                                     </div>
                                     <div className="flex items-center gap-2 text-sm text-text-muted dark:text-gray-400">
                                         <span className="material-symbols-outlined text-base">school</span>
-                                        <label className="text-base">University:</label>
+                                        <label className="text-base">{t('dashboard.universityLabel')}:</label>
                                         <span className="text-base truncate text-slate-600 dark:text-slate-300 font-medium">{user.university}</span>
                                     </div>
                                     <div className="flex items-center gap-2 text-sm text-text-muted dark:text-gray-400">
                                         <span className="material-symbols-outlined text-base">calendar_month</span>
-                                        <label className="text-base">Current Year:</label>
+                                        <label className="text-base">{t('dashboard.currentYearLabel')}:</label>
                                         <span className="text-base truncate text-slate-600 dark:text-slate-300 font-medium">{user.currentYear}</span>
                                     </div>
                                     <div className="flex items-center gap-2 text-sm text-text-muted dark:text-gray-400">
@@ -282,7 +284,7 @@ const StudentDashboard = () => {
                                     </div>
                                     <div className="flex items-center gap-2 text-sm text-text-muted dark:text-gray-400">
                                         <span className="material-symbols-outlined text-base">location_on</span>
-                                        <label className="text-base">address:</label>
+                                        <label className="text-base">{t('dashboard.addressLabel')}:</label>
                                         <span className="text-base truncate text-slate-600 dark:text-slate-300 font-medium">{user.country}</span>
                                     </div>
                                 </div>
@@ -290,7 +292,7 @@ const StudentDashboard = () => {
                                 {/* Skills Section */}
                                 <div className="w-full text-left">
                                     <div className="flex items-center justify-between mb-3">
-                                        <h3 className="font-body text-xs font-bold uppercase tracking-wider text-text-muted dark:text-gray-400">My Skills</h3>
+                                        <h3 className="font-body text-xs font-bold uppercase tracking-wider text-text-muted dark:text-gray-400">{t('dashboard.mySkills')}</h3>
                                     </div>
                                     <div className="flex flex-wrap gap-2">
                                         {user.skills.map(skill => (
@@ -309,7 +311,7 @@ const StudentDashboard = () => {
                                 {/* Profile Completion */}
                                 <div className="w-full text-left mt-4">
                                     <div className="flex items-center justify-between mb-2">
-                                        <h3 className="font-body text-xs font-bold uppercase tracking-wider text-text-muted dark:text-gray-400">Profile Completion</h3>
+                                        <h3 className="font-body text-xs font-bold uppercase tracking-wider text-text-muted dark:text-gray-400">{t('profile.completionLabel')}</h3>
                                         <span className={`text-xs font-bold ${profileCompletion >= 80 ? 'text-emerald-600' : 'text-amber-600'}`}>{profileCompletion}%</span>
                                     </div>
                                     <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
@@ -321,7 +323,7 @@ const StudentDashboard = () => {
                                     {profileCompletion < 80 && (
                                         <p className="text-[11px] text-amber-600 dark:text-amber-400 mt-2 font-medium flex items-center gap-1">
                                             <span className="material-symbols-outlined text-xs">warning</span>
-                                            Complete at least 80% to apply to offers
+                                            {t('profile.completionWarning')}
                                         </p>
                                     )}
                                 </div>
@@ -330,14 +332,14 @@ const StudentDashboard = () => {
 
                                 {/* Availability */}
                                 <div className="w-full text-left">
-                                    <h3 className="font-body text-xs font-bold uppercase tracking-wider text-text-muted dark:text-gray-400 mb-3">Availability</h3>
+                                    <h3 className="font-body text-xs font-bold uppercase tracking-wider text-text-muted dark:text-gray-400 mb-3">{t('dashboard.availability')}</h3>
                                     <div className="flex items-center gap-2 text-sm text-text-main dark:text-gray-100">
                                         <span className="material-symbols-outlined text-accent text-lg">calendar_today</span>
                                         <span>{moment(user.createdAt).format('ll')}</span>
                                     </div>
                                     <div className="flex items-center gap-2 text-sm text-text-main dark:text-gray-100 mt-2">
                                         <span className="material-symbols-outlined text-secondary text-lg">location_on</span>
-                                        <span>Remote or Algiers</span>
+                                        <span>{t('dashboard.remoteLocation')}</span>
                                     </div>
                                 </div>
 
@@ -350,7 +352,7 @@ const StudentDashboard = () => {
                                         className="w-full py-3 px-4 rounded-xl border border-primary/20 text-primary font-semibold text-sm hover:bg-primary/5 transition-colors flex items-center justify-center gap-2"
                                     >
                                         <span className="material-symbols-outlined text-lg">edit</span>
-                                        Edit Profile
+                                        {t('sidebar.student.editProfile')}
                                     </button>
                                     <button
                                         onClick={async () => {
@@ -360,7 +362,7 @@ const StudentDashboard = () => {
                                         className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-red-50 text-red-600 rounded-xl font-bold text-sm hover:bg-red-100 transition-all border border-red-100 group shadow-sm shadow-red-50"
                                     >
                                         <span className="material-symbols-outlined text-lg group-hover:-translate-x-1 transition-transform">logout</span>
-                                        Logout
+                                        {t('sidebar.student.logout')}
                                     </button>
                                 </div>
                             </div>
@@ -372,14 +374,14 @@ const StudentDashboard = () => {
                         {/* Active Application Tracker */}
                         <section>
                             <div className="flex items-center justify-between mb-4">
-                                <h2 className="font-display text-xl font-bold text-text-main dark:text-gray-100">Active Applications</h2>
-                                <button onClick={() => navigate('/ApplicationTracker')} className="text-sm font-medium text-primary hover:underline">View all ({applications.length})</button>
+                                <h2 className="font-display text-xl font-bold text-text-main dark:text-gray-100">{t('dashboard.activeApplications')}</h2>
+                                <button onClick={() => navigate('/ApplicationTracker')} className="text-sm font-medium text-primary hover:underline">{t('dashboard.viewAll')} ({applications.length})</button>
                             </div>
 
                             {applications.length === 0 ? (
                                 <div className="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lift p-8 border border-border-color dark:border-slate-700/50 flex flex-col items-center text-center gap-3">
                                     <span className="material-symbols-outlined text-4xl text-slate-300">description</span>
-                                    <p className="text-text-muted dark:text-gray-400 font-medium">No applications yet. Start applying!</p>
+                                    <p className="text-text-muted dark:text-gray-400 font-medium">{t('dashboard.noApplications')}</p>
                                 </div>
                             ) : (() => {
                                 // Show the most recent application
@@ -402,7 +404,7 @@ const StudentDashboard = () => {
                                                 </div>
                                                 <div>
                                                     <h3 className="font-bold text-lg text-text-main dark:text-gray-100">{app.offerId?.title || 'Position'}</h3>
-                                                    <p className="text-sm text-text-muted dark:text-gray-400">{app.offerId?.companyId?.companyName || 'Company'} • Applied {dateApplied}</p>
+                                                    <p className="text-sm text-text-muted dark:text-gray-400">{app.offerId?.companyId?.companyName || 'Company'} • {t('dashboard.appliedOn')} {dateApplied}</p>
                                                 </div>
                                             </div>
                                             <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-${info.colorClass}-100 text-${info.colorClass}-700 border border-${info.colorClass}-200`}>
@@ -462,12 +464,12 @@ const StudentDashboard = () => {
 
                                             {/* Labels */}
                                             <div className="flex justify-between w-full mt-3">
-                                                <span className={`text-xs font-bold ${app.status === 'admin_rejected' ? 'text-green-600' : `text-${info.colorClass}-600`} text-center w-10`}>Applied</span>
+                                                <span className={`text-xs font-bold ${app.status === 'admin_rejected' ? 'text-green-600' : `text-${info.colorClass}-600`} text-center w-10`}>{t('dashboard.stepApplied')}</span>
                                                 <span className={`text-xs font-bold text-center flex-1 ${['accepted', 'rejected', 'admin_rejected'].includes(app.status) ? (app.status === 'admin_rejected' ? 'text-green-600' : `text-${info.colorClass}-600`) : 'text-slate-400 dark:text-slate-500'}`}>
-                                                    {app.status === 'rejected' ? 'Refused' : 'Accepted'}
+                                                    {app.status === 'rejected' ? t('dashboard.stepRefused') : t('dashboard.stepAccepted')}
                                                 </span>
                                                 <span className={`text-xs font-bold text-center w-10 ${app.status === 'validated' ? 'text-green-600' : (app.status === 'admin_rejected' ? 'text-red-600' : 'text-slate-400 dark:text-slate-500')}`}>
-                                                    {app.status === 'admin_rejected' ? 'Refused' : 'Valid.'}
+                                                    {app.status === 'admin_rejected' ? t('dashboard.stepRefused') : t('dashboard.stepValidated')}
                                                 </span>
                                             </div>
                                         </div>
@@ -477,7 +479,7 @@ const StudentDashboard = () => {
                                                 onClick={() => navigate('/ApplicationTracker')}
                                                 className="text-sm font-medium text-text-main dark:text-gray-100 hover:text-primary flex items-center gap-1 transition-colors"
                                             >
-                                                View All Applications
+                                                {t('dashboard.viewAllApplications')}
                                                 <span className="material-symbols-outlined text-base">arrow_forward</span>
                                             </button>
                                         </div>
@@ -490,8 +492,8 @@ const StudentDashboard = () => {
                         <section>
                             <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center gap-2">
-                                    <h2 className="font-display text-xl font-bold text-text-main dark:text-gray-100">Suggested for You</h2>
-                                    <span className="bg-secondary/10 text-secondary text-xs font-bold px-2 py-0.5 rounded-full">AI Matched</span>
+                                    <h2 className="font-display text-xl font-bold text-text-main dark:text-gray-100">{t('dashboard.suggestedForYou')}</h2>
+                                    <span className="bg-secondary/10 text-secondary text-xs font-bold px-2 py-0.5 rounded-full">{t('dashboard.aiMatched')}</span>
                                 </div>
                                 <div className="flex gap-2">
                                     <button
@@ -516,7 +518,7 @@ const StudentDashboard = () => {
                                     ))
                                 ) : offers.length === 0 ? (
                                     <div className="col-span-1 md:col-span-2 lg:col-span-3 text-center py-10 text-text-muted dark:text-gray-400">
-                                        <p>No offers available.</p>
+                                        <p>{t('offers.noOffers')}</p>
                                     </div>
                                 ) : offers.map((offer) => {
                                     // Flatten tags
@@ -562,11 +564,11 @@ const StudentDashboard = () => {
                                                         </span>
                                                     ))}
                                                     {allTags.length === 0 && (
-                                                        <span className="text-[10px] text-gray-400 italic">No specific skills listed</span>
+                                                        <span className="text-[10px] text-gray-400 italic">{t('offerDetail.noSkillsListed')}</span>
                                                     )}
                                                 </div>
                                                 <p className="text-sm text-text-muted dark:text-gray-400 line-clamp-2">
-                                                    {offer.description || 'No description provided.'}
+                                                    {offer.description || t('offerDetail.noDescriptionProvided')}
                                                 </p>
                                             </div>
                                             {/* Button footer - always pinned to bottom */}
@@ -578,7 +580,7 @@ const StudentDashboard = () => {
                                                             onClick={(e) => openApplyModal(e, offer)}
                                                             disabled={applyingTo === offer._id || offer.isApplied || isClosed}
                                                             className={`text-sm font-semibold px-4 py-2 rounded-full transition-all flex items-center gap-1 shadow-lg ${offer.applicationStatus === 'admin_rejected' ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-100 dark:border-red-800/50 cursor-default shadow-none' : (offer.isApplied ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/50 cursor-default shadow-none' : (isClosed ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed border border-slate-200 dark:border-slate-700 shadow-none' : (applyingTo === offer._id ? 'bg-indigo-400 text-white cursor-not-allowed' : 'bg-primary hover:bg-indigo-700 text-white shadow-indigo-500/30')))}`}>
-                                                            {offer.applicationStatus === 'admin_rejected' ? 'Refused' : (offer.isApplied ? 'Applied' : (isClosed ? 'Offer Closed' : (applyingTo === offer._id ? 'Applying...' : 'Apply Now')))}
+                                                            {offer.applicationStatus === 'admin_rejected' ? t('offerDetail.refused') : (offer.isApplied ? t('offerDetail.applied') : (isClosed ? t('offerDetail.offerClosed') : (applyingTo === offer._id ? t('offerDetail.applying') : t('offerDetail.applyBtn'))))}
                                                             {offer.applicationStatus === 'admin_rejected' && <span className="material-symbols-outlined text-[16px]">block</span>}
                                                             {offer.isApplied && offer.applicationStatus !== 'admin_rejected' && <span className="material-symbols-outlined text-[16px]">check_circle</span>}
                                                             {isClosed && <span className="material-symbols-outlined text-[16px]">lock</span>}
@@ -599,15 +601,14 @@ const StudentDashboard = () => {
                                 <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-white dark:bg-slate-800 opacity-10 blur-3xl"></div>
                                 <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
                                     <div>
-                                        <h3 className="font-display text-2xl font-bold mb-2">
-                                            Enhance your CV to get 3x more offers</h3>
-                                        <p className="text-white/80">Recruiters are searching for specific skills. Add your portfolio and certifications.</p>
+                                        <h3 className="font-display text-2xl font-bold mb-2">{t('dashboard.ctaTitle')}</h3>
+                                        <p className="text-white/80">{t('dashboard.ctaDesc')}</p>
                                     </div>
                                     <button
                                         onClick={() => navigate('/edit-student-profile')}
                                         className="bg-white dark:bg-slate-800 text-primary font-bold px-6 py-3 rounded-full hover:bg-gray-50 dark:bg-slate-800 transition-colors shadow-md whitespace-nowrap"
                                     >
-                                        Enhance Your CV
+                                        {t('dashboard.ctaBtn')}
                                     </button>
                                 </div>
                             </div>
@@ -624,22 +625,22 @@ const StudentDashboard = () => {
                         <div className="w-16 h-16 bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800/30 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6">
                             <span className="material-symbols-outlined text-3xl">send</span>
                         </div>
-                        <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Apply to this offer?</h3>
+                        <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">{t('offerDetail.applyConfirmTitle')}</h3>
                         <p className="text-slate-500 dark:text-slate-400 text-sm mb-2 font-semibold">{applyModal.title}</p>
-                        <p className="text-slate-400 dark:text-slate-500 text-xs mb-8">at {applyModal.company}</p>
+                        <p className="text-slate-400 dark:text-slate-500 text-xs mb-8">{t('offerDetail.at')} {applyModal.company}</p>
                         <div className="flex gap-4">
                             <button
                                 onClick={() => setApplyModal(null)}
                                 className="flex-1 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-sm uppercase tracking-wider rounded-xl transition-all"
                             >
-                                Cancel
+                                {t('offerDetail.cancel')}
                             </button>
                             <button
                                 onClick={handleApply}
                                 className="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm uppercase tracking-wider rounded-xl transition-all shadow-xl shadow-indigo-600/20 flex items-center justify-center gap-2"
                             >
                                 <span className="material-symbols-outlined text-lg">send</span>
-                                Apply Now
+                                {t('offerDetail.applyBtn')}
                             </button>
                         </div>
                     </div>
@@ -653,22 +654,22 @@ const StudentDashboard = () => {
                         <div className="w-16 h-16 bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800/30 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-6">
                             <span className="material-symbols-outlined text-3xl">warning</span>
                         </div>
-                        <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Profile Incomplete</h3>
-                        <p className="text-slate-500 dark:text-slate-400 text-sm mb-2 font-semibold">Your profile is only {profileCompletion}% complete.</p>
-                        <p className="text-slate-400 dark:text-slate-500 text-xs mb-8">You need at least 80% to apply to offers. Please complete your profile information first.</p>
+                        <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">{t('profile.incompleteTitle')}</h3>
+                        <p className="text-slate-500 dark:text-slate-400 text-sm mb-2 font-semibold">{t('profile.incompleteDesc', { pct: profileCompletion })}</p>
+                        <p className="text-slate-400 dark:text-slate-500 text-xs mb-8">{t('profile.incompleteWarning')}</p>
                         <div className="flex gap-4">
                             <button
                                 onClick={() => setProfileIncompleteModal(false)}
                                 className="flex-1 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-sm uppercase tracking-wider rounded-xl transition-all"
                             >
-                                Cancel
+                                {t('offerDetail.cancel')}
                             </button>
                             <button
                                 onClick={() => navigate('/edit-student-profile')}
                                 className="flex-1 py-3 bg-primary hover:bg-primary/90 text-white font-bold text-sm uppercase tracking-wider rounded-xl transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2"
                             >
                                 <span className="material-symbols-outlined text-lg">edit</span>
-                                Complete Profile
+                                {t('profile.completeProfileBtn')}
                             </button>
                         </div>
                     </div>

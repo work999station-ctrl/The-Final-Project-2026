@@ -76,7 +76,7 @@ const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
                 <div className="flex flex-col gap-3 mt-auto pb-4">
                     <button
                         onClick={() => navigate('/edit-company-profile')}
-                        title={isCollapsed ? "Edit Profile" : undefined}
+                        title={isCollapsed ? t('sidebar.company.editProfile') : undefined}
                         className="py-3 px-3 rounded-xl border border-primary/20 text-indigo-600 dark:text-indigo-400 font-semibold text-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors flex items-center justify-center gap-2 w-full"
                     >
                         <span className="material-symbols-outlined text-lg shrink-0">edit</span>
@@ -89,7 +89,7 @@ const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
                             await fetch('/api/logout', { method: 'POST' });
                             window.location.href = '/';
                         }}
-                        title={isCollapsed ? "Logout" : undefined}
+                        title={isCollapsed ? t('sidebar.company.logout') : undefined}
                         className="flex items-center justify-center gap-2 py-3 px-3 bg-red-50 text-red-600 rounded-xl font-bold text-sm hover:bg-red-100 transition-all border border-red-100 shadow-sm w-full"
                     >
                         <span className="material-symbols-outlined text-lg shrink-0">logout</span>

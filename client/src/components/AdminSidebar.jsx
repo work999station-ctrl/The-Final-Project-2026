@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLang } from '../contexts/LanguageContext';
 
 const AdminSidebar = ({ activePage, adminUser }) => {
     const navigate = useNavigate();
+    const { t } = useLang();
     const [isCollapsed, setIsCollapsed] = useState(() => {
         return localStorage.getItem('adminSidebarCollapsed') === 'true';
     });
@@ -23,10 +25,10 @@ const AdminSidebar = ({ activePage, adminUser }) => {
     };
 
     const navItems = [
-        { page: 'dashboard', icon: 'dashboard', label: 'Dashboard', href: '/admin-dashboard' },
-        { page: 'inbox', icon: 'inbox', label: 'Inbox', href: '/admin-inbox' },
-        { page: 'validate', icon: 'verified', label: 'Validate', href: '/candidate-tracking-admin' },
-        { page: 'stats', icon: 'bar_chart', label: 'Stats', href: '/university-placement-analytics' },
+        { page: 'dashboard', icon: 'dashboard', label: t('sidebar.admin.dashboard'), href: '/admin-dashboard' },
+        { page: 'inbox', icon: 'inbox', label: t('sidebar.admin.inbox'), href: '/admin-inbox' },
+        { page: 'validate', icon: 'verified', label: t('sidebar.admin.validate'), href: '/candidate-tracking-admin' },
+        { page: 'stats', icon: 'bar_chart', label: t('sidebar.admin.stats'), href: '/university-placement-analytics' },
     ];
 
     return (
@@ -49,7 +51,7 @@ const AdminSidebar = ({ activePage, adminUser }) => {
                     </div>
                     <div className={`overflow-hidden whitespace-nowrap transition-all duration-300 ${isCollapsed ? 'w-0 opacity-0' : 'opacity-100'}`}>
                         <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100 leading-tight truncate">{adminUser?.fullName || 'Loading...'}</h2>
-                        <p className="text-xs text-slate-500 truncate">{adminUser?.universityName || 'University Admin'}</p>
+                        <p className="text-xs text-slate-500 truncate">{adminUser?.universityName || t('sidebar.admin.portal')}</p>
                     </div>
                 </div>
 
@@ -74,12 +76,12 @@ const AdminSidebar = ({ activePage, adminUser }) => {
                 <div className="flex flex-col gap-2 flex-shrink-0 border-t border-slate-200 dark:border-slate-800 pt-3 mt-2">
                     <button
                         onClick={() => navigate('/contact-us')}
-                        title={isCollapsed ? 'Help' : undefined}
+                        title={isCollapsed ? t('sidebar.admin.help') : undefined}
                         className="flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all w-full"
                     >
                         <span className="material-symbols-outlined shrink-0">help</span>
                         <span className={`overflow-hidden whitespace-nowrap transition-all duration-300 ${isCollapsed ? 'w-0 opacity-0' : 'opacity-100'}`}>
-                            Help
+                            {t('sidebar.admin.help')}
                         </span>
                     </button>
                     <button
@@ -87,12 +89,12 @@ const AdminSidebar = ({ activePage, adminUser }) => {
                             await fetch('/api/logout', { method: 'POST' });
                             window.location.href = '/';
                         }}
-                        title={isCollapsed ? 'Logout' : undefined}
+                        title={isCollapsed ? t('sidebar.admin.logout') : undefined}
                         className="flex items-center justify-center gap-2 py-3 px-3 bg-red-50 text-red-600 rounded-xl font-bold text-sm hover:bg-red-100 transition-all border border-red-100 shadow-sm w-full"
                     >
                         <span className="material-symbols-outlined text-lg shrink-0">logout</span>
                         <span className={`overflow-hidden whitespace-nowrap transition-all duration-300 ${isCollapsed ? 'w-0 opacity-0' : 'opacity-100'}`}>
-                            Logout
+                            {t('sidebar.admin.logout')}
                         </span>
                     </button>
                 </div>
@@ -101,7 +103,7 @@ const AdminSidebar = ({ activePage, adminUser }) => {
             {/* Toggle Button — fixed, tracks the right edge of the sidebar */}
             <button
                 onClick={() => setIsCollapsed(prev => !prev)}
-                title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+                title={isCollapsed ? t('sidebar.admin.expandSidebar') : t('sidebar.admin.collapseSidebar')}
                 className="fixed top-20 z-[60] w-6 h-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full hidden md:flex items-center justify-center shadow-md hover:shadow-lg hover:scale-110 transition-all text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400"
                 style={{ left: `calc(${sidebarWidth} - 12px)`, transition: 'left 300ms ease-in-out' }}
             >

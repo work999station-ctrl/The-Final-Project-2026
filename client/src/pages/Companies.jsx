@@ -4,9 +4,11 @@ import logoImage from '../assets/logo.png';
 import ThemeToggle from '../components/ThemeToggle';
 import Footer from '../components/Footer';
 import LandingNavBar from '../components/LandingNavBar';
+import { useLang } from '../contexts/LanguageContext';
 
 const Companies = () => {
     const navigate = useNavigate();
+    const { t, isRTL } = useLang();
 
     return (
         <div className="bg-white dark:bg-slate-900 font-display text-slate-900 dark:text-slate-100 min-h-screen selection:bg-indigo-100 dark:selection:bg-indigo-900/30">
@@ -31,18 +33,18 @@ const Companies = () => {
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-500">Top Academic Talent.</span>
                         </h1>
                         <p className="max-w-2xl mx-auto text-xl text-slate-600 dark:text-slate-400 mb-12 leading-relaxed">
-                            Eliminate the friction of internship recruitment. stag.io connects you with vetted students and automates your administrative workflow from discovery to agreement.
+                            {t('companies.hero.subtitle')}
                         </p>
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                             <button
                                 onClick={() => navigate('/company-signup')}
                                 className="w-full sm:w-auto bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-lg font-bold py-4 px-10 rounded-2xl hover:scale-105 transition-all shadow-xl shadow-slate-200 dark:shadow-none"
                             >
-                                Start Hiring Now
+                                {t('companies.hero.ctaPrimary')}
                             </button>
                             <a href="/careers">
                                 <button className="w-full sm:w-auto bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-lg font-bold py-4 px-10 rounded-2xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-750 transition-all flex items-center justify-center gap-2 group">
-                                    View Demo
+                                    {t('companies.hero.ctaSecondary')}
                                     <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">play_arrow</span>
                                 </button>
                             </a>
@@ -81,14 +83,14 @@ const Companies = () => {
                                     <span className="text-indigo-600">manage internships.</span>
                                 </h2>
                                 <p className="text-lg text-slate-600 dark:text-slate-400 mb-10 leading-relaxed">
-                                    Stop wasting time on manual paperwork and unvetted candidates. stag.io provides a centralized command center for your entire internship program.
+                                    {t('companies.features.subtitle')}
                                 </p>
 
                                 <div className="space-y-6">
                                     {[
-                                        { icon: 'verified_user', title: 'Vetted Candidates', desc: 'Access a curated pool of students with verified academic backgrounds and skills.' },
-                                        { icon: 'auto_mode', title: 'Automated Workflows', desc: 'Generate and sign internship agreements automatically with our tripartite signature system.' },
-                                        { icon: 'analytics', title: 'Recruitment Analytics', desc: 'Track your hiring pipeline and internship success rates with real-time data.' }
+                                        { icon: 'verified_user', title: t('companies.features.f1Title'), desc: t('companies.features.f1Desc') },
+                                        { icon: 'auto_mode', title: t('companies.features.f2Title'), desc: t('companies.features.f2Desc') },
+                                        { icon: 'analytics', title: t('companies.features.f3Title'), desc: t('companies.features.f3Desc') }
                                     ].map((item, i) => (
                                         <div key={i} className="flex gap-4 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm transition-transform hover:translate-x-2">
                                             <div className="size-12 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
@@ -155,14 +157,14 @@ const Companies = () => {
                         <div className="relative z-10">
                             <h2 className="text-4xl lg:text-5xl font-black text-white mb-8">Ready to transform your <br />internship program?</h2>
                             <p className="text-indigo-100 text-xl mb-12 max-w-2xl mx-auto leading-relaxed">
-                                Join hundreds of innovative companies already using stag.io to discover and manage their future talent.
+                             {t('companies.cta.subtitle')}
                             </p>
                             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
                                 <button
                                     onClick={() => navigate('/company-signup')}
                                     className="w-full sm:w-auto bg-white text-indigo-600 text-lg font-bold py-4 px-12 rounded-2xl hover:scale-105 transition-all shadow-xl"
                                 >
-                                    Get Started for Free
+                                    {t('companies.cta.btn')}
                                 </button>
                                 {/* <button 
                                     onClick={() => navigate('/pricing')}

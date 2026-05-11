@@ -6,9 +6,9 @@ import ThemeToggle from './ThemeToggle';
 import LanguageSwitcher from './LanguageSwitcher';
 
 const CompanyNavbar = ({ company: companyProp }) => {
+    const { t } = useLang();
     const navigate = useNavigate();
     const location = useLocation();
-    const { t } = useLang();
     const [company, setCompany] = useState(companyProp || null);
     const [hasUnread, setHasUnread] = useState(false);
     const [messages, setMessages] = useState([]);
@@ -80,7 +80,7 @@ const CompanyNavbar = ({ company: companyProp }) => {
                             onClick={() => navigate('/company-dashboard')}
                             className={`text-sm font-medium transition-colors hover:text-primary ${isActive('/company-dashboard') ? 'text-primary font-semibold' : 'text-slate-500 dark:text-slate-400'}`}
                         >
-                            Dashboard
+                            {t('nav2.dashboard')}
                         </button>
                         <button
                             onClick={() => navigate('/company-offers')}
