@@ -4,9 +4,11 @@ import logoImage from '../assets/logo.png';
 import ThemeToggle from '../components/ThemeToggle';
 import Footer from '../components/Footer';
 import LandingNavBar from '../components/LandingNavBar';
+import { useLang } from '../contexts/LanguageContext';
 
 const Universities = () => {
     const navigate = useNavigate();
+    const { t, isRTL } = useLang();
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -35,7 +37,7 @@ const Universities = () => {
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-500">Career Services.</span>
                         </h1>
                         <p className="max-w-2xl mx-auto text-xl text-slate-600 dark:text-slate-400 mb-12 leading-relaxed">
-                            Empower your students and eliminate paperwork with our automated placement ecosystem. Streamline internships from initial connection to the final contract.
+                            {t('universities.hero.subtitle')}
                         </p>
 
 
@@ -64,7 +66,7 @@ const Universities = () => {
                         <div className="text-center mb-20">
                             <h2 className="text-4xl font-black text-slate-900 dark:text-white mb-6">The Digital Bridge.</h2>
                             <p className="max-w-3xl mx-auto text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
-                                stag.io replaces fragmented job boards with a unified ecosystem where verified employers actively seek emerging talent directly from your programs.
+                                {t('universities.features.subtitle')}
                             </p>
                         </div>
 
@@ -72,18 +74,18 @@ const Universities = () => {
                             {[
                                 {
                                     icon: 'hub',
-                                    title: 'Unified Ecosystem',
-                                    desc: 'A single platform connecting students, companies, and academic administrators in real-time.'
+                                    title: t('universities.features.f1Title'),
+                                    desc: t('universities.features.f1Desc')
                                 },
                                 {
                                     icon: 'verified',
-                                    title: 'Vetted Partners',
-                                    desc: 'Access to a premium network of companies pre-screened for quality internship experiences.'
+                                    title: t('universities.features.f2Title'),
+                                    desc: t('universities.features.f2Desc')
                                 },
                                 {
                                     icon: 'bolt',
-                                    title: 'Algorithmic Matching',
-                                    desc: 'Direct matching aligns student skills with exact employer requirements automatically.'
+                                    title: t('universities.features.f3Title'),
+                                    desc: t('universities.features.f3Desc')
                                 }
                             ].map((feature, i) => (
                                 <div key={i} className="bg-white dark:bg-slate-900 p-8 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all hover:translate-y-[-8px] group">
@@ -180,14 +182,14 @@ const Universities = () => {
                                 Ready to elevate your <br />placement office?
                             </h2>
                             <p className="max-w-2xl mx-auto text-slate-400 dark:text-slate-500 text-xl mb-12 relative z-10">
-                                Join forward-thinking institutions that are redefining the student-to-professional transition.
+                                {t('universities.cta.subtitle')}
                             </p>
                             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 relative z-10">
                                 <button 
                                     onClick={() => navigate('/contact-us')}
                                     className="w-full sm:w-auto bg-indigo-600 text-white text-lg font-bold py-5 px-12 rounded-2xl hover:scale-105 transition-all shadow-xl shadow-indigo-900/20"
                                 >
-                                    Request Information
+                                    {t('universities.cta.btn')}
                                 </button>
                             </div>
                         </div>

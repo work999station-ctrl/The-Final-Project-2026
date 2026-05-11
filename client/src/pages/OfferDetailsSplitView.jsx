@@ -4,11 +4,12 @@ import moment from 'moment';
 import AdminNavbar from '../components/AdminNavbar';
 import AdminSidebar from '../components/AdminSidebar';
 import { getProfileCompletion } from '../utils/profileCompletion';
-
+import { useLang } from '../contexts/LanguageContext';
 
 const OfferDetailsSplitView = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { t } = useLang();
     const [offer, setOffer] = useState(null);
     const [company, setCompany] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -89,20 +90,14 @@ const OfferDetailsSplitView = () => {
 
                 if (studentRes.status === 'fulfilled' && studentRes.value.ok) {
                     setUserType('student');
-                    const studentJson = await studentRes.json();
+                    const studentJson = await studentRes.value.json();
                     if (studentJson && studentJson.user) setStudentData(studentJson.user);
-                } else {
-                    const companyRes = await fetch('/api/company/me');
-                    if (companyRes.ok) {
-                        setUserType('company');
-                    } else {
-                        const adminRes = await fetch('/api/admin/me');
-                        if (adminRes.ok) {
-                            setUserType('admin');
-                            const adminJson = await adminRes.json();
-                            setAdminUser(adminJson.user || null);
-                        }
-                    }
+                } else if (companyRes.status === 'fulfilled' && companyRes.value.ok) {
+                    setUserType('company');
+                } else if (adminRes.status === 'fulfilled' && adminRes.value.ok) {
+                    setUserType('admin');
+                    const adminJson = await adminRes.value.json();
+                    setAdminUser(adminJson.user || null);
                 }
 
                 const response = await fetch(`/api/offers/${id}`);
@@ -112,11 +107,11 @@ const OfferDetailsSplitView = () => {
                     setOffer(data.offer);
                     setCompany(data.company);
                 } else {
-                    setError(data.error || 'Offer not found.');
+                    setError(data.error || t('errors.offerNotFound'));
                 }
             } catch (err) {
                 console.error("Error fetching offer details:", err);
-                setError('Failed to fetch offer details.');
+                setError(t('errors.fetchOfferFailed'));
             } finally {
                 setLoading(false);
             }
@@ -168,14 +163,14 @@ const OfferDetailsSplitView = () => {
             });
             const data = await res.json();
             if (res.ok && data.success) {
-                setToast({ message: 'Success! Your application has been submitted.', type: 'success' });
+                setToast({ message: t('dashboard.applySuccess'), type: 'success' });
                 setOffer(prev => ({ ...prev, isApplied: true }));
             } else {
-                setToast({ message: data.message || 'Failed to apply.', type: 'error' });
+                setToast({ message: data.message || t('dashboard.applyFailed'), type: 'error' });
             }
         } catch (err) {
             console.error('Error applying:', err);
-            setToast({ message: 'An error occurred. Please try again later.', type: 'error' });
+            setToast({ message: t('dashboard.applyError'), type: 'error' });
         } finally {
             setIsApplying(false);
             setActionModal(null);
@@ -192,14 +187,14 @@ const OfferDetailsSplitView = () => {
 
             if (res.ok) {
                 setOffer(prev => ({ ...prev, status: 'Closed' }));
-                setToast({ message: "Offer closed successfully.", type: 'success' });
+                setToast({ message: t('offerDetail.offerClosedSuccess'), type: 'success' });
             } else {
                 const data = await res.json();
-                setToast({ message: data.error || "Failed to close offer", type: 'error' });
+                setToast({ message: data.error || t('offerDetail.offerCloseFailed'), type: 'error' });
             }
         } catch (err) {
             console.error("Error closing offer:", err);
-            setToast({ message: "Connection error. Please try again.", type: 'error' });
+            setToast({ message: t('errors.connectionError'), type: 'error' });
         } finally {
             setActionModal(null);
             setTimeout(() => setToast(null), 5000);
@@ -230,18 +225,18 @@ const OfferDetailsSplitView = () => {
                     setOffer(data.offer);
                     setToast({
                         message: deadlineExpired
-                            ? `Offer re-opened. Deadline extended to ${moment(newDeadline).format('LL')}.`
-                            : "Offer re-opened successfully.",
+                            ? t('offerDetail.offerReopenedExtended', { date: moment(newDeadline).format('LL') })
+                            : t('offerDetail.offerReopenedSuccess'),
                         type: 'success'
                     });
                 }
             } else {
                 const errorData = await res.json();
-                setToast({ message: errorData.error || "Failed to re-open offer", type: 'error' });
+                setToast({ message: errorData.error || t('offerDetail.offerReopenFailed'), type: 'error' });
             }
         } catch (err) {
             console.error("Error re-opening offer:", err);
-            setToast({ message: "An error occurred while re-opening the offer.", type: 'error' });
+            setToast({ message: t('errors.genericFallback'), type: 'error' });
         } finally {
             setActionModal(null);
             setTimeout(() => setToast(null), 5000);
@@ -260,9 +255,9 @@ const OfferDetailsSplitView = () => {
         const dashboardPath = userType === 'student' ? '/student-dashboard' : (userType === 'admin' ? '/admin-dashboard' : '/company-dashboard');
         return (
             <div className="bg-slate-50 dark:bg-slate-900 min-h-screen flex items-center justify-center font-sans flex-col gap-4">
-                <div className="text-red-500 font-bold">{error || 'Offer not found.'}</div>
+                <div className="text-red-500 font-bold">{error || t('errors.offerNotFound')}</div>
                 <button onClick={() => navigate(dashboardPath)} className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
-                    Go Back to Dashboard
+                    {t('errors.goBackDashboard')}
                 </button>
             </div>
         );
@@ -288,19 +283,19 @@ const OfferDetailsSplitView = () => {
                                 to={userType === 'student' ? "/student-dashboard" : (userType === 'admin' ? "/admin-dashboard" : "/company-dashboard")}
                                 className="hover:text-indigo-600 cursor-pointer"
                             >
-                                Dashboard
+                                {t('dashboard.dashboardLink')}
                             </Link>
                             <span className="material-symbols-outlined text-[10px]">chevron_right</span>
                             {userType === 'student' ? (
                                 <>
-                                    <Link to="/opportunities" className="hover:text-indigo-600 cursor-pointer">Offers</Link>
+                                    <Link to="/opportunities" className="hover:text-indigo-600 cursor-pointer">{t('offerDetail.offersLink')}</Link>
                                     <span className="material-symbols-outlined text-[10px]">chevron_right</span>
                                 </>
                             ) : null}
                             <span className="text-slate-900 dark:text-slate-200 font-medium">{offer.title}</span>
                         </nav>
                         <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-                            {userType === 'admin' ? 'Offer Review' : (userType === 'student' ? 'Offer Details' : 'Offer Management')}
+                            {userType === 'admin' ? t('offerDetail.offerReview') : (userType === 'student' ? t('offerDetail.offerDetails') : t('offerDetail.offerManagement'))}
                         </h1>
                     </div>
                     <div className="flex items-center gap-3">
@@ -311,7 +306,7 @@ const OfferDetailsSplitView = () => {
                                     className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 transition-all shadow-sm"
                                 >
                                     <span className="material-symbols-outlined text-lg">edit</span>
-                                    Edit Offer
+                                    {t('offerDetail.editOffer')}
                                 </button>
                                 {isClosed ? (
                                     <button
@@ -319,7 +314,7 @@ const OfferDetailsSplitView = () => {
                                         className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-semibold hover:bg-emerald-700 transition-all shadow-md active:scale-95"
                                     >
                                         <span className="material-symbols-outlined text-lg">check_circle</span>
-                                        Re-open Offer
+                                        {t('offerDetail.reopenOffer')}
                                     </button>
                                 ) : (
                                     <button
@@ -327,7 +322,7 @@ const OfferDetailsSplitView = () => {
                                         className="flex items-center gap-2 px-4 py-2 bg-slate-900 dark:bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-all shadow-md active:scale-95"
                                     >
                                         <span className="material-symbols-outlined text-lg">block</span>
-                                        Close Offer
+                                        {t('offerDetail.closeOffer')}
                                     </button>
                                 )}
                             </>
@@ -338,7 +333,7 @@ const OfferDetailsSplitView = () => {
                                     onClick={() => setActionModal({ type: 'apply' })}
                                     disabled={isApplying || (offer && offer.isApplied) || isClosed}
                                     className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-bold transition-all shadow-lg ${offer && offer.applicationStatus === 'admin_rejected' ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-100 dark:border-red-800/50 cursor-default shadow-none' : (offer && offer.isApplied ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/50 cursor-default shadow-none' : (isClosed ? 'bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 cursor-not-allowed border border-slate-300 dark:border-slate-700 shadow-none' : (isApplying ? 'bg-indigo-400 text-white cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-200 dark:shadow-indigo-900/40')))}`}>
-                                    {offer && offer.applicationStatus === 'admin_rejected' ? 'Refused' : (offer && offer.isApplied ? 'Applied' : (isClosed ? 'Offer Closed' : (isApplying ? 'Applying...' : 'Apply now')))}
+                                    {offer && offer.applicationStatus === 'admin_rejected' ? t('offerDetail.refused') : (offer && offer.isApplied ? t('offerDetail.applied') : (isClosed ? t('offerDetail.offerClosed') : (isApplying ? t('offerDetail.applying') : t('offerDetail.applyBtn'))))}
                                     <span className={`material-symbols-outlined text-lg ${isApplying ? 'animate-spin' : ''}`}>
                                         {offer && offer.applicationStatus === 'admin_rejected' ? 'block' : (offer && offer.isApplied ? 'check_circle' : (isClosed ? 'lock' : (isApplying ? 'hourglass_empty' : 'send')))}
                                     </span>
@@ -347,7 +342,7 @@ const OfferDetailsSplitView = () => {
                                     onClick={() => navigate(`/company-dashboard-student-view/${company?._id}`)}
                                     className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 transition-all"
                                 >
-                                    View Company
+                                    {t('offerDetail.viewCompany')}
                                     <span className="material-symbols-outlined text-lg">corporate_fare</span>
                                 </button>
                             </>
@@ -358,7 +353,7 @@ const OfferDetailsSplitView = () => {
                                 className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 transition-all shadow-sm"
                             >
                                 <span className="material-symbols-outlined text-lg">corporate_fare</span>
-                                View Company
+                                {t('offerDetail.viewCompany')}
                             </button>
                         )}
                     </div>
@@ -401,20 +396,20 @@ const OfferDetailsSplitView = () => {
                                     </div>
                                     <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${isClosed ? 'bg-rose-50 dark:bg-rose-900/20 text-rose-700 dark:text-rose-400' : 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400'}`}>
                                         <span className={`w-2 h-2 rounded-full ${isClosed ? 'bg-rose-500' : 'bg-emerald-500 animate-pulse'}`}></span>
-                                        {isClosed ? 'Closed' : 'Open'}
+                                        {isClosed ? t('offerDetail.closed') : t('offerDetail.open')}
                                     </div>
                                 </div>
 
                                 <div className="space-y-6">
                                     <section>
-                                        <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest mb-3">Description</h3>
+                                        <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest mb-3">{t('offerDetail.description')}</h3>
                                         <div className="text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-wrap">
-                                            {offer.description || 'No description provided.'}
+                                            {offer.description || t('offerDetail.noDescriptionProvided')}
                                         </div>
                                     </section>
 
                                     <section>
-                                        <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest mb-3">How you'll work</h3>
+                                        <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest mb-3">{t('offerDetail.howYoullWork')}</h3>
                                         <div className="text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-wrap">
                                             {offer.internshipType === 'PFE' && 'The "Graduation Project" internship. It is long-term (4–6 months) and requires a final thesis and defense.'}
                                             {offer.internshipType === 'Observation' && 'A short-term "Summer Internship" (usually 1 month) aimed at discovering the professional environment.'}
@@ -425,7 +420,7 @@ const OfferDetailsSplitView = () => {
                                     </section>
 
                                     <section>
-                                        <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest mb-3">Required Skills</h3>
+                                        <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest mb-3">{t('offerDetail.requiredSkills')}</h3>
                                         <div className="flex flex-col gap-4">
                                             {offer.techStack && offer.techStack.length > 0 ? (
                                                 offer.techStack.map((stack, index) => (
@@ -456,13 +451,13 @@ const OfferDetailsSplitView = () => {
                                                     </div>
                                                 ))
                                             ) : (
-                                                <span className="text-sm text-slate-500">No specific skills listed.</span>
+                                                <span className="text-sm text-slate-500">{t('offerDetail.noSkillsListed')}</span>
                                             )}
                                         </div>
                                     </section>
 
                                     <section className="mt-8">
-                                        <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest mb-3">Application Deadline</h3>
+                                        <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest mb-3">{t('offerDetail.deadline')}</h3>
                                         {offer.endDateOfApplay ? (
                                             <div className="inline-flex items-center gap-3 px-4 py-2.5 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/30 rounded-xl relative overflow-hidden group">
                                                 <div className="absolute inset-0 bg-gradient-to-r from-amber-100/50 to-transparent dark:from-amber-800/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
@@ -472,46 +467,46 @@ const OfferDetailsSplitView = () => {
                                                 </span>
                                             </div>
                                         ) : (
-                                            <span className="text-sm text-slate-500 italic">No exact deadline specified.</span>
+                                            <span className="text-sm text-slate-500 italic">{t('offerDetail.noDeadline')}</span>
                                         )}
                                     </section>
 
                                     <section className="mt-8">
-                                        <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest mb-3">About the Company</h3>
+                                        <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest mb-3">{t('offerDetail.aboutCompany')}</h3>
                                         {company ? (
                                             <>
                                                 <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
-                                                    {company.description || company.companyName || 'Company details not available.'}
+                                                    {company.description || company.companyName || t('offerDetail.noCompanyDetails')}
                                                 </p>
                                                 {company.website && (
                                                     <a href={company.website.startsWith('http') ? company.website : `https://${company.website}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer">
-                                                        Visit Website
+                                                        {t('offerDetail.visitWebsite')}
                                                         <span className="material-symbols-outlined text-sm">arrow_outward</span>
                                                     </a>
                                                 )}
                                             </>
                                         ) : (
-                                            <p className="text-sm text-slate-500">Company details not available.</p>
+                                            <p className="text-sm text-slate-500">{t('offerDetail.noCompanyDetails')}</p>
                                         )}
                                     </section>
                                 </div>
 
                                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 mt-6 border-t border-slate-100 dark:border-slate-700">
                                     <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50">
-                                        <span className="block text-[10px] text-slate-400 uppercase font-bold mb-1">Duration</span>
-                                        <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">{offer.durationMonths || 0} Months</span>
+                                        <span className="block text-[10px] text-slate-400 uppercase font-bold mb-1">{t('offerDetail.durationLabel')}</span>
+                                        <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">{offer.durationMonths || 0} {t('offerDetail.months')}</span>
                                     </div>
                                     <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50">
-                                        <span className="block text-[10px] text-slate-400 uppercase font-bold mb-1">Salary</span>
+                                        <span className="block text-[10px] text-slate-400 uppercase font-bold mb-1">{t('offerDetail.salaryLabel')}</span>
                                         <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">{offer.salary}.00 DA</span>
                                     </div>
                                     <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50">
-                                        <span className="block text-[10px] text-slate-400 uppercase font-bold mb-1">Type</span>
+                                        <span className="block text-[10px] text-slate-400 uppercase font-bold mb-1">{t('offerDetail.typeLabel')}</span>
                                         <span className="text-sm font-semibold text-slate-700 dark:text-slate-200 capitalize">{offer.internshipType || 'Full-time'}</span>
                                     </div>
                                     <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50">
-                                        <span className="block text-[10px] text-slate-400 uppercase font-bold mb-1">Openings</span>
-                                        <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">{offer.slotsAvailable || 1} Seats</span>
+                                        <span className="block text-[10px] text-slate-400 uppercase font-bold mb-1">{t('offerDetail.openingsLabel')}</span>
+                                        <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">{offer.slotsAvailable || 1} {t('offerDetail.seats')}</span>
                                     </div>
                                 </div>
                             </div>

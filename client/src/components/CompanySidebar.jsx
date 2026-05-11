@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLang } from '../contexts/LanguageContext';
 
 const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
     const navigate = useNavigate();
+    const { t } = useLang();
     const [isCollapsed, setIsCollapsed] = useState(() => {
         return localStorage.getItem('companySidebarCollapsed') === 'true';
     });
@@ -23,12 +25,12 @@ const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
     };
 
     const navItems = [
-        { page: 'overview', icon: 'business', label: 'Dashboard', href: '/company-dashboard' },
-        { page: 'offers', icon: 'work', label: 'My Offers', href: '/company-offers' },
-        { page: 'applications', icon: 'groups', label: 'Applications', href: '/candidate-tracking-statistics' },
-        { page: 'create-offer', icon: 'add_box', label: 'Create Offer', href: '/create-offer' },
-        { page: 'messages', icon: 'chat', label: 'Messages', href: '/company-direct-messages' },
-        { page: 'inbox', icon: 'inbox', label: 'Inbox', href: '/company-inbox' },
+        { page: 'overview', icon: 'business', label: t('sidebar.company.dashboard'), href: '/company-dashboard' },
+        { page: 'offers', icon: 'work', label: t('sidebar.company.myOffers'), href: '/company-offers' },
+        { page: 'applications', icon: 'groups', label: t('sidebar.company.applications'), href: '/candidate-tracking-statistics' },
+        { page: 'create-offer', icon: 'add_box', label: t('sidebar.company.createOffer'), href: '/create-offer' },
+        { page: 'messages', icon: 'chat', label: t('sidebar.company.messages'), href: '/company-direct-messages' },
+        { page: 'inbox', icon: 'inbox', label: t('sidebar.company.inbox'), href: '/company-inbox' },
     ];
 
     return (
@@ -54,7 +56,7 @@ const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
                     </div>
                     <div className={`overflow-hidden whitespace-nowrap transition-all duration-300 ${isCollapsed ? 'w-0 opacity-0' : 'opacity-100'}`}>
                         <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100 leading-tight truncate">{company?.companyName || '—'}</h2>
-                        <p className="text-xs text-slate-500 truncate">Recruiter Dashboard</p>
+                        <p className="text-xs text-slate-500 truncate">{t('sidebar.company.portal')}</p>
                     </div>
                 </div>
 
@@ -74,12 +76,12 @@ const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
                 <div className="flex flex-col gap-3 mt-auto pb-4">
                     <button
                         onClick={() => navigate('/edit-company-profile')}
-                        title={isCollapsed ? "Edit Profile" : undefined}
+                        title={isCollapsed ? t('sidebar.company.editProfile') : undefined}
                         className="py-3 px-3 rounded-xl border border-primary/20 text-indigo-600 dark:text-indigo-400 font-semibold text-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors flex items-center justify-center gap-2 w-full"
                     >
                         <span className="material-symbols-outlined text-lg shrink-0">edit</span>
                         <span className={`overflow-hidden whitespace-nowrap transition-all duration-300 ${isCollapsed ? 'w-0 opacity-0' : 'opacity-100'}`}>
-                            Edit Profile
+                            {t('sidebar.company.editProfile')}
                         </span>
                     </button>
                     <button
@@ -87,12 +89,12 @@ const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
                             await fetch('/api/logout', { method: 'POST' });
                             window.location.href = '/';
                         }}
-                        title={isCollapsed ? "Logout" : undefined}
+                        title={isCollapsed ? t('sidebar.company.logout') : undefined}
                         className="flex items-center justify-center gap-2 py-3 px-3 bg-red-50 text-red-600 rounded-xl font-bold text-sm hover:bg-red-100 transition-all border border-red-100 shadow-sm w-full"
                     >
                         <span className="material-symbols-outlined text-lg shrink-0">logout</span>
                         <span className={`overflow-hidden whitespace-nowrap transition-all duration-300 ${isCollapsed ? 'w-0 opacity-0' : 'opacity-100'}`}>
-                            Logout
+                            {t('sidebar.company.logout')}
                         </span>
                     </button>
                 </div>
@@ -101,7 +103,7 @@ const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
             {/* Toggle Button — fixed, tracks the right edge of the sidebar */}
             <button
                 onClick={() => setIsCollapsed(prev => !prev)}
-                title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                title={isCollapsed ? t('sidebar.company.expandSidebar') : t('sidebar.company.collapseSidebar')}
                 className="fixed top-20 z-[60] w-6 h-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full hidden md:flex items-center justify-center shadow-md hover:shadow-lg hover:scale-110 transition-all text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400"
                 style={{ left: `calc(${sidebarWidth} - 12px)`, transition: 'left 300ms ease-in-out' }}
             >

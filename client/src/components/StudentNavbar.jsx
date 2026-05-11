@@ -3,8 +3,10 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import logoImage from '../assets/logo.png';
 import ThemeToggle from './ThemeToggle';
 import LanguageSwitcher from './LanguageSwitcher';
+import { useLang } from '../contexts/LanguageContext';
 
 const StudentNavbar = ({ student: studentProp }) => {
+    const { t } = useLang();
     const navigate = useNavigate();
     const location = useLocation();
     const [student, setStudent] = useState(studentProp || null);
@@ -74,26 +76,26 @@ const StudentNavbar = ({ student: studentProp }) => {
                             onClick={() => navigate('/student-dashboard')}
                             className={`text-sm font-medium transition-colors hover:text-primary ${isActive('/student-dashboard') ? 'text-primary font-semibold' : 'text-slate-500 dark:text-slate-400'}`}
                         >
-                            Dashboard
+                        {t('nav2.dashboard')}
                         </button>
                         <button
                             onClick={() => navigate('/opportunities')}
                             className={`text-sm font-medium transition-colors hover:text-primary ${isActive('/opportunities') ? 'text-primary font-semibold' : 'text-slate-500 dark:text-slate-400'}`}
                         >
-                            Offer Discovery
+                            {t('nav2.offerDiscovery')}
                         </button>
                         <button
                             onClick={() => navigate('/ApplicationTracker')}
                             className={`text-sm font-medium transition-colors hover:text-primary ${isActive('/ApplicationTracker') ? 'text-primary font-semibold' : 'text-slate-500 dark:text-slate-400'}`}
                         >
-                            Applications
+                            {t('nav2.applications')}
                         </button>
                         <button
                             onClick={() => navigate('/student-inbox')}
                             className={`text-sm font-medium transition-colors hover:text-primary flex items-center gap-1.5 ${isActive('/student-inbox') ? 'text-primary font-semibold' : 'text-slate-500 dark:text-slate-400'}`}
                         >
                             <span className="material-symbols-outlined text-[16px]">mail</span>
-                            Messages
+                            {t('nav2.messages')}
                         </button>
                     </nav>
                 </div>
@@ -105,7 +107,7 @@ const StudentNavbar = ({ student: studentProp }) => {
                         <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
                         <input
                             className="bg-slate-100 dark:bg-slate-800 border-none rounded-full pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/50 w-56 outline-none text-slate-700 dark:text-slate-200"
-                            placeholder="Search offers..."
+                            placeholder={t('nav2.searchPlaceholder')}
                             type="text"
                             defaultValue={new URLSearchParams(location.search).get('search') || ''}
                             onKeyDown={(e) => {
@@ -135,7 +137,7 @@ const StudentNavbar = ({ student: studentProp }) => {
                         {showNotifications && (
                             <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2">
                                 <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 flex justify-between items-center">
-                                    <span className="text-xs font-bold uppercase tracking-widest text-slate-400">Notifications</span>
+                                    <span className="text-xs font-bold uppercase tracking-widest text-slate-400">{t('nav2.notifications')}</span>
                                 </div>
                                 <div className="max-h-72 overflow-y-auto">
                                     {messages.length > 0 ? (
@@ -165,7 +167,7 @@ const StudentNavbar = ({ student: studentProp }) => {
                                         ))
                                     ) : (
                                         <div className="px-4 py-6 text-center text-slate-500 text-sm font-medium">
-                                            No new notifications
+                                            {t('nav2.noNotifications')}
                                         </div>
                                     )}
                                 </div>
@@ -174,7 +176,7 @@ const StudentNavbar = ({ student: studentProp }) => {
                                         onClick={() => { setShowNotifications(false); navigate('/student-inbox'); }}
                                         className="w-full text-center px-4 py-3 text-sm font-bold text-primary hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
                                     >
-                                        View All
+                                        {t('nav2.viewAll')}
                                     </button>
                                 </div>
                             </div>
