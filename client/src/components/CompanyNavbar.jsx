@@ -27,7 +27,10 @@ const CompanyNavbar = ({ company: companyProp }) => {
     }, []);
 
     useEffect(() => {
-        if (companyProp) return; // use value from props, set during useState init
+        if (companyProp) {
+            setCompany(companyProp);
+            return;
+        }
         // Auto-fetch company if not passed as prop
         const fetchCompany = async () => {
             try {
@@ -199,7 +202,7 @@ const CompanyNavbar = ({ company: companyProp }) => {
                         title={company?.companyName || 'Company'}
                     >
                         {company?.logo ? (
-                            <img alt="Company logo" className="w-full h-full object-cover" src={company.logo} />
+                            <img alt="Company logo" className="w-full h-full object-cover" src={`${company.logo}${company.logo.includes('?') ? '' : `?t=${Date.now()}`}`} />
                         ) : (
                             <span className="material-symbols-outlined text-primary">business</span>
                         )}
