@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
 import logo from '../assets/logo.png';
-import Footer from '../components/Footer';
 
 
 const AgreementPreview = () => {
@@ -250,7 +249,6 @@ const AgreementPreview = () => {
                 </div>
             </main>
             <div className="print:hidden">
-                <Footer />
             </div>
         </div>
     );

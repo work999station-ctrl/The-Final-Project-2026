@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import CompanyNavbar from '../components/CompanyNavbar';
 import CompanySidebar from '../components/CompanySidebar';
-import Footer from '../components/Footer';
 import { useLang } from '../contexts/LanguageContext';
 
 const CompanyDirectMessages = () => {
@@ -197,8 +196,6 @@ const CompanyDirectMessages = () => {
                     )}
                 </div>
             </main>
-
-            <Footer />
         </div>
     );
 };

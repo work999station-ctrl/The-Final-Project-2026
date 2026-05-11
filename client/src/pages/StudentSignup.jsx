@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import logoImage from '../assets/logo.png';
+import Logo from '../components/Logo';
 import { submitStudentSignup } from '../services/api';
-import Footer from '../components/Footer';
 
 
 const Input = ({ icon, ...props }) => (
@@ -468,9 +467,7 @@ const StudentSignup = () => {
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-display text-slate-900 dark:text-slate-100 flex flex-col">
             {/* Header */}
             <header className="flex items-center justify-between px-6 lg:px-16 py-4 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50">
-                <div className="cursor-pointer" onClick={() => navigate('/')}>
-                    <img src={logoImage} alt="stag.io" className="h-12 w-auto object-contain dark:brightness-0 dark:invert dark:sepia dark:saturate-[10] dark:hue-rotate-[350deg] mix-blend-multiply dark:mix-blend-screen" />
-                </div>
+                <Logo size={36} onClick={() => navigate('/')} />
                 <button onClick={() => navigate('/login')} className="flex items-center gap-2 px-5 py-2 rounded-full bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 transition-colors">
                     Log In
                 </button>
@@ -482,8 +479,6 @@ const StudentSignup = () => {
                 {role === 'student' && <StudentForm onBack={() => setRole(null)} />}
                 {role === 'company' && <CompanyForm onBack={() => setRole(null)} />}
             </main>
-
-            <Footer />
         </div>
     );
 };

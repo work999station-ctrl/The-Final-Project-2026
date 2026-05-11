@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import SharedInbox from '../components/SharedInbox';
 import AdminNavbar from '../components/AdminNavbar';
 import AdminSidebar from '../components/AdminSidebar';
-import Footer from '../components/Footer';
 
 const AdminInbox = () => {
     const [adminUser, setAdminUser] = useState(null);
@@ -30,7 +29,7 @@ const AdminInbox = () => {
                     <AdminSidebar activePage="inbox" adminUser={adminUser} />
                 </div>
                 <div className="flex-1 w-full min-w-0">
-                    <SharedInbox userType="admin" title="Admin Inbox" backLink="/admin-dashboard" navTitle="stage.io Admin" />
+                    <SharedInbox userType="admin" title="Admin Inbox" backLink="/admin-dashboard" navTitle="stage.io Admin" hideHeader={true} />
                 </div>
             </div>
         </div>
@@ -38,3 +37,4 @@ const AdminInbox = () => {
 };
 
 export default AdminInbox;
+

@@ -1,8 +1,7 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useLang } from '../contexts/LanguageContext';
 import logoImage from '../assets/logo.png';
-import Footer from '../components/Footer';
 
 const CompanySignup = () => {
     const navigate = useNavigate();
@@ -284,7 +283,6 @@ const CompanySignup = () => {
                     </main>
 
                     {/* Footer */}
-                    <Footer />
                 </div>
             </div>
         </div>

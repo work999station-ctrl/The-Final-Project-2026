@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import moment from 'moment';
 import CompanyNavbar from '../components/CompanyNavbar';
 import CompanySidebar from '../components/CompanySidebar';
-import Footer from '../components/Footer';
 import { useLang } from '../contexts/LanguageContext';
 
 const CompanyOffers = () => {
@@ -293,8 +292,6 @@ const CompanyOffers = () => {
                     </div>
                 </div>
             )}
-
-            <Footer />
 
 
             {/* Toast Notification */}

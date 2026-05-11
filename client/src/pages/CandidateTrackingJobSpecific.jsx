@@ -1,8 +1,7 @@
-import React from 'react';
+﻿import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLang } from '../contexts/LanguageContext';
 import CompanyNavbar from '../components/CompanyNavbar';
-import Footer from '../components/Footer';
 
 const CandidateTrackingJobSpecific = () => {
     const { t, lang, setLang } = useLang();
@@ -326,8 +325,6 @@ const CandidateTrackingJobSpecific = () => {
                     </div>
                 </main>
             </div>
-
-            <Footer />
         </div>
     );
 };

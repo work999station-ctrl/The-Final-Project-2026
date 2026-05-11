@@ -10,7 +10,7 @@ const init = (httpServer) => {
   const { Server } = require('socket.io');
   _io = new Server(httpServer, {
     cors: {
-      origin: ['http://localhost:5173', 'http://localhost:3000'],
+      origin: /^http:\/\/localhost(:\d+)?$/,
       methods: ['GET', 'POST'],
       credentials: true
     }

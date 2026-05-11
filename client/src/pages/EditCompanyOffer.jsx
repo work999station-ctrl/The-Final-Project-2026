@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import CompanyNavbar from '../components/CompanyNavbar';
-import Footer from '../components/Footer';
 import { useLang } from '../contexts/LanguageContext';
 
 const EditCompanyOffer = () => {
@@ -491,8 +490,6 @@ const EditCompanyOffer = () => {
                     </div>
                 </div>
             </div>
-
-            <Footer />
         </div>
     );
 };

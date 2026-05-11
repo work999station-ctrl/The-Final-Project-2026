@@ -56,7 +56,7 @@ const SOCIAL_LINKS = [
     { label: 'Email',    icon: 'mail',            href: '#', color: 'hover:bg-primary' },
 ];
 
-const Footer = () => {
+const Footer = ({ showNewsletter = false }) => {
     const { lang, setLang, t, isRTL } = useLang();
     const [email, setEmail] = useState('');
     const [subscribed, setSubscribed] = useState(false);
@@ -106,7 +106,8 @@ const Footer = () => {
 
             <div className="relative z-10 max-w-7xl mx-auto px-6 pt-20 pb-8">
 
-                {/* ── Newsletter Card ───────────────────────────────────────── */}
+                {/* ── Newsletter Card (Home only) ───────────────────────── */}
+                {showNewsletter && (
                 <div className="relative mb-20">
                     <div className="absolute -inset-1 bg-gradient-to-r from-primary via-violet-500 to-cyan-400 rounded-3xl blur-xl opacity-30" />
                     <div className="relative rounded-3xl bg-gradient-to-br from-slate-900/95 to-slate-900/70 backdrop-blur-xl border border-white/[0.08] p-8 md:p-12 overflow-hidden">
@@ -180,6 +181,7 @@ const Footer = () => {
 
                     </div>
                 </div>
+                )}
 
                 {/* ── Main grid ─────────────────────────────────────────────── */}
                 <div className="grid grid-cols-2 md:grid-cols-12 gap-10 mb-16">

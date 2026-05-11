@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useParams } from 'react-router-dom';
 import moment from 'moment';
+import { getProfileCompletion } from '../utils/profileCompletion';
+import AdminNavbar from '../components/AdminNavbar';
+import AdminSidebar from '../components/AdminSidebar';
 
 const OfferDetailsSplitView = () => {
     const { id } = useParams();
@@ -676,7 +679,6 @@ const OfferDetailsSplitView = () => {
                     </div>
                 </div>
             )}
-            <Footer />
         </div>
     );
 };

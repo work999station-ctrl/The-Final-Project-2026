@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import moment from 'moment';
 import CompanyNavbar from '../components/CompanyNavbar';
 import useSocket from '../hooks/useSocket';
-import Footer from '../components/Footer';
 import { useLang } from '../contexts/LanguageContext';
 
 const CompanyDashboard = () => {
@@ -425,8 +424,6 @@ const CompanyDashboard = () => {
                     </div>
                 </div>
             </main>
-
-            <Footer />
 
             {/* Delete Offer Confirmation Modal */}
             {offerToDelete && (

@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import AdminNavbar from '../components/AdminNavbar';
 import AdminSidebar from '../components/AdminSidebar';
-import Footer from '../components/Footer';
 
 const AdminValidation = () => {
     const navigate = useNavigate();
@@ -625,7 +624,6 @@ const AdminValidation = () => {
                     </div>
                 </div>
             )}
-            <Footer />
         </div>
     );
 };

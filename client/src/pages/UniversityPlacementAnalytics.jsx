@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import AdminSidebar from '../components/AdminSidebar';
 import AdminNavbar from '../components/AdminNavbar';
-import Footer from '../components/Footer';
 
 
 const UniversityPlacementAnalytics = () => {
@@ -404,8 +403,6 @@ const UniversityPlacementAnalytics = () => {
                     </div>
                 </div>
             </main>
-
-            <Footer />
 
             {/* BottomNavBar for Mobile */}
             <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 px-6 py-3 flex justify-between items-center z-50">

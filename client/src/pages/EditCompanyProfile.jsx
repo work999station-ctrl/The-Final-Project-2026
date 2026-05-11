@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useLang } from '../contexts/LanguageContext';
 import CompanyNavbar from '../components/CompanyNavbar';
-import Footer from '../components/Footer';
 
 const EditCompanyProfile = () => {
     const navigate = useNavigate();
@@ -318,8 +317,6 @@ const EditCompanyProfile = () => {
 
                         </div>
                     </main>
-
-                    <Footer />
                 </div>
             </div>
         </div>

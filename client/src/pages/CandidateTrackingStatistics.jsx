@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useLang } from '../contexts/LanguageContext';
 import CompanyNavbar from '../components/CompanyNavbar';
 import CompanySidebar from '../components/CompanySidebar';
-import Footer from '../components/Footer';
 import ActionSuccessConfirmation from '../components/ActionSuccessConfirmation';
 import ActionRejectionConfirmation from '../components/ActionRejectionConfirmation';
 import useSocket from '../hooks/useSocket';
@@ -609,8 +608,6 @@ const CandidateTrackingStatistics = () => {
 
                 </div>
             </main>
-            
-            <Footer />
             <ActionSuccessConfirmation isOpen={isSuccessModalOpen} onClose={() => setIsSuccessModalOpen(false)} />
             <ActionRejectionConfirmation isOpen={isRejectionModalOpen} onClose={() => setIsRejectionModalOpen(false)} />
         </div>

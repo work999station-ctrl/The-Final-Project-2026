@@ -1,7 +1,6 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import logoImage from '../assets/logo.png';
-import Footer from '../components/Footer';
 
 
 const AdminSignup = () => {
@@ -304,8 +303,6 @@ const AdminSignup = () => {
                             </div>
                         </div>
                     </main>
-
-                    <Footer />
                 </div>
             </div>
         </div>

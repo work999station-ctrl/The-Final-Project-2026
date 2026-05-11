@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useLang } from '../contexts/LanguageContext';
 import CompanyNavbar from '../components/CompanyNavbar';
-import Footer from '../components/Footer';
 import logoImage from '../assets/logo.png';
 import { QRCodeSVG } from 'qrcode.react';
 
@@ -288,8 +287,6 @@ const CompanyStatistics = () => {
                     </div>
                 </div>
             </main>
-
-            <Footer />
         </div>
     );
 };

@@ -1,9 +1,8 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+﻿import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import moment from 'moment';
 import StudentNavbar from '../components/StudentNavbar';
 import StudentSidebar from '../components/StudentSidebar';
-import Footer from '../components/Footer';
 
 const InternshipOffers = () => {
     const navigate = useNavigate();
@@ -575,7 +574,6 @@ const InternshipOffers = () => {
                     </div>
                 </div>
             )}
-            <Footer />
         </div>
     );
 };

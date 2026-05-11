@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminNavbar from '../components/AdminNavbar';
-import Footer from '../components/Footer';
 
 
 const EditAdminProfile = () => {
@@ -301,8 +300,6 @@ const EditAdminProfile = () => {
                             </div>
                         </div>
                     </main>
-
-                    <Footer />
                 </div>
             </div>
         </div>

@@ -781,7 +781,7 @@ const Home = () => {
             </main>
 
             {/* ── Footer ──────────────────────────────────────────────────────── */}
-            <Footer />
+            <Footer showNewsletter={true} />
         </div>
     );
 };

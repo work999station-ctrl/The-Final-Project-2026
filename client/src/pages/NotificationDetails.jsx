@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import StudentNavbar from '../components/StudentNavbar';
 import CompanyNavbar from '../components/CompanyNavbar';
-import Footer from '../components/Footer';
 
 const NotificationDetails = () => {
     const { applicationId } = useParams();
@@ -282,7 +281,6 @@ const NotificationDetails = () => {
                     </div>
                 </div>
             )}
-            <Footer />
         </div>
     );
 };

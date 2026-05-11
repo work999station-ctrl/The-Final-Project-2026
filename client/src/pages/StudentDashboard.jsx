@@ -1,8 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import StudentNavbar from '../components/StudentNavbar';
-import Footer from '../components/Footer';
 import { getProfileCompletion } from '../utils/profileCompletion';
 import useSocket from '../hooks/useSocket';
 
@@ -547,7 +546,6 @@ const StudentDashboard = () => {
                     </div>
                 </div>
             </main>
-            <Footer />
         </div>
 
             {/* Floating Apply Confirmation Modal */}

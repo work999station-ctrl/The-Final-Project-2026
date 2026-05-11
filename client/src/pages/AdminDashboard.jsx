@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminNavbar from '../components/AdminNavbar';
 import AdminSidebar from '../components/AdminSidebar';
-import Footer from '../components/Footer';
 
 
 const AdminDashboard = () => {
@@ -337,7 +336,6 @@ const AdminDashboard = () => {
                     </div>
                 </main>
             </div>
-            <Footer />
         </div>
     );
 };

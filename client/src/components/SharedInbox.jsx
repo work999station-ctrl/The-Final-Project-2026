@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import Footer from './Footer';
 import { useLang } from '../contexts/LanguageContext';
 import logoImage from '../assets/logo.png';
 
@@ -147,7 +146,6 @@ const SharedInbox = ({ userType, title, backLink, navTitle = "stage.io", hideHea
                 </div>
             </main>
 
-            <Footer />
         </div>
     );
 };
