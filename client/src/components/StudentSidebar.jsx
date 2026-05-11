@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLang } from '../contexts/LanguageContext';
 
 const StudentSidebar = ({ student, activePage, topOffset = "top-16" }) => {
     const navigate = useNavigate();
+    const { t } = useLang();
     const [isCollapsed, setIsCollapsed] = useState(() => {
         return localStorage.getItem('studentSidebarCollapsed') === 'true';
     });
@@ -23,10 +25,10 @@ const StudentSidebar = ({ student, activePage, topOffset = "top-16" }) => {
     };
 
     const navItems = [
-        { page: 'dashboard', icon: 'dashboard', label: 'Dashboard', href: '/student-dashboard' },
-        { page: 'offers', icon: 'search', label: 'Offer Discovery', href: '/opportunities' },
-        { page: 'applications', icon: 'description', label: 'Applications', href: '/ApplicationTracker' },
-        { page: 'inbox', icon: 'mail', label: 'Messages', href: '/student-inbox' },
+        { page: 'dashboard', icon: 'dashboard', label: t('sidebar.student.dashboard'), href: '/student-dashboard' },
+        { page: 'offers', icon: 'search', label: t('sidebar.student.offerDiscovery'), href: '/opportunities' },
+        { page: 'applications', icon: 'description', label: t('sidebar.student.applications'), href: '/ApplicationTracker' },
+        { page: 'inbox', icon: 'mail', label: t('sidebar.student.messages'), href: '/student-inbox' },
     ];
 
     return (
@@ -52,7 +54,7 @@ const StudentSidebar = ({ student, activePage, topOffset = "top-16" }) => {
                     </div>
                     <div className={`overflow-hidden whitespace-nowrap transition-all duration-300 ${isCollapsed ? 'w-0 opacity-0' : 'opacity-100'}`}>
                         <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100 leading-tight truncate">{student?.name || 'Student Name'}</h2>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 truncate">Student Portal</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{t('sidebar.student.portal')}</p>
                     </div>
                 </div>
 
@@ -72,25 +74,25 @@ const StudentSidebar = ({ student, activePage, topOffset = "top-16" }) => {
                 <div className="flex flex-col gap-3 mt-auto pb-4">
                     <button
                         onClick={() => navigate('/edit-student-profile')}
-                        title={isCollapsed ? "Edit Profile" : undefined}
+                        title={isCollapsed ? t('sidebar.student.editProfile') : undefined}
                         className="py-3 px-3 rounded-xl border border-primary/20 text-indigo-600 dark:text-indigo-400 font-semibold text-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors flex items-center justify-center gap-2 w-full"
                     >
                         <span className="material-symbols-outlined text-lg shrink-0">edit</span>
                         <span className={`overflow-hidden whitespace-nowrap transition-all duration-300 ${isCollapsed ? 'w-0 opacity-0' : 'opacity-100'}`}>
                             Edit Profile
                         </span>
-                    </button>
+                                    </button>
                     <button
                         onClick={async () => {
                             await fetch('/api/logout', { method: 'POST' });
                             window.location.href = '/';
                         }}
-                        title={isCollapsed ? "Logout" : undefined}
+                        title={isCollapsed ? t('sidebar.student.logout') : undefined}
                         className="flex items-center justify-center gap-2 py-3 px-3 bg-red-50 text-red-600 rounded-xl font-bold text-sm hover:bg-red-100 transition-all border border-red-100 shadow-sm w-full"
                     >
                         <span className="material-symbols-outlined text-lg shrink-0">logout</span>
                         <span className={`overflow-hidden whitespace-nowrap transition-all duration-300 ${isCollapsed ? 'w-0 opacity-0' : 'opacity-100'}`}>
-                            Logout
+                            {t('sidebar.student.logout')}
                         </span>
                     </button>
                 </div>
@@ -99,7 +101,7 @@ const StudentSidebar = ({ student, activePage, topOffset = "top-16" }) => {
             {/* Toggle Button — fixed, tracks the right edge of the sidebar */}
             <button
                 onClick={() => setIsCollapsed(prev => !prev)}
-                title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                title={isCollapsed ? t('sidebar.student.expandSidebar') : t('sidebar.student.collapseSidebar')}
                 className="fixed top-20 z-[60] w-6 h-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full hidden md:flex items-center justify-center shadow-md hover:shadow-lg hover:scale-110 transition-all text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400"
                 style={{ left: `calc(${sidebarWidth} - 12px)`, transition: 'left 300ms ease-in-out' }}
             >
