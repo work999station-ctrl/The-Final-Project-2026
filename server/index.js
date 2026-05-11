@@ -1,12 +1,11 @@
-
 const express = require('express');
+const path = require('path');
+require("dotenv").config();
 const mongoose = require('mongoose');
 const app = express();
 const cookieParser = require('cookie-parser');
 const allRoutes = require('./routes/all.routes.js')
 const { requireAuth, checkUser } = require('./middleware/authmiddleware.js');
-require("dotenv").config();
-const path = require('path');
 //middleware
 app.use(express.json());
 app.use(express.urlencoded({ extends: false }))
