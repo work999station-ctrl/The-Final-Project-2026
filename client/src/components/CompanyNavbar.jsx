@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useLang } from '../contexts/LanguageContext';
 import Logo from './Logo';
 import ThemeToggle from './ThemeToggle';
+import LanguageSwitcher from './LanguageSwitcher';
 
 const CompanyNavbar = ({ company: companyProp }) => {
     const navigate = useNavigate();
@@ -121,6 +122,7 @@ const CompanyNavbar = ({ company: companyProp }) => {
                         />
                     </div>
 
+                    <LanguageSwitcher compact />
                     <ThemeToggle />
 
                     {/* Notification bell */}

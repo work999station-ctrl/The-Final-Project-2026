@@ -4,10 +4,10 @@ import './index.css'
 
 import { ThemeProvider } from './contexts/ThemeContext'
 import { LanguageProvider } from './contexts/LanguageContext'
-import { initMobile } from './mobile/init'
+// import { initMobile } from './mobile/init'
 
 // Bootstrap native plugins (no-op on the web)
-initMobile()
+// initMobile()
 
 createRoot(document.getElementById('root')).render(
   <LanguageProvider>

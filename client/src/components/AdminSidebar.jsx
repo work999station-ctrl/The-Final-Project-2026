@@ -41,14 +41,11 @@ const AdminSidebar = ({ activePage, adminUser }) => {
                     onClick={() => navigate('/edit-admin-profile')}
                     className="flex items-center gap-3 px-2 py-3 mb-2 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-900 rounded-xl transition-colors flex-shrink-0"
                 >
-                    <div className="shrink-0">
-                        {adminUser?.profilePicture ? (
-                            <img alt="Admin Avatar" className="w-10 h-10 rounded-lg object-cover" src={adminUser.profilePicture} />
-                        ) : (
-                            <div className="w-10 h-10 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold italic">
-                                {adminUser?.fullName?.substring(0, 2).toUpperCase() || 'AD'}
-                            </div>
-                        )}
+                    <div 
+                        className="h-10 w-10 shrink-0 rounded-full bg-primary/20 ring-2 ring-primary/10 flex items-center justify-center overflow-hidden bg-cover bg-center text-primary shadow-sm"
+                        style={{ backgroundImage: adminUser?.profilePicture ? `url('${adminUser.profilePicture}')` : 'none' }}
+                    >
+                        {!adminUser?.profilePicture && <span className="material-symbols-outlined text-[20px]">school</span>}
                     </div>
                     <div className={`overflow-hidden whitespace-nowrap transition-all duration-300 ${isCollapsed ? 'w-0 opacity-0' : 'opacity-100'}`}>
                         <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100 leading-tight truncate">{adminUser?.fullName || 'Loading...'}</h2>

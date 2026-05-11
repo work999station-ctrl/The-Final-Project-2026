@@ -23,6 +23,58 @@ const OfferDetailsSplitView = () => {
     const [profileIncompleteModal, setProfileIncompleteModal] = useState(false);
     const [adminUser, setAdminUser] = useState(null);
 
+    // Real logos for programming/tech skills (Devicon CDN)
+    const DI = 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons';
+    const skillLogos = {
+        'React': `${DI}/react/react-original.svg`, 'Next.js': `${DI}/nextjs/nextjs-original.svg`,
+        'Vue.js': `${DI}/vuejs/vuejs-original.svg`, 'Tailwind CSS': `${DI}/tailwindcss/tailwindcss-original.svg`,
+        'Angular': `${DI}/angularjs/angularjs-original.svg`, 'HTML/CSS': `${DI}/html5/html5-original.svg`,
+        'TypeScript': `${DI}/typescript/typescript-original.svg`, 'JavaScript': `${DI}/javascript/javascript-original.svg`,
+        'Svelte': `${DI}/svelte/svelte-original.svg`, 'Bootstrap': `${DI}/bootstrap/bootstrap-original.svg`,
+        'Sass': `${DI}/sass/sass-original.svg`, 'jQuery': `${DI}/jquery/jquery-original.svg`,
+        'Node.js': `${DI}/nodejs/nodejs-original.svg`, 'Express': `${DI}/express/express-original.svg`,
+        'Python': `${DI}/python/python-original.svg`, 'Django': `${DI}/django/django-plain.svg`,
+        'Go': `${DI}/go/go-original.svg`, 'PHP': `${DI}/php/php-original.svg`,
+        'Java': `${DI}/java/java-original.svg`, 'C++': `${DI}/cplusplus/cplusplus-original.svg`,
+        'Rust': `${DI}/rust/rust-original.svg`, 'C#': `${DI}/csharp/csharp-original.svg`,
+        '.NET': `${DI}/dotnetcore/dotnetcore-original.svg`, 'Ruby': `${DI}/ruby/ruby-original.svg`,
+        'Laravel': `${DI}/laravel/laravel-original.svg`, 'Flask': `${DI}/flask/flask-original.svg`,
+        'FastAPI': `${DI}/fastapi/fastapi-original.svg`, 'Spring Boot': `${DI}/spring/spring-original.svg`,
+        'Scala': `${DI}/scala/scala-original.svg`, 'R': `${DI}/r/r-original.svg`,
+        'React Native': `${DI}/react/react-original.svg`, 'Flutter': `${DI}/flutter/flutter-original.svg`,
+        'Swift': `${DI}/swift/swift-original.svg`, 'Kotlin': `${DI}/kotlin/kotlin-original.svg`,
+        'Dart': `${DI}/dart/dart-original.svg`, 'Ionic': `${DI}/ionic/ionic-original.svg`,
+        'PostgreSQL': `${DI}/postgresql/postgresql-original.svg`, 'MongoDB': `${DI}/mongodb/mongodb-original.svg`,
+        'Redis': `${DI}/redis/redis-original.svg`, 'MySQL': `${DI}/mysql/mysql-original.svg`,
+        'Firebase': `${DI}/firebase/firebase-original.svg`, 'SQL': `${DI}/azuresqldatabase/azuresqldatabase-original.svg`,
+        'SQLite': `${DI}/sqlite/sqlite-original.svg`, 'Oracle': `${DI}/oracle/oracle-original.svg`,
+        'Supabase': `${DI}/supabase/supabase-original.svg`,
+        'Docker': `${DI}/docker/docker-original.svg`, 'AWS': `${DI}/amazonwebservices/amazonwebservices-plain-wordmark.svg`,
+        'CI/CD': `${DI}/githubactions/githubactions-original.svg`, 'Linux': `${DI}/linux/linux-original.svg`,
+        'Git': `${DI}/git/git-original.svg`, 'Kubernetes': `${DI}/kubernetes/kubernetes-original.svg`,
+        'Terraform': `${DI}/terraform/terraform-original.svg`, 'Jenkins': `${DI}/jenkins/jenkins-original.svg`,
+        'Nginx': `${DI}/nginx/nginx-original.svg`, 'Azure': `${DI}/azure/azure-original.svg`,
+        'Google Cloud': `${DI}/googlecloud/googlecloud-original.svg`, 'Ansible': `${DI}/ansible/ansible-original.svg`,
+        'TensorFlow': `${DI}/tensorflow/tensorflow-original.svg`, 'PyTorch': `${DI}/pytorch/pytorch-original.svg`,
+        'Pandas': `${DI}/pandas/pandas-original.svg`, 'NumPy': `${DI}/numpy/numpy-original.svg`,
+        'Jupyter': `${DI}/jupyter/jupyter-original.svg`, 'OpenCV': `${DI}/opencv/opencv-original.svg`,
+        'Matlab': `${DI}/matlab/matlab-original.svg`, 'Keras': `${DI}/keras/keras-original.svg`,
+        'Figma': `${DI}/figma/figma-original.svg`, 'Canva': `${DI}/canva/canva-original.svg`,
+        'Blender': `${DI}/blender/blender-original.svg`, 'After Effects': `${DI}/aftereffects/aftereffects-original.svg`,
+        'Adobe Photoshop': `${DI}/photoshop/photoshop-original.svg`, 'Illustrator': `${DI}/illustrator/illustrator-plain.svg`,
+        'Premiere Pro': `${DI}/premierepro/premierepro-original.svg`,
+    };
+    const skillIcons = {
+        'Shopify': 'storefront', 'WooCommerce': 'shopping_cart', 'SEO': 'travel_explore',
+        'Google Analytics': 'monitoring', 'Social Media Management': 'share',
+        'Email Marketing': 'mail', 'Copywriting': 'edit_note',
+        'Project Management': 'assignment', 'Agile/Scrum': 'sprint', 'Business Analysis': 'analytics',
+        'CRM': 'contacts', 'Graphic Design': 'palette', 'UI/UX Design': 'design_services',
+        'Recruitment': 'person_search', 'Talent Acquisition': 'star', 'Training & Development': 'school',
+        'Conflict Resolution': 'handshake', 'Sports Coaching': 'sports', 'Personal Training': 'fitness_center',
+        'Sports Nutrition': 'restaurant', 'First Aid': 'medical_services',
+    };
+
     useEffect(() => {
         const fetchOfferDetails = async () => {
             try {
@@ -232,6 +284,12 @@ const OfferDetailsSplitView = () => {
                                 Dashboard
                             </Link>
                             <span className="material-symbols-outlined text-[10px]">chevron_right</span>
+                            {userType === 'student' ? (
+                                <>
+                                    <Link to="/opportunities" className="hover:text-indigo-600 cursor-pointer">Offers</Link>
+                                    <span className="material-symbols-outlined text-[10px]">chevron_right</span>
+                                </>
+                            ) : null}
                             <span className="text-slate-900 dark:text-slate-200 font-medium">{offer.title}</span>
                         </nav>
                         <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
@@ -378,7 +436,12 @@ const OfferDetailsSplitView = () => {
                                                         )}
                                                         <div className="flex flex-wrap gap-2">
                                                             {stack.tags && stack.tags.map((tag, tagIndex) => (
-                                                                <span key={tagIndex} className="px-3 py-1.5 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-lg text-xs font-semibold border border-indigo-100 dark:border-indigo-800">
+                                                                <span key={tagIndex} className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-lg text-xs font-semibold border border-indigo-100 dark:border-indigo-800">
+                                                                    {skillLogos[tag] ? (
+                                                                        <img src={skillLogos[tag]} alt="" className="w-4 h-4 object-contain" />
+                                                                    ) : skillIcons[tag] ? (
+                                                                        <span className="material-symbols-outlined text-[14px]">{skillIcons[tag]}</span>
+                                                                    ) : null}
                                                                     {tag}
                                                                 </span>
                                                             ))}

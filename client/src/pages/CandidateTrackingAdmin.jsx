@@ -30,7 +30,14 @@ const AdminValidation = () => {
     }, []);
 
     // Filter & Pagination State
-    const [searchQuery, setSearchQuery] = useState('');
+    const [searchQuery, setSearchQuery] = useState(new URLSearchParams(location.search).get('search') || '');
+    
+    useEffect(() => {
+        const query = new URLSearchParams(location.search).get('search');
+        if (query !== null) {
+            setSearchQuery(query);
+        }
+    }, [location.search]);
     const [activeFilters, setActiveFilters] = useState({
         deadline: '',
         company: location.state?.companyFilter || ''

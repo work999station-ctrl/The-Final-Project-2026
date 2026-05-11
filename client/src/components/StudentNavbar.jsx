@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Logo from './Logo';
 import ThemeToggle from './ThemeToggle';
+import LanguageSwitcher from './LanguageSwitcher';
 
 const StudentNavbar = ({ student: studentProp }) => {
     const navigate = useNavigate();
@@ -113,6 +114,7 @@ const StudentNavbar = ({ student: studentProp }) => {
                         />
                     </div>
 
+                    <LanguageSwitcher compact />
                     <ThemeToggle />
 
                     {/* Notification bell + dropdown */}

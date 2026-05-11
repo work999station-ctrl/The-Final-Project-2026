@@ -1,9 +1,10 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
-import Logo from '../components/Logo';
+import logoImage from '../assets/logo.png';
 import Footer from '../components/Footer';
 import { useLang } from '../contexts/LanguageContext';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 
 // ─── Scroll progress bar ──────────────────────────────────────────────────────
 const ScrollProgress = () => {
@@ -250,7 +251,9 @@ const Home = () => {
                     : 'bg-transparent'
             }`}>
                 <div className="max-w-7xl mx-auto flex items-center justify-between px-6 h-16">
-                    <Logo size={36} onClick={() => navigate('/')} />
+                    <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
+                        <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain dark:brightness-0 dark:invert dark:sepia dark:saturate-[10] dark:hue-rotate-[350deg] mix-blend-multiply dark:mix-blend-screen" />
+                    </div>
 
                     <nav className="hidden md:flex items-center gap-1">
                         {NAV_LINKS.map(l => (
@@ -290,6 +293,8 @@ const Home = () => {
                                 </>
                             )
                         )}
+                        <div className="hidden sm:block border-l border-slate-200 dark:border-white/10 h-6 mx-1"></div>
+                        <LanguageSwitcher compact={true} />
                         <button
                             className="md:hidden p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 transition-colors"
                             onClick={() => setMobileOpen(v => !v)}

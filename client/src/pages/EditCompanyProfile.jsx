@@ -70,6 +70,8 @@ const EditCompanyProfile = () => {
             reader.onloadend = () => setLogoPreview(reader.result);
             reader.readAsDataURL(file);
         }
+        // Reset so re-selecting the same file still triggers onChange
+        e.target.value = '';
     };
 
     const handleSave = async () => {
@@ -143,7 +145,7 @@ const EditCompanyProfile = () => {
                                             <div className="relative group overflow-hidden">
                                                 <div className="bg-primary/5 dark:bg-primary/10 bg-center overflow-hidden bg-no-repeat aspect-square bg-cover rounded-2xl size-32 flex items-center justify-center border-2 border-dashed border-slate-300 dark:border-slate-700">
                                                     {logoPreview ? (
-                                                        <img src={logoPreview} alt="Company Logo" className="w-full h-full object-cover" />
+                                                        <img src={logoPreview} alt="Company Logo" className="w-full h-full object-cover" onError={() => setLogoPreview(null)} />
                                                     ) : (
                                                         <span className="material-symbols-outlined text-4xl text-slate-400">corporate_fare</span>
                                                     )}

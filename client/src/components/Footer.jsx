@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Logo from './Logo';
+import logoImage from '../assets/logo.png';
 import AlgeriaFlag from './AlgeriaFlag';
 import { useLang } from '../contexts/LanguageContext';
 
@@ -15,38 +15,45 @@ import { useLang } from '../contexts/LanguageContext';
 // - Language switcher
 // ═══════════════════════════════════════════════════════════════════
 
-const buildColumns = (t) => [
-    {
-        title: t('footer.columns.platform'),
-        icon: 'rocket_launch',
-        links: [
-            { label: t('footer.links.forStudents'),     to: '/students' },
-            { label: t('footer.links.forCompanies'),    to: '/companies' },
-            { label: t('footer.links.forUniversities'), to: '/universities' },
-            { label: t('footer.links.browseOffers'),    to: '/opportunities' },
-        ],
-    },
-    {
-        title: t('footer.columns.company'),
-        icon: 'business_center',
-        links: [
-            { label: t('footer.links.aboutUs'), to: '/about-us' },
-            { label: t('footer.links.careers'), to: '/careers', badge: t('footer.hiring') },
-            { label: t('footer.links.blog'),    to: '/blog' },
-            { label: t('footer.links.contact'), to: '/contact-us' },
-        ],
-    },
-    {
-        title: t('footer.columns.legal'),
-        icon: 'gavel',
-        links: [
-            { label: t('footer.links.privacy'),  to: '/privacy-policy' },
-            { label: t('footer.links.terms'),    to: '/terms-of-service' },
-            { label: t('footer.links.cookies'),  to: '/cookie-policy' },
-            { label: t('footer.links.security'), to: '/privacy-policy' },
-        ],
-    },
-];
+const buildColumns = (t, userRole) => {
+    let browseOffersLink = '/login';
+    if (userRole === 'student') browseOffersLink = '/opportunities';
+    else if (userRole === 'company') browseOffersLink = '/create-offer';
+    else if (userRole === 'admin') browseOffersLink = '/candidate-tracking-admin';
+
+    return [
+        {
+            title: t('footer.columns.platform'),
+            icon: 'rocket_launch',
+            links: [
+                { label: t('footer.links.forStudents'),     to: '/students' },
+                { label: t('footer.links.forCompanies'),    to: '/companies' },
+                { label: t('footer.links.forUniversities'), to: '/universities' },
+                { label: t('footer.links.browseOffers'),    to: browseOffersLink },
+            ],
+        },
+        {
+            title: t('footer.columns.company'),
+            icon: 'business_center',
+            links: [
+                { label: t('footer.links.aboutUs'), to: '/about-us' },
+                { label: t('footer.links.careers'), to: '/careers', badge: t('footer.hiring') },
+                { label: t('footer.links.blog'),    to: '/blog' },
+                { label: t('footer.links.contact'), to: '/contact-us' },
+            ],
+        },
+        {
+            title: t('footer.columns.legal'),
+            icon: 'gavel',
+            links: [
+                { label: t('footer.links.privacy'),  to: '/privacy-policy' },
+                { label: t('footer.links.terms'),    to: '/terms-of-service' },
+                { label: t('footer.links.cookies'),  to: '/cookie-policy' },
+                { label: t('footer.links.security'), to: '/privacy-policy' },
+            ],
+        },
+    ];
+};
 
 const SOCIAL_LINKS = [
     { label: 'Twitter',  icon: 'alternate_email', href: '#', color: 'hover:bg-sky-500' },
@@ -62,7 +69,33 @@ const Footer = ({ showNewsletter = false }) => {
     const [subscribed, setSubscribed] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [showTop, setShowTop] = useState(false);
-    const FOOTER_COLUMNS = buildColumns(t);
+    const [userRole, setUserRole] = useState(null);
+
+    useEffect(() => {
+        const checkAuth = async () => {
+            try {
+                const [studentRes, companyRes, adminRes] = await Promise.all([
+                    fetch('/api/student/me').catch(() => ({ ok: false })),
+                    fetch('/api/company/me').catch(() => ({ ok: false })),
+                    fetch('/api/admin/me').catch(() => ({ ok: false }))
+                ]);
+                
+                if (studentRes.ok) {
+                    const data = await studentRes.json();
+                    setUserRole(data.user?.role || 'student');
+                } else if (companyRes.ok) {
+                    const data = await companyRes.json();
+                    setUserRole(data.user?.role || 'company');
+                } else if (adminRes.ok) {
+                    const data = await adminRes.json();
+                    setUserRole(data.user?.role || 'admin');
+                }
+            } catch (err) { /* ignore */ }
+        };
+        checkAuth();
+    }, []);
+
+    const FOOTER_COLUMNS = buildColumns(t, userRole);
 
     useEffect(() => {
         const fn = () => setShowTop(window.scrollY > 600);
@@ -188,9 +221,9 @@ const Footer = ({ showNewsletter = false }) => {
 
                     {/* Brand column */}
                     <div className="col-span-2 md:col-span-4">
-                        <div className="[&_.logo-wordmark]:!text-white mb-6">
-                            <Logo size={38} />
-                        </div>
+                        <Link to="/" className="block mb-6">
+                            <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain dark:brightness-0 dark:invert dark:sepia dark:saturate-[10] dark:hue-rotate-[350deg] mix-blend-multiply dark:mix-blend-screen" />
+                        </Link>
                         <p className="text-sm leading-relaxed mb-6 max-w-sm text-slate-400">
                             {t('footer.description')}
                         </p>

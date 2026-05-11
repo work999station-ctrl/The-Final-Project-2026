@@ -33,12 +33,12 @@ const Logo = ({ size = 40, showWordmark = true, className = '', onClick }) => {
                 >
                     <defs>
                         <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%"   stopColor="#6366F1">
+                            <stop offset="0%" stopColor="#6366F1">
                                 <animate attributeName="stop-color"
                                     values="#6366F1; #818CF8; #06B6D4; #818CF8; #6366F1"
                                     dur="6s" repeatCount="indefinite" />
                             </stop>
-                            <stop offset="50%"  stopColor="#818CF8">
+                            <stop offset="50%" stopColor="#818CF8">
                                 <animate attributeName="stop-color"
                                     values="#818CF8; #A855F7; #6366F1; #A855F7; #818CF8"
                                     dur="6s" repeatCount="indefinite" />
@@ -51,7 +51,7 @@ const Logo = ({ size = 40, showWordmark = true, className = '', onClick }) => {
                         </linearGradient>
 
                         <linearGradient id="logo-grad-soft" x1="0%" y1="100%" x2="100%" y2="0%">
-                            <stop offset="0%"   stopColor="#6366F1" stopOpacity="0.55" />
+                            <stop offset="0%" stopColor="#6366F1" stopOpacity="0.55" />
                             <stop offset="100%" stopColor="#06B6D4" stopOpacity="0.85" />
                         </linearGradient>
 
