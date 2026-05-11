@@ -1,10 +1,11 @@
 import { useState } from 'react';
+import logoImage from '../assets/logo.png';
 
 /**
- * Modern animated logo for stage.io
- * - Geometric "bridge" mark made of two interlocking rounded shapes
- * - Continuous gradient flow + idle pulse
- * - Hover: mark rotates 180°, dot bounces, wordmark shifts color
+ * Official logo for stage.io
+ * - Uses the real logo.png asset as the mark
+ * - Idle float animation + hover scale
+ * - Dot bounce on wordmark hover
  * - Auto dark-mode support
  */
 const Logo = ({ size = 40, showWordmark = true, className = '', onClick }) => {
@@ -21,94 +22,17 @@ const Logo = ({ size = 40, showWordmark = true, className = '', onClick }) => {
         >
             {/* ── Mark ────────────────────────────────────────────────────────── */}
             <div className="logo-mark-wrap" style={{ width: size, height: size }}>
-                <svg
-                    viewBox="0 0 48 48"
-                    width={size}
-                    height={size}
-                    xmlns="http://www.w3.org/2000/svg"
+                <img
+                    src={logoImage}
+                    alt="stage.io"
                     className="logo-mark"
                     style={{
-                        transform: hovered ? 'rotate(180deg) scale(1.05)' : 'rotate(0deg) scale(1)',
+                        width: size,
+                        height: size,
+                        objectFit: 'contain',
+                        transform: hovered ? 'scale(1.08)' : 'scale(1)',
                     }}
-                >
-                    <defs>
-                        <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stopColor="#6366F1">
-                                <animate attributeName="stop-color"
-                                    values="#6366F1; #818CF8; #06B6D4; #818CF8; #6366F1"
-                                    dur="6s" repeatCount="indefinite" />
-                            </stop>
-                            <stop offset="50%" stopColor="#818CF8">
-                                <animate attributeName="stop-color"
-                                    values="#818CF8; #A855F7; #6366F1; #A855F7; #818CF8"
-                                    dur="6s" repeatCount="indefinite" />
-                            </stop>
-                            <stop offset="100%" stopColor="#06B6D4">
-                                <animate attributeName="stop-color"
-                                    values="#06B6D4; #6366F1; #818CF8; #6366F1; #06B6D4"
-                                    dur="6s" repeatCount="indefinite" />
-                            </stop>
-                        </linearGradient>
-
-                        <linearGradient id="logo-grad-soft" x1="0%" y1="100%" x2="100%" y2="0%">
-                            <stop offset="0%" stopColor="#6366F1" stopOpacity="0.55" />
-                            <stop offset="100%" stopColor="#06B6D4" stopOpacity="0.85" />
-                        </linearGradient>
-
-                        <filter id="logo-glow" x="-50%" y="-50%" width="200%" height="200%">
-                            <feGaussianBlur stdDeviation="2" result="coloredBlur" />
-                            <feMerge>
-                                <feMergeNode in="coloredBlur" />
-                                <feMergeNode in="SourceGraphic" />
-                            </feMerge>
-                        </filter>
-                    </defs>
-
-                    {/* Outer rounded square — main brand color */}
-                    <rect
-                        x="4" y="4" width="40" height="40"
-                        rx="12" ry="12"
-                        fill="url(#logo-grad)"
-                        filter="url(#logo-glow)"
-                    />
-
-                    {/* Inner cut "S/bridge" formed by two arcs */}
-                    {/* Top arc — connecting two pillars */}
-                    <path
-                        d="M 12 20 Q 24 8 36 20"
-                        stroke="white"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        fill="none"
-                        opacity="0.95"
-                    />
-                    {/* Bottom arc */}
-                    <path
-                        d="M 12 28 Q 24 40 36 28"
-                        stroke="white"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        fill="none"
-                        opacity="0.95"
-                    />
-                    {/* Vertical bridge / center pillar */}
-                    <line
-                        x1="24" y1="14" x2="24" y2="34"
-                        stroke="white"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        opacity="0.95"
-                    />
-
-                    {/* Animated orbit dot */}
-                    <circle r="2.2" fill="white" filter="url(#logo-glow)">
-                        <animateMotion
-                            dur="4s"
-                            repeatCount="indefinite"
-                            path="M 24 14 Q 36 24 24 34 Q 12 24 24 14 Z"
-                        />
-                    </circle>
-                </svg>
+                />
             </div>
 
             {/* ── Wordmark ────────────────────────────────────────────────────── */}
