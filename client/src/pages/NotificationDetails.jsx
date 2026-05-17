@@ -100,10 +100,12 @@ const NotificationDetails = () => {
                                     ? 'bg-red-100 text-red-700'
                                     : notification.status === 'validated'
                                         ? 'bg-green-100 text-green-700'
-                                        : 'bg-indigo-100 text-indigo-700'
+                                        : notification.status === 'company_deleted'
+                                            ? 'bg-red-100 text-red-700'
+                                            : 'bg-indigo-100 text-indigo-700'
                                 }`}>
-                                <span className="material-symbols-outlined text-sm mr-1">{notification.status === 'admin_rejected' ? 'block' : 'verified'}</span>
-                                Status: {notification.status === 'admin_rejected' ? 'Rejected by Admin' : notification.status === 'validated' ? 'Validated by Admin' : 'In Progress'}
+                                <span className="material-symbols-outlined text-sm mr-1">{notification.status === 'admin_rejected' || notification.status === 'company_deleted' ? 'block' : 'verified'}</span>
+                                Status: {notification.status === 'admin_rejected' ? 'Rejected by Admin' : notification.status === 'validated' ? 'Validated by Admin' : notification.status === 'company_deleted' ? 'System Notice' : 'In Progress'}
                             </span>
                             <span className="text-slate-200 px-1">|</span>
                             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
@@ -119,7 +121,9 @@ const NotificationDetails = () => {
                             <h1 className="text-4xl font-black text-slate-900 tracking-tight font-headline py-6 leading-tight">
                                 {notification.status === 'admin_rejected'
                                     ? (isStudent ? 'Your Internship Application Was Rejected' : 'Internship Placement Rejected')
-                                    : (isStudent ? 'Your Internship Agreement is Ready' : 'Internship Agreement Ready')
+                                    : notification.status === 'company_deleted'
+                                        ? 'Offer No Longer Available'
+                                        : (isStudent ? 'Your Internship Agreement is Ready' : 'Internship Agreement Ready')
                                 }
                             </h1>
 
@@ -152,6 +156,18 @@ const NotificationDetails = () => {
                                         </p>
                                     </>
                                 )
+                            ) : notification.status === 'company_deleted' ? (
+                                <>
+                                    <p>
+                                        The company <span className="text-slate-900 font-black decoration-red-300 decoration-2 underline underline-offset-4">{notification.deletedCompanyName}</span> has deleted their account from the platform.
+                                    </p>
+                                    <p>
+                                        As a result, the offer for <span className="text-slate-900 font-black decoration-red-300 decoration-2 underline underline-offset-4">{notification.deletedOfferTitle}</span> is no longer available and your application has been automatically closed.
+                                    </p>
+                                    <p>
+                                        We encourage you to explore and apply to other open internship positions available on the platform.
+                                    </p>
+                                </>
                             ) : (
                                 /* Validated content (existing) */
                                 isStudent ? (
@@ -175,7 +191,7 @@ const NotificationDetails = () => {
                         </div>
 
                         {/* Attachment Card — only show for validated */}
-                        {notification.status !== 'admin_rejected' && (
+                        {notification.status === 'validated' && (
                             <div className="mt-6 w-full max-w-2xl">
                                 <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-6 text-center">Generated Documentation</h3>
                                 <div
@@ -215,7 +231,7 @@ const NotificationDetails = () => {
                         )}
 
                         {/* Summary Block — only show for validated */}
-                        {notification.status !== 'admin_rejected' && (
+                        {notification.status === 'validated' && (
                             <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 p-8 bg-slate-50 rounded-3xl border border-slate-100 w-full max-w-2xl">
                                 <div className="text-center">
                                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Internship Period</p>
@@ -236,12 +252,14 @@ const NotificationDetails = () => {
 
                         {/* Footer Actions */}
                         <div className="mt-12 flex flex-wrap gap-4 justify-center">
-                            <button
-                                onClick={() => navigate(`/offer-details/${notification.offerId}`)}
-                                className="px-10 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 font-black text-sm hover:bg-slate-50 transition-all uppercase tracking-wider"
-                            >
-                                View Original Offer
-                            </button>
+                            {notification.status !== 'company_deleted' && (
+                                <button
+                                    onClick={() => navigate(`/offer-details/${notification.offerId}`)}
+                                    className="px-10 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 font-black text-sm hover:bg-slate-50 transition-all uppercase tracking-wider"
+                                >
+                                    View Original Offer
+                                </button>
+                            )}
                             <button
                                 onClick={() => setShowArchiveModal(true)}
                                 className="px-10 py-3 rounded-xl bg-slate-900 text-white font-black text-sm hover:bg-indigo-600 transition-all shadow-lg tracking-wide uppercase"
