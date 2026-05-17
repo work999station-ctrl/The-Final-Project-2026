@@ -8,10 +8,7 @@ const parseCV = async (req, res) => {
             return res.status(400).json({ error: 'No CV file uploaded.' });
         }
 
-        const apiKey = process.env.GROQ_API_KEY;
-        if (!apiKey) {
-            return res.status(500).json({ error: 'GROQ_API_KEY is not configured in the server .env file.' });
-        }
+        let apiKey = process.env.GROQ_API_KEY;
 
         // 1. Read text from the uploaded PDF
         const dataBuffer = fs.readFileSync(req.file.path);
@@ -21,20 +18,24 @@ const parseCV = async (req, res) => {
         // Clean up the uploaded file to save disk space
         try { fs.unlinkSync(req.file.path); } catch (e) { console.error('Could not delete temp file', e); }
 
-        // 2. Setup Groq client
-        const groq = new Groq({ apiKey });
+        let parsedData = null;
 
-        // 3. Send to Groq (using free LLaMA model)
-        const completion = await groq.chat.completions.create({
-            model: 'llama-3.3-70b-versatile',
-            messages: [
-                {
-                    role: 'system',
-                    content: 'You are an expert CV parser. Always respond with only raw JSON, no markdown, no explanation, no code blocks.'
-                },
-                {
-                    role: 'user',
-                    content: `Extract the following information from this CV and return it strictly as a JSON object (no markdown, no extra text, just raw JSON).
+        if (apiKey && apiKey !== 'your_api_key_here') {
+            try {
+                // 2. Setup Groq client
+                const groq = new Groq({ apiKey });
+
+                // 3. Send to Groq (using free LLaMA model)
+                const completion = await groq.chat.completions.create({
+                    model: 'llama-3.3-70b-versatile',
+                    messages: [
+                        {
+                            role: 'system',
+                            content: 'You are an expert CV parser. Always respond with only raw JSON, no markdown, no explanation, no code blocks.'
+                        },
+                        {
+                            role: 'user',
+                            content: `Extract the following information from this CV and return it strictly as a JSON object (no markdown, no extra text, just raw JSON).
 
 Required JSON structure:
 {
@@ -64,18 +65,47 @@ Required JSON structure:
 
 CV Text:
 ${cvText.substring(0, 6000)}`
-                }
-            ],
-            temperature: 0.2,
-            max_tokens: 2048
-        });
+                        }
+                    ],
+                    temperature: 0.2,
+                    max_tokens: 2048
+                });
 
-        let responseText = completion.choices[0]?.message?.content?.trim() || '';
+                let responseText = completion.choices[0]?.message?.content?.trim() || '';
 
-        // Strip markdown code blocks if model wraps response
-        responseText = responseText.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/\s*```$/i, '').trim();
+                // Strip markdown code blocks if model wraps response
+                responseText = responseText.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/\s*```$/i, '').trim();
+                parsedData = JSON.parse(responseText);
 
-        const parsedData = JSON.parse(responseText);
+            } catch (llmErr) {
+                console.error('LLM Parsing error, falling back to regex:', llmErr.message);
+                // Fallback will happen below since parsedData is null
+            }
+        }
+
+        // Fallback Parsing (Regex) if LLM failed or API key missing/invalid
+        if (!parsedData) {
+            const emailMatch = cvText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+            const phoneMatch = cvText.match(/(?:\+?\d{1,3}[\s-]?)?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}/);
+            const githubMatch = cvText.match(/github\.com\/[a-zA-Z0-9_-]+/i);
+            const linkedinMatch = cvText.match(/linkedin\.com\/in\/[a-zA-Z0-9_-]+/i);
+            
+            let portfolio = '';
+            if (githubMatch) portfolio = `https://${githubMatch[0]}`;
+            else if (linkedinMatch) portfolio = `https://${linkedinMatch[0]}`;
+
+            parsedData = {
+                baccalaureate: "",
+                githubPortfolio: portfolio,
+                phoneNumber: phoneMatch ? phoneMatch[0] : "",
+                bio: "Extracted basic info via fallback. Please configure a valid GROQ_API_KEY for advanced AI extraction.",
+                expectedGraduationDate: "",
+                skills: [],
+                academicProjects: [],
+                experience: []
+            };
+        }
+
         res.status(200).json({ success: true, data: parsedData });
 
     } catch (err) {

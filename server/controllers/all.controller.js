@@ -1460,7 +1460,7 @@ const getInboxMessages = async (req, res) => {
     } else if (userType === 'student') {
       // Student receives notifications from admin for validated/rejected agreements
       const [applications, adminUser] = await Promise.all([
-        Application.find({ status: { $in: ['validated', 'admin_rejected'] }, studentId: userId })
+        Application.find({ status: { $in: ['validated', 'admin_rejected', 'company_deleted'] }, studentId: userId })
           .populate({
             path: 'offerId',
             populate: { path: 'companyId', select: 'companyName logo' }
@@ -1469,9 +1469,25 @@ const getInboxMessages = async (req, res) => {
         Admin.findOne().select('profilePicture').lean()
       ]);
 
-      const validApplications = applications.filter(app => app.offerId);
+      const validApplications = applications.filter(app => app.offerId || app.status === 'company_deleted');
 
       messages = validApplications.map(app => {
+        if (app.status === 'company_deleted') {
+          return {
+            id: app._id,
+            appData: app,
+            companyName: 'System Notification',
+            logo: null,
+            logoText: 'S',
+            logoBg: 'bg-red-600 text-white',
+            time: app.statusChangedAt ? moment(app.statusChangedAt).fromNow() : moment(app.updatedAt).fromNow(),
+            title: `Offer Deleted - ${app.deletedOfferTitle || 'Position'}`,
+            snippet: `The internship offer you applied to has been deleted because the company account (${app.deletedCompanyName || 'Unknown'}) was deleted.`,
+            unread: !app.studentRead,
+            active: false
+          };
+        }
+
         const isRejected = app.status === 'admin_rejected';
         return {
           id: app._id,
@@ -1689,6 +1705,55 @@ const getUniversityPlacementStats = async (req, res) => {
   }
 };
 
+const deleteCompanyAccount = async (req, res) => {
+  try {
+    if (req.userType !== 'company') {
+      return res.status(403).json({ error: 'Only companies can perform this action' });
+    }
+
+    const companyId = req.user._id;
+
+    // 1. Get the company name for notification
+    const company = await Company.findById(companyId);
+    if (!company) {
+      return res.status(404).json({ error: 'Company not found' });
+    }
+    const companyName = company.companyName;
+
+    // 2. Find all offers by this company
+    const offers = await Offer.find({ companyId });
+    const offerIds = offers.map(o => o._id);
+
+    // 3. For each application attached to these offers, update status to 'company_deleted'
+    for (const offer of offers) {
+      await Application.updateMany(
+        { offerId: offer._id },
+        {
+          $set: {
+            status: 'company_deleted',
+            deletedCompanyName: companyName,
+            deletedOfferTitle: offer.title,
+            offerId: null, // Remove reference to soon-to-be-deleted offer
+            statusChangedAt: new Date(),
+            studentRead: false
+          }
+        }
+      );
+    }
+
+    // 4. Delete all offers by this company
+    await Offer.deleteMany({ companyId });
+
+    // 5. Delete the company
+    await Company.findByIdAndDelete(companyId);
+
+    res.status(200).json({ success: true, message: 'Company account deleted successfully' });
+  } catch (err) {
+    console.error("Error deleting company account:", err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 module.exports = {
-  studentSignup_get, studentSignup_post, studentDashboard_get, studentProfile_update, logout_get, login_post, login_get, companySignup_post, companySignup_get, companyProfile_update, adminSignup_post, adminProfile_update, createOffer, getAllOffers, getCompanyOffers, updateOffer, deleteOffer, getOfferById, createApplication, getCompanyApplications, getStudentProfileForRecruiter, getApplicationsByOfferId, updateApplicationStatus, getAdminApplicationsToValidate, getAdminAllApplications, getAdminCompanyProfile, getAdminApplicationById, getCompanyApplicationById, addApplicationFeedback, validateApplicationAdmin, rejectApplicationAdmin, getStudentApplications, deleteApplication, getCompanyDashboardStats, getInboxMessages, markMessageAsRead, getNotificationDetails, getUniversityPlacementStats
+  studentSignup_get, studentSignup_post, studentDashboard_get, studentProfile_update, logout_get, login_post, login_get, companySignup_post, companySignup_get, companyProfile_update, adminSignup_post, adminProfile_update, createOffer, getAllOffers, getCompanyOffers, updateOffer, deleteOffer, getOfferById, createApplication, getCompanyApplications, getStudentProfileForRecruiter, getApplicationsByOfferId, updateApplicationStatus, getAdminApplicationsToValidate, getAdminAllApplications, getAdminCompanyProfile, getAdminApplicationById, getCompanyApplicationById, addApplicationFeedback, validateApplicationAdmin, rejectApplicationAdmin, getStudentApplications, deleteApplication, getCompanyDashboardStats, getInboxMessages, markMessageAsRead, getNotificationDetails, getUniversityPlacementStats, deleteCompanyAccount
 };
