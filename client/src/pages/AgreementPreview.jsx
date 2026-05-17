@@ -124,9 +124,7 @@ const AgreementPreview = () => {
                                 {/* Header of Doc */}
                                 <div className="flex justify-between items-start border-b-2 border-slate-900 pb-6 mb-8">
                                     <div className="flex items-center gap-3">
-                                        <div className="h-12 w-12 bg-slate-900 text-white flex items-center justify-center font-['Space_Grotesk'] font-bold text-2xl rounded">
-                                            {data.universityName?.charAt(0) || 'U'}
-                                        </div>
+                                        <img src={logo} alt="University Logo" className="h-16 w-16 object-contain rounded filter grayscale" />
                                         <div>
                                             <h2 className="font-['Space_Grotesk'] font-bold text-xl uppercase tracking-tight text-slate-900">{data.universityName}</h2>
                                             <p className="font-mono text-xs text-slate-500">Department of {data.studentDept || 'Technology'}</p>
@@ -171,43 +169,14 @@ const AgreementPreview = () => {
                                         <h4 className="font-bold uppercase text-xs tracking-wider border-b border-slate-200 pb-1 mb-3 text-slate-500">Article 3: Insurance & Liability</h4>
                                         <p>During the internship, the Student remains affiliated with the University for social security purposes. Civil liability is covered under Policy Number <strong className="bg-amber-50 px-1 font-mono text-xs">UNIV-INS-2026-8892</strong>.</p>
                                     </div>
-                                </div>
-
-                                {/* Signatures */}
-                                <div className="mt-10 grid grid-cols-3 gap-6 sm:gap-8 pt-6 border-t border-slate-200 print:mt-4 print:pt-4">
-                                    <div>
-                                        <p className="text-[10px] sm:text-xs font-bold uppercase mb-4">The Student</p>
-                                        <div className="h-16 border-b border-dashed border-slate-300 relative flex items-end pb-1">
-                                            <span style={{ fontFamily: '"Dancing Script", cursive' }} className="text-xl sm:text-2xl text-blue-800 opacity-90 select-none">{data.studentName}</span>
-                                        </div>
-                                        <p className="text-[9px] sm:text-[10px] text-slate-400 mt-1 italic">Electronically Signed</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-[10px] sm:text-xs font-bold uppercase mb-4">Host Organization</p>
-                                        <div className="h-16 border-b border-dashed border-slate-300 relative flex items-end pb-1">
-                                            <span style={{ fontFamily: '"Dancing Script", cursive' }} className="text-xl sm:text-2xl text-blue-800 opacity-90 select-none">Approved</span>
-                                            {/* Stamp simulation */}
-                                            <div className="absolute -top-6 -right-2 w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-blue-800/20 flex items-center justify-center -rotate-12 opacity-40 pointer-events-none">
-                                                <span className="text-[6px] sm:text-[8px] font-bold text-blue-900 uppercase text-center leading-tight">Corporate<br />Validated<br />HR Dept</span>
-                                            </div>
-                                        </div>
-                                        <p className="text-[9px] sm:text-[10px] text-slate-400 mt-1 italic">Verified Signature</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-[10px] sm:text-xs font-bold uppercase mb-4">University Admin</p>
-                                        <div className="h-16 border-b border-dashed border-slate-300 relative flex items-end pb-1">
-                                            <span style={{ fontFamily: '"Dancing Script", cursive' }} className="text-xl sm:text-2xl text-blue-800 opacity-90 select-none">Registrar</span>
-                                            {/* University Stamp simulation */}
-                                            <div className="absolute -top-6 -right-2 w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-blue-800/20 flex items-center justify-center rotate-12 opacity-40 pointer-events-none">
-                                                <span className="text-[6px] sm:text-[8px] font-bold text-blue-900 uppercase text-center leading-tight">UNIVERSITY<br />CERTIFIED</span>
-                                            </div>
-                                        </div>
-                                        <p className="text-[9px] sm:text-[10px] text-slate-400 mt-1 italic">Verified University Admin</p>
+                                    <div className="mt-6">
+                                        <h4 className="font-bold uppercase text-xs tracking-wider border-b border-slate-200 pb-1 mb-3 text-slate-500">Article 8: Official Digital Documents & Legal Validity</h4>
+                                        <p className="text-sm">This document is digitally issued and legally binding under Ministry of Higher Education standards.<br />Authenticity is verified via the unique QR code, superseding physical signatures and stamps.</p>
                                     </div>
                                 </div>
 
                                 {/* QR Code Section */}
-                                <div className="mt-8 pt-6 border-t border-slate-200 flex items-center justify-between gap-6">
+                                <div className="mt-8 pt-6 border-t border-slate-200 flex items-center justify-between gap-6 print:mt-4 print:pt-4">
                                     <div className="flex-1">
                                         <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Document Authenticity</p>
                                         <p className="text-xs text-slate-500 leading-relaxed">

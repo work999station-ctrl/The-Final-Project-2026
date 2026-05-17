@@ -123,11 +123,39 @@ const CompanyDashboard = () => {
     const handleLogoUpload = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
+
+        // Show local preview immediately
         const reader = new FileReader();
         reader.onloadend = () => {
             setCompany(prev => ({ ...prev, logo: reader.result }));
         };
         reader.readAsDataURL(file);
+
+        // Upload to server
+        const formData = new FormData();
+        formData.append('logo', file);
+
+        try {
+            const res = await fetch('/api/company/profile', {
+                method: 'PUT',
+                body: formData
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                // Update with server path and current timestamp for cache busting
+                setCompany(prev => ({ 
+                    ...prev, 
+                    logo: `${data.company.logo}?t=${Date.now()}` 
+                }));
+            } else {
+                console.error('Failed to upload logo');
+                alert('Failed to upload logo. Please try again.');
+            }
+        } catch (err) {
+            console.error('Error uploading logo:', err);
+            alert('An error occurred during logo upload.');
+        }
     };
 
     if (isLoading) {
@@ -162,7 +190,7 @@ const CompanyDashboard = () => {
                             <div className="p-8 text-center border-b border-slate-100 dark:border-slate-800 dark:border-slate-800">
                                 <label className="relative cursor-pointer group flex mx-auto h-24 w-24 rounded-2xl bg-primary/10 border-2 border-primary/20 items-center justify-center overflow-hidden mb-4 transition-transform hover:scale-105">
                                     {company.logo ? (
-                                        <img src={company.logo} alt="Company logo" className="w-full h-full object-cover" />
+                                        <img src={`${company.logo}${company.logo.includes('?') ? '' : `?t=${Date.now()}`}`} alt="Company logo" className="w-full h-full object-cover" />
                                     ) : (
                                         <span className="material-symbols-outlined text-5xl text-primary">corporate_fare</span>
                                     )}
@@ -326,7 +354,7 @@ const CompanyDashboard = () => {
                                                     <div className="flex items-center gap-6">
                                                         <div className="h-16 w-16 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 flex flex-shrink-0 items-center justify-center text-primary overflow-hidden">
                                                             {company.logo ? (
-                                                                <img src={company.logo} alt="logo" className="w-full h-full object-cover" />
+                                                                <img src={`${company.logo}${company.logo.includes('?') ? '' : `?t=${Date.now()}`}`} alt="logo" className="w-full h-full object-cover" />
                                                             ) : (
                                                                 <span className="material-symbols-outlined text-3xl">terminal</span>
                                                             )}

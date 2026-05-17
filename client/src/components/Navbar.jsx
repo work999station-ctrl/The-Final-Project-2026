@@ -2,8 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import logoImage from '../assets/logo.png';
 import ThemeToggle from './ThemeToggle';
+import LanguageSwitcher from './LanguageSwitcher';
+import { useLang } from '../contexts/LanguageContext';
 
 const Navbar = ({ userProfile }) => {
+    const { t } = useLang();
     const navigate = useNavigate();
     const location = useLocation();
     const [user, setUser] = useState(userProfile || null);
@@ -107,26 +110,26 @@ const Navbar = ({ userProfile }) => {
                                         onClick={() => navigate('/company-dashboard')}
                                         className={`text-sm font-medium transition-colors hover:text-[#4F46E5] ${isActive('/company-dashboard') ? 'text-[#4F46E5] font-semibold' : 'text-slate-600 dark:text-slate-400'}`}
                                     >
-                                        Dashboard
+                                        {t('nav2.dashboard')}
                                     </button>
                                     <button
                                         onClick={() => navigate('/internship-offers')}
                                         className={`text-sm font-medium transition-colors hover:text-[#4F46E5] ${isActive('/internship-offers', '/create-offer') ? 'text-[#4F46E5] font-semibold' : 'text-slate-600 dark:text-slate-400'}`}
                                     >
-                                        My Offers
+                                        {t('nav2.myOffers')}
                                     </button>
                                     <button
                                         onClick={() => navigate('/candidate-tracking')}
                                         className={`text-sm font-medium transition-colors hover:text-[#4F46E5] ${isActive('/candidate-tracking') ? 'text-[#4F46E5] font-semibold' : 'text-slate-600 dark:text-slate-400'}`}
                                     >
-                                        Candidates
+                                        {t('nav2.candidates')}
                                     </button>
                                     <button
                                         onClick={() => navigate('/company-inbox')}
                                         className={`text-sm font-medium transition-colors hover:text-[#4F46E5] flex items-center gap-1.5 ${isActive('/company-inbox') ? 'text-[#4F46E5] font-semibold' : 'text-slate-600 dark:text-slate-400'}`}
                                     >
                                         <span className="material-symbols-outlined text-[16px]">mail</span>
-                                        Inbox
+                                        {t('nav2.inbox')}
                                     </button>
                                 </>
                             ) : (
@@ -136,29 +139,29 @@ const Navbar = ({ userProfile }) => {
                                         onClick={handleDashboardClick}
                                         className={`text-sm font-medium transition-colors hover:text-[#4F46E5] ${isActive('/student-dashboard', '/admin-dashboard') ? 'text-[#4F46E5] font-semibold' : 'text-slate-600 dark:text-slate-400'}`}
                                     >
-                                        Dashboard
+                                        {t('nav2.dashboard')}
                                     </button>
                                     <button
                                         onClick={() => navigate('/opportunities')}
                                         className={`text-sm font-medium transition-colors hover:text-[#4F46E5] ${isActive('/opportunities') ? 'text-[#4F46E5] font-semibold' : 'text-slate-600 dark:text-slate-400'}`}
                                     >
-                                        Offer Discovery
+                                        {t('nav2.offerDiscovery')}
                                     </button>
                                     <button
                                         onClick={() => navigate('/student-inbox')}
                                         className={`text-sm font-medium transition-colors hover:text-[#4F46E5] flex items-center gap-1.5 ${isActive('/student-inbox') ? 'text-[#4F46E5] font-semibold' : 'text-slate-600 dark:text-slate-400'}`}
                                     >
                                         <span className="material-symbols-outlined text-[16px]">mail</span>
-                                        Messages
+                                        {t('nav2.messages')}
                                     </button>
                                 </>
                             )
                         ) : (
                             /* ── Logged-out ── */
                             <>
-                                <Link className="text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-[#4F46E5] transition-colors" to="/students">Students</Link>
-                                <Link className="text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-[#4F46E5] transition-colors" to="/companies">Companies</Link>
-                                <Link className="text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-[#4F46E5] transition-colors" to="/universities">Universities</Link>
+                                <Link className="text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-[#4F46E5] transition-colors" to="/students">{t('nav.students')}</Link>
+                                <Link className="text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-[#4F46E5] transition-colors" to="/companies">{t('nav.companies')}</Link>
+                                <Link className="text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-[#4F46E5] transition-colors" to="/universities">{t('nav.universities')}</Link>
                             </>
                         )}
                     </nav>
@@ -188,7 +191,7 @@ const Navbar = ({ userProfile }) => {
                                         {showNotifications && (
                                             <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2">
                                                 <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 flex justify-between items-center">
-                                                    <span className="text-xs font-bold uppercase tracking-widest text-slate-400">Notifications</span>
+                                                    <span className="text-xs font-bold uppercase tracking-widest text-slate-400">{t('nav2.notifications')}</span>
                                                 </div>
                                                 <div className="max-h-72 overflow-y-auto">
                                                     {messages.length > 0 ? (
@@ -218,7 +221,7 @@ const Navbar = ({ userProfile }) => {
                                                         ))
                                                     ) : (
                                                         <div className="px-4 py-6 text-center text-slate-500 text-sm font-medium">
-                                                            No new notifications
+                                                            {t('nav2.noNotifications')}
                                                         </div>
                                                     )}
                                                 </div>
@@ -233,7 +236,7 @@ const Navbar = ({ userProfile }) => {
                                                         }}
                                                         className="w-full text-center px-4 py-3 text-sm font-bold text-primary hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
                                                     >
-                                                        View All
+                                                        {t('nav2.viewAll')}
                                                     </button>
                                                 </div>
                                             </div>
@@ -259,6 +262,7 @@ const Navbar = ({ userProfile }) => {
                             ) : (
                                 <>
                                     {/* Theme Toggle */}
+                                    <LanguageSwitcher compact />
                                     <ThemeToggle />
 
                                     <button
