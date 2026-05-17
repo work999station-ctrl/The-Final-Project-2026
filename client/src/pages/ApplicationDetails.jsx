@@ -137,6 +137,7 @@ const ApplicationDetails = () => {
         phone: fetchedApp.studentId?.phoneNumber || "No phone provided",
         university: fetchedApp.studentId?.university || "No university provided",
         bio: fetchedApp.studentId?.bio || "No cover letter or bio provided.",
+        cvUrl: fetchedApp.studentId?.cvUrl || null,
         experience: fetchedApp.studentId?.experience || [],
         education: {
              degreeName: fetchedApp.studentId?.degreeName || "Unknown Degree",
@@ -159,6 +160,7 @@ const ApplicationDetails = () => {
         phone: "...",
         university: "...",
         bio: "...",
+        cvUrl: null,
         experience: [],
         education: {},
         timeline: {},
@@ -175,6 +177,13 @@ const ApplicationDetails = () => {
     ];
 
     const handleDownloadDocument = (fileName) => {
+        if (fileName === 'Resume.pdf' && appData.cvUrl) {
+            // The backend serves public files directly from root URL or the configured path
+            // e.g. "/uploads/student/1234.pdf". The proxy handles it.
+            window.open(appData.cvUrl, '_blank');
+            return;
+        }
+
         // Create a dummy file download since files aren't stored on the server
         const blob = new Blob([`This is a placeholder for ${fileName}. Actual files are not currently stored by the system.`], { type: 'text/plain' });
         const url = window.URL.createObjectURL(blob);
@@ -368,13 +377,15 @@ const ApplicationDetails = () => {
                                             Documents & Attachments
                                         </h3>
                                         <div className="flex flex-col gap-4">
-                                            <div onClick={() => handleDownloadDocument('Resume.txt')} className="border border-slate-200 dark:border-slate-700 p-4 rounded-xl flex items-center gap-4 cursor-pointer hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800 transition-colors">
+                                            <div onClick={() => handleDownloadDocument('Resume.pdf')} className="border border-slate-200 dark:border-slate-700 p-4 rounded-xl flex items-center gap-4 cursor-pointer hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800 transition-colors">
                                                 <span className="material-symbols-outlined text-red-500 text-3xl">picture_as_pdf</span>
                                                 <div className="flex-1">
                                                     <p className="font-bold text-sm text-slate-800 dark:text-slate-100 dark:text-slate-200">Resume.pdf</p>
-                                                    <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500">Document generated from profile info</p>
+                                                    <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500">
+                                                        {appData.cvUrl ? 'Uploaded CV document' : 'Document generated from profile info'}
+                                                    </p>
                                                 </div>
-                                                <button onClick={(e) => { e.stopPropagation(); handleDownloadDocument('Resume.txt'); }} className="material-symbols-outlined text-slate-400 dark:text-slate-500 hover:text-primary transition-colors">download</button>
+                                                <button onClick={(e) => { e.stopPropagation(); handleDownloadDocument('Resume.pdf'); }} className="material-symbols-outlined text-slate-400 dark:text-slate-500 hover:text-primary transition-colors">download</button>
                                             </div>
                                             <div onClick={() => handleDownloadDocument('Portfolio_Final.zip')} className="border border-slate-200 dark:border-slate-700 p-4 rounded-xl flex items-center gap-4 cursor-pointer hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800 transition-colors">
                                                 <span className="material-symbols-outlined text-indigo-500 text-3xl">folder_zip</span>

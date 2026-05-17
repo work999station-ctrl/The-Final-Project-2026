@@ -94,9 +94,15 @@ const studentProfile_update = async (req, res) => {
       }
     });
 
-    // If a file was uploaded, add its path to updateData
-    if (req.file) {
-      // Store the web-accessible path (e.g., /uploads/student/filename.jpg)
+    // If files were uploaded, add their paths to updateData
+    if (req.files) {
+      if (req.files.profile_picture) {
+        updateData.profilePicture = `/uploads/student/${req.files.profile_picture[0].filename}`;
+      }
+      if (req.files.cv) {
+        updateData.cvUrl = `/uploads/student/${req.files.cv[0].filename}`;
+      }
+    } else if (req.file) {
       updateData.profilePicture = `/uploads/student/${req.file.filename}`;
     }
 

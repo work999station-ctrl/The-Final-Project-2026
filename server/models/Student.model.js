@@ -57,6 +57,7 @@ const studentSchema = mongoose.Schema({
         default: []
     },
     degreeName: { type: String, default: '' },
+    cvUrl: { type: String, default: '' },
 
     expectedGraduationDate: { type: String, default: '' },
     technicalSkills: {
