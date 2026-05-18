@@ -53,7 +53,7 @@ router.get('/api/student/me', requireAuthAPI, (req, res) => {
     }
 });
 
-router.put('/api/student/profile', requireAuthAPI, upload.single('profile_picture'), studentProfile_update);
+router.put('/api/student/profile', requireAuthAPI, upload.fields([{ name: 'profile_picture', maxCount: 1 }, { name: 'cv', maxCount: 1 }]), studentProfile_update);
 router.post('/api/student/parse-cv', requireAuthAPI, upload.single('cv'), parseCV);
 router.get('/api/student/applications', requireAuthAPI, getStudentApplications);
 
