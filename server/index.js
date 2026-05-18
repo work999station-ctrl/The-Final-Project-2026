@@ -17,9 +17,10 @@ app.use(checkUser);
 
 
 
+const http = require('http');
+const socketManager = require('./socket');
+
 // load .env
-
-
 
 // Bypass Windows/ISP DNS issues with MongoDB Atlas SRV/TXT lookups
 require('dns').setServers(['8.8.8.8', '8.8.4.4']);
@@ -27,9 +28,6 @@ require('dns').setServers(['8.8.8.8', '8.8.4.4']);
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("Connected"))
   .catch(err => console.log(err));
-
-
-
 
 app.get('/', (req, res) => res.json({ message: "Server is running", status: "API only" }));
 app.use(allRoutes);
@@ -55,7 +53,10 @@ app.use((err, req, res, next) => {
   });
 });
 
+const server = http.createServer(app);
+socketManager.init(server);
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT}`);
 });

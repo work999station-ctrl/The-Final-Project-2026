@@ -2,6 +2,7 @@
 import { useNavigate, Link } from 'react-router-dom';
 import { useLang } from '../contexts/LanguageContext';
 import CompanyNavbar from '../components/CompanyNavbar';
+import CompanyDeleteAlert from '../components/CompanyDeleteAlert';
 
 const EditCompanyProfile = () => {
     const navigate = useNavigate();
@@ -21,6 +22,7 @@ const EditCompanyProfile = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [error, setError] = useState('');
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchCompanyProfile = async () => {
@@ -104,6 +106,29 @@ const EditCompanyProfile = () => {
             setError(t('editProfile.errorConnSave'));
         } finally {
             setIsSaving(false);
+        }
+    };
+
+    const handleDeleteConfirm = async () => {
+        try {
+            const res = await fetch('/api/company', {
+                method: 'DELETE'
+            });
+
+            if (res.ok) {
+                // Account deleted, clear cookie/storage and redirect
+                // Usually logout clears cookie
+                await fetch('/api/logout', { method: 'POST' });
+                navigate('/');
+            } else {
+                const data = await res.json();
+                setError(data.error || 'Failed to delete account.');
+                setIsDeleteModalOpen(false);
+            }
+        } catch (err) {
+            console.error('Delete error:', err);
+            setError('Connection error deleting account.');
+            setIsDeleteModalOpen(false);
         }
     };
 
@@ -317,10 +342,30 @@ const EditCompanyProfile = () => {
                                 </div>
                             </div>
 
+                            {/* Danger Zone */}
+                            <div className="mt-8 p-6 bg-white dark:bg-slate-900 border border-red-200 dark:border-red-900/50 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+                                <div>
+                                    <h4 className="font-header text-red-600 dark:text-red-400 font-bold">Danger Zone</h4>
+                                    <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">Permanently delete your company account and all associated internship offers.</p>
+                                </div>
+                                <button
+                                    onClick={() => setIsDeleteModalOpen(true)}
+                                    className="px-6 h-11 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/50 rounded-full font-semibold hover:bg-red-100 dark:hover:bg-red-900/40 transition-all text-sm whitespace-nowrap"
+                                >
+                                    Delete Account
+                                </button>
+                            </div>
+
                         </div>
                     </main>
                 </div>
             </div>
+
+            <CompanyDeleteAlert
+                isOpen={isDeleteModalOpen}
+                onConfirm={handleDeleteConfirm}
+                onCancel={() => setIsDeleteModalOpen(false)}
+            />
         </div>
     );
 };
