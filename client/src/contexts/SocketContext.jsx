@@ -12,8 +12,9 @@ export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    // Connect through the Vite proxy (or same origin in production)
-    const s = io('/', {
+    // Connect to the backend URL from env vars (for production) or proxy/same-origin (dev)
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || '/';
+    const s = io(backendUrl, {
       withCredentials: true
     });
 
