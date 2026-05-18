@@ -74,7 +74,14 @@ const ApplicationDetails = () => {
                 const data = await res.json();
                 if (data.success) {
                     setFeedbackText('');
-                    setFetchedApp(data.application);
+                    setFetchedApp(prev => ({
+                        ...prev,
+                        ...data.application,
+                        studentId: {
+                            ...(prev?.studentId || {}),
+                            ...(data.application?.studentId || {})
+                        }
+                    }));
                 }
             } else {
                 alert('Failed to send feedback.');
