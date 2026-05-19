@@ -98,11 +98,8 @@ const CompanyProfileStudentView = () => {
 
                                 {/* Action Row */}
                                 <div className="flex flex-wrap justify-center gap-3 mt-8">
-                                    <button className="bg-indigo-600 text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-200 flex items-center gap-2">
-                                        <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>mail</span>
-                                        Contact Company
-                                    </button>
-                                    <button className="bg-white border border-slate-200 text-slate-700 px-6 py-2.5 rounded-lg font-semibold hover:bg-slate-50 transition-colors flex items-center gap-2">
+
+                                    <button onClick={() => document.getElementById('recent-offers').scrollIntoView({ behavior: 'smooth' })} className="bg-white border border-slate-200 text-slate-700 px-6 py-2.5 rounded-lg font-semibold hover:bg-slate-50 transition-colors flex items-center gap-2">
                                         <span className="material-symbols-outlined text-sm">visibility</span>
                                         View Active Offers
                                     </button>
@@ -229,14 +226,14 @@ const CompanyProfileStudentView = () => {
                     </div> */}
 
                     {/* Recent Internship Postings Section */}
-                    <section className="space-y-4">
+                    <section id="recent-offers" className="space-y-4">
                         <div className="flex items-center justify-between">
-                            <h2 className="text-2xl font-bold text-slate-900">Recent Internship Postings {company.recentPostings.length}</h2>
-                            <button className="text-indigo-600 text-sm font-bold">View Archive</button>
+                            <h2 className="text-2xl font-bold text-slate-900">Recent Internship Postings ({company.recentPostings.length})</h2>
+                            <button onClick={() => navigate('/opportunities')} className="text-indigo-600 hover:text-indigo-700 transition-colors text-sm font-bold">View Archive</button>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {company.recentPostings.map((posting) => (
-                                <div key={posting.id} className="bg-white p-5 rounded-xl border border-slate-100 shadow-sm flex items-center justify-between hover:border-indigo-200 hover:bg-indigo-50/10 transition-all cursor-pointer group">
+                                <div key={posting._id} onClick={() => navigate(`/offer-details/${posting._id}`)} className="bg-white p-5 rounded-xl border border-slate-100 shadow-sm flex items-center justify-between hover:border-indigo-200 hover:bg-indigo-50/10 transition-all cursor-pointer group">
                                     <div className="flex items-center gap-4">
                                         <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${posting.iconColor}`}>
                                             <span className="material-symbols-outlined">{posting.icon}</span>

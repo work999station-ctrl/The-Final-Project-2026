@@ -62,6 +62,10 @@ const OfferSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    photo: {
+        type: String,
+        default: ''
+    },
 
     // 4. Status & Tracking
     status: {
