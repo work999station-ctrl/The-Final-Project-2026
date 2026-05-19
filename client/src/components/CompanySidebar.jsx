@@ -25,12 +25,12 @@ const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
     };
 
     const navItems = [
-        { page: 'overview', icon: 'business', label: t('sidebar.company.dashboard'), href: '/company-dashboard' },
-        { page: 'offers', icon: 'work', label: t('sidebar.company.myOffers'), href: '/company-offers' },
-        { page: 'applications', icon: 'groups', label: t('sidebar.company.applications'), href: '/candidate-tracking-statistics' },
-        { page: 'create-offer', icon: 'add_box', label: t('sidebar.company.createOffer'), href: '/create-offer' },
-        { page: 'messages', icon: 'chat', label: t('sidebar.company.messages'), href: '/company-direct-messages' },
-        { page: 'inbox', icon: 'inbox', label: t('sidebar.company.inbox'), href: '/company-inbox' },
+        { page: 'overview', icon: 'business', label: t('companySidebar.dashboard'), href: '/company-dashboard' },
+        { page: 'offers', icon: 'work', label: t('companySidebar.myOffers'), href: '/company-offers' },
+        { page: 'applications', icon: 'groups', label: t('companySidebar.applications'), href: '/candidate-tracking-statistics' },
+        { page: 'create-offer', icon: 'add_box', label: t('companySidebar.createOffer'), href: '/create-offer' },
+        { page: 'messages', icon: 'chat', label: t('companySidebar.messages'), href: '/company-direct-messages' },
+        { page: 'inbox', icon: 'inbox', label: t('companySidebar.inbox'), href: '/company-inbox' },
     ];
 
     return (
@@ -56,7 +56,7 @@ const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
                     </div>
                     <div className={`overflow-hidden whitespace-nowrap transition-all duration-300 ${isCollapsed ? 'w-0 opacity-0' : 'opacity-100'}`}>
                         <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100 leading-tight truncate">{company?.companyName || '—'}</h2>
-                        <p className="text-xs text-slate-500 truncate">{t('sidebar.company.portal')}</p>
+                        <p className="text-xs text-slate-500 truncate">{t('companySidebar.recruiterDashboard')}</p>
                     </div>
                 </div>
 
@@ -81,7 +81,7 @@ const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
                     >
                         <span className="material-symbols-outlined text-lg shrink-0">edit</span>
                         <span className={`overflow-hidden whitespace-nowrap transition-all duration-300 ${isCollapsed ? 'w-0 opacity-0' : 'opacity-100'}`}>
-                            {t('sidebar.company.editProfile')}
+                            {t('companySidebar.editProfile')}
                         </span>
                     </button>
                     <button
@@ -94,7 +94,7 @@ const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
                     >
                         <span className="material-symbols-outlined text-lg shrink-0">logout</span>
                         <span className={`overflow-hidden whitespace-nowrap transition-all duration-300 ${isCollapsed ? 'w-0 opacity-0' : 'opacity-100'}`}>
-                            {t('sidebar.company.logout')}
+                            {t('companySidebar.logout')}
                         </span>
                     </button>
                 </div>
@@ -103,7 +103,7 @@ const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
             {/* Toggle Button — fixed, tracks the right edge of the sidebar */}
             <button
                 onClick={() => setIsCollapsed(prev => !prev)}
-                title={isCollapsed ? t('sidebar.company.expandSidebar') : t('sidebar.company.collapseSidebar')}
+                title={isCollapsed ? t('companySidebar.expandSidebar') : t('companySidebar.collapseSidebar')}
                 className="fixed top-20 z-[60] w-6 h-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full hidden md:flex items-center justify-center shadow-md hover:shadow-lg hover:scale-110 transition-all text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400"
                 style={{ left: `calc(${sidebarWidth} - 12px)`, transition: 'left 300ms ease-in-out' }}
             >

@@ -1,9 +1,11 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useLang } from '../contexts/LanguageContext';
 import logoImage from '../assets/logo.png';
 
 const CompanySignup = () => {
     const navigate = useNavigate();
+    const { t } = useLang();
     const [formData, setFormData] = useState({
         companyName: '',
         email: '',
@@ -67,12 +69,12 @@ const CompanySignup = () => {
                 if (data.email || data.password || data.companyName) {
                     setFieldErrors(data);
                 } else {
-                    setError('An error occurred during signup');
+                    setError(t('companySignup.errorSignup'));
                 }
             }
         } catch (err) {
             console.error('Signup error:', err);
-            setError('Connection error. Please try again later.');
+            setError(t('companySignup.errorConn'));
         } finally {
             setLoading(false);
         }
@@ -88,9 +90,9 @@ const CompanySignup = () => {
                             <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain dark:brightness-0 dark:invert dark:sepia dark:saturate-[10] dark:hue-rotate-[350deg] mix-blend-multiply dark:mix-blend-screen" />
                         </div>
                         <div className="flex items-center gap-4">
-                            <span className="hidden md:block text-slate-500 text-sm">Already have an account?</span>
+                            <span className="hidden md:block text-slate-500 text-sm">{t('companySignup.alreadyHaveAccount')}</span>
                             <button onClick={() => navigate('/login')} className="flex min-w-[100px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 transition-colors">
-                                Log In
+                                {t('companySignup.logIn')}
                             </button>
                         </div>
                     </header>
@@ -98,9 +100,9 @@ const CompanySignup = () => {
                     <main className="flex-1 flex justify-center py-12 px-4">
                         <div className="w-full max-w-[640px] flex flex-col gap-8">
                             {/* Header Text */}
-                            <div className="flex flex-col gap-2 px-4">
-                                <h1 className="text-slate-900 dark:text-white text-4xl font-black leading-tight tracking-tight">Create Company Account</h1>
-                                <p className="text-slate-500 dark:text-slate-400 text-lg">Join our professional network and start connecting with industry leaders.</p>
+                            <div className="flex flex-col gap-2 px-4 text-left">
+                                <h1 className="text-slate-900 dark:text-white text-4xl font-black leading-tight tracking-tight">{t('companySignup.title')}</h1>
+                                <p className="text-slate-500 dark:text-slate-400 text-lg">{t('companySignup.subtitle')}</p>
                             </div>
 
                             {/* Sign-up Card */}
@@ -114,8 +116,8 @@ const CompanySignup = () => {
 
                                 <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
                                     {/* Logo Upload Area */}
-                                    <div className="flex flex-col gap-3">
-                                        <p className="text-slate-900 dark:text-slate-200 text-base font-semibold">Company Logo</p>
+                                    <div className="flex flex-col gap-3 text-left">
+                                        <p className="text-slate-900 dark:text-slate-200 text-base font-semibold">{t('companySignup.logoTitle')}</p>
                                         <div className="flex items-center gap-6">
                                             <div className="h-24 w-24 rounded-full bg-primary/10 border-2 border-dashed border-primary/30 flex items-center justify-center text-primary overflow-hidden flex-shrink-0">
                                                 {logoPreview ? (
@@ -124,20 +126,20 @@ const CompanySignup = () => {
                                                     <span className="material-symbols-outlined text-4xl">add_a_photo</span>
                                                 )}
                                             </div>
-                                            <div className="flex flex-col gap-2">
+                                            <div className="flex flex-col gap-2 text-left">
                                                 <label className="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full text-sm font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer inline-block text-center">
-                                                    Upload Image
+                                                    {t('companySignup.uploadImage')}
                                                     <input type="file" accept="image/*" onChange={handleLogoChange} className="hidden" />
                                                 </label>
-                                                <p className="text-xs text-slate-400">JPG, PNG or SVG. Max size 2MB.</p>
+                                                <p className="text-xs text-slate-400">{t('companySignup.logoSpecs')}</p>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         {/* Company Name */}
-                                        <label className="flex flex-col gap-2">
-                                            <span className="text-slate-700 dark:text-slate-300 text-sm font-medium">Company Name</span>
+                                        <label className="flex flex-col gap-2 text-left">
+                                            <span className="text-slate-700 dark:text-slate-300 text-sm font-medium">{t('companySignup.fieldCompanyName')}</span>
                                             <input
                                                 className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white focus:border-primary focus:ring-primary h-12 px-4 transition-all"
                                                 placeholder="e.g. Acme Corp"
@@ -151,8 +153,8 @@ const CompanySignup = () => {
                                         </label>
 
                                         {/* Business Email */}
-                                        <label className="flex flex-col gap-2">
-                                            <span className="text-slate-700 dark:text-slate-300 text-sm font-medium">Business Email</span>
+                                        <label className="flex flex-col gap-2 text-left">
+                                            <span className="text-slate-700 dark:text-slate-300 text-sm font-medium">{t('companySignup.fieldEmail')}</span>
                                             <input
                                                 className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white focus:border-primary focus:ring-primary h-12 px-4 transition-all"
                                                 placeholder="name@company.com"
@@ -167,8 +169,8 @@ const CompanySignup = () => {
                                     </div>
 
                                     {/* Password */}
-                                    <label className="flex flex-col gap-2">
-                                        <span className="text-slate-700 dark:text-slate-300 text-sm font-medium">Password</span>
+                                    <label className="flex flex-col gap-2 text-left">
+                                        <span className="text-slate-700 dark:text-slate-300 text-sm font-medium">{t('companySignup.fieldPassword')}</span>
                                         <div className="relative flex items-center">
                                             <input
                                                 className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white focus:border-primary focus:ring-primary h-12 px-4 pr-12 transition-all"
@@ -191,8 +193,8 @@ const CompanySignup = () => {
                                     </label>
 
                                     {/* Website */}
-                                    <label className="flex flex-col gap-2">
-                                        <span className="text-slate-700 dark:text-slate-300 text-sm font-medium">Website</span>
+                                    <label className="flex flex-col gap-2 text-left">
+                                        <span className="text-slate-700 dark:text-slate-300 text-sm font-medium">{t('companySignup.fieldWebsite')}</span>
                                         <div className="relative">
                                             <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg">language</span>
                                             <input
@@ -207,8 +209,8 @@ const CompanySignup = () => {
                                     </label>
 
                                     {/* Address */}
-                                    <label className="flex flex-col gap-2">
-                                        <span className="text-slate-700 dark:text-slate-300 text-sm font-medium">Address</span>
+                                    <label className="flex flex-col gap-2 text-left">
+                                        <span className="text-slate-700 dark:text-slate-300 text-sm font-medium">{t('companySignup.fieldAddress')}</span>
                                         <div className="relative">
                                             <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg">location_on</span>
                                             <input
@@ -223,11 +225,11 @@ const CompanySignup = () => {
                                     </label>
 
                                     {/* Description */}
-                                    <label className="flex flex-col gap-2">
-                                        <span className="text-slate-700 dark:text-slate-300 text-sm font-medium">Company Description</span>
+                                    <label className="flex flex-col gap-2 text-left">
+                                        <span className="text-slate-700 dark:text-slate-300 text-sm font-medium">{t('companySignup.fieldDescription')}</span>
                                         <textarea
                                             className="form-textarea w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white focus:border-primary focus:ring-primary p-4 transition-all resize-none"
-                                            placeholder="Tell us about your company mission and values..."
+                                            placeholder={t('companySignup.placeholderDescription')}
                                             rows="4"
                                             name="description"
                                             value={formData.description}
@@ -245,11 +247,18 @@ const CompanySignup = () => {
                                             {loading ? (
                                                 <div className="size-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                                             ) : (
-                                                "Create My Account"
+                                                t('companySignup.btnCreate')
                                             )}
                                         </button>
                                         <p className="text-center text-xs text-slate-400">
-                                            By creating an account, you agree to our <a className="text-primary hover:underline font-medium" href="#">Terms of Service</a> and <a className="text-primary hover:underline font-medium" href="#">Privacy Policy</a>.
+                                            {t('companySignup.agreement')
+                                                .split(/\{terms\}|\{privacy\}/)
+                                                .map((part, index, array) => {
+                                                    if (index === 0) return <span key={index}>{part}<Link className="text-primary hover:underline font-medium" to="/terms-of-service">{t('companySignup.terms')}</Link></span>;
+                                                    if (index === 1) return <span key={index}>{part}<Link className="text-primary hover:underline font-medium" to="/privacy-policy">{t('companySignup.privacy')}</Link></span>;
+                                                    return <span key={index}>{part}</span>;
+                                                })
+                                            }
                                         </p>
                                     </div>
                                 </form>
@@ -259,24 +268,21 @@ const CompanySignup = () => {
                             <div className="flex justify-center items-center gap-8 py-4 opacity-50 grayscale hover:grayscale-0 transition-all">
                                 <div className="h-6 w-auto flex items-center gap-2">
                                     <span className="material-symbols-outlined text-xl">shield_with_heart</span>
-                                    <span className="font-bold text-sm">Secure Data</span>
+                                    <span className="font-bold text-sm">{t('companySignup.secureData')}</span>
                                 </div>
                                 <div className="h-6 w-auto flex items-center gap-2">
                                     <span className="material-symbols-outlined text-xl">cloud_done</span>
-                                    <span className="font-bold text-sm">Cloud Sync</span>
+                                    <span className="font-bold text-sm">{t('companySignup.cloudSync')}</span>
                                 </div>
                                 <div className="h-6 w-auto flex items-center gap-2">
                                     <span className="material-symbols-outlined text-xl">support_agent</span>
-                                    <span className="font-bold text-sm">24/7 Support</span>
+                                    <span className="font-bold text-sm">{t('companySignup.support')}</span>
                                 </div>
                             </div>
                         </div>
                     </main>
 
                     {/* Footer */}
-                    <footer className="py-10 text-center text-slate-400 text-sm">
-                        © 2026 stage.io Inc. All rights reserved.
-                    </footer>
                 </div>
             </div>
         </div>

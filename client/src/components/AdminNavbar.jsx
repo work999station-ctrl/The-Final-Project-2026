@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import logoImage from '../assets/logo.png';
+import Logo from './Logo';
 import ThemeToggle from './ThemeToggle';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useLang } from '../contexts/LanguageContext';
@@ -68,9 +68,7 @@ const AdminNavbar = ({ admin: adminProp }) => {
                 {/* Left: Logo + Nav */}
                 <div className="flex items-center gap-8">
                     {/* Logo */}
-                    <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-                        <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain dark:brightness-0 dark:invert dark:sepia dark:saturate-[10] dark:hue-rotate-[350deg] mix-blend-multiply dark:mix-blend-screen" />
-                    </div>
+                    <Logo size={32} onClick={() => navigate('/')} />
 
                     {/* Nav Links */}
                     <nav className="hidden md:flex items-center gap-6">

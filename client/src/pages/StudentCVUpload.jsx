@@ -54,9 +54,12 @@ const StudentCVUpload = () => {
         form.append('cv', file);
 
         try {
+            const token = document.cookie.split('jwt=')[1]?.split(';')[0] || localStorage.getItem('token');
+
             // Step 1: Parse the CV
             const response = await fetch('/api/student/parse-cv', {
                 method: 'POST',
+                headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
                 body: form
             });
             const result = await response.json();
@@ -77,6 +80,7 @@ const StudentCVUpload = () => {
 
                 await fetch('/api/student/profile', {
                     method: 'PUT',
+                    headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
                     body: profileData
                 });
 

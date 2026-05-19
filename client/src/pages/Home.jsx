@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
-import logoImage from '../assets/logo.png';
+import Logo from '../components/Logo';
 import Footer from '../components/Footer';
 import { useLang } from '../contexts/LanguageContext';
 import LanguageSwitcher from '../components/LanguageSwitcher';
@@ -251,8 +251,8 @@ const Home = () => {
                     : 'bg-transparent'
             }`}>
                 <div className="max-w-7xl mx-auto flex items-center justify-between px-6 h-16">
-                    <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-                        <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain dark:brightness-0 dark:invert dark:sepia dark:saturate-[10] dark:hue-rotate-[350deg] mix-blend-multiply dark:mix-blend-screen" />
+                    <div className="flex items-center">
+                        <Logo size={36} onClick={() => navigate('/')} />
                     </div>
 
                     <nav className="hidden md:flex items-center gap-1">
@@ -786,7 +786,7 @@ const Home = () => {
             </main>
 
             {/* ── Footer ──────────────────────────────────────────────────────── */}
-            <Footer />
+            <Footer showNewsletter={true} />
         </div>
     );
 };

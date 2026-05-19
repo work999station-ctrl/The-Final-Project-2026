@@ -1,29 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import useSocket from '../hooks/useSocket';
+import StudentNavbar from '../components/StudentNavbar';
+import StudentSidebar from '../components/StudentSidebar';
 
-const CompanyProfileAdminView = () => {
+const CompanyProfileStudentView = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const socket = useSocket();
 
     const [company, setCompany] = useState(null);
+    const [student, setStudent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchCompanyProfile = async () => {
+        const fetchData = async () => {
             try {
-                const response = await fetch(`/api/admin/company/${id}`);
-                const data = await response.json();
+                const token = document.cookie.split('jwt=')[1]?.split(';')[0] || localStorage.getItem('token');
+                const [companyRes, studentRes] = await Promise.all([
+                    fetch(`/api/admin/company/${id}`, { headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) } }),
+                    fetch('/api/student/me', { headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) } })
+                ]);
 
-                if (data.success) {
-                    setCompany(data.company);
+                const companyData = await companyRes.json();
+                if (companyData.success) {
+                    setCompany(companyData.company);
                 } else {
-                    setError(data.error || 'Failed to fetch company profile');
+                    setError(companyData.error || 'Failed to fetch company profile');
+                }
+
+                if (studentRes.ok) {
+                    const studentData = await studentRes.json();
+                    if (studentData.user) {
+                        setStudent(studentData.user);
+                    }
                 }
             } catch (err) {
-                console.error('Error fetching company:', err);
+                console.error('Error fetching data:', err);
                 setError('An error occurred while fetching data');
             } finally {
                 setLoading(false);
@@ -31,7 +45,7 @@ const CompanyProfileAdminView = () => {
         };
 
         if (id) {
-            fetchCompanyProfile();
+            fetchData();
         }
     }, [id]);
 
@@ -54,53 +68,11 @@ const CompanyProfileAdminView = () => {
 
     return (
         <div className="bg-slate-50 text-slate-900 antialiased min-h-screen">
-            {/* TopAppBar */}
-            <header className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm font-sans antialiased">
-                <div className="flex items-center gap-8">
-                    <span className="text-xl font-bold text-indigo-700 dark:text-indigo-300">EduConnect Admin</span>
-                    <nav className="hidden md:flex items-center gap-6">
-                        <button onClick={() => navigate('/student-dashboard')} className="text-slate-600 dark:text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors cursor-pointer active:opacity-80 font-medium">Dashboard</button>
-                        <button className="text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400 pb-1 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors cursor-pointer active:opacity-80 font-medium">Companies</button>
-                    </nav>
-                </div>
-                <div className="flex items-center gap-4">
-                    <div className="relative hidden sm:block">
-                        <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
-                        <input className="pl-10 pr-4 py-1.5 rounded-full border-slate-200 bg-slate-50 text-sm focus:ring-indigo-500 focus:border-indigo-500 w-64" placeholder="Search companies..." type="text" />
-                    </div>
-                    <button className="text-slate-600 dark:text-slate-400 hover:text-indigo-500 cursor-pointer p-2">
-                        <span className="material-symbols-outlined">notifications</span>
-                    </button>
-                    <button className="text-slate-600 dark:text-slate-400 hover:text-indigo-500 cursor-pointer p-2 flex items-center justify-center">
-                        <span className="w-8 h-8 rounded-full border border-slate-200 shadow-sm bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold">A</span>
-                    </button>
-                </div>
-            </header>
-
-            {/* SideNavBar */}
-            <aside className="hidden lg:flex flex-col fixed left-0 top-16 h-[calc(100vh-64px)] p-4 bg-slate-50 dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 w-64 text-sm font-medium">
-                <div className="mb-8 px-4">
-                    <h2 className="text-lg font-black text-slate-900 dark:text-slate-100">Admin Portal</h2>
-                    <p className="text-xs text-slate-500">Career Services</p>
-                </div>
-                <nav className="space-y-1">
-                    <button onClick={() => navigate('/student-dashboard')} className="w-full flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all duration-200 rounded-lg">
-                        <span className="material-symbols-outlined">domain</span>
-                        Overview
-                    </button>
-                    <button onClick={() => navigate('/student-dashboard')} className="w-full flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all duration-200 rounded-lg">
-                        <span className="material-symbols-outlined">check_circle</span>
-                        Validations
-                    </button>
-                    <button className="w-full flex items-center gap-3 px-4 py-3 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-lg transition-all duration-200">
-                        <span className="material-symbols-outlined">corporate_fare</span>
-                        Company Profiles
-                    </button>
-                </nav>
-            </aside>
+            <StudentNavbar student={student} />
+            <StudentSidebar student={student} activePage="offers" />
 
             {/* Main Content */}
-            <main className="lg:ml-64 pt-24 pb-12 px-6">
+            <main className="md:ml-64 pt-20 pb-12 px-6">
                 <div className="max-w-5xl mx-auto space-y-8">
 
                     {/* Main Profile Hero Card */}
@@ -290,4 +262,4 @@ const CompanyProfileAdminView = () => {
     );
 };
 
-export default CompanyProfileAdminView;
+export default CompanyProfileStudentView;

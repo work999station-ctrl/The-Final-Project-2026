@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import SharedInbox from '../components/SharedInbox';
 import CompanySidebar from '../components/CompanySidebar';
 import CompanyNavbar from '../components/CompanyNavbar';
+import { useLang } from '../contexts/LanguageContext';
 
 const CompanyInbox = () => {
+    const { t } = useLang();
     const [company, setCompany] = useState(null);
 
     useEffect(() => {
@@ -22,14 +24,14 @@ const CompanyInbox = () => {
     }, []);
 
     return (
-        <div className="font-body min-h-screen bg-slate-50 dark:bg-slate-950">
-            <CompanyNavbar />
-            <div className="flex">
+        <div className="flex flex-col font-body min-h-screen bg-slate-50 dark:bg-slate-950">
+            <CompanyNavbar company={company} />
+            <div className="flex flex-1">
                 <div className="hidden md:block w-64 shrink-0">
-                    <CompanySidebar company={company} activePage="inbox" topOffset="top-0" />
+                    <CompanySidebar company={company} activePage="inbox" topOffset="top-16" />
                 </div>
                 <div className="flex-1 w-full min-w-0">
-                    <SharedInbox userType="company" title="Inbox" backLink="/company-dashboard" />
+                    <SharedInbox userType="company" title={t('inbox.title')} backLink="/company-dashboard" />
                 </div>
             </div>
         </div>

@@ -289,7 +289,8 @@ const createOffer = async (req, res) => {
     res.status(201).json({ success: true, offer: newOffer });
   } catch (err) {
     const errors = handelErrors(err);
-    res.status(400).json({ errors });
+    console.error("Error in createOffer:", err);
+    res.status(400).json({ errors, details: err.message });
   }
 }
 
@@ -435,7 +436,7 @@ const getAllOffers = async (req, res) => {
     res.status(200).json({ success: true, offers: finalizedOffers });
   } catch (err) {
     console.error("Error in getAllOffers aggregation:", err);
-    res.status(500).json({ error: 'Failed to fetch offers' });
+    res.status(500).json({ error: 'Failed to fetch offers', details: err.message });
   }
 }
 
@@ -456,7 +457,7 @@ const getCompanyOffers = async (req, res) => {
     res.status(200).json({ success: true, offers: finalizedOffers });
   } catch (err) {
     console.error("Error fetching company offers:", err);
-    res.status(500).json({ error: 'Failed to fetch offers' });
+    res.status(500).json({ error: 'Failed to fetch offers', details: err.message });
   }
 }
 
@@ -467,6 +468,7 @@ const getCompanyDashboardStats = async (req, res) => {
     }
 
     const companyId = req.user._id;
+    console.log('Fetching dashboard stats for company:', companyId);
 
     // 1. Active Offers: Not manually closed AND deadline not passed
     const activeOffers = await Offer.countDocuments({
@@ -474,6 +476,7 @@ const getCompanyDashboardStats = async (req, res) => {
       status: 'Open',
       endDateOfApplay: { $gte: new Date() }
     });
+    console.log('Active offers count:', activeOffers);
 
     // Total offers and closed offers
     const totalOffers = await Offer.countDocuments({ companyId });
@@ -492,6 +495,7 @@ const getCompanyDashboardStats = async (req, res) => {
       offerId: { $in: offerIds },
       createdAt: { $gte: sevenDaysAgo }
     });
+    console.log('New applicants count:', newApplicants);
 
     const prevNewApplicants = await Application.countDocuments({
       offerId: { $in: offerIds },
@@ -550,8 +554,10 @@ const getCompanyDashboardStats = async (req, res) => {
       offerId: { $in: offerIds },
       status: 'applied'
     });
+    console.log('Pending reviews count:', pendingReviews);
 
     // 5. Daily application data for the last 30 days
+    console.log('Fetching daily applications stats...');
     const dailyApplications = await Application.aggregate([
       {
         $match: {
@@ -601,7 +607,7 @@ const getCompanyDashboardStats = async (req, res) => {
     });
   } catch (err) {
     console.error("Error fetching company dashboard stats:", err);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error', details: err.message });
   }
 };
 
@@ -710,7 +716,7 @@ const getOfferById = async (req, res) => {
     });
   } catch (err) {
     console.error("Error in getOfferById:", err);
-    res.status(500).json({ error: 'Failed to fetch offer' });
+    res.status(500).json({ error: 'Failed to fetch offer', details: err.message });
   }
 }
 

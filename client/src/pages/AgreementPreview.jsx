@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
 import logo from '../assets/logo.png';
+
 
 const AgreementPreview = () => {
     const { applicationId } = useParams();
@@ -216,6 +217,8 @@ const AgreementPreview = () => {
                     </div>
                 </div>
             </main>
+            <div className="print:hidden">
+            </div>
         </div>
     );
 };

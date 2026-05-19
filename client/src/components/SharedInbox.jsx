@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { useLang } from '../contexts/LanguageContext';
 import logoImage from '../assets/logo.png';
 
 const SharedInbox = ({ userType, title, backLink, navTitle = "stage.io", hideHeader = false }) => {
     const navigate = useNavigate();
+    const { t, lang, setLang } = useLang();
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
@@ -55,7 +57,7 @@ const SharedInbox = ({ userType, title, backLink, navTitle = "stage.io", hideHea
                             <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain dark:brightness-0 dark:invert dark:sepia dark:saturate-[10] dark:hue-rotate-[350deg] mix-blend-multiply dark:mix-blend-screen" />
                         </div>
                         <nav className="hidden md:flex items-center gap-6">
-                            <a className="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm font-medium" onClick={() => navigate(backLink)} href="#">Dashboard</a>
+                            <a className="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm font-medium" onClick={() => navigate(backLink)} href="#">{t('inbox.dashboard')}</a>
                             <a className="text-primary font-semibold text-sm border-b-2 border-primary py-2" href="#">{title}</a>
                         </nav>
                     </div>
@@ -75,7 +77,7 @@ const SharedInbox = ({ userType, title, backLink, navTitle = "stage.io", hideHea
                             </span>
                             <input
                                 className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none text-slate-600 dark:text-slate-200 placeholder:text-slate-400"
-                                placeholder="Search messages..."
+                                placeholder={t('inbox.searchPlaceholder')}
                                 type="text"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -87,7 +89,7 @@ const SharedInbox = ({ userType, title, backLink, navTitle = "stage.io", hideHea
                         {filteredMessages.length === 0 ? (
                             <div className="flex flex-col items-center justify-center h-64 text-slate-400">
                                 <span className="material-symbols-outlined text-4xl mb-3 opacity-50">inbox</span>
-                                <p>No messages yet.</p>
+                                <p>{t('inbox.noMessages')}</p>
                             </div>
                         ) : (
                             filteredMessages.map(msg => (
@@ -143,6 +145,7 @@ const SharedInbox = ({ userType, title, backLink, navTitle = "stage.io", hideHea
                     </div>
                 </div>
             </main>
+
         </div>
     );
 };

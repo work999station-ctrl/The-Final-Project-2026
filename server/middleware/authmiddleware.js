@@ -9,10 +9,10 @@ const requireAuth = (req , res , next) =>{
     if(token){
         jwt.verify(token , 'net ninja secret' ,async (err , decodedToken) =>{
             if(err){
-                console.log( 'ad' + err.message);
-                res.redirect('/studentSignup');
-            }else{
-                // console.log(decodedToken);
+                console.log( 'Auth Error: ' + err.message);
+                return res.redirect('/login');
+            }
+            try {
                 let user = await student.findById(decodedToken.id);
                 if (user) {
                     req.user = user;
@@ -31,6 +31,9 @@ const requireAuth = (req , res , next) =>{
                     }
                 }
                 next();
+            } catch (dbErr) {
+                console.error('Database error in auth middleware:', dbErr);
+                res.status(500).json({ error: 'Internal server error during authentication', details: dbErr.message });
             }
         });
     }
@@ -45,9 +48,10 @@ const requireAuthAPI = (req, res, next) => {
     if (token) {
         jwt.verify(token, 'net ninja secret', async (err, decodedToken) => {
             if (err) {
-                console.log('ad' + err.message);
-                res.status(401).json({ error: 'Unauthorized' });
-            } else {
+                console.log('Auth Error:', err.message);
+                return res.status(401).json({ error: 'Unauthorized' });
+            }
+            try {
                 let user = await student.findById(decodedToken.id);
                 if (user) {
                     req.user = user;
@@ -66,6 +70,9 @@ const requireAuthAPI = (req, res, next) => {
                     }
                 }
                 next();
+            } catch (dbErr) {
+                console.error('Database error in auth middleware:', dbErr);
+                res.status(500).json({ error: 'Internal server error during authentication', details: dbErr.message });
             }
         });
     } else {

@@ -1,9 +1,11 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+﻿import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import CompanyNavbar from '../components/CompanyNavbar';
+import { useLang } from '../contexts/LanguageContext';
 
 const CreateInternshipOffer = () => {
     const navigate = useNavigate();
+    const { t, lang, setLang } = useLang();
 
     // UI States
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -35,12 +37,12 @@ const CreateInternshipOffer = () => {
             setIsLoading(true);
 
             let newErrors = {};
-            if (!formData.title) newErrors.title = 'Please enter an internship title.';
-            if (!formData.durationMonths) newErrors.durationMonths = 'Please enter the duration.';
-            if (!formData.wilaya) newErrors.wilaya = 'Please select a location.';
-            if (!formData.description) newErrors.description = 'Please provide a description.';
-            if (!formData.salary) newErrors.salary = 'Please enter the salary or specify "Unpaid".';
-            if (!formData.endDateOfApplay) newErrors.endDateOfApplay = 'Please provide an application deadline.';
+            if (!formData.title) newErrors.title = t('createOffer.errorTitle');
+            if (!formData.durationMonths) newErrors.durationMonths = t('createOffer.errorDuration');
+            if (!formData.wilaya) newErrors.wilaya = t('createOffer.errorLocation');
+            if (!formData.description) newErrors.description = t('createOffer.errorDescription');
+            if (!formData.salary) newErrors.salary = t('createOffer.errorSalary');
+            if (!formData.endDateOfApplay) newErrors.endDateOfApplay = t('createOffer.errorDeadline');
 
             // Validation: Ensure every selected category has at least one selected skill
             const selectedCategories = selectedSkills.filter(s => s.type === 'category');
@@ -48,7 +50,7 @@ const CreateInternshipOffer = () => {
                 const rawCatId = cat.id.replace('cat-', '');
                 const hasSkills = selectedSkills.some(s => s.type === 'skill' && s.id.startsWith(`${rawCatId}-`));
                 if (!hasSkills) {
-                    newErrors.techStack = `Please select at least one skill for the category: ${cat.label}`;
+                    newErrors.techStack = `${t('createOffer.errorCategorySkill')} ${cat.label}`;
                     break;
                 }
             }
@@ -74,7 +76,7 @@ const CreateInternshipOffer = () => {
             }));
 
             if (!newErrors.techStack && techStack.length === 0) {
-                newErrors.techStack = 'Please select at least one technology or skill.';
+                newErrors.techStack = t('createOffer.errorTechStack');
             }
 
             if (Object.keys(newErrors).length > 0) {
@@ -118,7 +120,7 @@ const CreateInternshipOffer = () => {
             navigate('/company-dashboard');
 
         } catch { // err swallowed
-            setErrors({ general: 'Something went wrong. Please try again.' });
+            setErrors({ general: t('createOffer.somethingWrong') });
         } finally {
             setIsLoading(false);
         }
@@ -369,8 +371,8 @@ const CreateInternshipOffer = () => {
                     {/* Modal Header */}
                     <div className="px-8 pt-8 pb-4 flex justify-between items-start">
                         <div>
-                            <h1 className="text-2xl font-heading font-semibold text-slate-900 dark:text-white">Create New Internship Offer</h1>
-                            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Fill in the details to reach out to the best student talent.</p>
+                            <h1 className="text-2xl font-heading font-semibold text-slate-900 dark:text-white">{t('createOffer.title')}</h1>
+                            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">{t('createOffer.subtitle')}</p>
                         </div>
                         <button className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors cursor-pointer" onClick={() => navigate(-1)}>
                             <span className="material-symbols-outlined text-slate-400">close</span>
@@ -389,13 +391,13 @@ const CreateInternshipOffer = () => {
                     <div className="px-8 py-4 overflow-y-auto space-y-6 custom-scrollbar flex-1 text-left">
                         {/* Internship Title */}
                         <div className="flex flex-col gap-2">
-                            <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Internship Title</label>
+                            <label className="text-sm font-medium text-slate-700 dark:text-slate-300">{t('createOffer.fieldTitle')}</label>
                             <input
                                 name="title"
                                 value={formData.title}
                                 onChange={handleInputChange}
                                 className={`w-full px-4 py-3 rounded-xl border ${errors.title ? 'border-red-400 dark:border-red-500 bg-red-50/50 dark:bg-red-900/10' : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800'} focus:ring-2 focus:ring-[#4f46e5]/20 focus:border-[#4f46e5] outline-none transition-all placeholder:text-slate-400 text-slate-900 dark:text-white`}
-                                placeholder="e.g. Full Stack Developer Intern"
+                                placeholder={t('createOffer.fieldTitlePlaceholder')}
                                 type="text"
                             />
                             {errors.title && <span className="text-xs text-red-500 dark:text-red-400 font-medium">{errors.title}</span>}
@@ -405,7 +407,7 @@ const CreateInternshipOffer = () => {
 
                         {/* Hierarchical Skills and Categories Selector */}
                         <div className="flex flex-col gap-2 relative">
-                            <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Target Categories &amp; Skills</label>
+                            <label className="text-sm font-medium text-slate-700 dark:text-slate-300">{t('createOffer.fieldTechStack')}</label>
                             <div className="relative w-full">
                                 {/* Select Trigger */}
                                 <div
@@ -432,7 +434,7 @@ const CreateInternshipOffer = () => {
                                                 </div>
                                             ))
                                         ) : (
-                                            <span className="text-sm text-slate-400 self-center">Search categories and skills...</span>
+                                            <span className="text-sm text-slate-400 self-center">{t('createOffer.fieldTechStackPlaceholder')}</span>
                                         )}
                                     </div>
                                     <span className={`material-symbols-outlined text-slate-400 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`}>expand_more</span>
@@ -442,7 +444,7 @@ const CreateInternshipOffer = () => {
                                 {isDropdownOpen && (
                                     <div className="absolute top-full left-0 mt-2 w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl overflow-hidden z-[60] animate-in fade-in slide-in-from-top-2 duration-300">
                                         <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/50">
-                                            <span className="text-xs font-bold uppercase tracking-widest text-slate-400">Categories & Skills</span>
+                                            <span className="text-xs font-bold uppercase tracking-widest text-slate-400">{t('createOffer.fieldTechStack')}</span>
                                             <button onClick={() => setIsDropdownOpen(false)} className="material-symbols-outlined text-slate-400 text-lg hover:text-slate-600 dark:hover:text-slate-200 transition-colors">close</button>
                                         </div>
                                         <div className="max-h-[320px] overflow-y-auto py-2 custom-scrollbar">
@@ -501,13 +503,13 @@ const CreateInternshipOffer = () => {
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-2 text-left">
                             {/* Duration */}
                             <div className="flex flex-col gap-2">
-                                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Duration (Mo)</label>
+                                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">{t('createOffer.fieldDuration')}</label>
                                 <input
                                     name="durationMonths"
                                     value={formData.durationMonths}
                                     onChange={handleInputChange}
                                     className={`w-full px-4 py-3 rounded-xl border ${errors.durationMonths ? 'border-red-400 dark:border-red-500 bg-red-50/50 dark:bg-red-900/10' : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800'} focus:ring-2 focus:ring-[#4f46e5]/20 focus:border-[#4f46e5] outline-none transition-all placeholder:text-slate-400 text-slate-900 dark:text-white`}
-                                    placeholder="e.g. 3"
+                                    placeholder={t('createOffer.fieldDurationPlaceholder')}
                                     type="number"
                                     min="1"
                                 />
@@ -516,7 +518,7 @@ const CreateInternshipOffer = () => {
 
                             {/* Slots */}
                             <div className="flex flex-col gap-2">
-                                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Slots</label>
+                                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">{t('createOffer.fieldSlots')}</label>
                                 <input
                                     name="slotsAvailable"
                                     value={formData.slotsAvailable}
@@ -529,13 +531,13 @@ const CreateInternshipOffer = () => {
 
                             {/* Salary */}
                             <div className="flex flex-col gap-2">
-                                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Salary</label>
+                                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">{t('createOffer.fieldSalary')}</label>
                                 <input
                                     name="salary"
                                     value={formData.salary}
                                     onChange={handleInputChange}
                                     className={`w-full px-4 py-3 rounded-xl border ${errors.salary ? 'border-red-400 dark:border-red-500 bg-red-50/50 dark:bg-red-900/10' : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800'} focus:ring-2 focus:ring-[#4f46e5]/20 focus:border-[#4f46e5] outline-none transition-all placeholder:text-slate-400 text-slate-900 dark:text-white`}
-                                    placeholder="e.g. 25000 DA"
+                                    placeholder={t('createOffer.fieldSalaryPlaceholder')}
                                     type="text"
                                 />
                                 {errors.salary && <span className="text-xs text-red-500 dark:text-red-400 font-medium">{errors.salary}</span>}
@@ -543,7 +545,7 @@ const CreateInternshipOffer = () => {
 
                             {/* Type */}
                             <div className="flex flex-col gap-2">
-                                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Work Type</label>
+                                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">{t('createOffer.fieldWorkType')}</label>
                                 <div className="relative">
                                     <select
                                         name="internshipType"
@@ -562,7 +564,7 @@ const CreateInternshipOffer = () => {
 
                             {/* Deadline */}
                             <div className="flex flex-col gap-2 col-span-2 md:col-span-4">
-                                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Application Deadline</label>
+                                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">{t('createOffer.fieldDeadline')}</label>
                                 <input
                                     name="endDateOfApplay"
                                     value={formData.endDateOfApplay}
@@ -577,7 +579,7 @@ const CreateInternshipOffer = () => {
 
                         {/* Location (Back to standard size) */}
                         <div className="flex flex-col gap-2 text-left">
-                            <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Location (Wilaya)</label>
+                            <label className="text-sm font-medium text-slate-700 dark:text-slate-300">{t('createOffer.fieldLocation')}</label>
                             <div className="relative">
                                 <select
                                     name="wilaya"
@@ -585,7 +587,7 @@ const CreateInternshipOffer = () => {
                                     onChange={handleInputChange}
                                     className={`w-full appearance-none pl-10 pr-4 py-3 rounded-xl border ${errors.wilaya ? 'border-red-400 dark:border-red-500 bg-red-50/50 dark:bg-red-900/10' : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800'} focus:ring-2 focus:ring-[#4f46e5]/20 focus:border-[#4f46e5] outline-none transition-all text-slate-600 dark:text-slate-300 cursor-pointer`}
                                 >
-                                    <option value="" disabled>Select Wilaya...</option>
+                                    <option value="" disabled>{t('createOffer.fieldLocationPlaceholder')}</option>
                                     <option>01 - Adrar</option>
                                     <option>02 - Chlef</option>
                                     <option>03 - Laghouat</option>
@@ -652,13 +654,13 @@ const CreateInternshipOffer = () => {
 
                         {/* Description */}
                         <div className="flex flex-col gap-2 text-left">
-                            <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Description</label>
+                            <label className="text-sm font-medium text-slate-700 dark:text-slate-300">{t('createOffer.fieldDescription')}</label>
                             <textarea
                                 name="description"
                                 value={formData.description}
                                 onChange={handleInputChange}
                                 className={`w-full px-4 py-3 rounded-xl border ${errors.description ? 'border-red-400 dark:border-red-500 bg-red-50/50 dark:bg-red-900/10' : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800'} focus:ring-2 focus:ring-[#4f46e5]/20 focus:border-[#4f46e5] outline-none transition-all placeholder:text-slate-400 text-slate-900 dark:text-white resize-none`}
-                                placeholder="Describe the role, responsibilities, and what the intern will learn..."
+                                placeholder={t('createOffer.fieldDescriptionPlaceholder')}
                                 rows="4"
                             ></textarea>
                             {errors.description && <span className="text-xs text-red-500 dark:text-red-400 font-medium">{errors.description}</span>}
@@ -672,14 +674,14 @@ const CreateInternshipOffer = () => {
                     {/* Modal Footer */}
                     <div className="px-8 py-6 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-4 bg-slate-50/50 dark:bg-slate-800/50">
                         <button className="px-6 py-2.5 rounded-full text-sm font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer" onClick={() => navigate(-1)}>
-                            Cancel
+                            {t('createOffer.cancel')}
                         </button>
                         <button
                             onClick={handleSubmit}
                             disabled={isLoading}
                             className={`flex items-center gap-2 px-8 py-2.5 rounded-full ${isLoading ? 'bg-[#4f46e5]/70 cursor-not-allowed' : 'bg-[#4f46e5] hover:bg-[#4f46e5]/90 cursor-pointer shadow-lg shadow-[#4f46e5]/20 active:scale-[0.98]'} text-white text-sm font-semibold transition-all`}
                         >
-                            {isLoading ? 'Posting...' : 'Post Offer'}
+                            {isLoading ? t('createOffer.posting') : t('createOffer.postOffer')}
                             {!isLoading && <span className="material-symbols-outlined text-lg">send</span>}
                         </button>
                     </div>

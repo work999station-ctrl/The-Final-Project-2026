@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+﻿import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import moment from 'moment';
 import StudentNavbar from '../components/StudentNavbar';
@@ -633,7 +633,7 @@ const InternshipOffers = () => {
                     </div>
                 </div>
             )}
-    </div>
+        </div>
     );
 };
 

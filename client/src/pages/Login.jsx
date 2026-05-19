@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import logoImage from '../assets/logo.png';
+import Logo from '../components/Logo';
+import Footer from '../components/Footer';
 import { useLang } from '../contexts/LanguageContext';
+
 
 const Login = () => {
     const navigate = useNavigate();
@@ -69,9 +71,7 @@ const Login = () => {
                 <div className="layout-container flex h-full grow flex-col">
                     {/* Header */}
                     <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 px-6 lg:px-40 py-4 bg-white dark:bg-slate-900 sticky top-0 z-50">
-                        <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-                            <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain dark:brightness-0 dark:invert dark:sepia dark:saturate-[10] dark:hue-rotate-[350deg] mix-blend-multiply dark:mix-blend-screen" />
-                        </div>
+                        <Logo size={36} onClick={() => navigate('/')} />
                         <div className="flex items-center gap-4">
                             <span className="hidden md:block text-slate-500 text-sm">{t('auth.noAccount')}</span>
                             <button onClick={() => navigate('/student-signup')} className="flex min-w-[100px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 transition-colors">
@@ -181,9 +181,7 @@ const Login = () => {
                         </div>
                     </main>
 
-                    <footer className="p-8 text-center text-slate-400 text-xs font-medium tracking-tight mt-auto border-t border-slate-200 dark:border-slate-800">
-                        © 2026 Modern Connectivity Platform. All rights reserved.
-                    </footer>
+                    <Footer />
                 </div>
             </div>
         </div>

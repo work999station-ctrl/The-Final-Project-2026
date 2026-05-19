@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminNavbar from '../components/AdminNavbar';
+
 
 const EditAdminProfile = () => {
     const navigate = useNavigate();
@@ -299,10 +300,6 @@ const EditAdminProfile = () => {
                             </div>
                         </div>
                     </main>
-
-                    <footer className="py-10 text-center text-slate-400 text-sm">
-                        © 2026 stage.io Inc. All rights reserved.
-                    </footer>
                 </div>
             </div>
         </div>

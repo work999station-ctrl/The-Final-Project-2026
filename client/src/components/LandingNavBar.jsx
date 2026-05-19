@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ThemeToggle from './ThemeToggle';
-import logoImage from '../assets/logo.png';
+import Logo from './Logo';
 import { useLang } from '../contexts/LanguageContext';
 import LanguageSwitcher from './LanguageSwitcher';
 
@@ -77,7 +77,7 @@ const LandingNavBar = () => {
         <header className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
             <div className="container mx-auto flex items-center justify-between px-6 py-4">
                 <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-                    <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain dark:brightness-0 dark:invert dark:sepia dark:saturate-[10] dark:hue-rotate-[350deg] mix-blend-multiply dark:mix-blend-screen" />
+                    <Logo size={36} onClick={() => navigate('/')} />
                 </div>
                 <nav className="hidden md:flex items-center gap-8">
                     <Link className="text-sm font-semibold hover:text-primary transition-colors" to="/students">{t('nav.students')}</Link>

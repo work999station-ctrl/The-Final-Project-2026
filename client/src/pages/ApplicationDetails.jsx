@@ -471,17 +471,24 @@ const ApplicationDetails = () => {
                                                 <p className="text-xs text-emerald-600 dark:text-emerald-500 mt-1 leading-relaxed">This application has been validated by the university admin. You can no longer update the status.</p>
                                             </div>
                                         </div>
+                                    ) : appData.status?.toLowerCase() === 'accepted' ? (
+                                        <div className="flex flex-col items-center gap-2 py-3 px-2 mb-1 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-xl text-center">
+                                            <span className="material-symbols-outlined text-amber-600 dark:text-amber-400">hourglass_top</span>
+                                            <div>
+                                                <p className="font-bold text-amber-800 dark:text-amber-300 text-sm">Waiting for Admin Validation</p>
+                                                <p className="text-xs text-amber-600 dark:text-amber-500 mt-1 leading-relaxed">You have accepted this candidate. Waiting for university admin validation.</p>
+                                            </div>
+                                        </div>
+                                    ) : appData.status?.toLowerCase() === 'refused' || appData.status?.toLowerCase() === 'rejected' ? (
+                                        <div className="flex flex-col items-center gap-2 py-3 px-2 mb-1 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-xl text-center">
+                                            <span className="material-symbols-outlined text-red-600 dark:text-red-400">cancel</span>
+                                            <div>
+                                                <p className="font-bold text-red-800 dark:text-red-300 text-sm">Application Refused</p>
+                                                <p className="text-xs text-red-600 dark:text-red-500 mt-1 leading-relaxed">You have refused this candidate.</p>
+                                            </div>
+                                        </div>
                                     ) : (
                                         <div className="flex flex-col gap-3">
-                                            {appData.status === 'accepted' && (
-                                                <div className="flex flex-col items-center gap-2 py-3 px-2 mb-1 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-xl text-center">
-                                                    <span className="material-symbols-outlined text-amber-600 dark:text-amber-400">hourglass_top</span>
-                                                    <div>
-                                                        <p className="font-bold text-amber-800 dark:text-amber-300 text-sm">Waiting for Admin Validation</p>
-                                                        <p className="text-xs text-amber-600 dark:text-amber-500 mt-1 leading-relaxed">You have accepted this candidate. Waiting for university admin validation. You can still update the status if needed.</p>
-                                                    </div>
-                                                </div>
-                                            )}
                                             <button
                                                 disabled={actionLoading}
                                                 onClick={() => setConfirmationModal({ isOpen: true, status: 'Accepted' })}

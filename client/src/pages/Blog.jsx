@@ -144,33 +144,6 @@ const Blog = () => {
                         </div>
                     </div>
                 </section>
-
-                {/* Newsletter CTA */}
-                <section className="mt-16 bg-white dark:bg-slate-800 rounded-2xl p-10 text-center border border-slate-200 dark:border-slate-700 shadow-sm relative overflow-hidden">
-                    <div className="absolute -top-20 -right-20 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl"></div>
-                    <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-sky-500/10 rounded-full blur-3xl"></div>
-
-                    <div className="relative z-10 max-w-lg mx-auto">
-                        <span className="material-symbols-outlined text-4xl text-indigo-500 mb-4">mail</span>
-                        <h2 className="font-display text-3xl font-bold text-slate-900 dark:text-white mb-3">Stay Connected</h2>
-                        <p className="text-slate-500 dark:text-slate-400 mb-8">Get the latest career tips and internship offers delivered right to your inbox.</p>
-
-                        {/* <form className="flex flex-col sm:flex-row gap-3" onSubmit={(e) => e.preventDefault()}>
-                            <input
-                                type="email"
-                                placeholder="Enter your email"
-                                className="flex-grow px-5 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 outline-none transition-all shadow-sm"
-                            />
-                            <button
-                                href="/student-signup"
-                                type="submit"
-                                className="bg-indigo-600 text-white font-semibold px-6 py-3 rounded-xl shadow-md hover:bg-indigo-700 active:scale-95 transition-all whitespace-nowrap"
-                            >
-                                Subscribe Now
-                            </button>
-                        </form> */}
-                    </div>
-                </section>
             </main>
 
             {/* Footer */}

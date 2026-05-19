@@ -7,11 +7,11 @@ const path = require('path');
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         if (file.fieldname === 'logo') {
-            cb(null, path.join(__dirname, '..', 'public', 'uploads', 'company'));
+            cb(null, path.join(__dirname, '../public/uploads/company/'));
         } else if (file.fieldname === 'profilePicture') {
-            cb(null, path.join(__dirname, '..', 'public', 'uploads', 'admin'));
+            cb(null, path.join(__dirname, '../public/uploads/admin/'));
         } else {
-            cb(null, path.join(__dirname, '..', 'public', 'uploads', 'student'));
+            cb(null, path.join(__dirname, '../public/uploads/student/'));
         }
     },
     filename: (req, file, cb) => {
