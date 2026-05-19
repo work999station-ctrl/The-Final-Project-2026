@@ -74,7 +74,14 @@ const ApplicationDetails = () => {
                 const data = await res.json();
                 if (data.success) {
                     setFeedbackText('');
-                    setFetchedApp(data.application);
+                    setFetchedApp(prev => ({
+                        ...prev,
+                        ...data.application,
+                        studentId: {
+                            ...(prev?.studentId || {}),
+                            ...(data.application?.studentId || {})
+                        }
+                    }));
                 }
             } else {
                 alert('Failed to send feedback.');
@@ -126,16 +133,45 @@ const ApplicationDetails = () => {
     }
 
     // Merge fetched UI with placeholder UI for development
-    const appData = {
-        name: fetchedApp?.studentId?.name || "Alex Rivers",
-        profilePicture: fetchedApp?.studentId?.profilePicture || "https://lh3.googleusercontent.com/aida-public/AB6AXuBHtLMRQ_YPF-KXsydSsHAdeNDvLA79bSudtCUEIhEdz5eSgoAeIF92aIJu6E5gHFn9tpJXiNEX0XHROi2Tj8Om2O6ZAxpqTn2yNGNQnOmAeP6rnJdWiWTU6GbwBRDeyPIbpCKPGvFmAqaeTrRNbnYR19DW_TynWWJlXuOjTlealoLyD-gQUuKpX1Dd8sM70OUU7rswlEw1MD94Kb3uruTd40Y61jEHIYZ_MbDApMKrIFOHccJgusBsRZ3syz6pIPVEi1WcxIymIb0",
-        role: fetchedApp?.offerId?.title || "Product Design Intern",
-        skills: fetchedApp?.studentId?.skills || ["Figma", "UI/UX", "Prototyping"],
-        matchScore: fetchedApp?.matchPercentage || 94,
-        status: fetchedApp?.status || fetchedApp?.dummyStatus || "Under Review",
-        email: fetchedApp?.studentId?.email || "a.rivers@example.com",
-        phone: fetchedApp?.studentId?.phoneNumber || "+1 (555) 012-3456",
-        university: fetchedApp?.studentId?.university || "University of Technology",
+    const appData = fetchedApp ? {
+        name: fetchedApp.studentId?.name || "Unknown Candidate",
+        profilePicture: fetchedApp.studentId?.profilePicture || "https://ui-avatars.com/api/?name=User",
+        role: fetchedApp.offerId?.title || "Unknown Position",
+        skills: fetchedApp.studentId?.skills || [],
+        matchScore: fetchedApp.matchPercentage || 0,
+        status: fetchedApp.status || "applied",
+        email: fetchedApp.studentId?.email || "No email provided",
+        phone: fetchedApp.studentId?.phoneNumber || "No phone provided",
+        university: fetchedApp.studentId?.university || "No university provided",
+        bio: fetchedApp.studentId?.bio || "No cover letter or bio provided.",
+        cvUrl: fetchedApp.studentId?.cvUrl || null,
+        experience: fetchedApp.studentId?.experience || [],
+        education: {
+             degreeName: fetchedApp.studentId?.degreeName || "Unknown Degree",
+             university: fetchedApp.studentId?.university || "Unknown University",
+             expectedGraduationDate: fetchedApp.studentId?.expectedGraduationDate || "N/A"
+        },
+        timeline: {
+             appliedAt: fetchedApp.createdAt,
+             statusChangedAt: fetchedApp.statusChangedAt
+        },
+        portfolioLink: fetchedApp.studentId?.githubPortfolio || "#"
+    } : {
+        name: "Loading...",
+        profilePicture: "https://ui-avatars.com/api/?name=Loading",
+        role: "Loading...",
+        skills: [],
+        matchScore: 0,
+        status: "Loading...",
+        email: "...",
+        phone: "...",
+        university: "...",
+        bio: "...",
+        cvUrl: null,
+        experience: [],
+        education: {},
+        timeline: {},
+        portfolioLink: "#"
     };
 
     const feedbackList = fetchedApp?.feedback || [];
@@ -146,6 +182,26 @@ const ApplicationDetails = () => {
         { id: 'Documents', icon: 'description' },
         { id: 'Feedback', icon: 'rate_review' },
     ];
+
+    const handleDownloadDocument = (fileName) => {
+        if (fileName === 'Resume.pdf' && appData.cvUrl) {
+            // The backend serves public files directly from root URL or the configured path
+            // e.g. "/uploads/student/1234.pdf". The proxy handles it.
+            window.open(appData.cvUrl, '_blank');
+            return;
+        }
+
+        // Create a dummy file download since files aren't stored on the server
+        const blob = new Blob([`This is a placeholder for ${fileName}. Actual files are not currently stored by the system.`], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+    };
 
     return (
         <div className="bg-slate-50 dark:bg-slate-900 dark:bg-slate-950 text-slate-900 dark:text-white dark:text-slate-100 min-h-screen flex flex-col font-body">
@@ -248,12 +304,10 @@ const ApplicationDetails = () => {
                                         <section className="bg-white dark:bg-slate-800 dark:bg-slate-900 p-6 md:p-8 rounded-xl border border-slate-200 dark:border-slate-700 dark:border-slate-800 shadow-sm transition-all">
                                             <h3 className="font-display text-lg font-bold mb-4 flex items-center gap-2">
                                                 <span className="material-symbols-outlined text-slate-400 dark:text-slate-500">mail</span>
-                                                Cover Letter
+                                                Cover Letter / Bio
                                             </h3>
                                             <div className="prose prose-slate dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 dark:text-slate-400 dark:text-slate-500 leading-relaxed text-sm md:text-base">
-                                                <p>Dear Hiring Team,</p>
-                                                <p className="mt-4">As a Product Design intern with a passion for creating impactful user experiences, I was thrilled to see the opening at your company. With a foundation in UI/UX principles and hands-on experience in prototyping with Figma, I am eager to bring my skills to your design team.</p>
-                                                <p className="mt-4">My approach centers around user-centric design and scalable components. I believe my creative problem-solving skills make me a strong candidate for this role.</p>
+                                                <p>{appData.bio}</p>
                                             </div>
                                         </section>
 
@@ -263,16 +317,22 @@ const ApplicationDetails = () => {
                                                 Experience Summary
                                             </h3>
                                             <div className="space-y-6">
-                                                <div className="flex gap-4">
-                                                    <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
-                                                        <span className="material-symbols-outlined text-slate-500 dark:text-slate-400 dark:text-slate-500">corporate_fare</span>
-                                                    </div>
-                                                    <div>
-                                                        <h4 className="font-bold text-slate-900 dark:text-white dark:text-white">UI/UX Design Intern @ Creative Co</h4>
-                                                        <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 mb-2">Summer 2023 • Internship</p>
-                                                        <p className="text-sm text-slate-600 dark:text-slate-300 dark:text-slate-400 dark:text-slate-500 leading-relaxed">Assisted in redesigning the core dashboard interface, resulting in a 20% improvement in user satisfaction metrics.</p>
-                                                    </div>
-                                                </div>
+                                                {appData.experience && appData.experience.length > 0 ? (
+                                                    appData.experience.map((exp, idx) => (
+                                                        <div key={idx} className="flex gap-4">
+                                                            <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
+                                                                <span className="material-symbols-outlined text-slate-500 dark:text-slate-400 dark:text-slate-500">corporate_fare</span>
+                                                            </div>
+                                                            <div>
+                                                                <h4 className="font-bold text-slate-900 dark:text-white dark:text-white">{exp.role}</h4>
+                                                                <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 mb-2">{exp.type}</p>
+                                                                <p className="text-sm text-slate-600 dark:text-slate-300 dark:text-slate-400 dark:text-slate-500 leading-relaxed">{exp.description}</p>
+                                                            </div>
+                                                        </div>
+                                                    ))
+                                                ) : (
+                                                    <p className="text-sm text-slate-500 italic">No experience provided.</p>
+                                                )}
                                             </div>
                                         </section>
 
@@ -286,9 +346,8 @@ const ApplicationDetails = () => {
                                                     <span className="material-symbols-outlined text-slate-500 dark:text-slate-400 dark:text-slate-500">school</span>
                                                 </div>
                                                 <div>
-                                                    <h4 className="font-bold text-slate-900 dark:text-white dark:text-white">B.Sc. in Human-Computer Interaction</h4>
-                                                    <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500">University of Technology • Expected 2025</p>
-                                                    <p className="text-sm text-slate-600 dark:text-slate-300 dark:text-slate-400 dark:text-slate-500 mt-2">Specializing in interactive systems and cognitive psychology.</p>
+                                                    <h4 className="font-bold text-slate-900 dark:text-white dark:text-white">{appData.education.degreeName}</h4>
+                                                    <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500">{appData.education.university} • Expected {appData.education.expectedGraduationDate}</p>
                                                 </div>
                                             </div>
                                         </section>
@@ -302,20 +361,17 @@ const ApplicationDetails = () => {
                                             Detailed Timeline
                                         </h3>
                                         <div className="relative pl-6 space-y-8 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-indigo-100 dark:before:bg-slate-800">
-                                            <div className="relative">
-                                                <div className="absolute -left-[23px] top-1 w-3 h-3 rounded-full bg-primary ring-4 ring-indigo-50 dark:ring-indigo-900/40"></div>
-                                                <h4 className="text-sm font-bold text-slate-900 dark:text-white dark:text-white">Screening Call Scheduled</h4>
-                                                <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500">Nov 22, 2023 • 2:00 PM</p>
-                                            </div>
-                                            <div className="relative">
-                                                <div className="absolute -left-[23px] top-1 w-3 h-3 rounded-full bg-indigo-400 ring-4 ring-indigo-50 dark:ring-indigo-900/40"></div>
-                                                <h4 className="text-sm font-bold text-slate-700 dark:text-slate-200 dark:text-slate-300">Review Started</h4>
-                                                <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500">Nov 20, 2023 • 10:15 AM</p>
-                                            </div>
+                                            {appData.timeline.statusChangedAt && appData.timeline.statusChangedAt !== appData.timeline.appliedAt && (
+                                                <div className="relative">
+                                                    <div className="absolute -left-[23px] top-1 w-3 h-3 rounded-full bg-primary ring-4 ring-indigo-50 dark:ring-indigo-900/40"></div>
+                                                    <h4 className="text-sm font-bold text-slate-900 dark:text-white dark:text-white">Status Updated</h4>
+                                                    <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500">{moment(appData.timeline.statusChangedAt).format('MMM Do YYYY, h:mm a')}</p>
+                                                </div>
+                                            )}
                                             <div className="relative">
                                                 <div className="absolute -left-[23px] top-1 w-3 h-3 rounded-full bg-indigo-400 ring-4 ring-indigo-50 dark:ring-indigo-900/40"></div>
-                                                <h4 className="text-sm font-bold text-slate-700 dark:text-slate-200 dark:text-slate-300">Applied</h4>
-                                                <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500">Nov 18, 2023 • 4:30 PM</p>
+                                                <h4 className="text-sm font-bold text-slate-700 dark:text-slate-200 dark:text-slate-300">Application Submitted</h4>
+                                                <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500">{appData.timeline.appliedAt ? moment(appData.timeline.appliedAt).format('MMM Do YYYY, h:mm a') : 'Unknown Date'}</p>
                                             </div>
                                         </div>
                                     </section>
@@ -328,21 +384,23 @@ const ApplicationDetails = () => {
                                             Documents & Attachments
                                         </h3>
                                         <div className="flex flex-col gap-4">
-                                            <div className="border border-slate-200 dark:border-slate-700 p-4 rounded-xl flex items-center gap-4 cursor-pointer hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800 transition-colors">
+                                            <div onClick={() => handleDownloadDocument('Resume.pdf')} className="border border-slate-200 dark:border-slate-700 p-4 rounded-xl flex items-center gap-4 cursor-pointer hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800 transition-colors">
                                                 <span className="material-symbols-outlined text-red-500 text-3xl">picture_as_pdf</span>
                                                 <div className="flex-1">
                                                     <p className="font-bold text-sm text-slate-800 dark:text-slate-100 dark:text-slate-200">Resume.pdf</p>
-                                                    <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500">1.2 MB • Uploaded at application</p>
+                                                    <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500">
+                                                        {appData.cvUrl ? 'Uploaded CV document' : 'Document generated from profile info'}
+                                                    </p>
                                                 </div>
-                                                <button className="material-symbols-outlined text-slate-400 dark:text-slate-500 hover:text-primary transition-colors">download</button>
+                                                <button onClick={(e) => { e.stopPropagation(); handleDownloadDocument('Resume.pdf'); }} className="material-symbols-outlined text-slate-400 dark:text-slate-500 hover:text-primary transition-colors">download</button>
                                             </div>
-                                            <div className="border border-slate-200 dark:border-slate-700 p-4 rounded-xl flex items-center gap-4 cursor-pointer hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800 transition-colors">
+                                            <div onClick={() => handleDownloadDocument('Portfolio_Final.zip')} className="border border-slate-200 dark:border-slate-700 p-4 rounded-xl flex items-center gap-4 cursor-pointer hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800 transition-colors">
                                                 <span className="material-symbols-outlined text-indigo-500 text-3xl">folder_zip</span>
                                                 <div className="flex-1">
                                                     <p className="font-bold text-sm text-slate-800 dark:text-slate-100 dark:text-slate-200">Portfolio_Final.zip</p>
-                                                    <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500">24 MB • Uploaded at application</p>
+                                                    <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500">Extracted portfolio attachments</p>
                                                 </div>
-                                                <button className="material-symbols-outlined text-slate-400 dark:text-slate-500 hover:text-primary transition-colors">download</button>
+                                                <button onClick={(e) => { e.stopPropagation(); handleDownloadDocument('Portfolio_Final.zip'); }} className="material-symbols-outlined text-slate-400 dark:text-slate-500 hover:text-primary transition-colors">download</button>
                                             </div>
                                         </div>
                                     </section>
@@ -481,8 +539,12 @@ const ApplicationDetails = () => {
                                         <div className="flex items-center gap-4">
                                             <span className="material-symbols-outlined text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-slate-900 dark:bg-slate-800 p-2 rounded-lg">link</span>
                                             <div>
-                                                <p className="text-[10px] text-slate-400 dark:text-slate-500 uppercase font-bold">Social</p>
-                                                <a className="text-sm font-bold text-primary hover:underline" href="#">LinkedIn Profile</a>
+                                                <p className="text-[10px] text-slate-400 dark:text-slate-500 uppercase font-bold">Portfolio</p>
+                                                {appData.portfolioLink && appData.portfolioLink !== "#" ? (
+                                                    <a className="text-sm font-bold text-primary hover:underline" target="_blank" rel="noopener noreferrer" href={appData.portfolioLink}>View Portfolio/GitHub</a>
+                                                ) : (
+                                                    <p className="text-sm text-slate-500">Not provided</p>
+                                                )}
                                             </div>
                                         </div>
                                     </div>

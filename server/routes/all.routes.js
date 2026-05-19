@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 
-const { studentSignup_get, studentSignup_post, studentDashboard_get, studentProfile_update, logout_get, login_post, login_get, companySignup_get, companySignup_post, companyProfile_update, adminSignup_post, adminProfile_update, createOffer, getAllOffers, getCompanyOffers, updateOffer, deleteOffer, getOfferById, createApplication, getCompanyApplications, getCompanyApplicationById, getStudentProfileForRecruiter, getApplicationsByOfferId, updateApplicationStatus, addApplicationFeedback, getAdminApplicationsToValidate, getAdminAllApplications, getAdminCompanyProfile, getAdminApplicationById, validateApplicationAdmin, rejectApplicationAdmin, getStudentApplications, deleteApplication, getCompanyDashboardStats, getInboxMessages, markMessageAsRead, getNotificationDetails, getUniversityPlacementStats } = require('../controllers/all.controller');
+const { studentSignup_get, studentSignup_post, studentDashboard_get, studentProfile_update, logout_get, login_post, login_get, companySignup_get, companySignup_post, companyProfile_update, adminSignup_post, adminProfile_update, createOffer, getAllOffers, getCompanyOffers, updateOffer, deleteOffer, getOfferById, createApplication, getCompanyApplications, getCompanyApplicationById, getStudentProfileForRecruiter, getApplicationsByOfferId, updateApplicationStatus, addApplicationFeedback, getAdminApplicationsToValidate, getAdminAllApplications, getAdminCompanyProfile, getAdminApplicationById, validateApplicationAdmin, rejectApplicationAdmin, getStudentApplications, deleteApplication, getCompanyDashboardStats, getInboxMessages, markMessageAsRead, getNotificationDetails, getUniversityPlacementStats, deleteCompanyAccount } = require('../controllers/all.controller');
 const { parseCV } = require('../controllers/cv.controller');
 const { requireAuth, requireAuthAPI } = require('../middleware/authmiddleware');
 
@@ -53,7 +53,7 @@ router.get('/api/student/me', requireAuthAPI, (req, res) => {
     }
 });
 
-router.put('/api/student/profile', requireAuthAPI, upload.single('profile_picture'), studentProfile_update);
+router.put('/api/student/profile', requireAuthAPI, upload.fields([{ name: 'profile_picture', maxCount: 1 }, { name: 'cv', maxCount: 1 }]), studentProfile_update);
 router.post('/api/student/parse-cv', requireAuthAPI, upload.single('cv'), parseCV);
 router.get('/api/student/applications', requireAuthAPI, getStudentApplications);
 
@@ -72,6 +72,7 @@ router.get('/api/company/me', requireAuthAPI, (req, res) => {
 });
 
 router.put('/api/company/profile', requireAuthAPI, upload.single('logo'), companyProfile_update);
+router.delete('/api/company', requireAuthAPI, deleteCompanyAccount);
 
 // Admin Routes
 router.post('/api/adminSignup', upload.single('profilePicture'), adminSignup_post);
