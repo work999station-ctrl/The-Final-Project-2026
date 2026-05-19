@@ -274,7 +274,7 @@ const OfferDetailsSplitView = () => {
                     <AdminSidebar activePage="validate" adminUser={adminUser} />
                 </>
             )}
-            <main className={`pb-12 px-6 max-w-7xl mx-auto ${userType === 'admin' ? 'md:ml-64 pt-20' : 'pt-12'}`}>
+            <main className={`pb-12 px-6 max-w-7xl mx-auto ${userType === 'admin' ? 'md:pl-64 pt-8' : 'pt-12'}`}>
                 {/* Header Actions */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
                     <div>
@@ -283,12 +283,17 @@ const OfferDetailsSplitView = () => {
                                 to={userType === 'student' ? "/student-dashboard" : (userType === 'admin' ? "/admin-dashboard" : "/company-dashboard")}
                                 className="hover:text-indigo-600 cursor-pointer"
                             >
-                                {t('dashboard.dashboardLink')}
+                                Dashboard
                             </Link>
                             <span className="material-symbols-outlined text-[10px]">chevron_right</span>
                             {userType === 'student' ? (
                                 <>
                                     <Link to="/opportunities" className="hover:text-indigo-600 cursor-pointer">{t('offerDetail.offersLink')}</Link>
+                                    <span className="material-symbols-outlined text-[10px]">chevron_right</span>
+                                </>
+                            ) : userType === 'admin' ? (
+                                <>
+                                    <Link to="/admin-dashboard" className="hover:text-indigo-600 cursor-pointer">Validations</Link>
                                     <span className="material-symbols-outlined text-[10px]">chevron_right</span>
                                 </>
                             ) : null}

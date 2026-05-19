@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import SharedInbox from '../components/SharedInbox';
 import CompanySidebar from '../components/CompanySidebar';
+import CompanyNavbar from '../components/CompanyNavbar';
 
 const CompanyInbox = () => {
     const [company, setCompany] = useState(null);
@@ -21,12 +22,15 @@ const CompanyInbox = () => {
     }, []);
 
     return (
-        <div className="flex font-body min-h-screen bg-slate-50 dark:bg-slate-950">
-            <div className="hidden md:block w-64 shrink-0">
-                <CompanySidebar company={company} activePage="inbox" topOffset="top-0" />
-            </div>
-            <div className="flex-1 w-full min-w-0">
-                <SharedInbox userType="company" title="Inbox" backLink="/company-dashboard" />
+        <div className="font-body min-h-screen bg-slate-50 dark:bg-slate-950">
+            <CompanyNavbar />
+            <div className="flex">
+                <div className="hidden md:block w-64 shrink-0">
+                    <CompanySidebar company={company} activePage="inbox" topOffset="top-0" />
+                </div>
+                <div className="flex-1 w-full min-w-0">
+                    <SharedInbox userType="company" title="Inbox" backLink="/company-dashboard" />
+                </div>
             </div>
         </div>
     );

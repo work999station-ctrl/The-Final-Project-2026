@@ -884,7 +884,7 @@ const EditStudentProfile = () => {
 
             {/* Floating Toast Notification */}
             {toast.show && (
-                <div className="fixed bottom-6 right-6 z-50 animate-in slide-in-from-bottom-5 fade-in duration-300">
+                <div className="fixed top-6 right-6 z-50 animate-in slide-in-from-top-5 fade-in duration-300">
                     <div className={`px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 border ${toast.type === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-800 dark:bg-emerald-900/30 dark:border-emerald-800 dark:text-emerald-300' : 'bg-red-50 border-red-200 text-red-800 dark:bg-red-900/30 dark:border-red-800 dark:text-red-300'}`}>
                         <span className="material-symbols-outlined text-2xl">
                             {toast.type === 'success' ? 'check_circle' : 'error'}

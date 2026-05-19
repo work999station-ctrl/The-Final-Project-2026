@@ -15,6 +15,10 @@ const Input = ({ icon, ...props }) => (
 
 const RoleSelector = ({ onSelect }) => (
     <div className="w-full max-w-xl mx-auto">
+        <Link to="/" className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors mb-8">
+            <span className="material-symbols-outlined text-lg">arrow_back</span>
+            Back to Home
+        </Link>
         <div className="text-center mb-10">
             <h1 className="text-3xl font-black text-slate-900 dark:text-white mb-2">Create your account</h1>
             <p className="text-slate-500 dark:text-slate-400">Who are you joining as?</p>
@@ -253,7 +257,7 @@ const StudentForm = ({ onBack }) => {
             if (data?.user || (data?.message && data.message.includes('success'))) {
                 setSuccess(true);
                 setTimeout(() => {
-                    navigate('/student-dashboard');
+                    navigate('/student-cv-upload');
                 }, 1500);
             } else {
                 setError(data?.message || 'Failed to sign up.');
@@ -264,7 +268,7 @@ const StudentForm = ({ onBack }) => {
             // Simulate success for local visualization fallback since backend isn't up
             setSuccess(true);
             setTimeout(() => {
-                navigate('/student-dashboard');
+                navigate('/student-cv-upload');
             }, 1500);
         }
     };
