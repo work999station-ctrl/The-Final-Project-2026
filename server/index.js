@@ -24,9 +24,13 @@ const socketManager = require('./socket');
 // Bypass Windows/ISP DNS issues with MongoDB Atlas SRV/TXT lookups
 require('dns').setServers(['8.8.8.8', '8.8.4.4']);
 
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("Connected"))
-  .catch(err => console.log(err));
+if (!process.env.MONGO_URI) {
+  console.warn("⚠️  WARNING: MONGO_URI is not set in .env — add it and restart the server.");
+}
+const mongoUri = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/stag";
+mongoose.connect(mongoUri)
+  .then(() => console.log(`✅ Connected to MongoDB`))
+  .catch(err => console.error(`❌ MongoDB connection error: ${err.message}`));
 
 app.get('/', (req, res) => res.json({ message: "Server is running", status: "API only" }));
 app.use(allRoutes);
