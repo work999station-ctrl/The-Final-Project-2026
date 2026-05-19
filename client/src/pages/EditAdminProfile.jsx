@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminNavbar from '../components/AdminNavbar';
 
@@ -90,6 +90,8 @@ const EditAdminProfile = () => {
             const data = await res.json();
 
             if (res.ok) {
+                // Store a cache-buster timestamp so all tabs pick up the new picture on focus
+                localStorage.setItem('adminProfilePicUpdatedAt', Date.now().toString());
                 navigate('/admin-dashboard');
             } else {
                 setError(data.error || 'Failed to save changes.');

@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminNavbar from '../components/AdminNavbar';
 import AdminSidebar from '../components/AdminSidebar';
@@ -19,6 +19,7 @@ const AdminDashboard = () => {
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [currentTime, setCurrentTime] = useState(new Date());
     const [filterStatus, setFilterStatus] = useState('All Statuses');
+    const [sortOrder, setSortOrder] = useState('Latest');
     const [stats, setStats] = useState({
         placedStudents: 0,
         unplacedStudents: 0
@@ -86,6 +87,10 @@ const AdminDashboard = () => {
         if (filterStatus === 'Agreement Generated') return app.status === 'validated';
         if (filterStatus === 'Pending') return app.status === 'accepted';
         return true;
+    }).sort((a, b) => {
+        const dateA = new Date(a.createdAt || 0).getTime();
+        const dateB = new Date(b.createdAt || 0).getTime();
+        return sortOrder === 'Latest' ? dateB - dateA : dateA - dateB;
     });
 
     const totalStudents = stats.placedStudents + stats.unplacedStudents;
@@ -231,6 +236,14 @@ const AdminDashboard = () => {
                                 <div className="p-6 border-b border-slate-100 dark:border-slate-800 dark:border-slate-700 flex flex-wrap gap-4 justify-between items-center">
                                     <h2 className="text-xl font-bold text-slate-900 dark:text-white font-headline">Recent Placements</h2>
                                     <div className="flex gap-2">
+                                        <button 
+                                            onClick={() => fetchDashboardData(true)}
+                                            disabled={isRefreshing}
+                                            title="Refresh"
+                                            className="px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 dark:text-slate-300 rounded-lg text-xs font-bold hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-800 transition-colors flex items-center gap-1 disabled:opacity-50"
+                                        >
+                                            <span className={`material-symbols-outlined text-[16px] ${isRefreshing ? 'animate-spin' : ''}`}>sync</span>
+                                        </button>
                                         <div className="relative">
                                             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 text-sm">filter_alt</span>
                                             <select 
@@ -243,8 +256,11 @@ const AdminDashboard = () => {
                                                 <option>Pending</option>
                                             </select>
                                         </div>
-                                        <button className="px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 dark:text-slate-300 rounded-lg text-xs font-bold hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-800 transition-colors">
-                                            Sort: Latest
+                                        <button 
+                                            onClick={() => setSortOrder(prev => prev === 'Latest' ? 'Oldest' : 'Latest')}
+                                            className="px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 dark:text-slate-300 rounded-lg text-xs font-bold hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-800 transition-colors"
+                                        >
+                                            Sort: {sortOrder}
                                         </button>
                                     </div>
                                 </div>

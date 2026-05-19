@@ -1,14 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Logo from './Logo';
 import ThemeToggle from './ThemeToggle';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useLang } from '../contexts/LanguageContext';
+import SocketContext from '../contexts/SocketContext';
 
 const AdminNavbar = ({ admin: adminProp }) => {
     const { t } = useLang();
     const navigate = useNavigate();
     const location = useLocation();
+    const socket = useContext(SocketContext);
     const [admin, setAdmin] = useState(adminProp || null);
     const [hasUnread, setHasUnread] = useState(false);
     const [messages, setMessages] = useState([]);
@@ -26,24 +28,45 @@ const AdminNavbar = ({ admin: adminProp }) => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
+    const fetchAdmin = async () => {
+        try {
+            const res = await fetch('/api/admin/me');
+            if (res.ok) {
+                const data = await res.json();
+                setAdmin(data.user || null);
+            }
+        } catch (err) {
+            console.error('AdminNavbar: failed to fetch admin', err);
+        }
+    };
+
     useEffect(() => {
         if (adminProp) {
             setAdmin(adminProp);
             return;
         }
-        const fetchAdmin = async () => {
-            try {
-                const res = await fetch('/api/admin/me');
-                if (res.ok) {
-                    const data = await res.json();
-                    setAdmin(data.user || null);
-                }
-            } catch (err) {
-                console.error('AdminNavbar: failed to fetch admin', err);
-            }
-        };
         fetchAdmin();
     }, [adminProp]);
+
+    // Real-time update: listen for profile changes via socket
+    useEffect(() => {
+        if (!socket) return;
+        const handleUserUpdated = (payload) => {
+            if (payload?.type === 'admin') {
+                // Re-fetch fresh data from the server to get the updated profile picture
+                fetchAdmin();
+            }
+        };
+        socket.on('user:updated', handleUserUpdated);
+        return () => socket.off('user:updated', handleUserUpdated);
+    }, [socket]);
+
+    // Cross-device update: re-fetch when the tab regains focus
+    useEffect(() => {
+        const handleFocus = () => fetchAdmin();
+        window.addEventListener('focus', handleFocus);
+        return () => window.removeEventListener('focus', handleFocus);
+    }, []);
 
     useEffect(() => {
         const checkInbox = async () => {
@@ -181,7 +204,7 @@ const AdminNavbar = ({ admin: adminProp }) => {
                     {/* Admin Avatar */}
                     <div
                         className="h-10 w-10 shrink-0 rounded-full bg-primary/20 ring-2 ring-primary/10 flex items-center justify-center overflow-hidden cursor-pointer hover:ring-4 hover:ring-primary/20 transition-all bg-cover bg-center text-primary shadow-sm"
-                        style={{ backgroundImage: admin?.profilePicture ? `url('${admin.profilePicture}')` : 'none' }}
+                        style={{ backgroundImage: admin?.profilePicture ? `url('${admin.profilePicture}?t=${localStorage.getItem('adminProfilePicUpdatedAt') || ''}')` : 'none' }}
                         onClick={() => navigate('/edit-admin-profile')}
                         title={admin?.fullName || 'Admin'}
                     >
