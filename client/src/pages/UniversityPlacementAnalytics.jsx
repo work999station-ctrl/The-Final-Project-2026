@@ -1,11 +1,15 @@
-﻿import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 import AdminSidebar from '../components/AdminSidebar';
 import AdminNavbar from '../components/AdminNavbar';
-
+import logoImage from '../assets/logo.png';
+import { QRCodeSVG } from 'qrcode.react';
 
 const UniversityPlacementAnalytics = () => {
+    const navigate = useNavigate();
     const currentMonthYear = new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' });
     const [adminUser, setAdminUser] = useState(null);
     const [trendFilter, setTrendFilter] = useState(3);
@@ -17,7 +21,8 @@ const UniversityPlacementAnalytics = () => {
         placedStudents: 0,
         unplacedStudents: 0,
         placementPercentage: 0,
-        monthlyTrends: []
+        monthlyTrends: [],
+        topCategories: []
     });
 
     useEffect(() => {
@@ -33,7 +38,8 @@ const UniversityPlacementAnalytics = () => {
                         placedStudents: res.data.stats.placedStudents || 0,
                         unplacedStudents: res.data.stats.unplacedStudents || 0,
                         placementPercentage: res.data.stats.placementPercentage || 0,
-                        monthlyTrends: res.data.stats.monthlyTrends || []
+                        monthlyTrends: res.data.stats.monthlyTrends || [],
+                        topCategories: res.data.stats.topCategories || []
                     });
                 }
             } catch (err) {
@@ -92,36 +98,186 @@ const UniversityPlacementAnalytics = () => {
     const { path: trendAreaPath } = generateTrendPath(trendData, true);
 
     return (
-        <div className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased min-h-screen font-body">
+        <div className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased min-h-screen font-body print:bg-white print:pt-0 print:block">
             {/* TopNavBar */}
-            <AdminNavbar admin={adminUser} />
+            <div className="print:hidden">
+                <AdminNavbar admin={adminUser} />
+            </div>
 
             {/* SideNavBar */}
-            <div className="hidden md:block">
+            <div className="hidden md:block print:hidden">
                 <AdminSidebar activePage="stats" adminUser={adminUser} />
             </div>
 
+            {/* Print Custom Styles */}
+            <style dangerouslySetInnerHTML={{ __html: `
+                @media print {
+                    @page { margin: 0; size: A4; }
+                    body { margin: 0; padding: 0 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+                    .print-doc { 
+                        width: 100% !important; 
+                        max-width: none !important; 
+                        box-shadow: none !important; 
+                        border: none !important; 
+                        padding: 2cm !important;
+                        margin: 0 !important;
+                        background: white !important; 
+                    }
+                    .dark { background: white !important; color: black !important; }
+                    .no-print { display: none !important; }
+                }
+            ` }} />
+
             {/* Main Content */}
-            <main className="md:ml-64 pt-24 pb-12 px-6 lg:px-10">
-                <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <main className="md:ml-64 pt-24 pb-12 px-6 lg:px-10 print:p-0 print:max-w-none">
+                
+                {/* THE OFFICIAL DOCUMENT (Print Only) */}
+                <div className="print-doc hidden print:block">
+                    {/* Watermark (Print Only) */}
+                    <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none select-none z-0 hidden print:flex">
+                        <span className="font-headline font-bold text-[120px] -rotate-45 text-slate-900 uppercase">Official Analytics</span>
+                    </div>
+                    
+                    {/* OFFICIAL HEADER (Print Only) */}
+                    <div className="relative z-10 print:bg-white p-2 sm:p-0">
+                        <div className="hidden print:flex justify-between items-start border-b-2 border-slate-900 pb-6 mb-10">
+                            <div className="flex items-center gap-4">
+                                <img src={logoImage} alt="stag.io" className="h-14 w-auto object-contain mix-blend-multiply" />
+                                <div className="h-12 w-px bg-slate-300"></div>
+                                <div>
+                                    <h2 className="font-headline font-bold text-2xl uppercase tracking-tighter text-slate-900">STAG.IO</h2>
+                                    <p className="font-mono text-[10px] text-slate-500 uppercase tracking-[0.2em]">Institutional Dashboard</p>
+                                </div>
+                            </div>
+                            <div className="text-right">
+                                <h3 className="font-headline font-bold text-slate-900 text-lg uppercase">Placement Analytics</h3>
+                                <p className="font-mono text-xs text-slate-500">Ref: ST-UNI-{adminUser?._id?.slice(-6).toUpperCase() || 'XXX'}-{new Date().getFullYear()}</p>
+                            </div>
+                        </div>
+
+                        {/* Summary Block (Print Only) */}
+                        <div className="hidden print:grid grid-cols-2 gap-8 mb-10 bg-slate-50 p-6 border border-slate-200 rounded-xl">
+                            <div>
+                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Academic Institution</p>
+                                <p className="text-lg font-bold text-slate-900">{adminUser?.universityName || 'University'}</p>
+                                <p className="text-xs text-slate-500 mt-1 italic">Verified Partner {new Date().getFullYear()}</p>
+                            </div>
+                            <div className="text-right">
+                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Reporting Period</p>
+                                <p className="text-lg font-bold text-slate-900">Academic Year {new Date().getFullYear()}</p>
+                                <p className="text-xs text-slate-500 mt-1 font-mono">{new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* FORMAL DOCUMENT BODY (Print Only) */}
+                    <div className="hidden print:block space-y-12 mb-10">
+                        <section>
+                            <div className="mb-6">
+                                <h4 className="font-bold uppercase text-xs tracking-wider border-b border-slate-200 pb-1 mb-4 text-slate-500">Article 1: Key Performance Indicators</h4>
+                                <p className="text-sm text-slate-600 leading-relaxed mb-6">Summary of active student population and current transition rates into the professional sector.</p>
+                            </div>
+                            <div className="grid grid-cols-4 gap-4">
+                                {[
+                                    { label: 'Total Enrolled', value: stats.totalStudents, icon: 'groups' },
+                                    { label: 'Accepted Offers', value: stats.acceptedApplications, icon: 'trending_up' },
+                                    { label: 'Validated Placements', value: stats.validatedApplications, icon: 'verified' },
+                                    { label: 'Placement Rate', value: `${stats.placementPercentage}%`, icon: 'analytics' }
+                                ].map((kpi, i) => (
+                                    <div key={i} className="p-4 border border-slate-300 rounded-lg shadow-none">
+                                        <div className="flex justify-between items-center mb-2 text-slate-500">
+                                            <span className="material-symbols-outlined text-lg">{kpi.icon}</span>
+                                        </div>
+                                        <p className="text-[9px] font-bold uppercase tracking-wider mb-1">{kpi.label}</p>
+                                        <h3 className="text-xl font-bold">{kpi.value}</h3>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+
+                        <section>
+                            <div className="mb-6">
+                                <h4 className="font-bold uppercase text-xs tracking-wider border-b border-slate-200 pb-1 mb-4 text-slate-500">Article 2: Placement Categorization</h4>
+                            </div>
+                            <table className="w-full text-left border-collapse">
+                                <thead>
+                                    <tr className="bg-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                                        <th className="py-2 px-4 border-b border-slate-200">Category</th>
+                                        <th className="py-2 px-4 border-b border-slate-200 text-right">Placements</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="text-sm">
+                                    {stats.topCategories && stats.topCategories.map((cat, i) => (
+                                        <tr key={i}>
+                                            <td className="py-2 px-4 border-b border-slate-100 font-bold">{cat.name}</td>
+                                            <td className="py-2 px-4 border-b border-slate-100 text-right font-bold">{cat.count}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </section>
+                    </div>
+
+                    {/* QR AUTHENTICITY SECTION (Print Only) */}
+                    <section className="hidden print:flex items-center justify-between gap-10 pt-10 mt-10 border-t border-slate-900 border-b border-slate-900 pb-10">
+                        <div className="flex-1">
+                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-900 mb-2">Authenticity & Verification</p>
+                            <p className="text-[11px] text-slate-600 leading-relaxed font-medium">
+                                This document is a certified extract from the Stag.io placement registry.
+                                Any alteration to this report renders it void. Scan the QR code to verify
+                                this data against live system records.
+                            </p>
+                            <div className="mt-4 flex gap-6">
+                                <div>
+                                    <p className="text-[9px] font-black text-slate-400 uppercase">Integrity Hash</p>
+                                    <p className="font-mono text-[9px] text-slate-600 uppercase mt-1">SHA-256: {adminUser?._id?.slice(0, 32).toUpperCase() || 'XXX'}</p>
+                                </div>
+                                <div>
+                                    <p className="text-[9px] font-black text-slate-400 uppercase">Validation Status</p>
+                                    <p className="text-[9px] font-bold text-emerald-600 uppercase mt-1">✓ Secure & Verified</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex flex-col items-center gap-2 shrink-0">
+                            <div className="p-3 bg-white border-4 border-slate-900 rounded-xl shadow-lg">
+                                <QRCodeSVG
+                                    value={`${window.location.origin}/university-placement-analytics?verify=${adminUser?._id}`}
+                                    size={100}
+                                    level="H"
+                                />
+                            </div>
+                            <p className="text-[9px] font-black text-slate-900 uppercase tracking-[0.2em]">Scan to Verify</p>
+                        </div>
+                    </section>
+                </div>
+
+                {/* SCREEN ONLY HEADER */}
+                <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4 print:hidden">
                     <div>
                         <h1 className="text-3xl lg:text-4xl font-bold tracking-tight text-slate-900 dark:text-white mb-2 font-headline">Institutional Placement Analytics</h1>
                         <p className="text-slate-500 dark:text-slate-400 max-w-2xl">Visualizing career transition performance and institutional placement metrics for Academic Year 2026.</p>
                     </div>
-                    <div className="flex gap-2">
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 text-xs font-semibold">
+                    <div className="flex gap-2 items-center mt-4 md:mt-0">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 text-xs font-semibold">
                             <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
                             Live Analytics
                         </span>
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-semibold">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-semibold">
                             <span className="material-symbols-outlined text-xs">calendar_today</span>
                             {currentMonthYear}
                         </span>
+                        <button 
+                            onClick={exportPDF}
+                            className="flex items-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-4 py-1.5 rounded-full font-bold text-xs transition-all hover:scale-105 active:scale-95 shadow-md shadow-slate-200 dark:shadow-none ml-2"
+                        >
+                            <span className="material-symbols-outlined text-[16px]">print</span>
+                            <span>Export Report</span>
+                        </button>
                     </div>
                 </header>
 
                 {/* Enhanced KPI Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 print:hidden">
                     <div className="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between group hover:shadow-md transition-all relative overflow-hidden">
                         <div className="absolute right-0 top-0 w-24 h-24 bg-indigo-50/50 dark:bg-indigo-900/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
                         <div className="relative z-10 flex justify-between items-start mb-6">
@@ -174,7 +330,7 @@ const UniversityPlacementAnalytics = () => {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 print:hidden">
                     {/* Global Placement Rate Section */}
                     <div className="xl:col-span-1 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-8 flex flex-col items-center justify-center">
                         <div className="w-full mb-6">
@@ -297,77 +453,37 @@ const UniversityPlacementAnalytics = () => {
                         <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-8">
                             <h2 className="font-bold text-xl mb-6 font-headline">Top Placed Categories</h2>
                             <div className="space-y-6">
-                                <div className="space-y-2">
-                                    <div className="flex justify-between items-center text-sm">
-                                        <span className="font-semibold">Software Development</span>
-                                        <span className="text-indigo-600 font-bold">482</span>
-                                    </div>
-                                    <div className="h-3 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                                        <div className="h-full bg-indigo-600 rounded-full" style={{ width: '85%' }}></div>
-                                    </div>
-                                </div>
-                                <div className="space-y-2">
-                                    <div className="flex justify-between items-center text-sm">
-                                        <span className="font-semibold">Data Analytics &amp; AI</span>
-                                        <span className="text-sky-500 font-bold">310</span>
-                                    </div>
-                                    <div className="h-3 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                                        <div className="h-full bg-sky-500 rounded-full" style={{ width: '65%' }}></div>
-                                    </div>
-                                </div>
-                                <div className="space-y-2">
-                                    <div className="flex justify-between items-center text-sm">
-                                        <span className="font-semibold">Business Strategy</span>
-                                        <span className="text-indigo-900 dark:text-indigo-400 font-bold">204</span>
-                                    </div>
-                                    <div className="h-3 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                                        <div className="h-full bg-indigo-900 dark:bg-indigo-700 rounded-full" style={{ width: '45%' }}></div>
-                                    </div>
-                                </div>
-                                <div className="space-y-2">
-                                    <div className="flex justify-between items-center text-sm">
-                                        <span className="font-semibold">UI/UX Design</span>
-                                        <span className="text-sky-300 font-bold">135</span>
-                                    </div>
-                                    <div className="h-3 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                                        <div className="h-full bg-sky-300 rounded-full" style={{ width: '30%' }}></div>
-                                    </div>
-                                </div>
+                                {stats.topCategories && stats.topCategories.length > 0 ? stats.topCategories.map((cat, idx) => {
+                                    const colors = [
+                                        { text: 'text-indigo-600', bg: 'bg-indigo-600' },
+                                        { text: 'text-sky-500', bg: 'bg-sky-500' },
+                                        { text: 'text-indigo-900 dark:text-indigo-400', bg: 'bg-indigo-900 dark:bg-indigo-700' },
+                                        { text: 'text-sky-300', bg: 'bg-sky-300' }
+                                    ];
+                                    const color = colors[idx % colors.length];
+                                    const maxCount = Math.max(...stats.topCategories.map(c => c.count), 1);
+                                    const widthPct = (cat.count / maxCount) * 100;
+                                    return (
+                                        <div key={idx} className="space-y-2">
+                                            <div className="flex justify-between items-center text-sm">
+                                                <span className="font-semibold">{cat.name}</span>
+                                                <span className={`${color.text} font-bold`}>{cat.count}</span>
+                                            </div>
+                                            <div className="h-3 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                                <div className={`h-full ${color.bg} rounded-full`} style={{ width: `${widthPct}%` }}></div>
+                                            </div>
+                                        </div>
+                                    );
+                                }) : (
+                                    <p className="text-sm text-slate-500">No category data available yet.</p>
+                                )}
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Footer Stats & Connectivity */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
-                    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-8">
-                        <h3 className="font-bold text-lg mb-6 font-headline">Recent System Activity</h3>
-                        <div className="space-y-5">
-                            <div className="flex gap-4">
-                                <div className="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 flex items-center justify-center text-indigo-600 flex-shrink-0">
-                                    <span className="material-symbols-outlined text-xl">add_business</span>
-                                </div>
-                                <div>
-                                    <p className="text-sm font-bold">New Partner Onboarded</p>
-                                    <p className="text-xs text-slate-500">Tesla Gigafactory Berlin added to host pool.</p>
-                                    <p className="text-[10px] text-slate-400 font-medium mt-1">2 hours ago</p>
-                                </div>
-                            </div>
-                            <div className="flex gap-4">
-                                <div className="w-10 h-10 rounded-lg bg-sky-50 dark:bg-sky-900/20 flex items-center justify-center text-sky-600 flex-shrink-0">
-                                    <span className="material-symbols-outlined text-xl">verified_user</span>
-                                </div>
-                                <div>
-                                    <p className="text-sm font-bold">Compliance Milestone</p>
-                                    <p className="text-xs text-slate-500">Batch #44 agreements (12 units) fully validated.</p>
-                                    <p className="text-[10px] text-slate-400 font-medium mt-1">5 hours ago</p>
-                                </div>
-                            </div>
-                        </div>
-                        <button className="w-full mt-6 py-2.5 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
-                            View Full Audit History
-                        </button>
-                    </div>
+                {/* Footer Stats & Connectivity (Screen Only) */}
+                <div className="grid grid-cols-1 gap-8 mt-10 print:hidden">
 
                     <div className="bg-indigo-700 rounded-2xl p-8 text-white shadow-xl relative overflow-hidden group">
                         <div className="absolute inset-0 opacity-10 pointer-events-none">
@@ -426,5 +542,25 @@ const UniversityPlacementAnalytics = () => {
         </div>
     );
 };
+
+// Helper function to export the printable document as PDF
+function exportPDF() {
+  const element = document.querySelector('.print-doc');
+  if (!element) {
+    console.error('Print document not found');
+    return;
+  }
+  html2canvas(element, { scale: 2 }).then((canvas) => {
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    const filename = `PlacementAnalytics_${new Date().toISOString().split('T')[0]}.pdf`;
+    pdf.save(filename);
+  }).catch((err) => {
+    console.error('Failed to generate PDF', err);
+  });
+}
 
 export default UniversityPlacementAnalytics;

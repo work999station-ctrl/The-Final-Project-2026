@@ -1,15 +1,57 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLang } from '../contexts/LanguageContext';
+import SocketContext from '../contexts/SocketContext';
 
-const AdminSidebar = ({ activePage, adminUser }) => {
+const AdminSidebar = ({ activePage, adminUser: adminUserProp }) => {
     const navigate = useNavigate();
     const { t } = useLang();
+    const socket = useContext(SocketContext);
+    const [adminUser, setAdminUser] = useState(adminUserProp || null);
     const [isCollapsed, setIsCollapsed] = useState(() => {
         return localStorage.getItem('adminSidebarCollapsed') === 'true';
     });
 
     const sidebarWidth = isCollapsed ? '4.5rem' : '16rem';
+
+    // Keep adminUser in sync when prop changes (e.g. from AdminDashboard)
+    useEffect(() => {
+        if (adminUserProp) setAdminUser(adminUserProp);
+    }, [adminUserProp]);
+
+    // Self-fetch admin profile
+    const fetchAdminUser = async () => {
+        try {
+            const res = await fetch('/api/admin/me');
+            if (res.ok) {
+                const data = await res.json();
+                if (data.user) setAdminUser(data.user);
+            }
+        } catch (err) {
+            console.error('AdminSidebar: failed to fetch admin', err);
+        }
+    };
+
+    useEffect(() => {
+        if (!adminUserProp) fetchAdminUser();
+    }, []);
+
+    // Real-time update: listen for profile changes via socket
+    useEffect(() => {
+        if (!socket) return;
+        const handleUserUpdated = (payload) => {
+            if (payload?.type === 'admin') fetchAdminUser();
+        };
+        socket.on('user:updated', handleUserUpdated);
+        return () => socket.off('user:updated', handleUserUpdated);
+    }, [socket]);
+
+    // Cross-device: re-fetch when window regains focus
+    useEffect(() => {
+        const handleFocus = () => fetchAdminUser();
+        window.addEventListener('focus', handleFocus);
+        return () => window.removeEventListener('focus', handleFocus);
+    }, []);
 
     useEffect(() => {
         localStorage.setItem('adminSidebarCollapsed', isCollapsed);
@@ -45,7 +87,7 @@ const AdminSidebar = ({ activePage, adminUser }) => {
                 >
                     <div 
                         className="h-10 w-10 shrink-0 rounded-full bg-primary/20 ring-2 ring-primary/10 flex items-center justify-center overflow-hidden bg-cover bg-center text-primary shadow-sm"
-                        style={{ backgroundImage: adminUser?.profilePicture ? `url('${adminUser.profilePicture}')` : 'none' }}
+                        style={{ backgroundImage: adminUser?.profilePicture ? `url('${adminUser.profilePicture}?t=${localStorage.getItem('adminProfilePicUpdatedAt') || ''}')` : 'none' }}
                     >
                         {!adminUser?.profilePicture && <span className="material-symbols-outlined text-[20px]">school</span>}
                     </div>

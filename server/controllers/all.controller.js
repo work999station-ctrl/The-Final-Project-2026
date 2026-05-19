@@ -1698,6 +1698,28 @@ const getUniversityPlacementStats = async (req, res) => {
       }
     }
 
+    // Top Placed Categories logic
+    const validatedApps = await Application.find({
+      studentId: { $in: studentIds },
+      status: 'validated'
+    }).populate('offerId');
+
+    const categoryCounts = {};
+    validatedApps.forEach(app => {
+      let category = 'General';
+      if (app.offerId && app.offerId.techStack && app.offerId.techStack.length > 0) {
+        category = app.offerId.techStack[0].category || 'General';
+      } else if (app.offerId && app.offerId.title) {
+        category = app.offerId.title;
+      }
+      categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+    });
+
+    const topCategories = Object.keys(categoryCounts)
+      .map(cat => ({ name: cat, count: categoryCounts[cat] }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 4);
+
     res.status(200).json({
       success: true,
       stats: {
@@ -1707,7 +1729,8 @@ const getUniversityPlacementStats = async (req, res) => {
         placedStudents,
         unplacedStudents,
         placementPercentage,
-        monthlyTrends
+        monthlyTrends,
+        topCategories
       }
     });
 
