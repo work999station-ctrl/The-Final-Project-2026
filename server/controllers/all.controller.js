@@ -638,13 +638,10 @@ const updateOffer = async (req, res) => {
       { returnDocument: 'after', runValidators: true }
     );
 
-    // If a logo was uploaded, update the associated company logo
+    // If a photo was uploaded, update the offer photo
     if (req.file) {
-      const company = await Company.findById(req.user._id);
-      if (company) {
-        company.logo = `/uploads/company/${req.file.filename}`;
-        await company.save();
-      }
+      updatedOffer.photo = `/uploads/company/${req.file.filename}`;
+      await updatedOffer.save();
     }
 
     res.status(200).json({ success: true, offer: updatedOffer });
@@ -1293,6 +1290,7 @@ const getAdminCompanyProfile = async (req, res) => {
       company: {
         _id: company._id,
         name: company.companyName,
+        email: company.email,
         industry: "Technology", // Mocked Fallback since schema doesn't have it
         location: company.address || "Location Unknown",
         size: "N/A", // Mocked Fallback
@@ -1720,6 +1718,10 @@ const getUniversityPlacementStats = async (req, res) => {
       .sort((a, b) => b.count - a.count)
       .slice(0, 4);
 
+    const totalPartners = await Company.countDocuments();
+    const wilayas = await Company.distinct('address');
+    const totalWilayas = wilayas.filter(w => w && w.trim() !== '').length || 1;
+
     res.status(200).json({
       success: true,
       stats: {
@@ -1730,7 +1732,9 @@ const getUniversityPlacementStats = async (req, res) => {
         unplacedStudents,
         placementPercentage,
         monthlyTrends,
-        topCategories
+        topCategories,
+        totalPartners,
+        totalWilayas
       }
     });
 

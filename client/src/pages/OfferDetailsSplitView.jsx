@@ -376,8 +376,8 @@ const OfferDetailsSplitView = () => {
                                 <div className="absolute -bottom-6 left-8">
                                     <div className="h-20 w-20 bg-white dark:bg-slate-800 p-2 rounded-xl shadow-lg border border-slate-100 dark:border-slate-700 flex items-center justify-center">
                                         <div className="w-full h-full bg-indigo-50 dark:bg-indigo-900/30 rounded-lg flex items-center justify-center overflow-hidden">
-                                            {company?.logo ? (
-                                                <img src={`${company.logo}${company.logo.includes('?') ? '' : `?t=${Date.now()}`}`} alt="Company Logo" className="w-full h-full object-cover" />
+                                            {offer?.photo || company?.logo ? (
+                                                <img src={offer?.photo ? offer.photo : `${company.logo}${company.logo.includes('?') ? '' : `?t=${Date.now()}`}`} alt="Logo" className="w-full h-full object-cover" />
                                             ) : (
                                                 <span className="material-symbols-outlined text-indigo-600 dark:text-indigo-400 text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>developer_board</span>
                                             )}

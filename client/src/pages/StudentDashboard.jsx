@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import StudentNavbar from '../components/StudentNavbar';
@@ -396,8 +396,8 @@ const StudentDashboard = () => {
                                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
                                             <div className="flex items-center gap-4">
                                                 <div className="size-12 rounded-lg bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 flex items-center justify-center p-1 overflow-hidden">
-                                                    {app.offerId?.companyId?.logo ? (
-                                                        <img alt="Company Logo" className="w-full h-full object-contain" src={`http://localhost:3000${app.offerId.companyId.logo}`} />
+                                                    {app.offerId?.photo || app.offerId?.companyId?.logo ? (
+                                                        <img alt="Logo" className="w-full h-full object-contain" src={`http://localhost:3000${app.offerId?.photo ? app.offerId.photo : app.offerId.companyId.logo}`} />
                                                     ) : (
                                                         <span className="material-symbols-outlined text-gray-400">business</span>
                                                     )}
@@ -536,8 +536,8 @@ const StudentDashboard = () => {
                                             <div className="flex-1">
                                                 <div className="flex justify-between items-start mb-4">
                                                     <div className="size-10 rounded-lg bg-gray-50 dark:bg-slate-800 flex items-center justify-center border border-gray-100 dark:border-slate-700 overflow-hidden">
-                                                        {offer.company?.logo ? (
-                                                            <img alt={`${offer.company.name} Logo`} className="w-full h-full object-cover" src={offer.company.logo} />
+                                                        {offer.photo || offer.company?.logo ? (
+                                                            <img alt={`${offer.company.name} Logo`} className="w-full h-full object-cover" src={offer.photo ? offer.photo : offer.company.logo} />
                                                         ) : (
                                                             <span className="material-symbols-outlined text-gray-400">corporate_fare</span>
                                                         )}

@@ -117,7 +117,7 @@ const AdminDashboard = () => {
                         </div>
                         <div className="flex gap-3">
                             <button
-                                onClick={() => fetchDashboardData(true)}
+                                onClick={() => { fetchDashboardData(true); setFilterStatus('All Statuses'); setSortOrder('Latest'); }}
                                 disabled={isRefreshing}
                                 className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 px-4 py-2.5 rounded-lg flex items-center gap-2 font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-sm disabled:opacity-60"
                             >
@@ -237,7 +237,7 @@ const AdminDashboard = () => {
                                     <h2 className="text-xl font-bold text-slate-900 dark:text-white font-headline">Recent Placements</h2>
                                     <div className="flex gap-2">
                                         <button 
-                                            onClick={() => fetchDashboardData(true)}
+                                            onClick={() => { fetchDashboardData(true); setFilterStatus('All Statuses'); setSortOrder('Latest'); }}
                                             disabled={isRefreshing}
                                             title="Refresh"
                                             className="px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 dark:text-slate-300 rounded-lg text-xs font-bold hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-800 transition-colors flex items-center gap-1 disabled:opacity-50"
