@@ -47,5 +47,5 @@ export const getProfileCompletion = (user) => {
     const hasExperience = user.experience && user.experience.length > 0;
     if (hasProjects || hasExperience) filled++;
 
-    return Math.round((filled / 13) * 100);
+    return Math.min(100, Math.round((filled / 14) * 100));
 };

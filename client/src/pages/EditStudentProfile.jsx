@@ -32,6 +32,8 @@ const EditStudentProfile = () => {
     const [experience, setExperience] = useState([]);
     const [profilePicFile, setProfilePicFile] = useState(null);
     const [profilePicPreview, setProfilePicPreview] = useState(null);
+    const [cvFile, setCvFile] = useState(null);
+    const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [error, setError] = useState('');
@@ -144,6 +146,11 @@ const EditStudentProfile = () => {
         'Sports Nutrition': 'restaurant', 'First Aid': 'medical_services'
     };
 
+    const showToastMessage = (message, type = 'success') => {
+        setToast({ show: true, message, type });
+        setTimeout(() => setToast({ show: false, message: '', type: 'success' }), 5000);
+    };
+
     const toggleSkill = (skill) => {
         if (skills.includes(skill)) {
             setSkills(skills.filter(s => s !== skill));
@@ -218,7 +225,7 @@ const EditStudentProfile = () => {
             setSkills([...skills, skill.trim()]);
             setShowSkillsDropdown(false);
         } else if (skills.includes(skill?.trim())) {
-            alert('Skill already added!');
+            showToastMessage('Skill already added!', 'error');
         }
     };
 
@@ -235,6 +242,7 @@ const EditStudentProfile = () => {
         const file = e.target.files[0];
         if (!file) return;
 
+        setCvFile(file);
         setIsExtractingCV(true);
         const form = new FormData();
         form.append('cv', file);
@@ -270,13 +278,13 @@ const EditStudentProfile = () => {
                     setExperience(prev => [...prev, ...data.experience]);
                 }
 
-                alert('CV Successfully Parsed! Extracted information has been filled.');
+                showToastMessage('CV Successfully Parsed! Extracted information has been filled.', 'success');
             } else {
-                alert(result.error || 'Failed to parse CV.');
+                showToastMessage(result.error || 'Failed to parse CV.', 'error');
             }
         } catch (error) {
             console.error('Error uploading CV:', error);
-            alert('An error occurred while parsing the CV.');
+            showToastMessage('An error occurred while parsing the CV.', 'error');
         } finally {
             setIsExtractingCV(false);
             // Clear the input so the same file can be uploaded again if needed
@@ -306,6 +314,9 @@ const EditStudentProfile = () => {
             submitData.append('experience', JSON.stringify(experience));
             if (profilePicFile) {
                 submitData.append('profile_picture', profilePicFile);
+            }
+            if (cvFile) {
+                submitData.append('cv', cvFile);
             }
 
             const res = await fetch('/api/student/profile', {
@@ -821,7 +832,7 @@ const EditStudentProfile = () => {
                                                 {isExtractingCV ? (
                                                     <><span className="material-symbols-outlined text-lg animate-spin">progress_activity</span> Extracting...</>
                                                 ) : (
-                                                    <><span className="material-symbols-outlined text-lg">upload_file</span> Upload CV</>
+                                                    <><span className="material-symbols-outlined text-lg">upload_file</span> {cvFile ? 'CV Selected' : 'Upload CV'}</>
                                                 )}
                                             </button>
                                         </div>
@@ -870,6 +881,24 @@ const EditStudentProfile = () => {
                     </footer>
                 </div>
             </div>
+
+            {/* Floating Toast Notification */}
+            {toast.show && (
+                <div className="fixed top-6 right-6 z-50 animate-in slide-in-from-top-5 fade-in duration-300">
+                    <div className={`px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 border ${toast.type === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-800 dark:bg-emerald-900/30 dark:border-emerald-800 dark:text-emerald-300' : 'bg-red-50 border-red-200 text-red-800 dark:bg-red-900/30 dark:border-red-800 dark:text-red-300'}`}>
+                        <span className="material-symbols-outlined text-2xl">
+                            {toast.type === 'success' ? 'check_circle' : 'error'}
+                        </span>
+                        <div>
+                            <p className="font-bold">{toast.type === 'success' ? 'Success!' : 'Error'}</p>
+                            <p className="text-sm opacity-90">{toast.message}</p>
+                        </div>
+                        <button onClick={() => setToast({ show: false, message: '', type: 'success' })} className="ml-4 opacity-70 hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <span className="material-symbols-outlined text-lg">close</span>
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

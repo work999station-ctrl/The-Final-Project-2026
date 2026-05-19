@@ -49,7 +49,7 @@ const SharedInbox = ({ userType, title, backLink, navTitle = "stage.io", hideHea
     return (
         <div className="bg-background-light text-text-main font-body min-h-screen flex flex-col antialiased overflow-hidden">
             {/* Top Navigation Bar */}
-            {!hideHeader && (
+            {/* {!hideHeader && (
                 <header className="sticky top-0 z-50 w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 lg:px-12 py-4 shrink-0">
                 <div className="max-w-[1600px] mx-auto flex items-center justify-between">
                     <div className="flex items-center gap-8">
@@ -63,7 +63,7 @@ const SharedInbox = ({ userType, title, backLink, navTitle = "stage.io", hideHea
                     </div>
                 </div>
             </header>
-            )}
+            )} */}
 
             {/* Main Container */}
             <main className="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50 dark:bg-slate-900/50">
