@@ -7,7 +7,7 @@ const moment = require('moment');
 const jwt = require('jsonwebtoken');
 const socketManager = require('../socket');
 const { sendAgreementEmails } = require('../utils/emailService');
-const { generateAgreementPDF } = require('../utils/generateAgreementPDF');
+
 
 // Helper — safely emit so the app doesn't crash if socket isn't ready
 const emit = (event, payload) => {
