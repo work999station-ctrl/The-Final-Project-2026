@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useLang } from '../contexts/LanguageContext';
 import CompanyNavbar from '../components/CompanyNavbar';
@@ -31,7 +31,8 @@ const CandidateTrackingStatistics = () => {
         type: '',
         status: '',
         offer: '',
-        date: ''
+        date: '',
+        skills: ''
     });
     const [openFilter, setOpenFilter] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
@@ -99,7 +100,8 @@ const CandidateTrackingStatistics = () => {
             const matchesType = !activeFilters.type || app.offerId?.internshipType === activeFilters.type;
             const matchesStatus = !activeFilters.status || app.status === activeFilters.status;
             const matchesOffer = !activeFilters.offer || app.offerId?.title === activeFilters.offer;
-            return matchesSearch && matchesLocation && matchesType && matchesStatus && matchesOffer;
+            const matchesSkill = !activeFilters.skills || (app.studentId?.skills || []).some(s => s.toLowerCase() === activeFilters.skills.toLowerCase());
+            return matchesSearch && matchesLocation && matchesType && matchesStatus && matchesOffer && matchesSkill;
         })
         .sort((a, b) => {
             if (activeFilters.date === 'newest') return new Date(b.createdAt) - new Date(a.createdAt);
@@ -108,6 +110,9 @@ const CandidateTrackingStatistics = () => {
         });
 
     const offerTitles = [...new Set(applications.map(app => app.offerId?.title).filter(Boolean))];
+    const allSkills = [...new Set(applications.flatMap(app => app.studentId?.skills || []).map(s => s.trim()))]
+        .filter(Boolean)
+        .sort((a, b) => a.localeCompare(b));
     const totalApplicants = filteredApplications.length;
     const totalPages = Math.ceil(totalApplicants / PAGE_SIZE);
     const paginatedApplications = filteredApplications.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
@@ -139,13 +144,56 @@ const CandidateTrackingStatistics = () => {
         '55 - Touggourt', '56 - Djanet', '57 - In Salah', '58 - In Guezzam'
     ];
 
+    const itCategories = [
+        { id: 'front', name: 'Front-end', skills: ['React', 'Next.js', 'Vue.js', 'Tailwind CSS', 'Angular', 'HTML/CSS', 'TypeScript', 'JavaScript', 'Svelte', 'Bootstrap', 'Sass', 'jQuery'] },
+        { id: 'back', name: 'Back-end', skills: ['Node.js', 'Express', 'Python', 'Django', 'Go', 'PHP', 'Java', 'C++', 'Rust', 'C#', '.NET', 'Ruby', 'Laravel', 'Flask', 'FastAPI', 'Spring Boot', 'Scala', 'R'] },
+        { id: 'mobile', name: 'Mobile', skills: ['React Native', 'Flutter', 'Swift', 'Kotlin', 'Dart', 'Ionic'] },
+        { id: 'database', name: 'Database', skills: ['PostgreSQL', 'MongoDB', 'Redis', 'MySQL', 'Firebase', 'SQL', 'SQLite', 'Oracle', 'Supabase'] },
+        { id: 'devops', name: 'DevOps', skills: ['Docker', 'AWS', 'CI/CD', 'Linux', 'Git', 'Kubernetes', 'Terraform', 'Jenkins', 'Nginx', 'Azure', 'Google Cloud', 'Ansible'] },
+        { id: 'ai', name: 'AI & Data Science', skills: ['TensorFlow', 'PyTorch', 'Pandas', 'NumPy', 'Jupyter', 'OpenCV', 'Matlab', 'Keras'] }
+    ];
+
+    const ecommerceCategories = [
+        { id: 'ecommerce1', name: 'E-commerce & Digital Business', skills: ['Shopify', 'WooCommerce', 'PrestaShop', 'Magento', 'Supply Chain', 'Dropshipping', 'Inventory Management', 'Payment Gateways'] },
+        { id: 'ecommerce2', name: 'Digital Marketing & SEO', skills: ['SEO', 'Google Analytics', 'Social Media Management', 'Facebook Ads', 'Google Ads', 'Copywriting', 'Email Marketing', 'Content Strategy'] },
+        { id: 'ecommerce3', name: 'Management & Business Analysis', skills: ['Project Management', 'Agile/Scrum', 'Business Analysis', 'CRM (Salesforce, HubSpot)', 'Market Research', 'Data Entry'] },
+        { id: 'ecommerce4', name: 'Design & Multimedia', skills: ['Adobe Photoshop', 'Illustrator', 'Premiere Pro', 'Figma', 'Canva', 'Blender', 'After Effects', 'Video Editing', 'Brand Identity', 'Graphic Design', 'Product Photography'] }
+    ];
+
+    const psychologyCategories = [
+        { id: 'psychology1', name: 'HR & Organizational Psychology', skills: ['Recruitment', 'Talent Acquisition', 'Organizational Behavior', 'Employee Well-being', 'Conflict Resolution', 'Training & Development', 'Psychometric Testing'] },
+        { id: 'psychology2', name: 'Clinical Psychology & Healthcare', skills: ['Clinical Assessment', 'Cognitive Behavioral Therapy (CBT)', 'Patient Counseling', 'Child Psychology', 'Neuropsychology', 'Group Therapy', 'Case Management'] },
+        { id: 'psychology3', name: 'Educational & Social Psychology', skills: ['Career Guidance', 'Special Education', 'Developmental Psychology', 'Speech Therapy (Orthophony)', 'Behavioral Intervention', 'Student Counseling'] }
+    ];
+
+    const sportCategories = [
+        { id: 'sport1', name: 'Coaching & Fitness', skills: ['Sports Coaching', 'Personal Training', 'Fitness Assessment', 'Strength & Conditioning'] },
+        { id: 'sport2', name: 'Health & Therapy', skills: ['Biomechanics', 'Athletic Therapy', 'Exercise Physiology', 'Kinesiology', 'Rehabilitation', 'First Aid', 'CPR'] },
+        { id: 'sport3', name: 'Management & Business', skills: ['Sports Management', 'Event Planning', 'Sports Psychology', 'Sports Nutrition'] }
+    ];
+
+    const skillCategories = [
+        ...itCategories,
+        ...ecommerceCategories,
+        ...psychologyCategories,
+        ...sportCategories
+    ];
+
+    const groupedSkills = skillCategories.map(cat => ({
+        ...cat,
+        availableSkills: cat.skills.filter(s => allSkills.some(as => as.toLowerCase() === s.toLowerCase()))
+    })).filter(cat => cat.availableSkills.length > 0);
+
+    const categorizedSkillNames = new Set(skillCategories.flatMap(c => c.skills).map(s => s.toLowerCase()));
+    const otherSkills = allSkills.filter(s => !categorizedSkillNames.has(s.toLowerCase()));
+
     const applyFilter = (key, value) => {
         setActiveFilters(prev => ({ ...prev, [key]: prev[key] === value ? '' : value }));
         setOpenFilter(null);
     };
 
     const clearFilters = () => {
-        setActiveFilters({ location: '', type: '', status: '', offer: '', date: '' });
+        setActiveFilters({ location: '', type: '', status: '', offer: '', date: '', skills: '' });
         setSearchQuery('');
         setCurrentPage(1);
     };
@@ -389,8 +437,76 @@ const CandidateTrackingStatistics = () => {
                                     </div>
                                 )}
                             </div>
+                            {/* Skills Filter */}
+                            <div className="relative">
+                                {activeFilters.skills ? (
+                                    <span className="flex items-center gap-1.5 pl-3 pr-2 py-2 bg-[#4F46E5]/10 text-[#4F46E5] rounded-full text-sm font-semibold border border-[#4F46E5]/30 shadow-sm whitespace-nowrap cursor-default">
+                                        <span className="material-symbols-outlined text-lg">code</span> {activeFilters.skills}
+                                        <button onClick={() => applyFilter('skills', '')} className="ml-0.5 rounded-full hover:bg-[#4F46E5]/20 p-0.5 transition-colors">
+                                            <span className="material-symbols-outlined text-[14px]">close</span>
+                                        </button>
+                                    </span>
+                                ) : (
+                                    <button
+                                        onClick={() => setOpenFilter(openFilter === 'skills' ? null : 'skills')}
+                                        className={`flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-full text-sm font-medium text-slate-900 dark:text-white border shadow-sm hover:shadow-md transition-all whitespace-nowrap ${openFilter === 'skills' ? 'border-[#4F46E5] ring-2 ring-[#4F46E5]/20' : 'border-transparent hover:border-[#4F46E5]/30'}`}
+                                    >
+                                        <span className="material-symbols-outlined text-[18px] text-slate-500">code</span>
+                                        {t('candidateTracking.filters.skills')}
+                                        <span className={`material-symbols-outlined text-[18px] text-slate-500 transition-transform ${openFilter === 'skills' ? 'rotate-180' : ''}`}>expand_more</span>
+                                    </button>
+                                )}
+                                {openFilter === 'skills' && (
+                                    <div className="absolute top-full left-0 mt-2 w-64 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl z-50 overflow-hidden">
+                                        <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
+                                            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Select Skill</span>
+                                        </div>
+                                        <div className="max-h-72 overflow-y-auto">
+                                            {groupedSkills.map((category) => (
+                                                <div key={category.id} className="border-b border-slate-100 dark:border-slate-700/50 last:border-0 pb-1 mb-1 last:pb-0 last:mb-0">
+                                                    <div className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-800/30">
+                                                        {category.name}
+                                                    </div>
+                                                    {category.availableSkills.map((skill) => (
+                                                        <button
+                                                            key={skill}
+                                                            onClick={() => applyFilter('skills', skill)}
+                                                            className={`w-full text-left px-6 py-2 text-sm transition-colors flex items-center justify-between ${activeFilters.skills === skill ? 'bg-[#4F46E5]/10 text-[#4F46E5] font-semibold' : 'text-slate-700 dark:text-slate-300 hover:bg-[#4F46E5]/5 hover:text-[#4F46E5]'}`}
+                                                        >
+                                                            {skill}
+                                                            {activeFilters.skills === skill && <span className="material-symbols-outlined text-[16px]">check</span>}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            ))}
+                                            {otherSkills.length > 0 && (
+                                                <div className="border-b border-slate-100 dark:border-slate-700/50 last:border-0 pb-1 mb-1 last:pb-0 last:mb-0">
+                                                    <div className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-800/30">
+                                                        Other Skills
+                                                    </div>
+                                                    {otherSkills.map(skill => (
+                                                        <button
+                                                            key={skill}
+                                                            onClick={() => applyFilter('skills', skill)}
+                                                            className={`w-full text-left px-6 py-2 text-sm transition-colors flex items-center justify-between ${activeFilters.skills === skill ? 'bg-[#4F46E5]/10 text-[#4F46E5] font-semibold' : 'text-slate-700 dark:text-slate-300 hover:bg-[#4F46E5]/5 hover:text-[#4F46E5]'}`}
+                                                        >
+                                                            {skill}
+                                                            {activeFilters.skills === skill && <span className="material-symbols-outlined text-[16px]">check</span>}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            )}
+                                            {allSkills.length === 0 && (
+                                                <div className="px-4 py-6 text-center text-sm text-slate-500 dark:text-slate-400">
+                                                    No skills found
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                             {/* Clear All Button */}
-                            {(activeFilters.location || activeFilters.type || activeFilters.status || activeFilters.offer || searchQuery) && (
+                            {(activeFilters.location || activeFilters.type || activeFilters.status || activeFilters.offer || activeFilters.skills || searchQuery) && (
                                 <button
                                     onClick={clearFilters}
                                     className="flex items-center gap-1.5 px-4 py-2 text-slate-500 hover:text-[#4F46E5] text-sm font-bold transition-all whitespace-nowrap hover:bg-white dark:hover:bg-slate-800 rounded-full"
@@ -446,9 +562,23 @@ const CandidateTrackingStatistics = () => {
                                                                 <span className="material-symbols-outlined text-slate-400 text-2xl">person</span>
                                                             )}
                                                         </div>
-                                                        <div className="min-w-0">
+                                                        <div className="min-w-0 flex-1">
                                                             <div className="font-bold text-slate-900 dark:text-slate-100 text-sm leading-tight truncate">{app.studentId?.name || 'Unknown Student'}</div>
                                                             <div className="text-[11px] text-slate-500 font-medium mt-0.5">{app.studentId?.currentYear || 'Year'} Student</div>
+                                                            {app.studentId?.skills && app.studentId.skills.length > 0 && (
+                                                                <div className="flex flex-wrap gap-1 mt-1.5 max-w-[200px]">
+                                                                    {app.studentId.skills.slice(0, 3).map((skill, index) => (
+                                                                        <span key={index} className="text-[9px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-1.5 py-0.5 rounded shadow-sm border border-slate-200/50 dark:border-slate-700/50">
+                                                                            {skill}
+                                                                        </span>
+                                                                    ))}
+                                                                    {app.studentId.skills.length > 3 && (
+                                                                        <span className="text-[9px] font-semibold text-slate-400 dark:text-slate-500 self-center">
+                                                                            +{app.studentId.skills.length - 3}
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     </div>
                                                 </td>
