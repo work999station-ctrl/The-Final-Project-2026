@@ -6,6 +6,8 @@ const Application = require('../models/application.model');
 const moment = require('moment');
 const jwt = require('jsonwebtoken');
 const socketManager = require('../socket');
+const { sendAgreementEmails } = require('../utils/emailService');
+const { generateAgreementPDF } = require('../utils/generateAgreementPDF');
 
 // Helper — safely emit so the app doesn't crash if socket isn't ready
 const emit = (event, payload) => {
@@ -1111,6 +1113,40 @@ const validateApplicationAdmin = async (req, res) => {
       studentId: String(application.studentId),
       offerId: String(application.offerId)
     });
+
+    // ── Generate PDF then send to student & company ──
+    try {
+      const populatedApp = await Application.findById(applicationId)
+        .populate('studentId')
+        .populate({ path: 'offerId', populate: { path: 'companyId' } });
+
+      if (populatedApp) {
+        const studentEmail = populatedApp.studentId?.email;
+        const companyEmail = populatedApp.offerId?.companyId?.email;
+        const appUrl = process.env.APP_URL || 'http://localhost:5173';
+
+        // Generate the agreement PDF buffer
+        let pdfBuffer = null;
+        try {
+          pdfBuffer = await generateAgreementPDF(populatedApp);
+          console.log('[PDF] Agreement PDF generated successfully.');
+        } catch (pdfErr) {
+          console.error('[PDF] Failed to generate agreement PDF:', pdfErr.message);
+        }
+
+        await sendAgreementEmails({
+          application: populatedApp,
+          studentEmail,
+          companyEmail,
+          appUrl,
+          pdfBuffer,
+        });
+      }
+    } catch (emailErr) {
+      // Do not fail the request if email/pdf sending fails — just log it
+      console.error('[Email] Error sending agreement emails:', emailErr.message);
+    }
+
     res.status(200).json({ success: true, application });
   } catch (err) {
     console.error("Error validating application (admin):", err);
