@@ -1,4 +1,4 @@
-﻿import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import moment from 'moment';
 import StudentNavbar from '../components/StudentNavbar';
@@ -482,8 +482,8 @@ const InternshipOffers = () => {
                                     <div className="flex justify-between items-start mb-4">
                                         <div className="flex gap-4">
                                             <div className="w-12 h-12 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center shrink-0 border border-indigo-100 dark:border-indigo-800/50 overflow-hidden">
-                                                {offer.company?.logo ? (
-                                                    <img alt={`${offer.company?.name} logo`} className="w-full h-full object-cover" src={offer.company.logo} />
+                                                {offer.photo || offer.company?.logo ? (
+                                                    <img alt={`${offer.company?.name} logo`} className="w-full h-full object-cover" src={offer.photo ? offer.photo : offer.company.logo} />
                                                 ) : (
                                                     <span className="material-symbols-outlined text-2xl text-indigo-400">corporate_fare</span>
                                                 )}

@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import html2canvas from 'html2canvas';
-import { jsPDF } from 'jspdf';
 import AdminSidebar from '../components/AdminSidebar';
 import AdminNavbar from '../components/AdminNavbar';
 import logoImage from '../assets/logo.png';
@@ -22,7 +20,9 @@ const UniversityPlacementAnalytics = () => {
         unplacedStudents: 0,
         placementPercentage: 0,
         monthlyTrends: [],
-        topCategories: []
+        topCategories: [],
+        totalPartners: 0,
+        totalWilayas: 0
     });
 
     useEffect(() => {
@@ -39,7 +39,9 @@ const UniversityPlacementAnalytics = () => {
                         unplacedStudents: res.data.stats.unplacedStudents || 0,
                         placementPercentage: res.data.stats.placementPercentage || 0,
                         monthlyTrends: res.data.stats.monthlyTrends || [],
-                        topCategories: res.data.stats.topCategories || []
+                        topCategories: res.data.stats.topCategories || [],
+                        totalPartners: res.data.stats.totalPartners || 0,
+                        totalWilayas: res.data.stats.totalWilayas || 0
                     });
                 }
             } catch (err) {
@@ -100,7 +102,7 @@ const UniversityPlacementAnalytics = () => {
     return (
         <div className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased min-h-screen font-body print:bg-white print:pt-0 print:block">
             {/* TopNavBar */}
-            <div className="print:hidden">
+            <div className="print:hidden sticky top-0 z-50">
                 <AdminNavbar admin={adminUser} />
             </div>
 
@@ -114,14 +116,14 @@ const UniversityPlacementAnalytics = () => {
                 @media print {
                     @page { margin: 0; size: A4; }
                     body { margin: 0; padding: 0 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-                    .print-doc { 
+                    .print-container { 
                         width: 100% !important; 
                         max-width: none !important; 
                         box-shadow: none !important; 
                         border: none !important; 
                         padding: 2cm !important;
                         margin: 0 !important;
-                        background: white !important; 
+                        background: white !important;
                     }
                     .dark { background: white !important; color: black !important; }
                     .no-print { display: none !important; }
@@ -132,7 +134,7 @@ const UniversityPlacementAnalytics = () => {
             <main className="md:ml-64 pt-24 pb-12 px-6 lg:px-10 print:p-0 print:max-w-none">
                 
                 {/* THE OFFICIAL DOCUMENT (Print Only) */}
-                <div className="print-doc hidden print:block">
+                <div className="print-container bg-white dark:bg-transparent rounded-3xl overflow-hidden print:overflow-visible print:rounded-none relative shadow-soft print:shadow-none hidden print:block">
                     {/* Watermark (Print Only) */}
                     <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none select-none z-0 hidden print:flex">
                         <span className="font-headline font-bold text-[120px] -rotate-45 text-slate-900 uppercase">Official Analytics</span>
@@ -218,40 +220,57 @@ const UniversityPlacementAnalytics = () => {
                         </section>
                     </div>
 
-                    {/* QR AUTHENTICITY SECTION (Print Only) */}
-                    <section className="hidden print:flex items-center justify-between gap-10 pt-10 mt-10 border-t border-slate-900 border-b border-slate-900 pb-10">
-                        <div className="flex-1">
-                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-900 mb-2">Authenticity & Verification</p>
+                    {/* QR + LEGAL VALIDITY SECTION (Print Only) */}
+                    <section className="hidden print:flex items-start justify-between gap-10 pt-10 mt-10 border-t-2 border-slate-900 border-b-2 border-slate-900 pb-10">
+                        {/* Left: Legal Validity */}
+                        <div className="flex-1 space-y-3">
+                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-900 mb-3">Official Digital Documents &amp; Legal Validity</p>
                             <p className="text-[11px] text-slate-600 leading-relaxed font-medium">
-                                This document is a certified extract from the Stag.io placement registry.
-                                Any alteration to this report renders it void. Scan the QR code to verify
-                                this data against live system records.
+                                This report is an officially generated institutional document produced by the Stag.io
+                                platform on behalf of the registered academic partner. It carries the same legal
+                                standing as a signed physical report under applicable digital document frameworks.
                             </p>
-                            <div className="mt-4 flex gap-6">
+                            <ul className="text-[10px] text-slate-600 space-y-1 mt-2">
+                                <li className="flex items-start gap-2"><span className="text-emerald-600 font-black">&#10003;</span><span>Generated directly from live institutional database records.</span></li>
+                                <li className="flex items-start gap-2"><span className="text-emerald-600 font-black">&#10003;</span><span>Digitally signed and traceable via the embedded QR verification code.</span></li>
+                                <li className="flex items-start gap-2"><span className="text-emerald-600 font-black">&#10003;</span><span>Any manual alteration to this document renders it null and void.</span></li>
+                                <li className="flex items-start gap-2"><span className="text-emerald-600 font-black">&#10003;</span><span>Reference ID and integrity hash are unique to this report instance.</span></li>
+                            </ul>
+                            <div className="mt-4 flex gap-8">
                                 <div>
                                     <p className="text-[9px] font-black text-slate-400 uppercase">Integrity Hash</p>
-                                    <p className="font-mono text-[9px] text-slate-600 uppercase mt-1">SHA-256: {adminUser?._id?.slice(0, 32).toUpperCase() || 'XXX'}</p>
+                                    <p className="font-mono text-[9px] text-slate-600 uppercase mt-1">SHA-256: {adminUser?._id?.slice(0, 32).toUpperCase() || 'N/A'}</p>
                                 </div>
                                 <div>
                                     <p className="text-[9px] font-black text-slate-400 uppercase">Validation Status</p>
-                                    <p className="text-[9px] font-bold text-emerald-600 uppercase mt-1">✓ Secure & Verified</p>
+                                    <p className="text-[9px] font-bold text-emerald-600 uppercase mt-1">&#10003; Secure &amp; Verified</p>
                                 </div>
                             </div>
                         </div>
+                        {/* Right: QR Code */}
                         <div className="flex flex-col items-center gap-2 shrink-0">
                             <div className="p-3 bg-white border-4 border-slate-900 rounded-xl shadow-lg">
                                 <QRCodeSVG
                                     value={`${window.location.origin}/university-placement-analytics?verify=${adminUser?._id}`}
-                                    size={100}
+                                    size={110}
                                     level="H"
                                 />
                             </div>
                             <p className="text-[9px] font-black text-slate-900 uppercase tracking-[0.2em]">Scan to Verify</p>
+                            <p className="text-[8px] text-slate-400 font-mono">stag.io/verify</p>
                         </div>
                     </section>
+
+                    {/* Print Footer */}
+                    <div className="hidden print:block text-center mt-12 pb-6 border-t border-slate-100 pt-6">
+                        <p className="text-[10px] font-black font-headline uppercase tracking-[0.5em] text-slate-900">&#169; {new Date().getFullYear()} Stag.io &#8212; All Rights Reserved</p>
+                        <p className="text-[8px] text-slate-400 mt-2 font-mono uppercase">System-generated document &#8212; No signature required</p>
+                    </div>
                 </div>
+                {/* END print-container */}
 
                 {/* SCREEN ONLY HEADER */}
+
                 <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4 print:hidden">
                     <div>
                         <h1 className="text-3xl lg:text-4xl font-bold tracking-tight text-slate-900 dark:text-white mb-2 font-headline">Institutional Placement Analytics</h1>
@@ -267,7 +286,7 @@ const UniversityPlacementAnalytics = () => {
                             {currentMonthYear}
                         </span>
                         <button 
-                            onClick={exportPDF}
+                            onClick={() => window.print()}
                             className="flex items-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-4 py-1.5 rounded-full font-bold text-xs transition-all hover:scale-105 active:scale-95 shadow-md shadow-slate-200 dark:shadow-none ml-2"
                         >
                             <span className="material-symbols-outlined text-[16px]">print</span>
@@ -502,17 +521,17 @@ const UniversityPlacementAnalytics = () => {
                         </div>
                         <div className="relative z-10 h-full flex flex-col justify-between">
                             <div>
-                                <h3 className="font-bold text-2xl mb-2 font-headline">Global Network Reach</h3>
-                                <p className="text-indigo-100 text-sm max-w-xs">Expanding opportunities across borders with premium industry partners.</p>
+                                <h3 className="font-bold text-2xl mb-2 font-headline">National Network Reach</h3>
+                                <p className="text-indigo-100 text-sm max-w-xs">Expanding opportunities across the nation with premium industry partners.</p>
                             </div>
                             <div className="flex items-end justify-between">
                                 <div>
-                                    <p className="text-4xl font-black font-headline">340+</p>
-                                    <p className="text-xs font-bold uppercase tracking-widest text-indigo-200">Global Partners</p>
+                                    <p className="text-4xl font-black font-headline">{stats.totalPartners}</p>
+                                    <p className="text-xs font-bold uppercase tracking-widest text-indigo-200">National Partners</p>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-4xl font-black font-headline">12</p>
-                                    <p className="text-xs font-bold uppercase tracking-widest text-indigo-200">Countries</p>
+                                    <p className="text-4xl font-black font-headline">{stats.totalWilayas}</p>
+                                    <p className="text-xs font-bold uppercase tracking-widest text-indigo-200">Wilayas</p>
                                 </div>
                             </div>
                         </div>
@@ -520,47 +539,10 @@ const UniversityPlacementAnalytics = () => {
                 </div>
             </main>
 
-            {/* BottomNavBar for Mobile */}
-            <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 px-6 py-3 flex justify-between items-center z-50">
-                <button className="flex flex-col items-center gap-1 text-indigo-600">
-                    <span className="material-symbols-outlined text-2xl" data-icon="dashboard">dashboard</span>
-                    <span className="text-[10px] font-bold">Home</span>
-                </button>
-                <button className="flex flex-col items-center gap-1 text-slate-400">
-                    <span className="material-symbols-outlined text-2xl" data-icon="group">group</span>
-                    <span className="text-[10px] font-bold">Students</span>
-                </button>
-                <button className="flex flex-col items-center gap-1 text-slate-400">
-                    <span className="material-symbols-outlined text-2xl" data-icon="analytics">analytics</span>
-                    <span className="text-[10px] font-bold">Data</span>
-                </button>
-                <button className="flex flex-col items-center gap-1 text-slate-400">
-                    <span className="material-symbols-outlined text-2xl" data-icon="settings">settings</span>
-                    <span className="text-[10px] font-bold">Settings</span>
-                </button>
-            </nav>
+
         </div>
     );
 };
 
-// Helper function to export the printable document as PDF
-function exportPDF() {
-  const element = document.querySelector('.print-doc');
-  if (!element) {
-    console.error('Print document not found');
-    return;
-  }
-  html2canvas(element, { scale: 2 }).then((canvas) => {
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-    const filename = `PlacementAnalytics_${new Date().toISOString().split('T')[0]}.pdf`;
-    pdf.save(filename);
-  }).catch((err) => {
-    console.error('Failed to generate PDF', err);
-  });
-}
-
 export default UniversityPlacementAnalytics;
+

@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import CompanyNavbar from '../components/CompanyNavbar';
 import { useLang } from '../contexts/LanguageContext';
@@ -177,7 +177,9 @@ const EditCompanyOffer = () => {
                         salary: offer.salary || ''
                     });
 
-                    if (company && company.logo) {
+                    if (offer && offer.photo) {
+                        setLogoPreview(offer.photo);
+                    } else if (company && company.logo) {
                         setLogoPreview(company.logo);
                     }
 
