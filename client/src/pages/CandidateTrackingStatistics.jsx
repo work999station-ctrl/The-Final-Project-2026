@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useLang } from '../contexts/LanguageContext';
 import CompanyNavbar from '../components/CompanyNavbar';
@@ -185,6 +185,7 @@ const CandidateTrackingStatistics = () => {
         switch (status) {
             case 'accepted': return 'bg-green-50 text-green-700 border-green-100 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800';
             case 'rejected': return 'bg-red-50 text-red-700 border-red-100 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800';
+            case 'admin_rejected': return 'bg-rose-50 text-rose-700 border-rose-100 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800';
             case 'validated': return 'bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800';
             case 'on hold': return 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800';
             default: return 'bg-blue-50 text-blue-700 border-blue-100 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800';
@@ -491,10 +492,16 @@ const CandidateTrackingStatistics = () => {
                                                             </>
                                                         )}
                                                         {app.status === 'applied' && isAcceptanceOverdue && (
-                                                            <div className="flex flex-col items-end">
-                                                                <span className="text-[10px] font-black text-rose-600 uppercase tracking-widest bg-rose-50 px-2 py-1 rounded border border-rose-100">Decision Window Closed</span>
-                                                                <span className="text-[9px] text-slate-400 mt-0.5">Status: Automated Refusal</span>
+                                                            <div className="flex items-center gap-2">
+                                                                <div className="flex flex-col items-end">
+                                                                    <span className="text-[10px] font-black text-rose-600 uppercase tracking-widest bg-rose-50 px-2 py-1 rounded border border-rose-100">Decision Window Closed</span>
+                                                                    <span className="text-[9px] text-slate-400 mt-0.5">Status: Automated Refusal</span>
+                                                                </div>
+                                                                <button onClick={(e) => { e.stopPropagation(); handleStatusChange(app._id, 'accepted'); }} className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-black uppercase tracking-widest rounded-lg transition-transform active:scale-[0.98]">Accept</button>
                                                             </div>
+                                                        )}
+                                                        {(app.status === 'rejected' || app.status === 'refused' || app.status === 'admin_rejected') && (
+                                                            <button onClick={(e) => { e.stopPropagation(); handleStatusChange(app._id, 'accepted'); }} className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-black uppercase tracking-widest rounded-lg transition-transform active:scale-[0.98]">Accept</button>
                                                         )}
                                                         {app.status === 'accepted' && (
                                                             <div className="flex flex-col items-end gap-1">

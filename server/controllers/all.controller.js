@@ -9,7 +9,7 @@ const socketManager = require('../socket');
 
 // Helper — safely emit so the app doesn't crash if socket isn't ready
 const emit = (event, payload) => {
-  try { socketManager.getIO().emit(event, payload); } catch (_) {}
+  try { socketManager.getIO().emit(event, payload); } catch (_) { }
 };
 
 
@@ -1046,7 +1046,7 @@ const updateApplicationStatus = async (req, res) => {
     }
 
     const normalizedStatus = status.toLowerCase();
-    
+
     if (!['accepted', 'rejected', 'refused', 'on hold'].includes(normalizedStatus)) {
       return res.status(400).json({ error: 'Invalid status. Must be accepted, rejected, refused, or on hold' });
     }
@@ -1060,6 +1060,11 @@ const updateApplicationStatus = async (req, res) => {
     // 2. Verify the associated offer belongs to the requesting company
     if (application.offerId.companyId.toString() !== req.user._id.toString()) {
       return res.status(403).json({ error: 'Unauthorized to update this application' });
+    }
+
+    // Guard: Prevent modifications if the application status is already accepted or validated
+    if (['accepted', 'validated'].includes(application.status)) {
+      return res.status(400).json({ error: 'This application state is locked and cannot be updated' });
     }
 
     // 3. Update the status
@@ -1174,9 +1179,10 @@ const getAdminApplicationsToValidate = async (req, res) => {
 
     applications = applications.filter(app => {
       if (!app.offerId || app.offerId.status !== 'Open') return false;
-      if (!app.studentId || !app.studentId.specialty) return false;
+      if (!app.studentId || !app.studentId.specialty || !app.studentId.university) return false;
       const studentSpecialty = app.studentId.specialty.trim().toLowerCase();
-      return studentSpecialty === adminDeptHead;
+      const studentUni = app.studentId.university.trim().toLowerCase();
+      return studentSpecialty === adminDeptHead && studentUni === adminUni;
     });
 
     res.status(200).json({ success: true, applications });
@@ -1332,15 +1338,15 @@ const getAdminApplicationById = async (req, res) => {
     const student = application.studentId || {};
     const offer = application.offerId || {};
     const company = offer.companyId || {};
-    
+
     let admin = await Admin.findById(req.user._id).select('universityName DeptHead fullName');
     if (!admin) {
-        // If the requester is a student or company, find the Admin corresponding to the student's specialty
-        admin = await Admin.findOne({ DeptHead: student.specialty }).select('universityName DeptHead fullName');
-        if (!admin) {
-            // Fallback to the first available admin if no exact DeptHead match is found
-            admin = await Admin.findOne().select('universityName DeptHead fullName');
-        }
+      // If the requester is a student or company, find the Admin corresponding to the student's specialty
+      admin = await Admin.findOne({ DeptHead: student.specialty }).select('universityName DeptHead fullName');
+      if (!admin) {
+        // Fallback to the first available admin if no exact DeptHead match is found
+        admin = await Admin.findOne().select('universityName DeptHead fullName');
+      }
     }
 
     const formattedData = {

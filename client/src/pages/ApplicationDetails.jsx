@@ -479,13 +479,45 @@ const ApplicationDetails = () => {
                                                 <p className="text-xs text-amber-600 dark:text-amber-500 mt-1 leading-relaxed">You have accepted this candidate. Waiting for university admin validation.</p>
                                             </div>
                                         </div>
-                                    ) : appData.status?.toLowerCase() === 'refused' || appData.status?.toLowerCase() === 'rejected' ? (
-                                        <div className="flex flex-col items-center gap-2 py-3 px-2 mb-1 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-xl text-center">
-                                            <span className="material-symbols-outlined text-red-600 dark:text-red-400">cancel</span>
-                                            <div>
-                                                <p className="font-bold text-red-800 dark:text-red-300 text-sm">Application Refused</p>
-                                                <p className="text-xs text-red-600 dark:text-red-500 mt-1 leading-relaxed">You have refused this candidate.</p>
+                                    ) : appData.status?.toLowerCase() === 'admin_rejected' ? (
+                                        <div className="flex flex-col gap-3">
+                                            <div className="flex flex-col items-center gap-2 py-3 px-2 mb-1 bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800/50 rounded-xl text-center">
+                                                <span className="material-symbols-outlined text-rose-600 dark:text-rose-400">block</span>
+                                                <div>
+                                                    <p className="font-bold text-rose-800 dark:text-rose-300 text-sm">Validation Refused by Admin</p>
+                                                    {appData.adminRejectionReason && (
+                                                        <p className="text-xs text-rose-600 dark:text-rose-400 mt-1 leading-relaxed">
+                                                            Reason: <span className="font-semibold">{appData.adminRejectionReason}</span>
+                                                        </p>
+                                                    )}
+                                                </div>
                                             </div>
+                                            <button
+                                                disabled={actionLoading}
+                                                onClick={() => setConfirmationModal({ isOpen: true, status: 'Accepted' })}
+                                                className="w-full bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95 shadow-md shadow-green-100 dark:shadow-none"
+                                            >
+                                                <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                                                Re-Accept Candidate
+                                            </button>
+                                        </div>
+                                    ) : appData.status?.toLowerCase() === 'refused' || appData.status?.toLowerCase() === 'rejected' ? (
+                                        <div className="flex flex-col gap-3">
+                                            <div className="flex flex-col items-center gap-2 py-3 px-2 mb-1 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-xl text-center">
+                                                <span className="material-symbols-outlined text-red-600 dark:text-red-400">cancel</span>
+                                                <div>
+                                                    <p className="font-bold text-red-800 dark:text-red-300 text-sm">Application Refused</p>
+                                                    <p className="text-xs text-red-600 dark:text-red-500 mt-1 leading-relaxed">You have refused this candidate.</p>
+                                                </div>
+                                            </div>
+                                            <button
+                                                disabled={actionLoading}
+                                                onClick={() => setConfirmationModal({ isOpen: true, status: 'Accepted' })}
+                                                className="w-full bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95 shadow-md shadow-green-100 dark:shadow-none"
+                                            >
+                                                <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                                                Accept Candidate
+                                            </button>
                                         </div>
                                     ) : (
                                         <div className="flex flex-col gap-3">
