@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import StudentNavbar from '../components/StudentNavbar';
 import StudentSidebar from '../components/StudentSidebar';
@@ -220,23 +220,11 @@ const EditStudentProfile = () => {
         }
     };
 
-    const handleAddSkill = (skill) => {
-        if (skill && skill.trim() && !skills.includes(skill.trim())) {
-            setSkills([...skills, skill.trim()]);
-            setShowSkillsDropdown(false);
-        } else if (skills.includes(skill?.trim())) {
-            showToastMessage('Skill already added!', 'error');
-        }
-    };
 
-    const handleCustomSkill = () => {
-        const customSkill = prompt('Enter a new skill:');
-        if (customSkill) handleAddSkill(customSkill);
-    };
 
-    const handleRemoveSkill = (skillToRemove) => {
-        setSkills(skills.filter(s => s !== skillToRemove));
-    };
+
+
+
 
     const handleCVUpload = async (e) => {
         const file = e.target.files[0];

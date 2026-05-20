@@ -1214,7 +1214,7 @@ const getAdminApplicationsToValidate = async (req, res) => {
 
 
     applications = applications.filter(app => {
-      if (!app.offerId || app.offerId.status !== 'Open') return false;
+      if (!app.offerId) return false;
       if (!app.studentId || !app.studentId.specialty || !app.studentId.university) return false;
       const studentSpecialty = app.studentId.specialty.trim().toLowerCase();
       const studentUni = app.studentId.university.trim().toLowerCase();

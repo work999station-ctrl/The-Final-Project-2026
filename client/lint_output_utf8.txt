@@ -1,0 +1,273 @@
+﻿
+> client@0.0.0 lint
+> eslint .
+
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\components\AdminNavbar.jsx
+  45:13  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  43 |     useEffect(() => {
+  44 |         if (adminProp) {
+> 45 |             setAdmin(adminProp);
+     |             ^^^^^^^^ Avoid calling setState() directly within an effect
+  46 |             return;
+  47 |         }
+  48 |         fetchAdmin();  react-hooks/set-state-in-effect
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\components\AdminSidebar.jsx
+  19:28  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  17 |     // Keep adminUser in sync when prop changes (e.g. from AdminDashboard)
+  18 |     useEffect(() => {
+> 19 |         if (adminUserProp) setAdminUser(adminUserProp);
+     |                            ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  20 |     }, [adminUserProp]);
+  21 |
+  22 |     // Self-fetch admin profile  react-hooks/set-state-in-effect
+  36:29  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  34 |
+  35 |     useEffect(() => {
+> 36 |         if (!adminUserProp) fetchAdminUser();
+     |                             ^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  37 |     }, []);
+  38 |
+  39 |     // Real-time update: listen for profile changes via socket                                                                  react-hooks/set-state-in-effect
+  37:8   warning  React Hook useEffect has a missing dependency: 'adminUserProp'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  react-hooks/exhaustive-deps
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\components\CompanyNavbar.jsx
+   66:11   error  'handleLogout' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         no-unused-vars
+  203:155  error  Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  201 |                     >
+  202 |                         {company?.logo ? (
+> 203 |                             <img alt="Company logo" className="w-full h-full object-cover" src={`${company.logo}${company.logo.includes('?') ? '' : `?t=${Date.now()}`}`} />
+      |                                                                                                                                                           ^^^^^^^^^^ Cannot call impure function
+  204 |                         ) : (
+  205 |                             <span className="material-symbols-outlined text-primary">business</span>
+  206 |                         )}  react-hooks/purity
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\components\CompanySidebar.jsx
+  50:162  error  Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  48 |                     <div className="shrink-0">
+  49 |                         {company?.logo ? (
+> 50 |                             <img alt="Company Logo" className="w-10 h-10 rounded-lg object-cover" src={`${company.logo}${company.logo.includes('?') ? '' : `?t=${Date.now()}`}`} />
+     |                                                                                                                                                                  ^^^^^^^^^^ Cannot call impure function
+  51 |                         ) : (
+  52 |                             <div className="w-10 h-10 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold italic">
+  53 |                                 {company?.companyName?.substring(0, 2)?.toUpperCase() || 'CP'}  react-hooks/purity
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\components\Footer.jsx
+  93:22  error  'err' is defined but never used  no-unused-vars
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\components\SharedInbox.jsx
+  4:8   error  'logoImage' is defined but never used. Allowed unused vars must match /^[A-Z_]/u         no-unused-vars
+  6:41  error  'backLink' is defined but never used                                                     no-unused-vars
+  6:51  error  'navTitle' is assigned a value but never used                                            no-unused-vars
+  6:74  error  'hideHeader' is assigned a value but never used                                          no-unused-vars
+  8:16  error  'lang' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u     no-unused-vars
+  8:22  error  'setLang' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\contexts\LanguageContext.jsx
+  125:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\contexts\SocketContext.jsx
+   1:25  error  'useContext' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           no-unused-vars
+  31:5   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  29 |
+  30 |     socketRef.current = s;
+> 31 |     setSocket(s);
+     |     ^^^^^^^^^ Avoid calling setState() directly within an effect
+  32 |
+  33 |     return () => {
+  34 |       s.disconnect();  react-hooks/set-state-in-effect
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\contexts\ThemeContext.jsx
+  5:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\i18n\translations.js
+  670:9  error  Duplicate key 'dashboard'  no-dupe-keys
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\mobile\init.js
+  62:14  error  'e' is defined but never used  no-unused-vars
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\pages\AboutUs.jsx
+  3:8   error  'logoImage' is defined but never used. Allowed unused vars must match /^[A-Z_]/u          no-unused-vars
+  8:11  error  'navigate' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\pages\AdminAcceptanceValidation.jsx
+  14:12  error  'validating' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u     no-unused-vars
+  56:11  error  'handleApprove' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\pages\AgreementVerificationSuccess.jsx
+  22:22  error  'err' is defined but never used  no-unused-vars
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\pages\Blog.jsx
+  3:8   error  'logoImage' is defined but never used. Allowed unused vars must match /^[A-Z_]/u          no-unused-vars
+  8:11  error  'navigate' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\pages\CandidateTrackingJobSpecific.jsx
+  7:16  error  'lang' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u     no-unused-vars
+  7:22  error  'setLang' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\pages\CandidateTrackingStatistics.jsx
+   13:16  error  'lang' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u            no-unused-vars
+   13:22  error  'setLang' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u         no-unused-vars
+  128:11  error  'acceptanceRate' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\pages\Careers.jsx
+  3:8   error  'logoImage' is defined but never used. Allowed unused vars must match /^[A-Z_]/u          no-unused-vars
+  8:11  error  'navigate' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\pages\Companies.jsx
+   3:8   error  'logoImage' is defined but never used. Allowed unused vars must match /^[A-Z_]/u       no-unused-vars
+  11:16  error  'isRTL' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\pages\CompanyDashboard.jsx
+  10:16  error  'lang' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u     no-unused-vars
+  10:22  error  'setLang' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\pages\CompanyDirectMessages.jsx
+  9:16  error  'lang' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u     no-unused-vars
+  9:22  error  'setLang' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\pages\CompanyOffers.jsx
+  10:16  error  'lang' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u     no-unused-vars
+  10:22  error  'setLang' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\pages\CompanySignup.jsx
+  256:68  error  'array' is defined but never used  no-unused-vars
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\pages\CompanyStatistics.jsx
+   9:11  error  'navigate' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u       no-unused-vars
+  10:16  error  'lang' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u           no-unused-vars
+  10:22  error  'setLang' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u        no-unused-vars
+  51:11  error  'rejectedCount' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  54:11  error  'totalOffers' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u    no-unused-vars
+  55:11  error  'closedOffers' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u   no-unused-vars
+  62:11  error  'pendingRate' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u    no-unused-vars
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\pages\ContactUs.jsx
+  3:8   error  'logoImage' is defined but never used. Allowed unused vars must match /^[A-Z_]/u          no-unused-vars
+  8:11  error  'navigate' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\pages\CookiePolicy.jsx
+  3:8   error  'logoImage' is defined but never used. Allowed unused vars must match /^[A-Z_]/u          no-unused-vars
+  8:11  error  'navigate' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\pages\CreateInternshipOffer.jsx
+  8:16  error  'lang' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u     no-unused-vars
+  8:22  error  'setLang' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\pages\EditCompanyOffer.jsx
+    9:16  error    'lang' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                     no-unused-vars
+    9:22  error    'setLang' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                  no-unused-vars
+  214:8   warning  React Hook useEffect has missing dependencies: 'categories' and 't'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\pages\EditCompanyProfile.jsx
+   9:16  error    'lang' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                  no-unused-vars
+   9:22  error    'setLang' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u               no-unused-vars
+  58:8   warning  React Hook useEffect has a missing dependency: 't'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\pages\EditStudentProfile.jsx
+  232:11  error  'handleCustomSkill' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  237:11  error  'handleRemoveSkill' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\pages\Home.jsx
+  86:15  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  84 |     const particles = useMemo(() => Array.from({ length: count }, (_, i) => ({
+  85 |         id: i,
+> 86 |         left: Math.random() * 100,
+     |               ^^^^^^^^^^^^^ Cannot call impure function
+  87 |         delay: Math.random() * 12,
+  88 |         duration: 12 + Math.random() * 12,
+  89 |         size: 2 + Math.random() * 4,  react-hooks/purity
+  87:16  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  85 |         id: i,
+  86 |         left: Math.random() * 100,
+> 87 |         delay: Math.random() * 12,
+     |                ^^^^^^^^^^^^^ Cannot call impure function
+  88 |         duration: 12 + Math.random() * 12,
+  89 |         size: 2 + Math.random() * 4,
+  90 |         opacity: 0.3 + Math.random() * 0.4,                                    react-hooks/purity
+  88:24  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  86 |         left: Math.random() * 100,
+  87 |         delay: Math.random() * 12,
+> 88 |         duration: 12 + Math.random() * 12,
+     |                        ^^^^^^^^^^^^^ Cannot call impure function
+  89 |         size: 2 + Math.random() * 4,
+  90 |         opacity: 0.3 + Math.random() * 0.4,
+  91 |     })), [count]);                        react-hooks/purity
+  89:19  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  87 |         delay: Math.random() * 12,
+  88 |         duration: 12 + Math.random() * 12,
+> 89 |         size: 2 + Math.random() * 4,
+     |                   ^^^^^^^^^^^^^ Cannot call impure function
+  90 |         opacity: 0.3 + Math.random() * 0.4,
+  91 |     })), [count]);
+  92 |     return (                                                   react-hooks/purity
+  90:24  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  88 |         duration: 12 + Math.random() * 12,
+  89 |         size: 2 + Math.random() * 4,
+> 90 |         opacity: 0.3 + Math.random() * 0.4,
+     |                        ^^^^^^^^^^^^^ Cannot call impure function
+  91 |     })), [count]);
+  92 |     return (
+  93 |         <div className="absolute inset-0 overflow-hidden pointer-events-none">  react-hooks/purity
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\pages\PrivacyPolicy.jsx
+  2:10  error  Parsing error: Identifier 'useEffect' has already been declared
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\src\pages\VerifyQR.jsx
+  27:22  error  'err' is defined but never used  no-unused-vars
+
+C:\Users\ASPIRE 3 15\The-Final-Project-2026\client\vite.config.js
+  8:37  error  '__dirname' is not defined  no-undef
+
+ظ£û 72 problems (69 errors, 3 warnings)
+

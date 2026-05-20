@@ -10,7 +10,7 @@ import useSocket from '../hooks/useSocket';
 const CandidateTrackingStatistics = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { t, lang, setLang } = useLang();
+    const { t } = useLang();
     const socket = useSocket();
     const searchParams = new URLSearchParams(location.search);
     const initialSearch = searchParams.get('search') || '';
@@ -123,9 +123,9 @@ const CandidateTrackingStatistics = () => {
         : 0;
 
     const pendingFiltered = filteredApplications.filter(app => app.status === 'applied' || app.status === 'on hold').length;
-    const totalAllApps = applications.length;
+    
     const acceptedAllApps = applications.filter(app => app.status === 'accepted' || app.status === 'validated').length;
-    const acceptanceRate = totalAllApps > 0 ? Math.round((acceptedAllApps / totalAllApps) * 100) : 0;
+    
     const highlyMatched = filteredApplications.filter(app => app.matchPercentage >= 70).length;
 
 

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import logoImage from '../assets/logo.png';
 import ThemeToggle from '../components/ThemeToggle';
 import Footer from '../components/Footer';
 import LandingNavBar from '../components/LandingNavBar';
@@ -8,7 +7,7 @@ import { useLang } from '../contexts/LanguageContext';
 
 const Universities = () => {
     const navigate = useNavigate();
-    const { t, isRTL } = useLang();
+    const { t } = useLang();
 
     useEffect(() => {
         window.scrollTo(0, 0);

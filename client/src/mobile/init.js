@@ -59,7 +59,7 @@ export const initMobile = async () => {
             document.documentElement.style.setProperty('--kb-height', '0px');
             document.documentElement.classList.remove('kb-open');
         });
-    } catch (e) {
+    } catch {
         // Keyboard plugin is optional
     }
 

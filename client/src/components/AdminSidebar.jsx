@@ -34,6 +34,7 @@ const AdminSidebar = ({ activePage, adminUser: adminUserProp }) => {
 
     useEffect(() => {
         if (!adminUserProp) fetchAdminUser();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // Real-time update: listen for profile changes via socket

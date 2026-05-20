@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import logoImage from '../assets/logo.png';
+import { Link } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
 import Footer from '../components/Footer';
 import LandingNavBar from '../components/LandingNavBar';
 import { useLang } from '../contexts/LanguageContext';
 
 const Students = () => {
-    const navigate = useNavigate();
     const [userRole, setUserRole] = useState(null);
     const { t, isRTL } = useLang();
 
@@ -31,7 +29,7 @@ const Students = () => {
                     const data = await adminRes.json();
                     setUserRole(data.user?.role || 'admin');
                 }
-            } catch (err) { /* ignore */ }
+            } catch { /* ignore */ }
         };
         checkAuth();
     }, []);

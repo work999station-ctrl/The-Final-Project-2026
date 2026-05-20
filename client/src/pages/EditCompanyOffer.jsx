@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import CompanyNavbar from '../components/CompanyNavbar';
 import { useLang } from '../contexts/LanguageContext';
 
 const EditCompanyOffer = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { t, lang, setLang } = useLang();
+    const { t } = useLang();
 
     // UI States
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -211,6 +211,7 @@ const EditCompanyOffer = () => {
         };
 
         fetchOfferData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
     const handleInputChange = (e) => {

@@ -7,7 +7,7 @@ import { useLang } from '../contexts/LanguageContext';
 
 const CompanyDashboard = () => {
     const navigate = useNavigate();
-    const { t, lang, setLang } = useLang();
+    const { t } = useLang();
     const socket = useSocket();
 
     const [company, setCompany] = useState(null);

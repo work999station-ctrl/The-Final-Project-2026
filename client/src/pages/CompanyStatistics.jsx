@@ -1,13 +1,12 @@
-﻿import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useLang } from '../contexts/LanguageContext';
 import CompanyNavbar from '../components/CompanyNavbar';
 import logoImage from '../assets/logo.png';
 import { QRCodeSVG } from 'qrcode.react';
 
 const CompanyStatistics = () => {
-    const navigate = useNavigate();
-    const { t, lang, setLang } = useLang();
+    const { t } = useLang();
     const [stats, setStats] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [company, setCompany] = useState(null);
@@ -48,18 +47,14 @@ const CompanyStatistics = () => {
     const totalApplicants = s.totalApplicants || 0;
     const pendingReviews = s.pendingReviews || 0;
     const acceptedCount = s.acceptedCount || 0;
-    const rejectedCount = s.rejectedCount || 0;
     const hiredCount = s.hiredCount || 0;
     const activeOffers = s.activeOffers || 0;
-    const totalOffers = s.totalOffers || 0;
-    const closedOffers = s.closedOffers || 0;
     const dailyApplications = s.dailyApplications || [];
     const applicantGrowth = s.applicantGrowth || "0.0";
     const offersGrowth = s.offersGrowth || "0.0";
 
     const reviewed = totalApplicants - pendingReviews;
     const acceptanceRate = reviewed > 0 ? ((acceptedCount / reviewed) * 100).toFixed(1) : "0.0";
-    const pendingRate = totalApplicants > 0 ? ((pendingReviews / totalApplicants) * 100).toFixed(1) : "0.0";
     const maxDaily = Math.max(...dailyApplications.map(d => d.count), 1);
 
     const formatDate = (dateStr) => {

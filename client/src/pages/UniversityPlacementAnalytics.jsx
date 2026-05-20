@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import AdminSidebar from '../components/AdminSidebar';
 import AdminNavbar from '../components/AdminNavbar';
@@ -7,7 +7,6 @@ import logoImage from '../assets/logo.png';
 import { QRCodeSVG } from 'qrcode.react';
 
 const UniversityPlacementAnalytics = () => {
-    const navigate = useNavigate();
     const currentMonthYear = new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' });
     const [adminUser, setAdminUser] = useState(null);
     const [trendFilter, setTrendFilter] = useState(3);

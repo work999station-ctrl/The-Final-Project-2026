@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import moment from 'moment';
 import CompanyNavbar from '../components/CompanyNavbar';
@@ -7,7 +7,7 @@ import { useLang } from '../contexts/LanguageContext';
 
 const CompanyOffers = () => {
     const navigate = useNavigate();
-    const { t, lang, setLang } = useLang();
+    const { t } = useLang();
     const [company, setCompany] = useState(null);
     const [offers, setOffers] = useState([]);
     const [isLoading, setIsLoading] = useState(true);

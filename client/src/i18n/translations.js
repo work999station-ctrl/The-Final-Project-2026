@@ -667,7 +667,7 @@ export const translations = {
             completeProfileBtn: 'Complete Profile',
             editProfileBtn: 'Edit Profile',
         },
-        dashboard: {
+        dashboard2: {
             welcomeBack: 'Welcome back, {{name}}',
             todaySummary: "Here's what's happening with your applications today.",
             readyToWork: 'Ready to work',

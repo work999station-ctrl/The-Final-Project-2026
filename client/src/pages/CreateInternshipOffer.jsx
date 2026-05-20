@@ -1,11 +1,11 @@
-﻿import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import CompanyNavbar from '../components/CompanyNavbar';
 import { useLang } from '../contexts/LanguageContext';
 
 const CreateInternshipOffer = () => {
     const navigate = useNavigate();
-    const { t, lang, setLang } = useLang();
+    const { t } = useLang();
 
     // UI States
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
