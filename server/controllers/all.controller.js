@@ -1,6 +1,7 @@
 const Student = require('../models/Student.model');
 const Company = require('../models/Company.model');
 const Admin = require('../models/Admin.model');
+const SuperAdmin = require('../models/superAdmin.model');
 const Offer = require('../models/Offer.model');
 const Application = require('../models/application.model');
 const moment = require('moment');
@@ -147,8 +148,16 @@ const login_post = async (req, res) => {
         if (companyErr.message === 'incorrect password') throw companyErr;
 
         // If company login fails due to incorrect email, try admin login
-        user = await Admin.login(email, password);
-        role = 'admin';
+        try {
+          user = await Admin.login(email, password);
+          role = 'admin';
+        } catch (adminErr) {
+          if (adminErr.message === 'incorrect password') throw adminErr;
+          
+          // Try SuperAdmin login
+          user = await SuperAdmin.login(email, password);
+          role = 'superAdmin';
+        }
       }
     }
 
@@ -855,8 +864,8 @@ const getCompanyApplications = async (req, res) => {
 
 const getStudentProfileForRecruiter = async (req, res) => {
   try {
-    if (req.userType !== 'company' && req.userType !== 'admin') {
-      return res.status(403).json({ error: 'Only companies and admins can view detailed student profiles' });
+    if (req.userType !== 'company' && req.userType !== 'admin' && req.userType !== 'superadmin') {
+      return res.status(403).json({ error: 'Only companies, admins, and superadmins can view detailed student profiles' });
     }
 
     const studentId = req.params.id;
@@ -865,15 +874,21 @@ const getStudentProfileForRecruiter = async (req, res) => {
       return res.status(404).json({ error: 'Student not found' });
     }
 
-    // Find all offers by the requesting company
-    const companyOffers = await Offer.find({ companyId: req.user._id });
-    const offerIds = companyOffers.map(o => o._id);
+    let applications = [];
+    if (req.userType === 'company') {
+      // Find all offers by the requesting company
+      const companyOffers = await Offer.find({ companyId: req.user._id });
+      const offerIds = companyOffers.map(o => o._id);
 
-    // Find student's applications for these company offers
-    const applications = await Application.find({
-      studentId,
-      offerId: { $in: offerIds }
-    }).populate('offerId').sort({ createdAt: -1 });
+      // Find student's applications for these company offers
+      applications = await Application.find({
+        studentId,
+        offerId: { $in: offerIds }
+      }).populate('offerId').sort({ createdAt: -1 });
+    } else {
+      // Admins and superadmins see all applications for this student
+      applications = await Application.find({ studentId }).populate('offerId').sort({ createdAt: -1 });
+    }
 
     res.status(200).json({ success: true, student, applications });
   } catch (err) {
@@ -1292,8 +1307,8 @@ const getStudentApplications = async (req, res) => {
 
 const getAdminCompanyProfile = async (req, res) => {
   try {
-    if (req.userType !== 'admin' && req.userType !== 'student') {
-      return res.status(403).json({ error: 'Only admins and students can view company profiles' });
+    if (req.userType !== 'admin' && req.userType !== 'student' && req.userType !== 'superadmin') {
+      return res.status(403).json({ error: 'Only admins, students, and superadmins can view company profiles' });
     }
 
     const { id: companyId } = req.params;
@@ -1312,9 +1327,13 @@ const getAdminCompanyProfile = async (req, res) => {
     const applications = await Application.find({ offerId: { $in: offerIds } })
       .populate('studentId');
 
-    // Filter applications down to the admin's university matches
-    const adminUni = req.user.universityName ? req.user.universityName.trim().toLowerCase() : '';
+    // Filter applications down to the admin's university matches (allow all for superadmin/student)
+    const isSuperAdmin = req.userType === 'superadmin';
+    const isStudent = req.userType === 'student';
+    const adminUni = (!isSuperAdmin && !isStudent && req.user && req.user.universityName) ? req.user.universityName.trim().toLowerCase() : '';
+    
     const universityApplications = applications.filter(app => {
+      if (isSuperAdmin || isStudent) return true;
       if (!app.studentId || !app.studentId.university) return false;
       const studentUni = app.studentId.university.trim().toLowerCase();
       return studentUni === adminUni;
@@ -1800,6 +1819,159 @@ const getUniversityPlacementStats = async (req, res) => {
   }
 };
 
+const superAdminSignup_post = async (req, res) => {
+  try {
+    const count = await SuperAdmin.countDocuments();
+    if (count > 0) {
+      return res.status(400).json({ error: 'SuperAdmin already exists in the system. Setup is complete.' });
+    }
+    const { email, password } = req.body;
+    const superAdmin = await SuperAdmin.create({ email, password, role: 'superAdmin' });
+
+    const token = createToken(superAdmin._id);
+    res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
+    res.status(201).json({ user: superAdmin._id, role: 'superAdmin' });
+  } catch (err) {
+    const errors = handelErrors(err);
+    res.status(400).json({ errors });
+  }
+};
+
+const getSuperAdminStats = async (req, res) => {
+  try {
+    if (req.userType !== 'superAdmin') {
+      return res.status(403).json({ error: 'Access denied. SuperAdmin only.' });
+    }
+    const studentCount = await Student.countDocuments();
+    const companyCount = await Company.countDocuments();
+    const adminCount = await Admin.countDocuments();
+    const offerCount = await Offer.countDocuments();
+    const applicationCount = await Application.countDocuments();
+
+    const admins = await Admin.find().sort({ createdAt: -1 });
+    const companies = await Company.find().sort({ createdAt: -1 });
+    const students = await Student.find().sort({ createdAt: -1 });
+
+    const allUsers = [];
+    admins.forEach(u => {
+      allUsers.push({
+        _id: u._id,
+        name: u.fullName || 'N/A',
+        email: u.email,
+        phone: u.phone || 'N/A',
+        profilePicture: u.profilePicture || '',
+        role: 'admin',
+        details: {
+          university: u.universityName || '',
+          department: u.DeptHead || ''
+        },
+        createdAt: u.createdAt
+      });
+    });
+    companies.forEach(u => {
+      allUsers.push({
+        _id: u._id,
+        name: u.companyName || 'N/A',
+        email: u.email,
+        phone: u.phoneNumber || 'N/A',
+        profilePicture: u.logo || '',
+        role: 'company',
+        details: {
+          university: '',
+          department: u.internshipOffice || ''
+        },
+        createdAt: u.createdAt
+      });
+    });
+    students.forEach(u => {
+      allUsers.push({
+        _id: u._id,
+        name: u.name || 'N/A',
+        email: u.email,
+        phone: u.phoneNumber || 'N/A',
+        profilePicture: u.profilePicture || '',
+        role: 'student',
+        details: {
+          university: u.university || '',
+          department: u.specialty || ''
+        },
+        createdAt: u.createdAt
+      });
+    });
+
+    // Sort combined list by newest first
+    allUsers.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+
+    res.status(200).json({
+      stats: {
+        students: studentCount,
+        companies: companyCount,
+        admins: adminCount,
+        offers: offerCount,
+        applications: applicationCount
+      },
+      allUsers
+    });
+  } catch (err) {
+    console.error("Error fetching SuperAdmin stats:", err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const deleteUserBySuperAdmin = async (req, res) => {
+  try {
+    if (req.userType !== 'superAdmin') {
+      return res.status(403).json({ error: 'Access denied. SuperAdmin only.' });
+    }
+
+    const { role, userId } = req.params;
+    let deletedUser = null;
+
+    if (role === 'admin') {
+      deletedUser = await Admin.findByIdAndDelete(userId);
+    } else if (role === 'company') {
+      // For company, let's also delete offers and update application status (same as company self deletion)
+      const company = await Company.findById(userId);
+      if (company) {
+        const companyName = company.companyName;
+        const offers = await Offer.find({ companyId: userId });
+        for (const offer of offers) {
+          await Application.updateMany(
+            { offerId: offer._id },
+            {
+              $set: {
+                status: 'company_deleted',
+                deletedCompanyName: companyName,
+                deletedOfferTitle: offer.title,
+                offerId: null,
+                statusChangedAt: new Date(),
+                studentRead: false
+              }
+            }
+          );
+        }
+        await Offer.deleteMany({ companyId: userId });
+        deletedUser = await Company.findByIdAndDelete(userId);
+      }
+    } else if (role === 'student') {
+      // For student, let's also delete their applications
+      await Application.deleteMany({ studentId: userId });
+      deletedUser = await Student.findByIdAndDelete(userId);
+    } else {
+      return res.status(400).json({ error: 'Invalid user role.' });
+    }
+
+    if (!deletedUser) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
+
+    res.status(200).json({ success: true, message: 'User account deleted successfully.' });
+  } catch (err) {
+    console.error("Error deleting user account by SuperAdmin:", err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 const deleteCompanyAccount = async (req, res) => {
   try {
     if (req.userType !== 'company') {
@@ -1850,5 +2022,5 @@ const deleteCompanyAccount = async (req, res) => {
 };
 
 module.exports = {
-  studentSignup_get, studentSignup_post, studentDashboard_get, studentProfile_update, logout_get, login_post, login_get, companySignup_post, companySignup_get, companyProfile_update, adminSignup_post, adminProfile_update, createOffer, getAllOffers, getCompanyOffers, updateOffer, deleteOffer, getOfferById, createApplication, getCompanyApplications, getStudentProfileForRecruiter, getApplicationsByOfferId, updateApplicationStatus, getAdminApplicationsToValidate, getAdminAllApplications, getAdminCompanyProfile, getAdminApplicationById, getCompanyApplicationById, addApplicationFeedback, validateApplicationAdmin, rejectApplicationAdmin, getStudentApplications, deleteApplication, getCompanyDashboardStats, getInboxMessages, markMessageAsRead, getNotificationDetails, getUniversityPlacementStats, deleteCompanyAccount
+  studentSignup_get, studentSignup_post, studentDashboard_get, studentProfile_update, logout_get, login_post, login_get, companySignup_post, companySignup_get, companyProfile_update, adminSignup_post, adminProfile_update, createOffer, getAllOffers, getCompanyOffers, updateOffer, deleteOffer, getOfferById, createApplication, getCompanyApplications, getStudentProfileForRecruiter, getApplicationsByOfferId, updateApplicationStatus, getAdminApplicationsToValidate, getAdminAllApplications, getAdminCompanyProfile, getAdminApplicationById, getCompanyApplicationById, addApplicationFeedback, validateApplicationAdmin, rejectApplicationAdmin, getStudentApplications, deleteApplication, getCompanyDashboardStats, getInboxMessages, markMessageAsRead, getNotificationDetails, getUniversityPlacementStats, deleteCompanyAccount, superAdminSignup_post, getSuperAdminStats, deleteUserBySuperAdmin
 };

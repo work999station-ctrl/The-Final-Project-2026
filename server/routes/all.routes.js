@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 
-const { studentSignup_get, studentSignup_post, studentDashboard_get, studentProfile_update, logout_get, login_post, login_get, companySignup_get, companySignup_post, companyProfile_update, adminSignup_post, adminProfile_update, createOffer, getAllOffers, getCompanyOffers, updateOffer, deleteOffer, getOfferById, createApplication, getCompanyApplications, getCompanyApplicationById, getStudentProfileForRecruiter, getApplicationsByOfferId, updateApplicationStatus, addApplicationFeedback, getAdminApplicationsToValidate, getAdminAllApplications, getAdminCompanyProfile, getAdminApplicationById, validateApplicationAdmin, rejectApplicationAdmin, getStudentApplications, deleteApplication, getCompanyDashboardStats, getInboxMessages, markMessageAsRead, getNotificationDetails, getUniversityPlacementStats, deleteCompanyAccount } = require('../controllers/all.controller');
+const { studentSignup_get, studentSignup_post, studentDashboard_get, studentProfile_update, logout_get, login_post, login_get, companySignup_get, companySignup_post, companyProfile_update, adminSignup_post, adminProfile_update, createOffer, getAllOffers, getCompanyOffers, updateOffer, deleteOffer, getOfferById, createApplication, getCompanyApplications, getCompanyApplicationById, getStudentProfileForRecruiter, getApplicationsByOfferId, updateApplicationStatus, addApplicationFeedback, getAdminApplicationsToValidate, getAdminAllApplications, getAdminCompanyProfile, getAdminApplicationById, validateApplicationAdmin, rejectApplicationAdmin, getStudentApplications, deleteApplication, getCompanyDashboardStats, getInboxMessages, markMessageAsRead, getNotificationDetails, getUniversityPlacementStats, deleteCompanyAccount, superAdminSignup_post, getSuperAdminStats, deleteUserBySuperAdmin } = require('../controllers/all.controller');
 const { parseCV } = require('../controllers/cv.controller');
 const { requireAuth, requireAuthAPI } = require('../middleware/authmiddleware');
 
@@ -76,6 +76,20 @@ router.delete('/api/company', requireAuthAPI, deleteCompanyAccount);
 
 // Admin Routes
 router.post('/api/adminSignup', upload.single('profilePicture'), adminSignup_post);
+
+// SuperAdmin Routes
+router.get('/api/superadmin/check', async (req, res) => {
+    try {
+        const SuperAdmin = require('../models/superAdmin.model');
+        const count = await SuperAdmin.countDocuments();
+        res.status(200).json({ exists: count > 0 });
+    } catch (err) {
+        res.status(500).json({ error: 'Server error check' });
+    }
+});
+router.post('/api/superadmin/setup', superAdminSignup_post);
+router.get('/api/superadmin/stats', requireAuthAPI, getSuperAdminStats);
+router.delete('/api/superadmin/users/:role/:userId', requireAuthAPI, deleteUserBySuperAdmin);
 
 router.get('/api/admin/me', requireAuthAPI, (req, res) => {
     if (req.userType === 'admin') {

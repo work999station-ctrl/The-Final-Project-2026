@@ -606,7 +606,7 @@ const StudentDashboard = () => {
                                         </div>
                                         <button
                                             onClick={() => navigate('/edit-student-profile')}
-                                            className="bg-white text-primary font-bold px-6 py-3 rounded-full hover:bg-opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-md whitespace-nowrap"
+                                            className="bg-white dark:bg-slate-800 text-primary font-bold px-6 py-3 rounded-full hover:bg-opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-md whitespace-nowrap"
                                         >
                                             {t('dashboard.ctaBtn')}
                                         </button>

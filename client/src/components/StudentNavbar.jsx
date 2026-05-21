@@ -64,12 +64,14 @@ const StudentNavbar = ({ student: studentProp }) => {
             <div className="max-w-[1600px] mx-auto flex items-center justify-between px-6 lg:px-12 h-16">
 
                 {/* Left: Logo + Nav */}
-                <div className="flex items-center gap-8">
+                <div className="flex items-center justify-center md:justify-start w-full md:w-auto gap-8">
                     {/* Logo */}
-                    <Logo size={32} onClick={() => navigate('/')} />
+                    <div className="hidden md:block">
+                        <Logo size={32} onClick={() => navigate('/')} />
+                    </div>
 
                     {/* Nav Links */}
-                    <nav className="hidden md:flex items-center gap-6">
+                    <nav className="flex items-center justify-center w-full md:w-auto gap-4 md:gap-6 flex-wrap md:flex-nowrap">
                         <button
                             onClick={() => navigate('/student-dashboard')}
                             className={`text-sm font-medium transition-colors hover:text-primary ${isActive('/student-dashboard') ? 'text-primary font-semibold' : 'text-slate-500 dark:text-slate-400'}`}
@@ -99,7 +101,7 @@ const StudentNavbar = ({ student: studentProp }) => {
                 </div>
 
                 {/* Right: Search + Actions */}
-                <div className="flex items-center gap-4">
+                <div className="hidden md:flex items-center gap-4">
                     {/* Search */}
                     <div className="relative hidden sm:block">
                         <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
