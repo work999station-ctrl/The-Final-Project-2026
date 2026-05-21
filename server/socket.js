@@ -12,7 +12,7 @@ const init = (httpServer) => {
     cors: {
       origin: process.env.NODE_ENV === 'production' 
         ? [/\.vercel\.app$/, process.env.FRONTEND_URL]
-        : /^http:\/\/localhost(:\d+)?$/,
+        : (origin, callback) => callback(null, true),
       methods: ['GET', 'POST'],
       credentials: true
     }
