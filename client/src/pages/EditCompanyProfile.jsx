@@ -1,9 +1,5 @@
 import { useState, useEffect } from 'react';
-oblv
-import { useNavigate, Link } from 'react-router-dom';
-=======
 import { useNavigate } from 'react-router-dom';
- main
 import { useLang } from '../contexts/LanguageContext';
 import CompanyNavbar from '../components/CompanyNavbar';
 import CompanyDeleteAlert from '../components/CompanyDeleteAlert';

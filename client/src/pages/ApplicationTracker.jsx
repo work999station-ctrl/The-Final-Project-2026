@@ -174,7 +174,7 @@ const ApplicationTracker = () => {
                                             <div className="col-span-3 flex items-center gap-4">
                                                 <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center p-2 border border-slate-200 dark:border-slate-700 overflow-hidden">
                                                     {app.offerId?.companyId?.logo ? (
-                                                        <img alt={app.offerId?.companyId?.companyName} className="w-full h-full object-contain" src={`http://localhost:3000${app.offerId?.companyId?.logo}`} />
+                                                        <img alt={app.offerId?.companyId?.companyName} className="w-full h-full object-contain" src={app.offerId?.companyId?.logo} />
                                                     ) : (
                                                         <span className="material-symbols-outlined text-slate-400 dark:text-slate-500">business</span>
                                                     )}
@@ -312,7 +312,7 @@ const ApplicationTracker = () => {
                                             {applications.slice(0, 3).map((a, i) => (
                                                 <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-slate-100 dark:bg-slate-800 overflow-hidden shadow-sm">
                                                     {a.offerId?.companyId?.logo ? (
-                                                        <img src={`http://localhost:3000${a.offerId.companyId.logo}`} className="w-full h-full object-cover" alt="Company" />
+                                                        <img src={a.offerId.companyId.logo} className="w-full h-full object-cover" alt="Company" />
                                                     ) : (
                                                         <div className="w-full h-full flex items-center justify-center text-[10px] bg-indigo-100 text-indigo-600 font-bold">{i + 1}</div>
                                                     )}

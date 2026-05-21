@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react';
-oblv
-import { useNavigate, Link } from 'react-router-dom';
-=======
 import { Link } from 'react-router-dom';
-main
 import { useLang } from '../contexts/LanguageContext';
 import CompanyNavbar from '../components/CompanyNavbar';
 import logoImage from '../assets/logo.png';
