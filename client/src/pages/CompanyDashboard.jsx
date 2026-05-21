@@ -156,10 +156,10 @@ const CompanyDashboard = () => {
                 const data = await res.json();
                 const logoPath = data.user?.logo || data.company?.logo;
                 if (logoPath) {
-                    // Update with server path and current timestamp for cache busting
+                    // Update with server path and current timestamp for cache busting if not Base64
                     setCompany(prev => ({ 
                         ...prev, 
-                        logo: `${logoPath}?t=${Date.now()}` 
+                        logo: logoPath.startsWith('data:') ? logoPath : `${logoPath}?t=${Date.now()}` 
                     }));
                 }
             } else {
@@ -204,7 +204,7 @@ const CompanyDashboard = () => {
                             <div className="p-8 text-center border-b border-border-color dark:border-slate-700/50">
                                 <label className="relative cursor-pointer group flex mx-auto h-24 w-24 rounded-2xl bg-primary/10 border-2 border-primary/20 items-center justify-center overflow-hidden mb-4 transition-transform hover:scale-105">
                                     {company.logo ? (
-                                        <img src={`${company.logo}${company.logo.includes('?') ? '' : `?t=${Date.now()}`}`} alt="Company logo" className="w-full h-full object-cover" />
+                                        <img src={company.logo.startsWith('data:') ? company.logo : `${company.logo}${company.logo.includes('?') ? '' : `?t=${Date.now()}`}`} alt="Company logo" className="w-full h-full object-cover" />
                                     ) : (
                                         <span className="material-symbols-outlined text-5xl text-primary">corporate_fare</span>
                                     )}
@@ -370,7 +370,7 @@ const CompanyDashboard = () => {
                                                             {offer.photo ? (
                                                                 <img src={offer.photo} alt="offer" className="w-full h-full object-cover" />
                                                             ) : company.logo ? (
-                                                                <img src={`${company.logo}${company.logo.includes('?') ? '' : `?t=${Date.now()}`}`} alt="logo" className="w-full h-full object-cover" />
+                                                                <img src={company.logo.startsWith('data:') ? company.logo : `${company.logo}${company.logo.includes('?') ? '' : `?t=${Date.now()}`}`} alt="logo" className="w-full h-full object-cover" />
                                                             ) : (
                                                                 <span className="material-symbols-outlined text-3xl">terminal</span>
                                                             )}

@@ -88,7 +88,7 @@ const AdminSidebar = ({ activePage, adminUser: adminUserProp }) => {
                 >
                     <div 
                         className="h-10 w-10 shrink-0 rounded-full bg-primary/20 ring-2 ring-primary/10 flex items-center justify-center overflow-hidden bg-cover bg-center text-primary shadow-sm"
-                        style={{ backgroundImage: adminUser?.profilePicture ? `url('${adminUser.profilePicture}?t=${localStorage.getItem('adminProfilePicUpdatedAt') || ''}')` : 'none' }}
+                        style={{ backgroundImage: adminUser?.profilePicture ? `url('${adminUser.profilePicture.startsWith('data:') ? adminUser.profilePicture : `${adminUser.profilePicture}?t=${localStorage.getItem('adminProfilePicUpdatedAt') || ''}`}')` : 'none' }}
                     >
                         {!adminUser?.profilePicture && <span className="material-symbols-outlined text-[20px]">school</span>}
                     </div>

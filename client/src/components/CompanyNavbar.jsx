@@ -198,7 +198,7 @@ const CompanyNavbar = ({ company: companyProp }) => {
                         title={company?.companyName || 'Company'}
                     >
                         {company?.logo ? (
-                            <img alt="Company logo" className="w-full h-full object-cover" src={`${company.logo}${company.logo.includes('?') ? '' : `?t=${localStorage.getItem('companyProfileUpdatedAt') || ''}`}`} />
+                            <img alt="Company logo" className="w-full h-full object-cover" src={company.logo.startsWith('data:') ? company.logo : `${company.logo}${company.logo.includes('?') ? '' : `?t=${localStorage.getItem('companyProfileUpdatedAt') || ''}`}`} />
                         ) : (
                             <span className="material-symbols-outlined text-primary">business</span>
                         )}
