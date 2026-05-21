@@ -130,6 +130,7 @@ router.delete('/api/applications/:id', requireAuthAPI, deleteApplication);
 
 router.get('/api/public/verify-agreement/:id', async (req, res) => {
     const Application = require('../models/application.model');
+    const Admin = require('../models/Admin.model');
 
     try {
         const application = await Application.findById(req.params.id)
@@ -140,8 +141,12 @@ router.get('/api/public/verify-agreement/:id', async (req, res) => {
             });
 
         if (application) {
-            // Fetch company and admin info manually if needed, or just return basic info
-            return res.status(200).json({ success: true, application });
+            const student = application.studentId || {};
+            let admin = await Admin.findOne({ DeptHead: student.specialty }).select('universityName DeptHead fullName profilePicture');
+            if (!admin) {
+                admin = await Admin.findOne().select('universityName DeptHead fullName profilePicture');
+            }
+            return res.status(200).json({ success: true, application, admin });
         }
         res.status(404).json({ success: false, error: 'Not found or not validated' });
     } catch (e) {

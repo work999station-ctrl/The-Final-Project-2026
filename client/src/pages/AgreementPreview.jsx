@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
 import logo from '../assets/logo.png';
@@ -125,7 +125,7 @@ const AgreementPreview = () => {
                                 {/* Header of Doc */}
                                 <div className="flex justify-between items-start border-b-2 border-slate-900 pb-6 mb-8">
                                     <div className="flex items-center gap-3">
-                                        <img src={logo} alt="University Logo" className="h-16 w-16 object-contain rounded filter grayscale" />
+                                        <img src={data.universityLogo ? data.universityLogo : logo} alt="University Logo" className={`h-16 w-16 object-contain rounded ${data.universityLogo ? '' : 'filter grayscale'}`} />
                                         <div>
                                             <h2 className="font-['Space_Grotesk'] font-bold text-xl uppercase tracking-tight text-slate-900">{data.universityName}</h2>
                                             <p className="font-mono text-xs text-slate-500">Department of {data.studentDept || 'Technology'}</p>

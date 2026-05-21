@@ -1388,13 +1388,13 @@ const getAdminApplicationById = async (req, res) => {
     const offer = application.offerId || {};
     const company = offer.companyId || {};
 
-    let admin = await Admin.findById(req.user._id).select('universityName DeptHead fullName');
+    let admin = await Admin.findById(req.user._id).select('universityName DeptHead fullName profilePicture');
     if (!admin) {
       // If the requester is a student or company, find the Admin corresponding to the student's specialty
-      admin = await Admin.findOne({ DeptHead: student.specialty }).select('universityName DeptHead fullName');
+      admin = await Admin.findOne({ DeptHead: student.specialty }).select('universityName DeptHead fullName profilePicture');
       if (!admin) {
         // Fallback to the first available admin if no exact DeptHead match is found
-        admin = await Admin.findOne().select('universityName DeptHead fullName');
+        admin = await Admin.findOne().select('universityName DeptHead fullName profilePicture');
       }
     }
 
@@ -1411,6 +1411,7 @@ const getAdminApplicationById = async (req, res) => {
       internshipOffice: company.internshipOffice || "Unknown Office",
       companyRepresentative: "HR Management", // Using a fallback since there's no representative in Company model
       universityName: admin?.universityName || student.university || "University of Constantine 2",
+      universityLogo: admin?.profilePicture || "",
       adminDeptHead: admin?.DeptHead || "",
       adminName: admin?.fullName || "",
       startDate: offer.createdAt ? moment(offer.createdAt).format('MMMM Do, YYYY') : moment().format('MMMM Do, YYYY'),
