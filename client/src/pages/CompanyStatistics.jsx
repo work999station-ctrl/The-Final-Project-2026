@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
+oblv
+import { useNavigate, Link } from 'react-router-dom';
+=======
 import { Link } from 'react-router-dom';
+main
 import { useLang } from '../contexts/LanguageContext';
 import CompanyNavbar from '../components/CompanyNavbar';
 import logoImage from '../assets/logo.png';
@@ -33,7 +37,7 @@ const CompanyStatistics = () => {
 
     if (isLoading) {
         return (
-            <div className="bg-background-light dark:bg-background-dark min-h-screen flex flex-col pt-16">
+            <div className="bg-background-light dark:bg-background-dark min-h-screen flex flex-col">
                 <CompanyNavbar company={company} />
                 <div className="flex-1 flex flex-col items-center justify-center gap-4">
                     <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
@@ -63,7 +67,7 @@ const CompanyStatistics = () => {
     };
 
     return (
-        <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white min-h-screen font-body flex flex-col pt-16 print:bg-white print:pt-0 print:block">
+        <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white min-h-screen font-body flex flex-col print:bg-white print:pt-0 print:block">
             {/* Standard Navbar - Hidden in Print */}
             <div className="print:hidden">
                 <CompanyNavbar company={company} />
