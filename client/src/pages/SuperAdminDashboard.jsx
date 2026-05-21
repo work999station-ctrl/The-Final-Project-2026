@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import logoImage from '../assets/logo.png';
+import Logo from '../components/Logo';
 
 const SuperAdminDashboard = () => {
     const navigate = useNavigate();
@@ -155,9 +155,7 @@ const SuperAdminDashboard = () => {
         return (
             <div className="bg-slate-50 dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 min-h-screen flex flex-col justify-between overflow-x-hidden">
                 <header className="flex items-center justify-between border-b border-solid border-slate-200 dark:border-slate-800 px-6 lg:px-40 py-4 bg-white dark:bg-slate-900 sticky top-0 z-50">
-                    <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-                        <img src={logoImage} alt="stage.io logo" className="h-16 w-auto object-contain dark:brightness-0 dark:invert" />
-                    </div>
+                    <Logo size={40} onClick={() => navigate('/')} />
                     <button onClick={() => navigate('/login')} className="flex min-w-[100px] cursor-pointer items-center justify-center rounded-full h-10 px-6 bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 text-sm font-bold hover:bg-indigo-100 dark:hover:bg-indigo-950/50 transition-colors shadow-sm">
                         Log In
                     </button>
@@ -272,8 +270,8 @@ const SuperAdminDashboard = () => {
         <div className="bg-slate-50 dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
             {/* SuperAdmin Header */}
             <header className="flex items-center justify-between border-b border-solid border-slate-200 dark:border-slate-800 px-6 lg:px-40 py-4 bg-white dark:bg-slate-900 sticky top-0 z-50 shadow-sm">
-                <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/')}>
-                    <img src={logoImage} alt="stage.io logo" className="h-12 w-auto object-contain dark:brightness-0 dark:invert" />
+                <div className="flex items-center gap-3 cursor-pointer">
+                    <Logo size={36} onClick={() => navigate('/')} />
                     <span className="bg-indigo-600 text-white text-xs font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">
                         SuperAdmin
                     </span>
