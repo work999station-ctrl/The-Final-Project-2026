@@ -864,8 +864,8 @@ const getCompanyApplications = async (req, res) => {
 
 const getStudentProfileForRecruiter = async (req, res) => {
   try {
-    if (req.userType !== 'company' && req.userType !== 'admin') {
-      return res.status(403).json({ error: 'Only companies and admins can view detailed student profiles' });
+    if (req.userType !== 'company' && req.userType !== 'admin' && req.userType !== 'superadmin') {
+      return res.status(403).json({ error: 'Only companies, admins, and superadmins can view detailed student profiles' });
     }
 
     const studentId = req.params.id;
@@ -874,15 +874,21 @@ const getStudentProfileForRecruiter = async (req, res) => {
       return res.status(404).json({ error: 'Student not found' });
     }
 
-    // Find all offers by the requesting company
-    const companyOffers = await Offer.find({ companyId: req.user._id });
-    const offerIds = companyOffers.map(o => o._id);
+    let applications = [];
+    if (req.userType === 'company') {
+      // Find all offers by the requesting company
+      const companyOffers = await Offer.find({ companyId: req.user._id });
+      const offerIds = companyOffers.map(o => o._id);
 
-    // Find student's applications for these company offers
-    const applications = await Application.find({
-      studentId,
-      offerId: { $in: offerIds }
-    }).populate('offerId').sort({ createdAt: -1 });
+      // Find student's applications for these company offers
+      applications = await Application.find({
+        studentId,
+        offerId: { $in: offerIds }
+      }).populate('offerId').sort({ createdAt: -1 });
+    } else {
+      // Admins and superadmins see all applications for this student
+      applications = await Application.find({ studentId }).populate('offerId').sort({ createdAt: -1 });
+    }
 
     res.status(200).json({ success: true, student, applications });
   } catch (err) {
@@ -1301,8 +1307,8 @@ const getStudentApplications = async (req, res) => {
 
 const getAdminCompanyProfile = async (req, res) => {
   try {
-    if (req.userType !== 'admin' && req.userType !== 'student') {
-      return res.status(403).json({ error: 'Only admins and students can view company profiles' });
+    if (req.userType !== 'admin' && req.userType !== 'student' && req.userType !== 'superadmin') {
+      return res.status(403).json({ error: 'Only admins, students, and superadmins can view company profiles' });
     }
 
     const { id: companyId } = req.params;
@@ -1321,9 +1327,13 @@ const getAdminCompanyProfile = async (req, res) => {
     const applications = await Application.find({ offerId: { $in: offerIds } })
       .populate('studentId');
 
-    // Filter applications down to the admin's university matches
-    const adminUni = req.user.universityName ? req.user.universityName.trim().toLowerCase() : '';
+    // Filter applications down to the admin's university matches (allow all for superadmin/student)
+    const isSuperAdmin = req.userType === 'superadmin';
+    const isStudent = req.userType === 'student';
+    const adminUni = (!isSuperAdmin && !isStudent && req.user && req.user.universityName) ? req.user.universityName.trim().toLowerCase() : '';
+    
     const universityApplications = applications.filter(app => {
+      if (isSuperAdmin || isStudent) return true;
       if (!app.studentId || !app.studentId.university) return false;
       const studentUni = app.studentId.university.trim().toLowerCase();
       return studentUni === adminUni;

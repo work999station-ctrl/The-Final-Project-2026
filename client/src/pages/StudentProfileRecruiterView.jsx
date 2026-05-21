@@ -1,7 +1,8 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import CompanyNavbar from '../components/CompanyNavbar';
 import useSocket from '../hooks/useSocket';
+import Logo from '../components/Logo';
 
 const StudentProfileRecruiterView = () => {
     const { id } = useParams();
@@ -11,6 +12,21 @@ const StudentProfileRecruiterView = () => {
     const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+
+    useEffect(() => {
+        const checkRole = async () => {
+            try {
+                const res = await fetch('/api/superadmin/stats');
+                if (res.ok) {
+                    setIsSuperAdmin(true);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        };
+        checkRole();
+    }, []);
 
     useEffect(() => {
         const fetchStudentProfile = async () => {
@@ -81,7 +97,25 @@ const StudentProfileRecruiterView = () => {
 
     return (
         <div className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen font-body">
-            <CompanyNavbar />
+            {isSuperAdmin ? (
+                <header className="flex items-center justify-between border-b border-solid border-slate-200 dark:border-slate-800 px-6 lg:px-40 py-4 bg-white dark:bg-slate-900 sticky top-0 z-50 shadow-sm">
+                    <div className="flex items-center gap-3">
+                        <Logo size={36} onClick={() => navigate('/superadmin-dashboard')} />
+                        <span className="bg-indigo-600 text-white text-xs font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">
+                            SuperAdmin
+                        </span>
+                    </div>
+                    <button 
+                        onClick={() => navigate('/superadmin-dashboard')} 
+                        className="flex items-center gap-2 cursor-pointer rounded-full h-10 px-6 bg-indigo-50 dark:bg-indigo-950/20 text-indigo-600 dark:text-indigo-400 text-sm font-bold hover:bg-indigo-100 dark:hover:bg-indigo-950/30 transition-all active:scale-[0.98]"
+                    >
+                        <span className="material-symbols-outlined text-[18px]">dashboard</span>
+                        Control Room
+                    </button>
+                </header>
+            ) : (
+                <CompanyNavbar />
+            )}
 
             <main className="max-w-5xl mx-auto px-4 py-8">
                 {/* Back Navigation */}

@@ -1,7 +1,8 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import AdminNavbar from '../components/AdminNavbar';
 import AdminSidebar from '../components/AdminSidebar';
+import Logo from '../components/Logo';
 
 
 const CompanyProfileAdminView = () => {
@@ -12,6 +13,21 @@ const CompanyProfileAdminView = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [adminUser, setAdminUser] = useState(null);
+    const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+
+    useEffect(() => {
+        const checkRole = async () => {
+            try {
+                const res = await fetch('/api/superadmin/stats');
+                if (res.ok) {
+                    setIsSuperAdmin(true);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        };
+        checkRole();
+    }, []);
 
     useEffect(() => {
         const fetchAdmin = async () => {
@@ -54,17 +70,59 @@ const CompanyProfileAdminView = () => {
 
     if (loading) return <div className="min-h-screen flex items-center justify-center bg-slate-50"><div className="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div></div>;
     if (error) return <div className="min-h-screen flex items-center justify-center bg-slate-50"><p className="text-red-500 font-bold">{error}</p></div>;
-    if (!company) return <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50"><p className="text-slate-500 text-lg">Company not found.</p><button onClick={() => navigate('/admin-dashboard')} className="mt-4 text-indigo-600 hover:text-indigo-700 font-medium">Return to Dashboard</button></div>;
+    if (!company) {
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50">
+                <p className="text-slate-500 text-lg">Company not found.</p>
+                <button 
+                    onClick={() => navigate(isSuperAdmin ? '/superadmin-dashboard' : '/admin-dashboard')} 
+                    className="mt-4 text-indigo-600 hover:text-indigo-700 font-medium"
+                >
+                    Return to Dashboard
+                </button>
+            </div>
+        );
+    }
 
 
     return (
         <div className="bg-slate-50 text-slate-900 antialiased min-h-screen">
-            <AdminNavbar admin={adminUser} />
-            <AdminSidebar activePage="validate" adminUser={adminUser} />
+            {isSuperAdmin ? (
+                <header className="flex items-center justify-between border-b border-solid border-slate-200 dark:border-slate-800 px-6 lg:px-40 py-4 bg-white dark:bg-slate-900 sticky top-0 z-50 shadow-sm">
+                    <div className="flex items-center gap-3">
+                        <Logo size={36} onClick={() => navigate('/superadmin-dashboard')} />
+                        <span className="bg-indigo-600 text-white text-xs font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">
+                            SuperAdmin
+                        </span>
+                    </div>
+                    <button 
+                        onClick={() => navigate('/superadmin-dashboard')} 
+                        className="flex items-center gap-2 cursor-pointer rounded-full h-10 px-6 bg-indigo-50 dark:bg-indigo-950/20 text-indigo-600 dark:text-indigo-400 text-sm font-bold hover:bg-indigo-100 dark:hover:bg-indigo-950/30 transition-all active:scale-[0.98]"
+                    >
+                        <span className="material-symbols-outlined text-[18px]">dashboard</span>
+                        Control Room
+                    </button>
+                </header>
+            ) : (
+                <>
+                    <AdminNavbar admin={adminUser} />
+                    <AdminSidebar activePage="validate" adminUser={adminUser} />
+                </>
+            )}
 
             {/* Main Content */}
-            <main className="md:ml-64 pt-20 pb-12 px-6">
+            <main className={`${isSuperAdmin ? 'pt-8' : 'md:ml-64 pt-20'} pb-12 px-6`}>
                 <div className="max-w-5xl mx-auto space-y-8">
+                    {/* Back Navigation */}
+                    <div>
+                        <button
+                            onClick={() => navigate(-1)}
+                            className="flex items-center gap-2 text-slate-500 hover:text-indigo-600 transition-colors group"
+                        >
+                            <span className="material-symbols-outlined text-lg group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                            <span className="font-medium text-sm">Back</span>
+                        </button>
+                    </div>
 
                     {/* Main Profile Hero Card */}
                     <section className="bg-white rounded-2xl shadow-xl shadow-indigo-100/50 overflow-hidden border border-slate-100">
