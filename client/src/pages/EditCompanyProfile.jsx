@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useLang } from '../contexts/LanguageContext';
 import CompanyNavbar from '../components/CompanyNavbar';
@@ -10,6 +10,7 @@ const EditCompanyProfile = () => {
 
     const [formData, setFormData] = useState({
         companyName: '',
+        companyRole: '',
         email: '',
         phoneNumber: '',
         address: '',
@@ -33,6 +34,7 @@ const EditCompanyProfile = () => {
                 if (res.ok && data.user) {
                     setFormData({
                         companyName: data.user.companyName || '',
+                        companyRole: data.user.companyRole || '',
                         email: data.user.email || '',
                         phoneNumber: data.user.phoneNumber || '',
                         address: data.user.address || '',
@@ -195,7 +197,7 @@ const EditCompanyProfile = () => {
 
                                 {/* Form Fields */}
                                 <div className="p-8 space-y-8">
-                                    {/* Row 1: Name, Email and Phone */}
+                                    {/* Row 1: Name, Role and Office */}
                                     <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
                                         <div className="flex flex-col gap-2 text-left">
                                             <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
@@ -213,7 +215,21 @@ const EditCompanyProfile = () => {
                                         </div>
                                         <div className="flex flex-col gap-2 text-left">
                                             <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
-                                                <span className="material-symbols-outlined text-primary text-lg">business</span>
+                                                <span className="material-symbols-outlined text-primary text-lg">label</span>
+                                                {t('editProfile.fieldCompanyRole')}
+                                            </label>
+                                            <input
+                                                className="form-input w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary px-4 py-3 transition-all"
+                                                placeholder={t('editProfile.fieldCompanyRolePlaceholder')}
+                                                type="text"
+                                                name="companyRole"
+                                                value={formData.companyRole}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                        <div className="flex flex-col gap-2 text-left">
+                                            <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
+                                                <span className="material-symbols-outlined text-primary text-lg">work</span>
                                                 {t('editProfile.fieldInternshipOffice')}
                                             </label>
                                             <input
@@ -225,6 +241,10 @@ const EditCompanyProfile = () => {
                                                 onChange={handleChange}
                                             />
                                         </div>
+                                    </div>
+
+                                    {/* Row 2: Email, Phone and Website */}
+                                    <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
                                         <div className="flex flex-col gap-2 text-left">
                                             <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
                                                 <span className="material-symbols-outlined text-primary text-lg">mail</span>
@@ -253,10 +273,6 @@ const EditCompanyProfile = () => {
                                                 onChange={handleChange}
                                             />
                                         </div>
-                                    </div>
-
-                                    {/* Row 2: Website and Address */}
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                         <div className="flex flex-col gap-2 text-left">
                                             <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
                                                 <span className="material-symbols-outlined text-primary text-lg">language</span>
@@ -271,6 +287,10 @@ const EditCompanyProfile = () => {
                                                 onChange={handleChange}
                                             />
                                         </div>
+                                    </div>
+
+                                    {/* Row 3: Address */}
+                                    <div className="grid grid-cols-1 gap-8">
                                         <div className="flex flex-col gap-2 text-left">
                                             <label className="text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-1.5">
                                                 <span className="material-symbols-outlined text-primary text-lg">location_on</span>

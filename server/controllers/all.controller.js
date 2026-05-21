@@ -199,7 +199,7 @@ const companyProfile_update = async (req, res) => {
     const company = await Company.findById(req.user._id);
 
     // Only allow updates to defined fields
-    const allowedUpdates = ['companyName', 'email', 'phoneNumber', 'address', 'website', 'description', 'internshipOffice'];
+    const allowedUpdates = ['companyName', 'email', 'phoneNumber', 'address', 'website', 'description', 'internshipOffice', 'companyRole'];
     allowedUpdates.forEach(field => {
       if (updateData[field] !== undefined) {
         company[field] = updateData[field];
@@ -283,10 +283,22 @@ const createOffer = async (req, res) => {
       return res.status(403).json({ error: 'Only companies can create offers' });
     }
 
-    const newOffer = await Offer.create({
+    // Parse techStack if sent as JSON string
+    if (req.body.techStack && typeof req.body.techStack === 'string') {
+      try { req.body.techStack = JSON.parse(req.body.techStack); } catch (e) {}
+    }
+
+    const offerData = {
       ...req.body,
       companyId: req.user._id
-    });
+    };
+
+    // If a custom offer photo was uploaded, save its path
+    if (req.file) {
+      offerData.photo = `/uploads/company/${req.file.filename}`;
+    }
+
+    const newOffer = await Offer.create(offerData);
 
     res.status(201).json({ success: true, offer: newOffer });
   } catch (err) {
@@ -1332,7 +1344,8 @@ const getAdminCompanyProfile = async (req, res) => {
         size: "N/A", // Mocked Fallback
         website: company.website || "No website provided",
         websiteUrl: company.website ? (company.website.startsWith('http') ? company.website : `https://${company.website}`) : '#',
-        tagline: company.companyName + " Profile", // Mock fallback
+        tagline: company.companyRole || (company.companyName + " Profile"),
+        companyRole: company.companyRole || '',
         mission: company.description || "No mission statement provided.",
         keySectors: (offers.length > 0 && offers[0].techStack) ? offers[0].techStack.map(ts => ts.category) : ['Technology'], // Inferred from offers
         logo: company.logo,

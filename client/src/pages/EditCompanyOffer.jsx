@@ -312,7 +312,7 @@ const EditCompanyOffer = () => {
             });
             submitData.append('techStack', JSON.stringify(techStack));
             if (logoFile) {
-                submitData.append('logo', logoFile);
+                submitData.append('photo', logoFile);
             }
 
             const res = await fetch(`/api/offers/${id}`, {
@@ -377,14 +377,14 @@ const EditCompanyOffer = () => {
                                     </div>
                                 </div>
                                 <div className="flex flex-col text-left">
-                                    <h3 className="text-slate-900 dark:text-white text-xl font-bold">{t('editOffer.logoTitle')}</h3>
-                                    <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">{t('editOffer.logoDesc')}</p>
-                                    <p className="text-slate-400 dark:text-slate-500 text-xs mt-0.5">{t('editOffer.logoSpecs')}</p>
+                                    <h3 className="text-slate-900 dark:text-white text-xl font-bold">Offer Cover Photo</h3>
+                                    <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Upload a custom photo for this offer. If left empty, the company logo is used.</p>
+                                    <p className="text-slate-400 dark:text-slate-500 text-xs mt-0.5">PNG, JPG or WEBP · Max 5MB · Recommended 800×600</p>
                                 </div>
                             </div>
                             <label className="flex items-center justify-center gap-2 px-6 h-11 bg-indigo-600 text-white rounded-full font-semibold hover:bg-indigo-700 transition-all shadow-md shadow-indigo-600/20 cursor-pointer">
                                 <span className="material-symbols-outlined text-lg">upload_file</span>
-                                <span>{t('editOffer.changeLogo')}</span>
+                                <span>Change Photo</span>
                                 <input type="file" accept="image/*" onChange={handleLogoChange} className="hidden" />
                             </label>
                         </div>

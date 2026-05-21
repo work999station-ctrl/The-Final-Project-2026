@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import moment from 'moment';
 import CompanyNavbar from '../components/CompanyNavbar';
@@ -42,6 +42,7 @@ const CompanyDashboard = () => {
                     address: data.user.address || 'Not set',
                     website: data.user.website || 'Not set',
                     logo: data.user.logo || '',
+                    companyRole: data.user.companyRole || '',
                 });
 
                 try {
@@ -91,6 +92,7 @@ const CompanyDashboard = () => {
                     address: payload.data.address || prev?.address,
                     website: payload.data.website || prev?.website,
                     logo: payload.data.logo || prev?.logo,
+                    companyRole: payload.data.companyRole !== undefined ? payload.data.companyRole : prev?.companyRole,
                 }));
             }
         };
@@ -212,7 +214,7 @@ const CompanyDashboard = () => {
                                 <h2 className="text-2xl font-bold font-display text-text-main dark:text-gray-100">
                                     {company.companyName}
                                 </h2>
-                                <p className="text-sm text-text-muted dark:text-gray-400 mt-1">{t('companyDashboard.enterprisePartner')}</p>
+                                <p className="text-sm text-text-muted dark:text-gray-400 mt-1">{company.companyRole || t('companyDashboard.enterprisePartner')}</p>
                             </div>
 
                             <div className="p-6 space-y-6">
@@ -362,7 +364,9 @@ const CompanyDashboard = () => {
 
                                                     <div className="flex items-center gap-6">
                                                         <div className="h-16 w-16 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 flex flex-shrink-0 items-center justify-center text-primary overflow-hidden">
-                                                            {company.logo ? (
+                                                            {offer.photo ? (
+                                                                <img src={offer.photo} alt="offer" className="w-full h-full object-cover" />
+                                                            ) : company.logo ? (
                                                                 <img src={`${company.logo}${company.logo.includes('?') ? '' : `?t=${Date.now()}`}`} alt="logo" className="w-full h-full object-cover" />
                                                             ) : (
                                                                 <span className="material-symbols-outlined text-3xl">terminal</span>

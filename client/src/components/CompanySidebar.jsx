@@ -56,7 +56,7 @@ const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
                     </div>
                     <div className={`overflow-hidden whitespace-nowrap transition-all duration-300 ${isCollapsed ? 'w-0 opacity-0' : 'opacity-100'}`}>
                         <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100 leading-tight truncate">{company?.companyName || '—'}</h2>
-                        <p className="text-xs text-slate-500 truncate">{t('companySidebar.recruiterDashboard')}</p>
+                        <p className="text-xs text-slate-500 truncate">{company?.companyRole || t('companySidebar.recruiterDashboard')}</p>
                     </div>
                 </div>
 
