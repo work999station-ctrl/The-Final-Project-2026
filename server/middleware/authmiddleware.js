@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const student = require('../models/Student.model');
 const Company = require('../models/Company.model');
 const Admin = require('../models/Admin.model');
+const SuperAdmin = require('../models/superAdmin.model');
 
 const requireAuth = (req , res , next) =>{
     const token = req.cookies.jwt;
@@ -27,6 +28,12 @@ const requireAuth = (req , res , next) =>{
                         if (user) {
                             req.user = user;
                             req.userType = 'admin';
+                        } else {
+                            user = await SuperAdmin.findById(decodedToken.id);
+                            if (user) {
+                                req.user = user;
+                                req.userType = 'superAdmin';
+                            }
                         }
                     }
                 }
@@ -66,6 +73,12 @@ const requireAuthAPI = (req, res, next) => {
                         if (user) {
                             req.user = user;
                             req.userType = 'admin';
+                        } else {
+                            user = await SuperAdmin.findById(decodedToken.id);
+                            if (user) {
+                                req.user = user;
+                                req.userType = 'superAdmin';
+                            }
                         }
                     }
                 }
@@ -99,6 +112,9 @@ const checkUser = (req , res , next)=>{
                 }
                 if (!user) {
                     user = await Admin.findById(decodedToken.id);
+                }
+                if (!user) {
+                    user = await SuperAdmin.findById(decodedToken.id);
                 }
                 res.locals.user = user;
                 next();

@@ -47,6 +47,8 @@ import Students from './pages/Students';
 import Companies from './pages/Companies';
 import Universities from './pages/Universities';
 import StudentCVUpload from './pages/StudentCVUpload';
+import SuperAdminSetup from './pages/SuperAdminSetup';
+import SuperAdminDashboard from './pages/SuperAdminDashboard';
 
 function App() {
   return (
@@ -101,6 +103,8 @@ function App() {
           <Route path="/universities" element={<Universities />} />
           <Route path="/company-direct-messages" element={<CompanyDirectMessages />} />
           <Route path="/student-cv-upload" element={<StudentCVUpload />} />
+          <Route path="/superadmin-setup" element={<SuperAdminSetup />} />
+          <Route path="/superadmin-dashboard" element={<SuperAdminDashboard />} />
         </Routes>
       </Router>
     </SocketProvider>

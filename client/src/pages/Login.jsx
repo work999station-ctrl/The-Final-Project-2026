@@ -44,6 +44,8 @@ const Login = () => {
                     navigate('/company-dashboard');
                 } else if (data.role === 'admin') {
                     navigate('/admin-dashboard');
+                } else if (data.role === 'superAdmin') {
+                    navigate('/superadmin-dashboard');
                 } else {
                     navigate('/student-dashboard');
                 }
