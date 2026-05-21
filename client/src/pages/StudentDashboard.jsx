@@ -397,7 +397,7 @@ const StudentDashboard = () => {
                                                 <div className="flex items-center gap-4">
                                                     <div className="size-12 rounded-lg bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 flex items-center justify-center p-1 overflow-hidden">
                                                         {app.offerId?.photo || app.offerId?.companyId?.logo ? (
-                                                            <img alt="Logo" className="w-full h-full object-contain" src={`http://localhost:3000${app.offerId?.photo ? app.offerId.photo : app.offerId.companyId.logo}`} />
+                                                            <img alt="Logo" className="w-full h-full object-contain" src={app.offerId?.photo ? app.offerId.photo : app.offerId.companyId.logo} />
                                                         ) : (
                                                             <span className="material-symbols-outlined text-gray-400">business</span>
                                                         )}
@@ -606,7 +606,7 @@ const StudentDashboard = () => {
                                         </div>
                                         <button
                                             onClick={() => navigate('/edit-student-profile')}
-                                            className="bg-white dark:bg-slate-800 text-primary font-bold px-6 py-3 rounded-full hover:bg-gray-50 dark:bg-slate-800 transition-colors shadow-md whitespace-nowrap"
+                                            className="bg-white dark:bg-slate-800 text-primary font-bold px-6 py-3 rounded-full hover:bg-opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-md whitespace-nowrap"
                                         >
                                             {t('dashboard.ctaBtn')}
                                         </button>
@@ -655,7 +655,7 @@ const StudentDashboard = () => {
                             <span className="material-symbols-outlined text-3xl">warning</span>
                         </div>
                         <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">{t('profile.incompleteTitle')}</h3>
-                        <p className="text-slate-500 dark:text-slate-400 text-sm mb-2 font-semibold">{t('profile.incompleteDesc', { pct: profileCompletion })}</p>
+                        <p className="text-slate-500 dark:text-slate-400 text-sm mb-2 font-semibold">{t('profile.incompleteDesc', { percent: profileCompletion })}</p>
                         <p className="text-slate-400 dark:text-slate-500 text-xs mb-8">{t('profile.incompleteWarning')}</p>
                         <div className="flex gap-4">
                             <button

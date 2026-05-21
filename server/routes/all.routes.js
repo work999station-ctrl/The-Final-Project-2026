@@ -6,7 +6,7 @@ const path = require('path');
 // Configure storage for uploads
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        if (file.fieldname === 'logo') {
+        if (file.fieldname === 'logo' || file.fieldname === 'photo') {
             cb(null, path.join(__dirname, '../public/uploads/company/'));
         } else if (file.fieldname === 'profilePicture') {
             cb(null, path.join(__dirname, '../public/uploads/admin/'));
@@ -117,7 +117,7 @@ router.post('/api/logout', (req, res) => {
 router.get('/create-offer', requireAuth, (req, res) => {
     res.status(200).json({ success: true });
 });
-router.post('/api/offers', requireAuthAPI, createOffer);
+router.post('/api/offers', requireAuthAPI, upload.single('photo'), createOffer);
 router.get('/api/offers', getAllOffers);
 router.get('/api/offers/:id', requireAuthAPI, getOfferById);
 router.get('/api/company/offers', requireAuthAPI, getCompanyOffers);
@@ -127,7 +127,7 @@ router.put('/api/company/applications/:id/status', requireAuthAPI, updateApplica
 router.post('/api/company/applications/:id/feedback', requireAuthAPI, addApplicationFeedback);
 router.get('/api/company/dashboard-stats', requireAuthAPI, getCompanyDashboardStats);
 router.get('/api/company/applications/offer/:id', requireAuthAPI, getApplicationsByOfferId);
-router.put('/api/offers/:id', requireAuthAPI, upload.single('logo'), updateOffer);
+router.put('/api/offers/:id', requireAuthAPI, upload.single('photo'), updateOffer);
 router.delete('/api/offers/:id', requireAuthAPI, deleteOffer);
 router.get('/api/student/profile-for-company/:id', requireAuthAPI, getStudentProfileForRecruiter);
 

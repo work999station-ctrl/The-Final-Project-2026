@@ -23,6 +23,10 @@ const companySchema = mongoose.Schema({
         type: String,
         default: ''
     },
+    companyRole: {
+        type: String,
+        default: ''
+    },
     description: {
         type: String,
         default: ''

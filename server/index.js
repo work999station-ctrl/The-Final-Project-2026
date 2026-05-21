@@ -22,7 +22,7 @@ const socketManager = require('./socket');
 // load .env
 
 // Bypass Windows/ISP DNS issues with MongoDB Atlas SRV/TXT lookups
-require('dns').setServers(['8.8.8.8', '8.8.4.4']);
+// require('dns').setServers(['8.8.8.8', '8.8.4.4']);
 
 if (!process.env.MONGO_URI) {
   console.warn("⚠️  WARNING: MONGO_URI is not set in .env — add it and restart the server.");
@@ -44,6 +44,15 @@ app.get('/api/test-password-reset', async (req, res) => {
     return res.json({ name: company.companyName, email: company.email, newPass: 'password123' });
   }
   res.json({ error: 'No companies exist' });
+});
+
+// Multer-specific error handler (must come before generic handler)
+const multer = require('multer');
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    return res.status(400).json({ error: `File upload error: ${err.message}`, code: err.code });
+  }
+  next(err);
 });
 
 // Error handling middleware

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Company = require('./models/Company.model');
 const bcrypt = require('bcrypt');
 require('dotenv').config({ path: './.env' });
-require('dns').setServers(['8.8.8.8', '8.8.4.4']);
+// require('dns').setServers(['8.8.8.8', '8.8.4.4']);
 
 async function getCompany() {
   try {

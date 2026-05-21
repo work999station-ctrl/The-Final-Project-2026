@@ -25,6 +25,24 @@ const CreateInternshipOffer = () => {
     });
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState({});
+    const [photoFile, setPhotoFile] = useState(null);
+    const [photoPreview, setPhotoPreview] = useState(null);
+
+    const handlePhotoChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setPhotoFile(file);
+            const reader = new FileReader();
+            reader.onloadend = () => setPhotoPreview(reader.result);
+            reader.readAsDataURL(file);
+        }
+        e.target.value = '';
+    };
+
+    const removePhoto = () => {
+        setPhotoFile(null);
+        setPhotoPreview(null);
+    };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -97,12 +115,21 @@ const CreateInternshipOffer = () => {
                 endDateOfApplay: formData.endDateOfApplay
             };
 
+            const submitData = new FormData();
+            Object.keys(offerData).forEach(key => {
+                if (key === 'techStack') {
+                    submitData.append('techStack', JSON.stringify(offerData[key]));
+                } else {
+                    submitData.append(key, offerData[key]);
+                }
+            });
+            if (photoFile) {
+                submitData.append('photo', photoFile);
+            }
+
             const response = await fetch('/api/offers', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(offerData)
+                body: submitData
             });
 
             const data = await response.json();
@@ -401,6 +428,30 @@ const CreateInternshipOffer = () => {
                                 type="text"
                             />
                             {errors.title && <span className="text-xs text-red-500 dark:text-red-400 font-medium">{errors.title}</span>}
+                        </div>
+
+                        {/* Offer Cover Photo */}
+                        <div className="flex flex-col gap-2">
+                            <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Offer Cover Photo <span className="text-slate-400 font-normal">(optional)</span></label>
+                            {photoPreview ? (
+                                <div className="relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
+                                    <img src={photoPreview} alt="Offer cover" className="w-full h-40 object-cover" />
+                                    <button
+                                        type="button"
+                                        onClick={removePhoto}
+                                        className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-slate-900/60 hover:bg-red-600 text-white rounded-full transition-colors"
+                                    >
+                                        <span className="material-symbols-outlined text-base leading-none">close</span>
+                                    </button>
+                                </div>
+                            ) : (
+                                <label className="flex flex-col items-center justify-center gap-2 h-28 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:border-[#4f46e5]/50 hover:bg-slate-100 dark:hover:bg-slate-700/50 cursor-pointer transition-all group">
+                                    <span className="material-symbols-outlined text-3xl text-slate-400 group-hover:text-[#4f46e5] transition-colors">add_photo_alternate</span>
+                                    <span className="text-sm text-slate-400 group-hover:text-[#4f46e5] font-medium transition-colors">Click to upload a cover photo</span>
+                                    <span className="text-xs text-slate-300">PNG, JPG, WEBP · Max 5MB</span>
+                                    <input type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" />
+                                </label>
+                            )}
                         </div>
 
 

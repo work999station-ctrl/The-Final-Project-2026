@@ -139,7 +139,9 @@ const CompanyOffers = () => {
                                     {/* Info Block */}
                                     <div className="flex items-start md:items-center gap-6 flex-1 min-w-0">
                                         <div className="h-16 w-16 md:h-14 md:w-14 rounded-2xl bg-[#4F46E5]/10 flex flex-shrink-0 items-center justify-center border border-[#4F46E5]/20 overflow-hidden text-[#4F46E5]">
-                                            {company?.logo ? (
+                                            {offer.photo ? (
+                                                <img src={offer.photo} alt="Offer cover" className="w-full h-full object-cover" />
+                                            ) : company?.logo ? (
                                                 <img src={company.logo} alt="Company logo" className="w-full h-full object-cover" />
                                             ) : (
                                                 <span className="material-symbols-outlined text-3xl">work</span>
