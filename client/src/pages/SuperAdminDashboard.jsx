@@ -406,7 +406,18 @@ const SuperAdminDashboard = () => {
                                     </thead>
                                     <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                                         {allUsers.map((user) => (
-                                            <tr key={user._id} className="text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
+                                            <tr 
+                                                key={user._id} 
+                                                className={`text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors ${user.role !== 'admin' ? 'cursor-pointer' : ''}`}
+                                                onClick={() => {
+                                                    if (user.role === 'student') {
+                                                        navigate(`/student-profile-recruiter/${user._id}`);
+                                                    } else if (user.role === 'company') {
+                                                        navigate(`/company-profile-admin/${user._id}`);
+                                                    }
+                                                }}
+                                                title={user.role !== 'admin' ? `View ${user.role === 'student' ? 'Student Profile' : 'Company Profile'}` : ''}
+                                            >
                                                 <td className="py-4 px-4">
                                                     <div className="h-10 w-10 rounded-full bg-indigo-50 dark:bg-indigo-950 flex items-center justify-center overflow-hidden border border-slate-200 dark:border-slate-800">
                                                         {user.profilePicture ? (
@@ -456,7 +467,10 @@ const SuperAdminDashboard = () => {
                                                 </td>
                                                 <td className="py-4 px-4 text-right">
                                                     <button
-                                                        onClick={() => handleDeleteUser(user.role, user._id)}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleDeleteUser(user.role, user._id);
+                                                        }}
                                                         className="p-2 cursor-pointer rounded-xl bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-950/30 transition-all hover:scale-105 active:scale-95"
                                                         title={`Delete ${user.role} Account`}
                                                     >
