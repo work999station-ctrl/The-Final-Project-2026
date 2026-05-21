@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Logo from '../components/Logo';
-import Footer from '../components/Footer';
+
 import { useLang } from '../contexts/LanguageContext';
 
 
@@ -181,7 +181,6 @@ const Login = () => {
                         </div>
                     </main>
 
-                    <Footer />
                 </div>
             </div>
         </div>

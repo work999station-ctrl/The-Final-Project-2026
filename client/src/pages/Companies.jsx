@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import logoImage from '../assets/logo.png';
 import ThemeToggle from '../components/ThemeToggle';
 import Footer from '../components/Footer';
 import LandingNavBar from '../components/LandingNavBar';
@@ -8,7 +7,7 @@ import { useLang } from '../contexts/LanguageContext';
 
 const Companies = () => {
     const navigate = useNavigate();
-    const { t, isRTL } = useLang();
+    const { t } = useLang();
 
     return (
         <div className="bg-white dark:bg-slate-900 font-display text-slate-900 dark:text-slate-100 min-h-screen selection:bg-indigo-100 dark:selection:bg-indigo-900/30">

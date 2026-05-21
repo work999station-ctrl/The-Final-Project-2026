@@ -19,7 +19,7 @@ const AgreementVerificationSuccess = () => {
                 if (res.ok && data.success) {
                     setApplication(data.application);
                 }
-            } catch (err) {
+            } catch {
                 console.error("Failed to load application data");
             } finally {
                 setLoading(false);

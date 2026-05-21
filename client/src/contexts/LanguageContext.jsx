@@ -122,6 +122,7 @@ export const LanguageProvider = ({ children }) => {
     );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useLang = () => {
     const ctx = useContext(LanguageContext);
     if (!ctx) throw new Error('useLang must be used inside <LanguageProvider>');

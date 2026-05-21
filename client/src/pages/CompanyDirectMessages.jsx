@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import CompanyNavbar from '../components/CompanyNavbar';
 import CompanySidebar from '../components/CompanySidebar';
@@ -6,7 +6,7 @@ import { useLang } from '../contexts/LanguageContext';
 
 const CompanyDirectMessages = () => {
     const navigate = useNavigate();
-    const { t, lang, setLang } = useLang();
+    const { t } = useLang();
     const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(true);
     const [company, setCompany] = useState(null);

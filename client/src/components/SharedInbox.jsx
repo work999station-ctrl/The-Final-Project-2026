@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useLang } from '../contexts/LanguageContext';
-import logoImage from '../assets/logo.png';
 
-const SharedInbox = ({ userType, title, backLink, navTitle = "stage.io", hideHeader = false }) => {
+const SharedInbox = ({ userType, title }) => {
     const navigate = useNavigate();
-    const { t, lang, setLang } = useLang();
+    const { t } = useLang();
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");

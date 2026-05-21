@@ -119,7 +119,7 @@ const OfferDetailsSplitView = () => {
         };
 
         if (id) fetchOfferDetails();
-    }, [id]);
+    }, [id, t]);
 
     useEffect(() => {
         const fetchApplicants = async () => {

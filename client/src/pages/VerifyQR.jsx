@@ -24,7 +24,7 @@ const VerifyQR = () => {
                 } else {
                     navigate('/verification-invalid', { replace: true });
                 }
-            } catch (err) {
+            } catch {
                 navigate('/verification-invalid', { replace: true });
             }
         };

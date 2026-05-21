@@ -1,13 +1,10 @@
 import React, { useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import logoImage from '../assets/logo.png';
+
 import ThemeToggle from '../components/ThemeToggle';
 import Footer from '../components/Footer';
 import LandingNavBar from '../components/LandingNavBar';
 
 const PrivacyPolicy = () => {
-    const navigate = useNavigate();
-
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);

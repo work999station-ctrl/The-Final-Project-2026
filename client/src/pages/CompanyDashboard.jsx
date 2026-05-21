@@ -7,7 +7,7 @@ import { useLang } from '../contexts/LanguageContext';
 
 const CompanyDashboard = () => {
     const navigate = useNavigate();
-    const { t, lang, setLang } = useLang();
+    const { t } = useLang();
     const socket = useSocket();
 
     const [company, setCompany] = useState(null);
@@ -154,11 +154,14 @@ const CompanyDashboard = () => {
 
             if (res.ok) {
                 const data = await res.json();
-                // Update with server path and current timestamp for cache busting
-                setCompany(prev => ({ 
-                    ...prev, 
-                    logo: `${data.company.logo}?t=${Date.now()}` 
-                }));
+                const logoPath = data.user?.logo || data.company?.logo;
+                if (logoPath) {
+                    // Update with server path and current timestamp for cache busting
+                    setCompany(prev => ({ 
+                        ...prev, 
+                        logo: `${logoPath}?t=${Date.now()}` 
+                    }));
+                }
             } else {
                 console.error('Failed to upload logo');
                 alert('Failed to upload logo. Please try again.');

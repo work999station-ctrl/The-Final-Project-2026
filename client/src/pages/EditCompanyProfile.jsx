@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react';
+oblv
 import { useNavigate, Link } from 'react-router-dom';
+=======
+import { useNavigate } from 'react-router-dom';
+ main
 import { useLang } from '../contexts/LanguageContext';
 import CompanyNavbar from '../components/CompanyNavbar';
 import CompanyDeleteAlert from '../components/CompanyDeleteAlert';
 
 const EditCompanyProfile = () => {
     const navigate = useNavigate();
-    const { t, lang, setLang } = useLang();
+    const { t } = useLang();
 
     const [formData, setFormData] = useState({
         companyName: '',
@@ -57,6 +61,7 @@ const EditCompanyProfile = () => {
         };
 
         fetchCompanyProfile();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleChange = (e) => {

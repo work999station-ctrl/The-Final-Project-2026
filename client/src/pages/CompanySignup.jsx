@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useLang } from '../contexts/LanguageContext';
 import logoImage from '../assets/logo.png';
@@ -253,7 +253,7 @@ const CompanySignup = () => {
                                         <p className="text-center text-xs text-slate-400">
                                             {t('companySignup.agreement')
                                                 .split(/\{terms\}|\{privacy\}/)
-                                                .map((part, index, array) => {
+                                                .map((part, index) => {
                                                     if (index === 0) return <span key={index}>{part}<Link className="text-primary hover:underline font-medium" to="/terms-of-service">{t('companySignup.terms')}</Link></span>;
                                                     if (index === 1) return <span key={index}>{part}<Link className="text-primary hover:underline font-medium" to="/privacy-policy">{t('companySignup.privacy')}</Link></span>;
                                                     return <span key={index}>{part}</span>;

@@ -28,6 +28,7 @@ const CompanyNavbar = ({ company: companyProp }) => {
 
     useEffect(() => {
         if (companyProp) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setCompany(companyProp);
             return;
         }
@@ -63,10 +64,7 @@ const CompanyNavbar = ({ company: companyProp }) => {
 
     const isActive = (...paths) => paths.includes(location.pathname);
 
-    const handleLogout = async () => {
-        await fetch('/api/logout', { method: 'POST' });
-        window.location.href = '/';
-    };
+
 
     return (
         <header className="sticky top-0 z-50 w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 backdrop-blur-md">
@@ -200,7 +198,7 @@ const CompanyNavbar = ({ company: companyProp }) => {
                         title={company?.companyName || 'Company'}
                     >
                         {company?.logo ? (
-                            <img alt="Company logo" className="w-full h-full object-cover" src={`${company.logo}${company.logo.includes('?') ? '' : `?t=${Date.now()}`}`} />
+                            <img alt="Company logo" className="w-full h-full object-cover" src={`${company.logo}${company.logo.includes('?') ? '' : `?t=${localStorage.getItem('companyProfileUpdatedAt') || ''}`}`} />
                         ) : (
                             <span className="material-symbols-outlined text-primary">business</span>
                         )}

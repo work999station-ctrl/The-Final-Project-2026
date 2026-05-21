@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import AdminNavbar from '../components/AdminNavbar';
 import AdminSidebar from '../components/AdminSidebar';
@@ -11,7 +11,7 @@ const AdminAcceptanceValidation = () => {
     const [application, setApplication] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [validating, setValidating] = useState(false);
+
 
     useEffect(() => {
         const fetchAdmin = async () => {
@@ -53,29 +53,7 @@ const AdminAcceptanceValidation = () => {
         }
     }, [applicationId]);
 
-    const handleApprove = async () => {
-        setValidating(true);
-        try {
-            const res = await fetch(`/api/admin/applications/${applicationId}/validate`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' }
-            });
-            if (res.ok) {
-                const data = await res.json();
-                if (data.success) {
-                    alert("Application validated successfully! Agreement generated.");
-                    navigate('/admin-inbox');
-                } else {
-                    alert(data.error || "Failed to validate.");
-                }
-            }
-        } catch (err) {
-            console.error("Validation error:", err);
-            alert("Error connecting to server.");
-        } finally {
-            setValidating(false);
-        }
-    };
+
 
     if (loading) {
         return (

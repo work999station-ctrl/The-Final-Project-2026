@@ -81,14 +81,19 @@ const SpotlightCard = ({ children, className = '' }) => {
 
 // ─── Floating particles background ────────────────────────────────────────────
 const Particles = ({ count = 14 }) => {
-    const particles = Array.from({ length: count }, (_, i) => ({
-        id: i,
-        left: Math.random() * 100,
-        delay: Math.random() * 12,
-        duration: 12 + Math.random() * 12,
-        size: 2 + Math.random() * 4,
-        opacity: 0.3 + Math.random() * 0.4,
-    }));
+    const [particles, setParticles] = useState([]);
+    
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setParticles(Array.from({ length: count }, (_, i) => ({
+            id: i,
+            left: Math.random() * 100,
+            delay: Math.random() * 12,
+            duration: 12 + Math.random() * 12,
+            size: 2 + Math.random() * 4,
+            opacity: 0.3 + Math.random() * 0.4,
+        })));
+    }, [count]);
     return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
             {particles.map(p => (
@@ -134,11 +139,11 @@ const useInView = (threshold = 0.12) => {
 
 const useCounter = (target, duration = 2200) => {
     const [value, setValue] = useState(0);
-    const [started, setStarted] = useState(false);
+    const hasStarted = useRef(false);
     const [ref, inView] = useInView(0.4);
     useEffect(() => {
-        if (!inView || started) return;
-        setStarted(true);
+        if (!inView || hasStarted.current) return;
+        hasStarted.current = true;
         const startTime = Date.now();
         const tick = () => {
             const elapsed = Date.now() - startTime;
@@ -148,7 +153,7 @@ const useCounter = (target, duration = 2200) => {
             if (progress < 1) requestAnimationFrame(tick);
         };
         requestAnimationFrame(tick);
-    }, [inView, started, target, duration]);
+    }, [inView, target, duration]);
     return [ref, value];
 };
 

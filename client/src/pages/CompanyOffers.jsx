@@ -7,7 +7,7 @@ import { useLang } from '../contexts/LanguageContext';
 
 const CompanyOffers = () => {
     const navigate = useNavigate();
-    const { t, lang, setLang } = useLang();
+    const { t } = useLang();
     const [company, setCompany] = useState(null);
     const [offers, setOffers] = useState([]);
     const [isLoading, setIsLoading] = useState(true);

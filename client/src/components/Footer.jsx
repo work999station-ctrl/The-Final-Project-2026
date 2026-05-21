@@ -90,7 +90,7 @@ const Footer = ({ showNewsletter = false }) => {
                     const data = await adminRes.json();
                     setUserRole(data.user?.role || 'admin');
                 }
-            } catch (err) { /* ignore */ }
+            } catch { /* ignore */ }
         };
         checkAuth();
     }, []);

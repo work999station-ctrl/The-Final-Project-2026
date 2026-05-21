@@ -42,6 +42,7 @@ const AdminNavbar = ({ admin: adminProp }) => {
 
     useEffect(() => {
         if (adminProp) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setAdmin(adminProp);
             return;
         }
