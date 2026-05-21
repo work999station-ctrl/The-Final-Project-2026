@@ -143,7 +143,15 @@ const UniversityPlacementAnalytics = () => {
                     <div className="relative z-10 print:bg-white p-2 sm:p-0">
                         <div className="hidden print:flex justify-between items-start border-b-2 border-slate-900 pb-6 mb-10">
                             <div className="flex items-center gap-4">
-                                <img src={logoImage} alt="stag.io" className="h-14 w-auto object-contain mix-blend-multiply" />
+                                <div className="flex items-center gap-3">
+                                    <img src={logoImage} alt="stag.io" className="h-14 w-auto object-contain mix-blend-multiply" />
+                                    {adminUser?.profilePicture && (
+                                        <>
+                                            <div className="h-10 w-px bg-slate-300"></div>
+                                            <img src={adminUser.profilePicture} alt="University Logo" className="h-12 w-12 object-contain rounded" />
+                                        </>
+                                    )}
+                                </div>
                                 <div className="h-12 w-px bg-slate-300"></div>
                                 <div>
                                     <h2 className="font-headline font-bold text-2xl uppercase tracking-tighter text-slate-900">STAG.IO</h2>
@@ -158,10 +166,17 @@ const UniversityPlacementAnalytics = () => {
 
                         {/* Summary Block (Print Only) */}
                         <div className="hidden print:grid grid-cols-2 gap-8 mb-10 bg-slate-50 p-6 border border-slate-200 rounded-xl">
-                            <div>
-                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Academic Institution</p>
-                                <p className="text-lg font-bold text-slate-900">{adminUser?.universityName || 'University'}</p>
-                                <p className="text-xs text-slate-500 mt-1 italic">Verified Partner {new Date().getFullYear()}</p>
+                            <div className="flex items-center gap-3">
+                                {adminUser?.profilePicture && (
+                                    <div className="w-12 h-12 bg-white rounded-lg p-1 border border-slate-200 flex items-center justify-center shrink-0">
+                                        <img src={adminUser.profilePicture} alt="University Logo" className="w-full h-full object-contain" />
+                                    </div>
+                                )}
+                                <div>
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Academic Institution</p>
+                                    <p className="text-lg font-bold text-slate-900">{adminUser?.universityName || 'University'}</p>
+                                    <p className="text-xs text-slate-500 mt-1 italic">Verified Partner {new Date().getFullYear()}</p>
+                                </div>
                             </div>
                             <div className="text-right">
                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Reporting Period</p>

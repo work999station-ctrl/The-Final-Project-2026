@@ -47,7 +47,7 @@ const CompanySidebar = ({ company, activePage, topOffset = "top-16" }) => {
                 >
                     <div className="shrink-0">
                         {company?.logo ? (
-                            <img alt="Company Logo" className="w-10 h-10 rounded-lg object-cover" src={`${company.logo}${company.logo.includes('?') ? '' : `?t=${localStorage.getItem('companyProfileUpdatedAt') || ''}`}`} />
+                            <img alt="Company Logo" className="w-10 h-10 rounded-lg object-cover" src={company.logo.startsWith('data:') ? company.logo : `${company.logo}${company.logo.includes('?') ? '' : `?t=${localStorage.getItem('companyProfileUpdatedAt') || ''}`}`} />
                         ) : (
                             <div className="w-10 h-10 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold italic">
                                 {company?.companyName?.substring(0, 2)?.toUpperCase() || 'CP'}

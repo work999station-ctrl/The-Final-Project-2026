@@ -205,7 +205,7 @@ const AdminNavbar = ({ admin: adminProp }) => {
                     {/* Admin Avatar */}
                     <div
                         className="h-10 w-10 shrink-0 rounded-full bg-primary/20 ring-2 ring-primary/10 flex items-center justify-center overflow-hidden cursor-pointer hover:ring-4 hover:ring-primary/20 transition-all bg-cover bg-center text-primary shadow-sm"
-                        style={{ backgroundImage: admin?.profilePicture ? `url('${admin.profilePicture}?t=${localStorage.getItem('adminProfilePicUpdatedAt') || ''}')` : 'none' }}
+                        style={{ backgroundImage: admin?.profilePicture ? `url('${admin.profilePicture.startsWith('data:') ? admin.profilePicture : `${admin.profilePicture}?t=${localStorage.getItem('adminProfilePicUpdatedAt') || ''}`}')` : 'none' }}
                         onClick={() => navigate('/edit-admin-profile')}
                         title={admin?.fullName || 'Admin'}
                     >

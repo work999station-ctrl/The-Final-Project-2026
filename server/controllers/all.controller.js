@@ -8,11 +8,32 @@ const moment = require('moment');
 const jwt = require('jsonwebtoken');
 const socketManager = require('../socket');
 const { sendAgreementEmails } = require('../utils/emailService');
+const fs = require('fs');
 
 
 // Helper — safely emit so the app doesn't crash if socket isn't ready
 const emit = (event, payload) => {
   try { socketManager.getIO().emit(event, payload); } catch (_) { }
+};
+
+// Helper — convert uploaded image files to Base64 data URI to support multi-device/multi-PC persistent state
+const fileToBase64 = (file) => {
+  if (!file) return null;
+  try {
+    const fileBuffer = fs.readFileSync(file.path);
+    const base64Data = fileBuffer.toString('base64');
+    const mimeType = file.mimetype;
+    // Delete local temp file
+    try {
+      fs.unlinkSync(file.path);
+    } catch (e) {
+      console.error("Failed to delete temp file:", e);
+    }
+    return `data:${mimeType};base64,${base64Data}`;
+  } catch (err) {
+    console.error("Error converting file to base64:", err);
+    return null;
+  }
 };
 
 
@@ -97,16 +118,18 @@ const studentProfile_update = async (req, res) => {
       }
     });
 
-    // If files were uploaded, add their paths to updateData
+    // If files were uploaded, add their paths/base64 to updateData
     if (req.files) {
       if (req.files.profile_picture) {
-        updateData.profilePicture = `/uploads/student/${req.files.profile_picture[0].filename}`;
+        const base64Pic = fileToBase64(req.files.profile_picture[0]);
+        if (base64Pic) updateData.profilePicture = base64Pic;
       }
       if (req.files.cv) {
         updateData.cvUrl = `/uploads/student/${req.files.cv[0].filename}`;
       }
     } else if (req.file) {
-      updateData.profilePicture = `/uploads/student/${req.file.filename}`;
+      const base64Pic = fileToBase64(req.file);
+      if (base64Pic) updateData.profilePicture = base64Pic;
     }
 
     const result = await Student.findByIdAndUpdate(req.user._id, updateData, { returnDocument: 'after' });
@@ -179,7 +202,8 @@ const companySignup_post = async (req, res) => {
     console.log(req.body);
     let companyData = { ...req.body };
     if (req.file) {
-      companyData.logo = `/uploads/company/${req.file.filename}`;
+      const base64Logo = fileToBase64(req.file);
+      if (base64Logo) companyData.logo = base64Logo;
     }
 
     const company = await Company.create(companyData);
@@ -200,9 +224,10 @@ const companyProfile_update = async (req, res) => {
   try {
     let updateData = { ...req.body };
 
-    // If a file was uploaded, add its path to updateData
+    // If a file was uploaded, convert it to Base64 and add to updateData
     if (req.file) {
-      updateData.logo = `/uploads/company/${req.file.filename}`;
+      const base64Logo = fileToBase64(req.file);
+      if (base64Logo) updateData.logo = base64Logo;
     }
 
     const company = await Company.findById(req.user._id);
@@ -236,9 +261,10 @@ const adminProfile_update = async (req, res) => {
   try {
     let updateData = { ...req.body };
 
-    // If a file was uploaded, add its path to updateData
+    // If a file was uploaded, convert it to Base64 and add to updateData
     if (req.file) {
-      updateData.profilePicture = `/uploads/admin/${req.file.filename}`;
+      const base64Pic = fileToBase64(req.file);
+      if (base64Pic) updateData.profilePicture = base64Pic;
     }
 
     const admin = await Admin.findById(req.user._id);
@@ -272,7 +298,8 @@ const adminSignup_post = async (req, res) => {
     console.log(req.body);
     let adminData = { ...req.body };
     if (req.file) {
-      adminData.profilePicture = `/uploads/admin/${req.file.filename}`;
+      const base64Pic = fileToBase64(req.file);
+      if (base64Pic) adminData.profilePicture = base64Pic;
     }
 
     const admin = await Admin.create(adminData);
@@ -302,9 +329,10 @@ const createOffer = async (req, res) => {
       companyId: req.user._id
     };
 
-    // If a custom offer photo was uploaded, save its path
+    // If a custom offer photo was uploaded, convert it to Base64
     if (req.file) {
-      offerData.photo = `/uploads/company/${req.file.filename}`;
+      const base64Photo = fileToBase64(req.file);
+      if (base64Photo) offerData.photo = base64Photo;
     }
 
     const newOffer = await Offer.create(offerData);
@@ -661,10 +689,13 @@ const updateOffer = async (req, res) => {
       { returnDocument: 'after', runValidators: true }
     );
 
-    // If a photo was uploaded, update the offer photo
+    // If a photo was uploaded, update the offer photo with Base64
     if (req.file) {
-      updatedOffer.photo = `/uploads/company/${req.file.filename}`;
-      await updatedOffer.save();
+      const base64Photo = fileToBase64(req.file);
+      if (base64Photo) {
+        updatedOffer.photo = base64Photo;
+        await updatedOffer.save();
+      }
     }
 
     res.status(200).json({ success: true, offer: updatedOffer });
@@ -1407,13 +1438,13 @@ const getAdminApplicationById = async (req, res) => {
     const offer = application.offerId || {};
     const company = offer.companyId || {};
 
-    let admin = await Admin.findById(req.user._id).select('universityName DeptHead fullName');
+    let admin = await Admin.findById(req.user._id).select('universityName DeptHead fullName profilePicture');
     if (!admin) {
       // If the requester is a student or company, find the Admin corresponding to the student's specialty
-      admin = await Admin.findOne({ DeptHead: student.specialty }).select('universityName DeptHead fullName');
+      admin = await Admin.findOne({ DeptHead: student.specialty }).select('universityName DeptHead fullName profilePicture');
       if (!admin) {
         // Fallback to the first available admin if no exact DeptHead match is found
-        admin = await Admin.findOne().select('universityName DeptHead fullName');
+        admin = await Admin.findOne().select('universityName DeptHead fullName profilePicture');
       }
     }
 
@@ -1430,6 +1461,7 @@ const getAdminApplicationById = async (req, res) => {
       internshipOffice: company.internshipOffice || "Unknown Office",
       companyRepresentative: "HR Management", // Using a fallback since there's no representative in Company model
       universityName: admin?.universityName || student.university || "University of Constantine 2",
+      universityLogo: admin?.profilePicture || "",
       adminDeptHead: admin?.DeptHead || "",
       adminName: admin?.fullName || "",
       startDate: offer.createdAt ? moment(offer.createdAt).format('MMMM Do, YYYY') : moment().format('MMMM Do, YYYY'),

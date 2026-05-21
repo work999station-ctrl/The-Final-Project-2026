@@ -5,6 +5,7 @@ import moment from 'moment';
 const AgreementVerificationSuccess = () => {
     const { id } = useParams();
     const [application, setApplication] = useState(null);
+    const [admin, setAdmin] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -18,6 +19,7 @@ const AgreementVerificationSuccess = () => {
                 const data = await res.json();
                 if (res.ok && data.success) {
                     setApplication(data.application);
+                    setAdmin(data.admin);
                 }
             } catch {
                 console.error("Failed to load application data");
@@ -44,11 +46,15 @@ const AgreementVerificationSuccess = () => {
         companyName: application.offerId?.companyId?.companyName || application.companyName || "TechCorp Solutions Inc.",
         duration: offer ?
             `${offer.createdAt ? moment(offer.createdAt).format('MMMM Do, YYYY') : moment().format('MMMM Do, YYYY')} — ${offer.durationMonths ? moment(offer.createdAt).add(offer.durationMonths, 'months').format('MMMM Do, YYYY') : moment().add(6, 'months').format('MMMM Do, YYYY')}`
-            : "April 11th, 2026 — May 11th, 2026"
+            : "April 11th, 2026 — May 11th, 2026",
+        universityName: admin?.universityName || application.studentId?.university || "University of Constantine 2",
+        universityLogo: admin?.profilePicture || ""
     } : {
         studentName: "Salah",
         companyName: "Youcef / HR Management",
-        duration: "April 11th, 2026 — May 11th, 2026"
+        duration: "April 11th, 2026 — May 11th, 2026",
+        universityName: "University of Constantine 2",
+        universityLogo: ""
     };
 
     return (
@@ -102,11 +108,19 @@ const AgreementVerificationSuccess = () => {
                             </div>
                             <div className="pt-2">
                                 <span className="block font-inter text-[12px] font-semibold tracking-wide text-slate-500 dark:text-slate-400 uppercase mb-1">Validated By</span>
-                                <div className="flex items-center gap-2">
-                                    <span className="material-symbols-outlined text-[18px] text-emerald-500">gpp_good</span>
-                                    <span className="font-body text-[15px] text-slate-900 dark:text-white font-medium">Digital Signature System</span>
+                                <div className="flex items-center gap-3">
+                                    {data.universityLogo ? (
+                                        <div className="w-8 h-8 rounded bg-slate-100 dark:bg-slate-900 flex items-center justify-center p-1 border border-slate-200 dark:border-slate-700 overflow-hidden shrink-0">
+                                            <img src={data.universityLogo} alt="University Logo" className="w-full h-full object-contain" />
+                                        </div>
+                                    ) : (
+                                        <span className="material-symbols-outlined text-[20px] text-indigo-600 dark:text-indigo-400 shrink-0">school</span>
+                                    )}
+                                    <div>
+                                        <span className="font-body text-[15px] text-slate-900 dark:text-white font-semibold block leading-tight">{data.universityName}</span>
+                                        <span className="block text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Officially Validated via Digital Seal</span>
+                                    </div>
                                 </div>
-                                <span className="block text-[12px] text-slate-500 dark:text-slate-400 mt-0.5 ml-6">University Admin</span>
                             </div>
                         </div>
 
